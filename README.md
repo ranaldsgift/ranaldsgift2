@@ -1,6 +1,6 @@
 # ranalds.gift 2.0
 
-This repository is for the community website ranalds.gift for Warhammer Vermintide 2. This website is for players to create, save and share their builds with other members of the community.
+This repository is for the community website [ranalds.gift](https://ranalds.gift) for Warhammer Vermintide 2. This website is for players to create, save and share their builds with other members of the community.
 
 Below are instructions on how to setup the project for local development.
 
