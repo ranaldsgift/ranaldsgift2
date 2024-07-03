@@ -1,0 +1,225 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+ 
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+ 
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+ 
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+ 
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+ 
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+ 
+    --destructive: 0 72.2% 50.6%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --ring: 222.2 84% 4.9%;
+ 
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+ 
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+ 
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+ 
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+ 
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+ 
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+ 
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+ 
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --ring: hsl(212.7,26.8%,83.9);
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+body {
+  background: black;
+  font-family: caslon-antique;
+  color: white;
+}
+
+:global(a) {
+  text-decoration: none;
+}
+
+@font-face {
+  font-family: caslon-antique;
+  src: url('/fonts/CaslonAntique.ttf');
+}
+
+@font-face {
+  font-family: caslon-antique-bold;
+  src: url('/fonts/CaslonAntique-Bold.ttf');
+}
+
+.scroll-01 {
+  background: url('/images/scrollers/scroll-01.png');
+}
+.scroll-02 {
+  background: url('/images/scrollers/scroll-02.png');
+}
+.scroll-03 {
+  background: url('/images/scrollers/scroll-03.png');
+}
+.scroll-04 {
+  background: url('/images/scrollers/scroll-04.png');
+}
+.scroll-05 {
+  background: url('/images/scrollers/scroll-05.png');
+}
+.scroll-06 {
+  background: url('/images/scrollers/scroll-06.png');
+}
+.scroll-07 {
+  background: url('/images/scrollers/scroll-07.png');
+}
+.scroll-08 {
+  background: url('/images/scrollers/scroll-08.png');
+}
+.scroll-09 {
+  background: url('/images/scrollers/scroll-09.png');
+}
+.scroll-10 {
+  background: url('/images/scrollers/scroll-10.png');
+}
+.scroll-11 {
+  background: url('/images/scrollers/scroll-11.png');
+}
+.scroll-12 {
+  background: url('/images/scrollers/scroll-12.png');
+}
+.scroll-13 {
+  background: url('/images/scrollers/scroll-13.png');
+}
+
+.divider-03 {
+  background: url('/images/dividers/divider-03.png') no-repeat center / 390px 26px;
+}
+.divider-03.top {
+  background-position: top;
+  padding-top: 48px;
+}
+.divider-03.bottom {
+  background-position: bottom;
+  padding-bottom: 48px;
+}
+.divider-06 {
+  background: url('/images/dividers/divider-06.png') no-repeat center;
+}
+.divider-01 {
+  background: url('/images/dividers/divider-01.png') no-repeat center / 419px 28px;
+}
+.divider-02 {
+  background: url('/images/dividers/divider-02.png') no-repeat center;
+}
+.divider-04 {
+  background: url('/images/dividers/divider-04.png') no-repeat center;
+}
+.divider-05 {
+  background: url('/images/dividers/divider-05.png') no-repeat center;
+}
+.divider-07 {
+  background: url('/images/dividers/divider-07.png') no-repeat center;
+}
+.divider-08 {
+  background: url('/images/dividers/divider-08.png') no-repeat center;
+}
+.divider-09 {
+  background: url('/images/dividers/divider-09.png') no-repeat center;
+}
+.divider-10 {
+  background: url('/images/dividers/divider-10.png') no-repeat center / 82px 26px;
+}
+.divider-11 {
+  background: url('/images/dividers/divider-11.png') no-repeat center;
+}
+.divider-12 {
+  background: url('/images/dividers/divider-12.png') no-repeat center;
+}
+.divider-13 {
+  background: url('/images/dividers/divider-13.png') no-repeat center;
+}
+.divider-14 {
+  background: url('/images/dividers/divider-14.png') no-repeat center;
+}
+.divider-15 {
+  background: url('/images/dividers/divider-15.png') no-repeat center;
+}
+.divider-16 {
+  background: url('/images/dividers/divider-16.png') no-repeat center;
+}
+.divider-17 {
+  background: url('/images/dividers/divider-17.png') no-repeat center;
+}
+.divider-18 {
+  background: url('/images/dividers/divider-18.png') no-repeat center;
+}
+.divider-19 {
+  background: url('/images/dividers/divider-19.png') no-repeat center;
+}
+.divider-20 {
+  background: url('/images/dividers/divider-20.png') no-repeat center;
+}
+
+.chain-decoration {
+  background: url('/images/scrollers/scroll-10.png');
+}
+.chain-decoration {
+  position: absolute;
+  height: calc(100% + 25px);
+  width: 20px;
+  background-repeat: repeat-y;
+}
+.chain-decoration.left {
+  top: -18px;
+  left: 90px;
+}
+.chain-decoration.right {
+  top: -18px;
+  right: 90px;  
+}

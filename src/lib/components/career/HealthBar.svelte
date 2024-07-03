@@ -1,0 +1,74 @@
+<script lang="ts">
+	type Props = {
+		health: number;
+	};
+
+	const { health }: Props = $props();
+	const MAX_HEALTH = 180;
+	const healthbarWidth = $derived((health / MAX_HEALTH) * 100);
+</script>
+
+<div class="health-bar">
+	<div class="stat-container" style="--health-bar-width: {healthbarWidth}%">
+		<span class="text-black">{health.toString()} HP</span>
+	</div>
+</div>
+
+<style>
+	.health-bar {
+		width: 100%;
+		border-radius: 2px;
+		height: 35px;
+		position: relative;
+	}
+	.health-bar::after {
+		border-image: url("/images/borders/border-11.png");
+		border-image-slice: 15;
+		border-image-width: 15px;
+		border-image-repeat: repeat;
+		border-style: solid;
+		content: "";
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		height: 100%;
+		width: 100%;
+		z-index: 1;
+		box-sizing: border-box;
+	}
+	.health-bar::before {
+		background-image: url("/images/backgrounds/background18.png");
+		background-size: cover;
+		background-repeat: no-repeat;
+		content: "";
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		height: 100%;
+		width: 100%;
+	}
+	.health-bar .stat-container {
+		width: var(--health-bar-width);
+	}
+	.health-bar .stat-container {
+		background:
+			linear-gradient(90deg, #06730ab3, #31d014b3 100%),
+			url("/images/backgrounds/background-42.png") center / cover;
+	}
+	.stat-container {
+		color: #f0d9af;
+		justify-content: center;
+		align-content: center;
+		display: grid;
+		height: 100%;
+		position: absolute;
+		z-index: 1;
+		grid-auto-flow: column;
+		grid-template-rows: 1fr;
+		grid-auto-columns: auto;
+		align-items: center;
+		box-shadow: inset 0px 5px 2px 2px #ffffff60;
+		font-size: 1.2em;
+		border-radius: 0 15px 15px 0;
+	}
+</style>
