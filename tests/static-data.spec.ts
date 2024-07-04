@@ -18,6 +18,15 @@ test("Static Career data matches data from /api/careers", async ({ request }) =>
 
 	for (let i = 0; i < StaticData.careers.length; i++) {
 		expect(json.items[i].id).toEqual(StaticData.careers[i].id);
-		expect(JSON.stringify(Object.entries(json.items[i]).sort())).toEqual(JSON.stringify(Object.entries(StaticData.careers[i]).sort()));
+		expect(deepEqual(json.items[i], StaticData.careers[i])).toBe(true);
 	}
 });
+
+function deepEqual(x: any, y: any): boolean {
+	return x && y && typeof x === "object" && typeof y === "object"
+		? Object.keys(x).length === Object.keys(y).length &&
+				Object.keys(x).reduce(function (isEqual, key) {
+					return isEqual && deepEqual(x[key], y[key]);
+				}, true)
+		: x === y;
+}
