@@ -46,7 +46,11 @@
 		<CareerEditor bind:build={pageState.build}></CareerEditor>
 	</div>
 {:else}
-	<p>An error has occurred.</p>
+	<div id="page" class="heroes-page">
+		<CareerSelection bind:selectedCareer={pageState.selectedCareer} careers={viewModel.careers} handler={careerSelectionHandler}
+		></CareerSelection>
+		<span>Initializing...</span>
+	</div>
 {/if}
 
 <style>

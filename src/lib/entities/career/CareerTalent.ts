@@ -27,5 +27,5 @@ export interface ICareerTalent {
 	name: string;
 	description: string;
 	talentNumber: number;
-	career: ICareer;
+	career?: ICareer;
 }

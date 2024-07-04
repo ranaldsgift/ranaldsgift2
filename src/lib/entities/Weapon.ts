@@ -97,18 +97,18 @@ export interface IWeapon {
 	name: string;
 	codename: string;
 	description: string;
-	dodgeDistance: number;
-	dodgeSpeed: number;
-	dodgeCount: number;
-	stamina: number;
-	blockInnerCost: number;
-	blockOuterCost: number;
-	blockAngle: number;
-	rightClickMovementModifier: number;
-	canWieldPrimary: ICareer[];
-	canWieldSecondary: ICareer[];
-	traitCategory: ITraitCategory;
-	propertyCategory: IPropertyCategory;
+	dodgeDistance: number | null;
+	dodgeSpeed: number | null;
+	dodgeCount: number | null;
+	stamina: number | null;
+	blockInnerCost: number | null;
+	blockOuterCost: number | null;
+	blockAngle: number | null;
+	rightClickMovementModifier: number | null;
+	canWieldPrimary?: ICareer[];
+	canWieldSecondary?: ICareer[];
+	traitCategory?: ITraitCategory;
+	propertyCategory?: IPropertyCategory;
 	properties: IProperty[];
 	traits: ITrait[];
 	tooltips: IWeaponTooltip[];
@@ -118,5 +118,5 @@ export interface IWeaponTooltip {
 	id: number;
 	name: string;
 	codename: string;
-	description: string;
+	description?: string | null;
 }

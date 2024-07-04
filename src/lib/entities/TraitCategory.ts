@@ -24,6 +24,6 @@ export class TraitCategory extends BaseEntity<ITraitCategory> {
 export interface ITraitCategory {
 	id: number;
 	name: string;
-	traits: ITrait[];
-	weapons: IWeapon[];
+	traits?: ITrait[];
+	weapons?: IWeapon[];
 }

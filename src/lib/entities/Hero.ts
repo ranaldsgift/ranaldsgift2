@@ -19,5 +19,5 @@ export class Hero extends BaseEntity<IHero> {
 export interface IHero {
 	id: number;
 	name: string;
-	careers: ICareer[];
+	careers?: ICareer[];
 }

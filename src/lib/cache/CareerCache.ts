@@ -1,4 +1,4 @@
-import { Career } from "$lib/entities/career/Career";
+import { Career, type ICareer } from "$lib/entities/career/Career";
 import StaticDataCache from "./StaticDataCache";
 
 export class CareerCache {
@@ -35,6 +35,21 @@ export class CareerCache {
 	public static async getAll(): Promise<Career[]> {
 		const instance = await CareerCache.getInstance();
 		return instance.getAll();
+	}
+
+	public static async getSorted(): Promise<ICareer[]> {
+		const instance = await CareerCache.getInstance();
+		return instance
+			.getAll()
+			.sort((a, b) => {
+				if (a.hero.id - b.hero.id === 0) {
+					return a.id - b.id;
+				}
+				return a.hero.id - b.hero.id;
+			})
+			.map((career) => {
+				return career.toObject();
+			});
 	}
 
 	public static async get(id: number): Promise<Career> {

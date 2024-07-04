@@ -3,7 +3,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Property, type IProperty } from "../Property";
 import { Trait, type ITrait } from "../Trait";
 import { ItemRarityEnum } from "$lib/enums/ItemRarityEnum";
-import { WeaponSkin } from "../WeaponSkin";
+import { WeaponSkin, type IWeaponSkin } from "../WeaponSkin";
 import { AuthoredEntity } from "../AuthoredEntity";
 import { Weapon, type IWeapon } from "../Weapon";
 
@@ -58,5 +58,5 @@ export interface IWeaponBuild {
 	property2: IProperty;
 	property2Value?: number;
 	trait: ITrait;
-	/* skin: WeaponSkin; */
+	skin?: IWeaponSkin;
 }
