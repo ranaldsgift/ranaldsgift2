@@ -5,7 +5,7 @@ export const load = (async ({ locals, depends, cookies }) => {
 
 	return {
 		session,
-		sessionUserProfile: locals.sessionUserProfile ? locals.sessionUserProfile.toObject() : null,
+		sessionUserProfile: locals.sessionUserProfile,
 		cookies: cookies.getAll(),
 	};
 }) satisfies LayoutServerLoad;

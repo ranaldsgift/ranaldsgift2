@@ -9,7 +9,7 @@ declare global {
 			supabaseServiceClient: import("@supabase/supabase-js").SupabaseClient;
 			session: import("@supabase/supabase-js").Session | null;
 			sessionUser: User | null;
-			sessionUserProfile: import("$lib/entities/User").User | null;
+			sessionUserProfile: IUser | null;
 			safeGetSession: () => Promise<{ session: Session | null; user: User | null }>;
 		}
 		interface PageData {
