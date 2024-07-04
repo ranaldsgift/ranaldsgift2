@@ -22,12 +22,15 @@
 	}
 
 	// For debugging to track changes to the build
-	$inspect(pageState.build);
+	$inspect(pageState.build).with((type, value) => {
+		type === "update" ? console.trace(value) : null;
+	});
 
 	const careerSelectionHandler = (career: ICareer) => {
 		if (pageState.build?.career !== career) {
 			let build = CareerHelper.getNewCareerBuildForCareer(career);
-			Object.assign(pageState.build!, build);
+			let mergedBuildState = Object.assign({}, pageState.build, build);
+			pageState.build = mergedBuildState;
 		}
 	};
 </script>
