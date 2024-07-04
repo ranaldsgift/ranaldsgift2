@@ -49,7 +49,6 @@ class TypeOrm {
 	}
 
 	public static getDb(supabaseServiceClient: SupabaseClient | null): Promise<DataSource | null> {
-		LogHelper.debug("Getting Data Source instance");
 		// TODO - Figure out why using the path instead of specifying each entity doesn't work
 		//const __filename = fileURLToPath(import.meta.url);
 		//const __dirname = path.dirname(__filename);
