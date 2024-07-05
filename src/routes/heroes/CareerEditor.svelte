@@ -1,0 +1,59 @@
+<script lang="ts">
+	import BuildSummary from "$lib/components/build/BuildSummary.svelte";
+	import CareerDetails from "$lib/components/career/CareerDetails.svelte";
+	import CareerInventory from "$lib/components/career/CareerInventory.svelte";
+	import CareerTalents from "$lib/components/career/CareerTalents.svelte";
+	import ContainerTitle from "$lib/components/ContainerTitle.svelte";
+	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
+
+	let { build = $bindable() }: { build: ICareerBuild } = $props();
+
+	enum InventoryTabState {
+		Primary = "primary",
+		Secondary = "secondary",
+		Equipment = "equipment",
+	}
+
+	let inventoryTabState = $state<InventoryTabState>(InventoryTabState.Primary);
+</script>
+
+<!-- TODO - Add Floating Copy URL Button -->
+
+<div class="career-container top-shadow">
+	<ContainerTitle class="w-full">Career Overview</ContainerTitle>
+	<div class="career-details-container">
+		<div class="border-01 p-5">
+			<CareerDetails career={build.career}></CareerDetails>
+			<div class="divider-03 h-[48px]"></div>
+			<BuildSummary {build}></BuildSummary>
+		</div>
+		<div class="border-01">
+			<CareerTalents
+				careerId={build.career.id}
+				talents={build.career.talents}
+				bind:talent1={build.talent1}
+				bind:talent2={build.talent2}
+				bind:talent3={build.talent3}
+				bind:talent4={build.talent4}
+				bind:talent5={build.talent5}
+				bind:talent6={build.talent6}
+			></CareerTalents>
+		</div>
+	</div>
+</div>
+<CareerInventory bind:build></CareerInventory>
+
+<style>
+	.career-container {
+		grid-area: careerContainer;
+	}
+	.career-details-container {
+		background: linear-gradient(
+				270deg,
+				rgba(0, 0, 0, 0.8313725490196079),
+				rgba(0, 0, 0, 0.788235294117647) 20%,
+				rgba(42, 42, 42, 0.10980392156862745)
+			),
+			url("/images/backgrounds/background14.png");
+	}
+</style>

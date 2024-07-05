@@ -1,0 +1,283 @@
+.background1 {
+  background: url('/images/backgrounds/background1.jpg')
+}
+.background2 {
+  background: url('/images/backgrounds/background2.jpg')
+}
+.background3 {
+  background: url('/images/backgrounds/background3.jpg')
+}
+.background4 {
+  background: url('/images/backgrounds/background4.jpg')
+}
+.background5 {
+  background: url('/images/backgrounds/background5.jpg')
+}
+.background6 {
+  background: url('/images/backgrounds/background6.jpg')
+}
+.background7 {
+  background: linear-gradient(45deg, #200000bd, #2000009e), url('/images/backgrounds/background7.jpg');
+}
+.background8 {
+  background: url('/images/backgrounds/background8.jpg')
+}
+.background9 {
+  background: url('/images/backgrounds/background9.jpg')
+}
+.background10 {
+  background: url('/images/backgrounds/background10.jpg')
+}
+.background11 {
+  background: url('/images/backgrounds/background11.jpg')
+}
+.background-12 {
+  background: url('/images/backgrounds/background12.png')
+}
+.background-12 {
+  background: url('/images/backgrounds/background12.png')
+}
+.background-13 {
+  background: url('/images/backgrounds/background13.png')
+}
+.background-14 {
+  background: url('/images/backgrounds/background14.png')
+}
+.background-15 {
+  background: url('/images/backgrounds/background15.png')
+}
+.background-16 {
+  background: url('/images/backgrounds/background16.png')
+}
+.background-17 {
+  background: url('/images/backgrounds/background17.png')
+}
+.background-18 {
+  background: url('/images/backgrounds/background18.png') center / cover;
+}
+.background-19 {
+  background: url('/images/backgrounds/background19.png')
+}
+.background-20 {
+  background: url('/images/backgrounds/background20.png')
+}
+.background-21 {
+  background: url('/images/backgrounds/background21.png')
+}
+.background-22 {
+  background: radial-gradient(ellipse at bottom, #6a371d69 15%, transparent), url('/images/backgrounds/background22.png');
+}
+.background-24 {
+  background: url('/images/backgrounds/background24.png')
+}
+.background-25 {
+  background: url('/images/backgrounds/background25.png')
+}
+.background-26 {
+  background: url('/images/backgrounds/background26.png')
+}
+.background-27 {
+  background: url('/images/backgrounds/background27.png')
+}
+.background-28 {
+  background: url('/images/backgrounds/background28.png')
+}
+.background-29 {
+  background: url('/images/backgrounds/background29.png');
+  background-size: cover;
+}
+.background-30 {
+  background: url('/images/backgrounds/background30.png')
+}
+.background-31 {
+  background: url('/images/backgrounds/background31.png')
+}
+.background-32 {
+  background: url('/images/backgrounds/background32.png')
+}
+.background-33 {
+  background: url('/images/backgrounds/background33.png')
+}
+.background-34 {
+  background: url('/images/backgrounds/background34.png')
+}
+.background-35 {
+  background: url('/images/backgrounds/background35.png')
+}
+.background-36 {
+  background: url('/images/backgrounds/background36.png')
+}
+.background-38 {
+  background: url('/images/backgrounds/background38.png')
+}
+.background-39 {
+  background: url('/images/backgrounds/background39.png')
+}
+
+.label-01 {
+  background: url('/images/labels/label-01.png');
+}
+.label-02 {
+  background: url('/images/labels/label-02.png');
+}
+.label-03 {
+  background: url('/images/labels/label-03.png');
+}
+.label-04 {
+  background: url('/images/labels/label-04.png');
+}
+.label-05 {
+  background: url('/images/labels/label-05.png');
+}
+.label-06 {
+  background: url('/images/labels/label-06.png');
+}
+.label-07 {
+  background: url('/images/labels/label-07.png');
+}
+.label-08 {
+  background: url('/images/labels/label-08.png');
+}
+.label-09 {
+  background: url('/images/labels/label-09.png');
+}
+.label-10 {
+  background: url('/images/labels/label-10.png');
+}
+.label-11 {
+  background: url('/images/labels/label-11.png');
+}
+.label-12 {
+  background: url('/images/labels/label-12.png');
+}
+.label-13 {
+  background: url('/images/labels/label-13.png');
+}
+.label-14 {
+  background: url('/images/labels/label-14.png');
+}
+.label-15 {
+  background: url('/images/labels/label-15.png');
+  width: 320px;
+  height: 50px
+}
+.label {
+  text-align: center;
+  display: grid;
+  align-content: center;
+}
+.hex-frame-01 {
+  background: url('/images/borders/hex-frame-01.png');
+}
+.header-01 {
+  background: url('/images/labels/header-01.png');
+}
+.header-02 {
+  background: url('/images/labels/header-02.png');
+}
+.header-03 {
+  background: url('/images/labels/header-03.png');
+}
+
+
+.overlay-01 {
+  background: url('/images/backgrounds/overlay-1.png');
+}
+.overlay-02 {
+  background: url('/images/backgrounds/overlay-2.png');
+}
+.overlay-03 {
+  background: url('/images/backgrounds/overlay-3.png');
+}
+.overlay-04 {
+  background: url('/images/backgrounds/overlay-4.png');
+}
+
+
+.fade-in {
+  animation: fadeIn ease 2s;
+  -webkit-animation: fadeIn ease 2s;
+  -moz-animation: fadeIn ease 2s;
+  -o-animation: fadeIn ease 2s;
+  -ms-animation: fadeIn ease 2s;
+  }
+  @keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+  }
+  
+  @-moz-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+  }
+  
+  @-webkit-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+  }
+  
+  @-o-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+  }
+  
+  @-ms-keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
+  }
+  
+  .hex-frame-01 {
+    background-image: url('/images/borders/hex-frame-01.png');
+  }
+  .hex-frame-01 {
+    background-image: url('/images/borders/hex-frame-01.png');
+  }
+  .hex-frame-02 {
+    background-image: url('/images/borders/hex-frame-02.png');
+  }
+  .hex-frame-03 {
+    background-image: url('/images/borders/hex-frame-03.png');
+  }
+  .hex-frame-04 {
+    background-image: url('/images/borders/hex-frame-04.png');
+  }
+  .hex-frame-05 {
+    background-image: url('/images/borders/hex-frame-05.png');
+  }
+  .hex-frame-06 {
+    background-image: url('/images/borders/hex-frame-06.png');
+  }
+  .hex-frame-07 {
+    background-image: url('/images/borders/hex-frame-07.png');
+  }
+  .background-40 {
+    background: url('/images/backgrounds/background40.png')
+  }
+  .background-41 {
+    background: url('/images/backgrounds/background41.png')
+  }
+  .background-42 {
+    background: url('/images/backgrounds/background-42.png')
+  }
+
+  .ranalds-finger {
+    background: url('/images/icons/ranaldsfinger.png');
+    height: 298px;
+    width: 128px;
+    margin: 0 auto;
+  }
+
+  .background-toggle {
+   background: url('/images/icons/background-toggle.png');
+   position: fixed;
+    right: 70px;
+    top: 0px;
+    width: 45px;
+    height: 45px;
+  }
+  .background-toggle:hover {
+   background: url('/images/icons/background-toggle-selected.png'); 
+  }
+  #app[data-showvideo='false'] .fullscreen-background-video {
+    display: none;
+  }
