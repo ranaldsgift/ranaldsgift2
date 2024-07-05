@@ -98,13 +98,16 @@ const authGuard: Handle = async ({ event, resolve }) => {
 };
 
 export const mainHook: Handle = async ({ event, resolve }) => {
-	LogHelper.debug("Hook - mainHook");
+	LogHelper.debug("Running Main Hook...");
 
 	// Initialize connection to database
 	await TypeOrm.getDb(event.locals.supabaseServiceClient);
 
 	if (event.locals.sessionUser?.id) {
-		event.locals.sessionUserProfile = await User.findOne({ where: { id: event.locals.sessionUser?.id } });
+		const userProfile = await User.findOne({ where: { id: event.locals.sessionUser?.id } });
+		if (userProfile) {
+			event.locals.sessionUserProfile = userProfile.toObject();
+		}
 	} else {
 		event.locals.sessionUserProfile = null;
 	}

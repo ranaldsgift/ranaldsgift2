@@ -23,21 +23,6 @@ class CareerHelper {
 				property2: career.secondaryWeapons[0].properties[1],
 				trait: career.secondaryWeapons[0].traits[0],
 			},
-			/* 				necklace: {
-                weapon: pojoViewModel.selectedCareer?.necklaces[0],
-                properties: [],
-                traits: [],
-            },
-            charm: {
-                weapon: pojoViewModel.selectedCareer?.charms[0],
-                properties: [],
-                traits: [],
-            },
-            trinket: {
-                weapon: pojoViewModel.selectedCareer?.trinkets[0],
-                properties: [],
-                traits: [],
-            }, */
 		};
 		return buildPojo;
 	}

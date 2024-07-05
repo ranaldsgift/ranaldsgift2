@@ -23,5 +23,5 @@ export interface ICareerPerk {
 	id: number;
 	name: string;
 	description: string;
-	career: ICareer | Career;
+	career?: ICareer | Career;
 }

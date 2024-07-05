@@ -31,9 +31,7 @@ import { EntitySubscriber } from "$lib/entities/subscribers/EntitySubscriber";
 import { DatabaseHelper } from "$lib/helpers/DatabaseHelper";
 import { LogHelper } from "$lib/helpers/LogHelper";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import path from "path";
 import { DataSource } from "typeorm";
-import { fileURLToPath } from "url";
 
 let PRIVATE_SUPABASE_HOST = env.PRIVATE_SUPABASE_HOST;
 let PRIVATE_SUPABASE_PASSWORD = env.PRIVATE_SUPABASE_PASSWORD;
@@ -51,11 +49,10 @@ class TypeOrm {
 	}
 
 	public static getDb(supabaseServiceClient: SupabaseClient | null): Promise<DataSource | null> {
-		const __filename = fileURLToPath(import.meta.url);
-		const __dirname = path.dirname(__filename);
-
 		// TODO - Figure out why using the path instead of specifying each entity doesn't work
-		const entitiesPath = path.resolve(__dirname, "..", "entities/*.ts");
+		//const __filename = fileURLToPath(import.meta.url);
+		//const __dirname = path.dirname(__filename);
+		//const entitiesPath = path.resolve(__dirname, "..", "entities/*.ts");
 
 		if (!TypeOrm.instance) {
 			TypeOrm.instance = new DataSource({

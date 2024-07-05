@@ -26,7 +26,7 @@ export abstract class AuthoredEntity<TModel> extends TimestampedEntity<TModel> {
 	}
 
 	public override save(options?: SaveOptions | undefined): Promise<this> {
-		if (options?.data?.session) {
+		if (options?.data?.session || options?.data?.authorizationBypassKey) {
 			return super.save(options);
 		}
 		throw new Error("You must provide a session to save an AuthoredEntity");

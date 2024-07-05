@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { NUMBER_OF_CAREERS, SORT_ORDER_CAREER_IDS } from "$lib/data/constants/constants";
-	import { Career, type ICareer } from "$lib/entities/career/Career";
-	import { CareersStore } from "$lib/stores/DataStores";
+	import { type ICareer } from "$lib/entities/career/Career";
 	import CareerIcon from "./CareerIcon.svelte";
 	import ContainerTitle from "../ContainerTitle.svelte";
 	import AspectRatio from "../ui/aspect-ratio/aspect-ratio.svelte";
@@ -12,53 +10,28 @@
 		handler?: (career: ICareer) => void;
 	};
 
-	let { selectedCareer = $bindable(), careers = [], handler }: Props = $props();
-
-	let loadCareers = async () => {
-		// Allow the careers to be passed in as a prop
-		// If they are, we don't need to load them from the client side
-		if (careers.length === NUMBER_OF_CAREERS) {
-			return careers;
-		}
-
-		const { items: careerData } = await CareersStore.loadData();
-		careers = careerData.map((career) => career.toObject());
-	};
+	let { selectedCareer = $bindable(), careers, handler }: Props = $props();
 </script>
 
 <div class="career-selection-container top-left-shadow self-start">
 	<ContainerTitle class="w-full">Career Selection</ContainerTitle>
-
-	{#await loadCareers()}
-		<!-- We know what to expect while waiting for the full career data. Show these as a placeholder -->
-		<div class="grid grid-rows-5 grid-cols-4 gap-2 background-12 border-01 p-5">
-			{#each SORT_ORDER_CAREER_IDS as careerId}
-				<AspectRatio ratio={57 / 67}>
-					<button class={careerId === 1 ? "selected" : ""}>
-						<CareerIcon {careerId}></CareerIcon>
-					</button>
-				</AspectRatio>
-			{/each}
-		</div>
-	{:then}
-		<div class="grid grid-rows-5 grid-cols-4 gap-2 background-12 border-01 p-5">
-			{#each careers as career}
-				<AspectRatio ratio={57 / 67}>
-					<button
-						class={career.id === selectedCareer?.id ? "selected" : ""}
-						onclick={() => {
-							selectedCareer = career;
-							if (handler) {
-								handler(career);
-							}
-						}}
-					>
-						<CareerIcon careerId={career.id}></CareerIcon>
-					</button>
-				</AspectRatio>
-			{/each}
-		</div>
-	{/await}
+	<div class="grid grid-rows-5 grid-cols-4 gap-2 background-12 border-01 p-5">
+		{#each careers as career}
+			<AspectRatio ratio={57 / 67}>
+				<button
+					class={career.id === selectedCareer?.id ? "selected" : ""}
+					onclick={() => {
+						selectedCareer = career;
+						if (handler) {
+							handler(career);
+						}
+					}}
+				>
+					<CareerIcon careerId={career.id}></CareerIcon>
+				</button>
+			</AspectRatio>
+		{/each}
+	</div>
 </div>
 
 <style>

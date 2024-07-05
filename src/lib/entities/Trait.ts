@@ -23,5 +23,5 @@ export interface ITrait {
 	id: number;
 	name: string;
 	description: string;
-	category: ITraitCategory;
+	category?: ITraitCategory;
 }

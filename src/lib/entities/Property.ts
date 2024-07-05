@@ -31,9 +31,9 @@ export class Property extends BaseEntity<IProperty> {
 export interface IProperty {
 	id: number;
 	name: string;
-	description: string;
+	description?: string | null;
 	minimumValue: number;
 	maximumValue: number;
 	step: number;
-	category: IPropertyCategory;
+	category?: IPropertyCategory;
 }

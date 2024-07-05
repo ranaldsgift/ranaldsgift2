@@ -22,12 +22,15 @@
 	}
 
 	// For debugging to track changes to the build
-	$inspect(pageState.build);
+	$inspect(pageState.build).with((type, value) => {
+		type === "update" ? console.trace(value) : null;
+	});
 
 	const careerSelectionHandler = (career: ICareer) => {
 		if (pageState.build?.career !== career) {
 			let build = CareerHelper.getNewCareerBuildForCareer(career);
-			Object.assign(pageState.build!, build);
+			let mergedBuildState = Object.assign({}, pageState.build, build);
+			pageState.build = mergedBuildState;
 		}
 	};
 </script>
@@ -43,7 +46,11 @@
 		<CareerEditor bind:build={pageState.build}></CareerEditor>
 	</div>
 {:else}
-	<p>An error has occurred.</p>
+	<div id="page" class="heroes-page">
+		<CareerSelection bind:selectedCareer={pageState.selectedCareer} careers={viewModel.careers} handler={careerSelectionHandler}
+		></CareerSelection>
+		<span>Initializing...</span>
+	</div>
 {/if}
 
 <style>

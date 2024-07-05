@@ -10,6 +10,8 @@
 	import { initializeHeroesPageState } from "$lib/state/HeroesPageState.svelte.js";
 	import { MenuState } from "$lib/state/MenuState.svelte.js";
 	import MainMenu from "$lib/components/navigation/MainMenu.svelte";
+	import { page } from "$app/stores";
+	import { ROOT_PAGE_TITLE } from "$lib/data/constants/constants.js";
 	let { data, children } = $props();
 
 	let user = $derived(data.sessionUserProfile);
@@ -66,7 +68,7 @@
 </script>
 
 <svelte:head>
-	<title>{MenuState.isOpen ? 'Menu - ranalds.gift' : 'ranalds.gift | Holy Sigmar, Bless This Ravaged Website'}</title>
+	<title>{MenuState.isOpen && $page.url.pathname !== '/' ? 'Menu - ranalds.gift' : ROOT_PAGE_TITLE}</title>
 </svelte:head>
 	
 <div id="root-container">

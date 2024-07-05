@@ -1,8 +1,6 @@
-import { CareerCache } from "$lib/cache/CareerCache.js";
 import type { ICareer } from "$lib/entities/career/Career.js";
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
-import { PropertiesCache } from "$lib/cache/PropertiesCache.js";
-import { TraitsCache } from "$lib/cache/TraitsCache.js";
+import { StaticData } from "$lib/data/HeroData.js";
 
 interface ViewModel {
 	pageTitle: string;
@@ -12,42 +10,27 @@ interface ViewModel {
 }
 
 export const load = async (event) => {
-	const careers = await CareerCache.getAll();
+	const necklaceProperties = StaticData.properties.filter((property) => property?.category?.name === "necklace");
+	const charmProperties = StaticData.properties.filter((property) => property?.category?.name === "charm");
+	const trinketProperties = StaticData.properties.filter((property) => property?.category?.name === "trinket");
 
-	let sortedCareers = careers
-		.sort((a, b) => {
-			if (a.hero.id - b.hero.id === 0) {
-				return a.id - b.id;
-			}
-			return a.hero.id - b.hero.id;
-		})
-		.map((career) => {
-			return career.toObject();
-		});
-
-	const propertiesData = (await PropertiesCache.getAll()).map((property) => property.toObject());
-	const necklaceProperties = propertiesData.filter((property) => property.category.name === "necklace");
-	const charmProperties = propertiesData.filter((property) => property.category.name === "charm");
-	const trinketProperties = propertiesData.filter((property) => property.category.name === "trinket");
-
-	const traitsData = (await TraitsCache.getAll()).map((trait) => trait.toObject());
-	const necklaceTraits = traitsData.filter((trait) => trait.category.name === "defence_accessory");
-	const charmTraits = traitsData.filter((trait) => trait.category.name === "offence_accessory");
-	const trinketTraits = traitsData.filter((trait) => trait.category.name === "utility_accessory");
+	const necklaceTraits = StaticData.traits.filter((trait) => trait?.category?.name === "defence_accessory");
+	const charmTraits = StaticData.traits.filter((trait) => trait?.category?.name === "offence_accessory");
+	const trinketTraits = StaticData.traits.filter((trait) => trait?.category?.name === "utility_accessory");
 
 	let initialBuild = {
-		career: sortedCareers[0],
+		career: StaticData.careers[0],
 		primaryWeapon: {
-			weapon: sortedCareers[0].primaryWeapons[0],
-			property1: sortedCareers[0].primaryWeapons[0].properties[0],
-			property2: sortedCareers[0].primaryWeapons[0].properties[1],
-			trait: sortedCareers[0].primaryWeapons[0].traits[0],
+			weapon: StaticData.careers[0].primaryWeapons[0],
+			property1: StaticData.careers[0].primaryWeapons[0].properties[0],
+			property2: StaticData.careers[0].primaryWeapons[0].properties[1],
+			trait: StaticData.careers[0].primaryWeapons[0].traits[0],
 		},
 		secondaryWeapon: {
-			weapon: sortedCareers[0].secondaryWeapons[0],
-			property1: sortedCareers[0].secondaryWeapons[0].properties[0],
-			property2: sortedCareers[0].secondaryWeapons[0].properties[1],
-			trait: sortedCareers[0].secondaryWeapons[0].traits[0],
+			weapon: StaticData.careers[0].secondaryWeapons[0],
+			property1: StaticData.careers[0].secondaryWeapons[0].properties[0],
+			property2: StaticData.careers[0].secondaryWeapons[0].properties[1],
+			trait: StaticData.careers[0].secondaryWeapons[0].traits[0],
 		},
 		talent1: 0,
 		talent2: 0,
@@ -75,8 +58,8 @@ export const load = async (event) => {
 
 	let viewModel: ViewModel = {
 		pageTitle: "Heroes",
-		careers: sortedCareers,
-		selectedCareer: sortedCareers[0],
+		careers: StaticData.careers,
+		selectedCareer: StaticData.careers[0],
 		build: initialBuild,
 	};
 
