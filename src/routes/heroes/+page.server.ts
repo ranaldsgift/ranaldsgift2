@@ -1,6 +1,6 @@
 import type { ICareer } from "$lib/entities/career/Career.js";
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
-import { StaticData } from "$lib/data/HeroData.js";
+import { StaticData } from "$lib/data/StaticData.js";
 
 interface ViewModel {
 	pageTitle: string;
@@ -10,6 +10,17 @@ interface ViewModel {
 }
 
 export const load = async (event) => {
+	// THREE URL patterns, old/1.0/2.0
+	///:careerId?/:talents?/:primary?/:secondary?/:necklace?/:charm?/:trinket?
+
+	// old
+	// https://www.ranalds.gift/heroes/1/112321/44,4,3,6/12,5,3,2/3,2,1/4,5,4/7,2,1
+
+	// 1.0
+	//https://www.ranalds.gift/heroes/1/112321/43-4-3-6/56-5-3-2/3-2-1/4-5-4/7-2-1
+
+	// 2.0
+
 	const necklaceProperties = StaticData.properties.filter((property) => property?.category?.name === "necklace");
 	const charmProperties = StaticData.properties.filter((property) => property?.category?.name === "charm");
 	const trinketProperties = StaticData.properties.filter((property) => property?.category?.name === "trinket");

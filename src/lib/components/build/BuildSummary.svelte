@@ -85,17 +85,10 @@
 		cursor: initial;
 	}
 	.build-melee-summary,
-	.build-range-summary {
-		display: grid;
-		grid-template-areas: "itemSummaryHeader itemSummaryHeader itemSummaryHeader" "weaponIcon traitIcon empty" "propertyContainer propertyContainer propertyContainer";
-		grid-template-columns: 60px 60px auto;
-		grid-template-rows: 1fr 60px 1fr;
-		grid-row-gap: 10px;
-		grid-column-gap: 10px;
-	}
+	.build-range-summary,
 	.build-jewelry-summary {
 		display: grid;
-		grid-template-areas: "itemSummaryHeader itemSummaryHeader itemSummaryHeader" "jewelryIcon traitIcon empty" "propertyContainer propertyContainer propertyContainer";
+		grid-template-areas: "itemSummaryHeader itemSummaryHeader itemSummaryHeader" "itemIcon traitIcon empty" "propertyContainer propertyContainer propertyContainer";
 		grid-template-columns: 60px 60px auto;
 		grid-template-rows: 1fr 60px 1fr;
 		grid-row-gap: 10px;
@@ -107,7 +100,7 @@
 	}
 	.build-melee-summary .weapon-icon,
 	.build-range-summary .weapon-icon {
-		grid-area: weaponIcon;
+		grid-area: itemIcon;
 	}
 	.property-container {
 		grid-area: propertyContainer;

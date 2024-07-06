@@ -42,9 +42,9 @@ export class CharmBuild extends AuthoredEntity<ICharmBuild> {
 export interface ICharmBuild {
 	rarity?: ItemRarityEnum;
 	powerLevel?: number;
-	property1: IProperty;
+	property1?: IProperty;
 	property1Value?: number;
-	property2: IProperty;
+	property2?: IProperty;
 	property2Value?: number;
-	trait: ITrait;
+	trait?: ITrait;
 }

@@ -1,19 +1,17 @@
 <script lang="ts">
-	import { getHeroesPageState } from "$lib/state/HeroesPageState.svelte";
-	import CareerEditor from "../../lib/components/career/CareerEditor.svelte";
 	import CareerSelection from "$lib/components/career/CareerSelection.svelte";
 	import CareerHelper from "$lib/helpers/CareerHelper.js";
 	import type { ICareer } from "$lib/entities/career/Career.js";
+	import CareerEditor from "$lib/components/career/CareerEditor.svelte";
 	const { data } = $props();
 
 	const { viewModel } = data;
-	const pageState = getHeroesPageState();
 
 	if (!viewModel) {
 		throw new Error("HeroesPageViewModel is required");
 	}
 
-	if (!pageState.selectedCareer) {
+	/* 	if (!pageState.selectedCareer) {
 		pageState.selectedCareer = viewModel.selectedCareer;
 	}
 
@@ -24,30 +22,30 @@
 	// For debugging to track changes to the build
 	$inspect(pageState.build).with((type, value) => {
 		type === "update" ? console.trace(value) : null;
-	});
+	}); */
 
 	const careerSelectionHandler = (career: ICareer) => {
-		if (pageState.build?.career !== career) {
+		if (viewModel.build?.career !== career) {
 			let build = CareerHelper.getNewCareerBuildForCareer(career);
-			let mergedBuildState = Object.assign({}, pageState.build, build);
-			pageState.build = mergedBuildState;
+			let mergedBuildState = Object.assign({}, viewModel.build, build);
+			viewModel.build = mergedBuildState;
 		}
 	};
 </script>
 
 <svelte:head>
-	<title>{pageState.build?.career?.name ?? viewModel.pageTitle} - ranalds.gift</title>
+	<title>{viewModel.build?.career?.name ?? viewModel.pageTitle} - ranalds.gift</title>
 </svelte:head>
 
-{#if pageState.build}
+{#if viewModel.build}
 	<div id="page" class="heroes-page">
-		<CareerSelection bind:selectedCareer={pageState.selectedCareer} careers={viewModel.careers} handler={careerSelectionHandler}
+		<CareerSelection bind:selectedCareer={viewModel.selectedCareer} careers={viewModel.careers} handler={careerSelectionHandler}
 		></CareerSelection>
-		<CareerEditor bind:build={pageState.build}></CareerEditor>
+		<CareerEditor bind:build={viewModel.build}></CareerEditor>
 	</div>
 {:else}
 	<div id="page" class="heroes-page">
-		<CareerSelection bind:selectedCareer={pageState.selectedCareer} careers={viewModel.careers} handler={careerSelectionHandler}
+		<CareerSelection bind:selectedCareer={viewModel.selectedCareer} careers={viewModel.careers} handler={careerSelectionHandler}
 		></CareerSelection>
 		<span>Initializing...</span>
 	</div>

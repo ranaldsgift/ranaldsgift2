@@ -1,154 +1,211 @@
-import {heroesData} from '$lib/data/legacy/Heroes'
-import {heroesDataMap} from '$lib/data/legacy/HeroesDataMap'
-import {weaponsData} from '$lib/data/legacy/Weapons'
-import {twitchData} from '$lib/data/legacy/Twitch'
-import {weaponsDataMap} from '$lib/data/legacy/WeaponsDataMap'
-import {traitsData} from '$lib/data/legacy/Traits'
-import {propertiesData} from '$lib/data/legacy/Properties'
-import { patchList } from '$lib/data/legacy/PatchList'
-import {missionData} from '$lib/data/legacy/Missions'
-import {sortByData} from '$lib/data/legacy/BuildSortOptions'
-import {difficultyData} from '$lib/data/legacy/Difficulties'
-import {potionData} from '$lib/data/legacy/Potions'
-import {roleData} from '$lib/data/legacy/Roles'
-import {bookData} from '$lib/data/legacy/Books'
-import {correctedTalentsData} from '$lib/data/legacy/CorrectedTalents'
-import {correctedPerksData} from '$lib/data/legacy/CorrectedPerks'
-import {correctedPassivesData} from '$lib/data/legacy/CorrectedPassives'
-import {correctedSkillsData} from '$lib/data/legacy/CorrectedSkills'
-import {unlistedPerksData} from '$lib/data/legacy/UnlistedPerks'
-import { traitsDataMap } from '$lib/data/legacy/TraitsDataMap'
+import { heroesData } from "$lib/data/legacy/Heroes";
+import { heroesDataMap } from "$lib/data/legacy/HeroesDataMap";
+import { weaponsData } from "$lib/data/legacy/Weapons";
+import { twitchData } from "$lib/data/legacy/Twitch";
+import { weaponsDataMap } from "$lib/data/legacy/WeaponsDataMap";
+import { traitsData } from "$lib/data/legacy/Traits";
+import { propertiesData } from "$lib/data/legacy/Properties";
+import { patchList } from "$lib/data/legacy/PatchList";
+import { missionData } from "$lib/data/legacy/Missions";
+import { sortByData } from "$lib/data/legacy/BuildSortOptions";
+import { difficultyData } from "$lib/data/legacy/Difficulties";
+import { potionData } from "$lib/data/legacy/Potions";
+import { roleData } from "$lib/data/legacy/Roles";
+import { bookData } from "$lib/data/legacy/Books";
+import { correctedTalentsData } from "$lib/data/legacy/CorrectedTalents";
+import { correctedPerksData } from "$lib/data/legacy/CorrectedPerks";
+import { correctedPassivesData } from "$lib/data/legacy/CorrectedPassives";
+import { correctedSkillsData } from "$lib/data/legacy/CorrectedSkills";
+import { unlistedPerksData } from "$lib/data/legacy/UnlistedPerks";
+import { traitsDataMap } from "$lib/data/legacy/TraitsDataMap";
+import { meleeWeaponsData } from "$lib/data/legacy/MeleeWeapons";
+import { rangeWeaponsData } from "$lib/data/legacy/RangeWeapons";
 
 let weapons: any = null;
 
-export type LegacyTraitCategory = "melee" | "ranged_ammo" | "ranged_energy" | "ranged_heat" | "defence_accessory" | "offence_accessory" | "utility_accessory"
+export type LegacyTraitCategory =
+	| "melee"
+	| "ranged_ammo"
+	| "ranged_energy"
+	| "ranged_heat"
+	| "defence_accessory"
+	| "offence_accessory"
+	| "utility_accessory";
+
+export type LegacyPropertyCategory = "melee" | "range" | "necklace" | "charm" | "trinket";
 
 // TODO - When we can fully migrate all firebase data to Supabase, we can trim all the useless functions and data from this file
 export class LegacyDataHelper {
-    static getCareers = () => {
-      var values = Object.values(heroesData);
-      var keys = Object.keys(heroesData);
-      var valueMap = values.map((obj: any, index) => {
-        obj.codeName = keys[index];
-        var careerMap = heroesDataMap.find((career) => { return career.codeName === keys[index] });
-        if (careerMap) {
-          obj.id = careerMap.id;
-          obj.sortOrder = careerMap.sortOrder;
-          obj.heroId = careerMap.heroId;
-        }
-        return obj;
-       });
-       return valueMap.sort((a, b) => { return a.id > b.id ? 1 : a.id < b.id ? -1 : 0; });
-    }
-    static getCareer = (careerId: string) => {
-      return this.getCareers().find((career) => { return career.id === parseInt(careerId); })
-    }
-    
-    static getCareerTalents = (careerId: string) => {
-        var career = this.getCareer(careerId);
-        return career ? career.talents : null;
-    }
+	static getCareers = () => {
+		var values = Object.values(heroesData);
+		var keys = Object.keys(heroesData);
+		var valueMap = values.map((obj: any, index) => {
+			obj.codeName = keys[index];
+			var careerMap = heroesDataMap.find((career) => {
+				return career.codeName === keys[index];
+			});
+			if (careerMap) {
+				obj.id = careerMap.id;
+				obj.sortOrder = careerMap.sortOrder;
+				obj.heroId = careerMap.heroId;
+			}
+			return obj;
+		});
+		return valueMap.sort((a, b) => {
+			return a.id > b.id ? 1 : a.id < b.id ? -1 : 0;
+		});
+	};
+	static getCareer = (careerId: string) => {
+		return this.getCareers().find((career) => {
+			return career.id === parseInt(careerId);
+		});
+	};
 
-    static getWeapon = (weaponId: string) => {
-        var weapon  = this.getWeapons().find((weapon: any) => { return weapon.id === parseInt(weaponId); });
-  
-        if (!weapon) {
-          return null;
-        }
-        
-        return weapon;
-      }
-  
-      static getWeaponCodename = (weaponId: string) => {
-        var weapon = this.getWeapons().find((weapon: any) => { return weapon.id === parseInt(weaponId); });
-        return weapon ? weapon.codeName : null;
-      }
-  
-      static getWeapons = () => {
-        if (!weapons) {
-          var values = Object.values(weaponsData);
-          var keys = Object.keys(weaponsData);
-          weapons = values.map((obj: any, index) => {
-            obj.codeName = keys[index];
-            var weaponMap: any = weaponsDataMap.find((weapon) => { return weapon.codeName === keys[index] });
-            if (weaponMap) {
-              obj.id = parseInt(weaponMap.id);
-            }
-            return obj;
-           });  
-        }  
-        return weapons;      
-      }
+	static getCareerTalents = (careerId: string) => {
+		var career = this.getCareer(careerId);
+		return career ? career.talents : null;
+	};
 
-      static getProperties = () => {
-        var values = Object.values(propertiesData);
-        var keys = Object.keys(propertiesData);
-        var properties = values.map((obj: any, index) => {
-          return {
-            name: keys[index],
-            properties: obj
-          }
-         });
-        return properties;
-      }
+	static getWeapon = (weaponId: string) => {
+		var weapon = this.getWeapons().find((weapon: any) => {
+			return weapon.id === parseInt(weaponId);
+		});
 
-      static getTraitFromCategory = (category: string, traitId: number) => {
-        return this.getTraits().find((traitCategory) => { 
-          return traitCategory.name === category 
-        })?.traits.find((trait) => { 
-          parseInt(trait.id) === traitId; 
-        });
-      }
+		if (!weapon) {
+			return null;
+		}
 
-      static getTraitMapById = (
-        category: LegacyTraitCategory, 
-        id: number
-      ) => {
-        var categoryTraits = traitsDataMap[category];
-        
-        if (!categoryTraits) {
-          return null;
-        }
-        return Object.values(categoryTraits).find((trait) => { return parseInt(trait.id) === id; });
-      }
+		return weapon;
+	};
 
-      static getTraits = () => {
-        var values = Object.values(traitsData);
-        var keys = Object.keys(traitsData);
-        var traits = values.map((obj: any, index) => {
+	static getWeaponCodename = (weaponId: string) => {
+		var weapon = this.getWeapons().find((weapon: any) => {
+			return weapon.id === parseInt(weaponId);
+		});
+		return weapon ? weapon.codeName : null;
+	};
 
-          var oldTraitValues = Object.values(obj);
-          var oldTraitsKeys = Object.keys(obj);
-          var oldTraits = oldTraitValues.map((trait: any) => {
-            trait.codeName = oldTraitsKeys[index];
-            return trait;
-          });
-          return {
-            name: keys[index],
-            traits: oldTraits
-          }
-         });
-        return traits;
-      }
+	static getWeapons = () => {
+		if (!weapons) {
+			var values = Object.values(weaponsData);
+			var keys = Object.keys(weaponsData);
+			weapons = values.map((obj: any, index) => {
+				obj.codeName = keys[index];
+				var weaponMap: any = weaponsDataMap.find((weapon) => {
+					return weapon.codeName === keys[index];
+				});
+				if (weaponMap) {
+					obj.id = parseInt(weaponMap.id);
+				}
+				return obj;
+			});
+		}
+		return weapons;
+	};
 
-      static getPropertyFromCategory = (category: string, propertyId:number) => {
-        switch (category) {
-          case "melee":
-            return propertiesData.melee.find((property) => { return parseInt(property.id) === propertyId; });
-          case "range":
-            return propertiesData.range.find((property) => { return parseInt(property.id) === propertyId; });
-          case "necklace":
-            return propertiesData.necklace.find((property) => { return parseInt(property.id) === propertyId; });
-          case "charm":
-            return propertiesData.charm.find((property) => { return parseInt(property.id) === propertyId; });
-          case "trinket":
-            return propertiesData.trinket.find((property) => { return parseInt(property.id) === propertyId; });
-          default:
-            return null;
-        }
-      }
+	static getProperties = () => {
+		var values = Object.values(propertiesData);
+		var keys = Object.keys(propertiesData);
+		var properties = values.map((obj: any, index) => {
+			return {
+				name: keys[index],
+				properties: obj,
+			};
+		});
+		return properties;
+	};
 
-/*     static getCorrectedTalent = (careerId, tierNumber, talentNumber) => {
+	static getPropertyName = (category: LegacyPropertyCategory, propertyId: number) => {
+		return propertiesData[category].find((property) => {
+			return parseInt(property.id) === propertyId;
+		})?.name;
+	};
+
+	static getTraitName = (category: LegacyTraitCategory, traitId: number) => {
+		return traitsDataMap[category].find((trait) => {
+			return parseInt(trait.id) === traitId;
+		})?.name;
+	};
+
+	static getOldWeaponCodename(id: number, type: "melee" | "range") {
+		// If it's a Slayer or Grail Knight, just use the old melee weapons
+		if (type === "melee") {
+			return meleeWeaponsData.find((weapon) => {
+				return weapon.id === id;
+			})?.codeName;
+		}
+		return rangeWeaponsData.find((weapon) => {
+			return weapon.id === id;
+		})?.codeName;
+	}
+
+	static getTraitFromCategory = (category: string, traitId: number) => {
+		return this.getTraits()
+			.find((traitCategory) => {
+				return traitCategory.name === category;
+			})
+			?.traits.find((trait) => {
+				parseInt(trait.id) === traitId;
+			});
+	};
+
+	static getTraitMapById = (category: LegacyTraitCategory, id: number) => {
+		var categoryTraits = traitsDataMap[category];
+
+		if (!categoryTraits) {
+			return null;
+		}
+		return Object.values(categoryTraits).find((trait) => {
+			return parseInt(trait.id) === id;
+		});
+	};
+
+	static getTraits = () => {
+		var values = Object.values(traitsData);
+		var keys = Object.keys(traitsData);
+		var traits = values.map((obj: any, index) => {
+			var oldTraitValues = Object.values(obj);
+			var oldTraitsKeys = Object.keys(obj);
+			var oldTraits = oldTraitValues.map((trait: any) => {
+				trait.codeName = oldTraitsKeys[index];
+				return trait;
+			});
+			return {
+				name: keys[index],
+				traits: oldTraits,
+			};
+		});
+		return traits;
+	};
+
+	static getPropertyFromCategory = (category: string, propertyId: number) => {
+		switch (category) {
+			case "melee":
+				return propertiesData.melee.find((property) => {
+					return parseInt(property.id) === propertyId;
+				});
+			case "range":
+				return propertiesData.range.find((property) => {
+					return parseInt(property.id) === propertyId;
+				});
+			case "necklace":
+				return propertiesData.necklace.find((property) => {
+					return parseInt(property.id) === propertyId;
+				});
+			case "charm":
+				return propertiesData.charm.find((property) => {
+					return parseInt(property.id) === propertyId;
+				});
+			case "trinket":
+				return propertiesData.trinket.find((property) => {
+					return parseInt(property.id) === propertyId;
+				});
+			default:
+				return null;
+		}
+	};
+
+	/*     static getCorrectedTalent = (careerId, tierNumber, talentNumber) => {
       return correctedTalentsData.find((talent) => {return talent.careerId === parseInt(careerId) && talent.tier === parseInt(tierNumber) && talent.talent === parseInt(talentNumber)});
     }
 
@@ -525,4 +582,4 @@ export class LegacyDataHelper {
       var mappedWeapon =  weaponsDataMap.find((weapon) => { return weapon.codeName === codename; });
       return mappedWeapon ? mappedWeapon.id : null;
     } */
-  }
+}
