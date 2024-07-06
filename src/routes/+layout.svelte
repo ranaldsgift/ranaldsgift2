@@ -37,23 +37,6 @@
 		});
 
 		return () => data.subscription.unsubscribe();
-
-/* 		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
-			if (newSession?.expires_at !== session?.expires_at || _ === 'INITIAL_SESSION') 
-			{
-				invalidateAll();
-			}
-
-			setTimeout(() => {
-				if (newSession && _ !== 'SIGNED_OUT') {
-					userState.user = user;
-				}
-				else {
-					userState.reset();
-				}
-			}, 0);
-		});
-		return () => data.subscription.unsubscribe(); */
 	});
 
 	afterNavigate((nav) => {
@@ -74,11 +57,11 @@
 <div id="root-container">
 	<!-- Use wallpaper by default unless the user has stored the preference in their user profile or local storage cookie -->
 	{#if userState.showVideo}
-	<video muted playsInline autoPlay={true} loop={true} poster='/videos/backgrounds/home-frame.jpg' class="fixed">                
+	<video muted playsInline autoPlay={true} loop={true} poster='/images/backgrounds/home-frame.webp' class="fixed">                
 		<source src='/videos/backgrounds/home.mp4' type="video/mp4" />
 	</video>
 	{:else}
-		<img src="/images/backgrounds/home-frame.jpg" alt="Home Frame" class="fixed object-cover w-full h-full top-0 left-0" />
+		<img src="/images/backgrounds/home-frame.webp" alt="Home Frame" class="fixed object-cover w-full h-full top-0 left-0" />
 	{/if}
 
 	<TopNavigation></TopNavigation>
@@ -98,14 +81,13 @@
 
 <style>
 	#root-container {
-		position: absolute;
+		position: relative;
 		width: 100%;
-		height: 100vh;
+		min-height: 100vh;
 		object-fit: cover;
 		top: 0;
 		left: 0;
-		overflow-y: auto;
-		padding: 0 20px;
+		padding: 0 20px 20px;
 	}
 	video {
 		top: 0;

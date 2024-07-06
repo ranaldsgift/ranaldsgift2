@@ -17,7 +17,7 @@
   background: url('/images/backgrounds/background6.jpg')
 }
 .background7 {
-  background: linear-gradient(45deg, #200000bd, #2000009e), url('/images/backgrounds/background7.jpg');
+  background: linear-gradient(45deg, #200000bd, #2000009e), url('/images/backgrounds/background7.webp');
 }
 .background8 {
   background: url('/images/backgrounds/background8.jpg')
@@ -32,16 +32,13 @@
   background: url('/images/backgrounds/background11.jpg')
 }
 .background-12 {
-  background: url('/images/backgrounds/background12.png')
-}
-.background-12 {
-  background: url('/images/backgrounds/background12.png')
+  background: url('/images/backgrounds/background12.webp')
 }
 .background-13 {
   background: url('/images/backgrounds/background13.png')
 }
 .background-14 {
-  background: url('/images/backgrounds/background14.png')
+  background: url('/images/backgrounds/background14.webp')
 }
 .background-15 {
   background: url('/images/backgrounds/background15.png')
@@ -74,10 +71,10 @@
   background: url('/images/backgrounds/background25.png')
 }
 .background-26 {
-  background: url('/images/backgrounds/background26.png')
+  background: url('/images/backgrounds/background26.webp')
 }
 .background-27 {
-  background: url('/images/backgrounds/background27.png')
+  background: url('/images/backgrounds/background27.webp')
 }
 .background-28 {
   background: url('/images/backgrounds/background28.png')
