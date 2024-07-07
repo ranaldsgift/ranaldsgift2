@@ -11,19 +11,6 @@
 		throw new Error("HeroesPageViewModel is required");
 	}
 
-	/* 	if (!pageState.selectedCareer) {
-		pageState.selectedCareer = viewModel.selectedCareer;
-	}
-
-	if (!pageState.build) {
-		pageState.build = viewModel.build;
-	}
-
-	// For debugging to track changes to the build
-	$inspect(pageState.build).with((type, value) => {
-		type === "update" ? console.trace(value) : null;
-	}); */
-
 	const careerSelectionHandler = (career: ICareer) => {
 		if (viewModel.build?.career !== career) {
 			let build = CareerHelper.getNewCareerBuildForCareer(career);
@@ -66,20 +53,11 @@
 			grid-template-areas: "careerSelection careerContainer careerInventory" !important;
 		}
 	}
-
 	@media (max-width: 1000px) {
 		.heroes-page {
 			width: auto !important;
 			grid-template-columns: 100% !important;
 			grid-template-areas: "careerSelection" "careerContainer" "careerInventory" !important;
 		}
-	}
-
-	@media (min-width: 1000px) and (max-width: 1899px) {
-		/*         .heroes-page {
-            width: auto !important;
-            grid-template-columns: auto !important;
-            grid-template-areas: "careerSelection" "careerContainer" "careerInventory" !important;
-        } */
 	}
 </style>
