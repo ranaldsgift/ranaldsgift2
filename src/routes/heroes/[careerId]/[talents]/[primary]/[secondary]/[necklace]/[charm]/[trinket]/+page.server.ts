@@ -41,7 +41,7 @@ export const load = async (event) => {
 			"-"
 		);
 	} else {
-		throw new Error("Invalid URL parameters");
+		error(404, "Invalid URL parameters");
 	}
 
 	// TODO - Redirect to /heroes URL with route params
@@ -87,7 +87,7 @@ function getWeapon(id: number, type: "melee" | "range") {
 	});
 
 	if (!weapon) {
-		throw new Error(`Weapon with id ${id} not found`);
+		error(404, `Weapon with id ${id} not found`);
 	}
 
 	return weapon;
@@ -114,12 +114,12 @@ function loadCareerFromOldURL(
 		return career.id === parseInt(careerId);
 	});
 	if (!career) {
-		throw new Error(`Career with id ${careerId} not found`);
+		error(404, `Career with id ${careerId} not found`);
 	}
 
 	if (typeof talentsParam != "undefined") {
 		if (talentsParam.length !== 6) {
-			throw new Error(`Invalid talents parameters: ${talentsParam}`);
+			error(404, `Invalid talents parameters: ${talentsParam}`);
 		}
 	}
 
@@ -135,12 +135,12 @@ function loadCareerFromOldURL(
 					return parseInt(x);
 			  });
 
-	if (talents.filter((talent) => talent < 1 || talent > 3).length > 0) {
-		throw new Error(`Invalid talent values: ${talents}`);
+	if (talents.filter((talent) => talent < 0 || talent > 3).length > 0) {
+		error(404, `Invalid talent values: ${talents}`);
 	}
 
 	if (typeof meleeParam === "undefined" || meleeParam.split(",").length !== 4) {
-		throw new Error(`Invalid melee weapon parameters: ${meleeParam}`);
+		error(404, `Invalid melee weapon parameters: ${meleeParam}`);
 	}
 
 	let meleeParams = meleeParam.split(",");
@@ -158,7 +158,7 @@ function loadCareerFromOldURL(
 	primaryWeapon = primaryWeaponBuild;
 
 	if (typeof rangeParam === "undefined" || rangeParam.split(",").length !== 4) {
-		throw new Error(`Invalid range weapon parameters: ${rangeParam}`);
+		error(404, `Invalid range weapon parameters: ${rangeParam}`);
 	}
 	let rangeParams = rangeParam.split(",");
 	weapon = getWeapon(parseInt(rangeParams[0]), career.id === 6 || career.id === 16 ? "melee" : "range");
@@ -175,7 +175,7 @@ function loadCareerFromOldURL(
 	secondaryWeapon = secondaryWeaponBuild;
 
 	if (typeof necklaceParam === "undefined") {
-		throw new Error(`Invalid necklace parameters: ${necklaceParam}`);
+		error(404, `Invalid necklace parameters: ${necklaceParam}`);
 	}
 
 	let necklaceParams = necklaceParam.split(",");
@@ -198,7 +198,7 @@ function loadCareerFromOldURL(
 	necklace = necklaceBuild;
 
 	if (typeof charmParam === "undefined") {
-		throw new Error(`Invalid charm parameters: ${charmParam}`);
+		error(404, `Invalid charm parameters: ${charmParam}`);
 	}
 
 	let charmParams = charmParam.split(",");
@@ -220,7 +220,7 @@ function loadCareerFromOldURL(
 	charm = charmBuild;
 
 	if (typeof trinketParam === "undefined") {
-		throw new Error(`Invalid trinket parameters: ${trinketParam}`);
+		error(404, `Invalid trinket parameters: ${trinketParam}`);
 	}
 
 	let trinketParams = trinketParam.split(",");
@@ -282,12 +282,12 @@ function loadCareerFromNewURL(
 		return career.id === parseInt(careerId);
 	});
 	if (!career) {
-		throw new Error(`Career with id ${careerId} not found`);
+		error(404, `Career with id ${careerId} not found`);
 	}
 
 	if (typeof talentsParam != "undefined") {
 		if (talentsParam.length !== 6) {
-			throw new Error(`Invalid talents parameters: ${talentsParam}`);
+			error(404, `Invalid talents parameters: ${talentsParam}`);
 		}
 	}
 
@@ -303,12 +303,12 @@ function loadCareerFromNewURL(
 					return parseInt(x);
 			  });
 
-	if (talents.filter((talent) => talent < 1 || talent > 3).length > 0) {
-		throw new Error(`Invalid talent values: ${talents}`);
+	if (talents.filter((talent) => talent < 0 || talent > 3).length > 0) {
+		error(404, `Invalid talent values: ${talents}`);
 	}
 
 	if (typeof primaryParam === "undefined" || primaryParam.split(separator).length !== 4) {
-		throw new Error(`Invalid melee weapon parameters: ${primaryParam}`);
+		error(404, `Invalid melee weapon parameters: ${primaryParam}`);
 	}
 
 	let meleeParams = primaryParam.split(separator);
@@ -317,7 +317,7 @@ function loadCareerFromNewURL(
 	});
 
 	if (!weapon) {
-		throw new Error(`Weapon with id ${meleeParams[0]} not found`);
+		error(404, `Weapon with id ${meleeParams[0]} not found`);
 	}
 
 	let property1 = getProperty(weapon?.propertyCategory?.name as LegacyPropertyCategory, parseInt(meleeParams[1]), weapon.properties);
@@ -333,7 +333,7 @@ function loadCareerFromNewURL(
 	primaryWeapon = primaryWeaponBuild;
 
 	if (typeof secondaryParam === "undefined" || secondaryParam.split(separator).length !== 4) {
-		throw new Error(`Invalid range weapon parameters: ${secondaryParam}`);
+		error(404, `Invalid range weapon parameters: ${secondaryParam}`);
 	}
 	let rangeParams = secondaryParam.split(separator);
 	weapon = WeaponData.find((weapon) => {
@@ -341,7 +341,7 @@ function loadCareerFromNewURL(
 	});
 
 	if (!weapon) {
-		throw new Error(`Weapon with id ${rangeParams[0]} not found`);
+		error(404, `Weapon with id ${rangeParams[0]} not found`);
 	}
 
 	property1 = getProperty(weapon?.propertyCategory?.name as LegacyPropertyCategory, parseInt(rangeParams[1]), weapon.properties);
@@ -357,7 +357,7 @@ function loadCareerFromNewURL(
 	secondaryWeapon = secondaryWeaponBuild;
 
 	if (typeof necklaceParam === "undefined") {
-		throw new Error(`Invalid necklace parameters: ${necklaceParam}`);
+		error(404, `Invalid necklace parameters: ${necklaceParam}`);
 	}
 
 	let necklaceParams = necklaceParam.split(separator);
@@ -380,7 +380,7 @@ function loadCareerFromNewURL(
 	necklace = necklaceBuild;
 
 	if (typeof charmParam === "undefined") {
-		throw new Error(`Invalid charm parameters: ${charmParam}`);
+		error(404, `Invalid charm parameters: ${charmParam}`);
 	}
 
 	let charmParams = charmParam.split(separator);
@@ -402,7 +402,7 @@ function loadCareerFromNewURL(
 	charm = charmBuild;
 
 	if (typeof trinketParam === "undefined") {
-		throw new Error(`Invalid trinket parameters: ${trinketParam}`);
+		error(404, `Invalid trinket parameters: ${trinketParam}`);
 	}
 
 	let trinketParams = trinketParam.split(separator);

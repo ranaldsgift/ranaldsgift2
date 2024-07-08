@@ -70,6 +70,10 @@
 		<div id="page-container">
 			<MainMenu></MainMenu>
 		</div>
+	{:else if $page.error}
+		<div id="error-container" class="relative">
+			{@render children()}
+		</div>
 	{:else}
 		<a class="page-title label-01" href="/">Ranald's Gift</a>
 		<div class="page-title-background"></div>
@@ -88,6 +92,8 @@
 		top: 0;
 		left: 0;
 		padding: 0 20px 20px;
+		display: grid;
+		grid-template-rows: auto 1fr;
 	}
 	video {
 		top: 0;
@@ -104,9 +110,11 @@
         grid-template-rows: 1fr;
         justify-items: center;
         align-items: center;
+		min-width: 900px;
         width: 100%;
 		min-height: calc(100% - 70px);
 		border-radius: 8px;
+		margin: 0 auto;
     }
 	.page-title {
 		text-align: center;
