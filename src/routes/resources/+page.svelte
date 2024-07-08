@@ -204,19 +204,19 @@
 				},
 				{
 					title: "[Cataclysm] Bardin Goreksson",
-					url: "https://steamcommunity.com/sharedfiles/filedetails/?id=1831243904",
+					url: "https://steamcommunity.com/sharedfiles/filedetails/?id=1832306381",
 				},
 				{
 					title: "[Cataclysm] Kerillian",
-					url: "https://steamcommunity.com/sharedfiles/filedetails/?id=1831243904",
+					url: "https://steamcommunity.com/sharedfiles/filedetails/?id=1833337461",
 				},
 				{
 					title: "[Cataclysm] Victor Saltzpyre",
-					url: "https://steamcommunity.com/sharedfiles/filedetails/?id=1831243904",
+					url: "https://steamcommunity.com/sharedfiles/filedetails/?id=1833338040",
 				},
 				{
 					title: "[Cataclysm] Sienna Fuegonasus",
-					url: "https://steamcommunity.com/sharedfiles/filedetails/?id=1831243904",
+					url: "https://steamcommunity.com/sharedfiles/filedetails/?id=1833925976",
 				},
 			],
 		},
@@ -224,16 +224,18 @@
 </script>
 
 <div id="page">
-	<div class="flex flex-wrap gap-5">
+	<div class="flex flex-wrap gap-5 justify-center">
 		{#each resources as { title, links }}
 			<div class="border-13 background-22">
 				<h2 class="label label-15">{title}</h2>
-				<div class="link-container">
+				<div class="links-container">
 					{#each links as { title, url, description }}
-						<p><a href={url}>{title}</a></p>
-						{#if description}
-							<p class="tooltip">{description}</p>
-						{/if}
+						<div class="link-container">
+							<p><a href={url}>{title}</a></p>
+							{#if description}
+								<p class="tooltip">{description}</p>
+							{/if}
+						</div>
 					{/each}
 				</div>
 			</div>
@@ -242,11 +244,15 @@
 </div>
 
 <style>
+	#page {
+		max-width: 1200px;
+	}
+
 	a {
 		color: #c15b24;
 	}
 
-	.link-container {
+	.links-container {
 		box-shadow: inset 0px 8px 10px 0px #000000;
 		padding: 16px 20px;
 	}
@@ -260,9 +266,6 @@
 		max-width: 320px;
 	}
 
-	div.flex > div {
-		align-self: flex-start;
-	}
 	.tooltip {
 		display: none;
 	}
