@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getHeroesPageState } from "$lib/state/HeroesPageState.svelte";
-	import CareerEditor from "./CareerEditor.svelte";
+	import CareerEditor from "../../lib/components/career/CareerEditor.svelte";
 	import CareerSelection from "$lib/components/career/CareerSelection.svelte";
 	import CareerHelper from "$lib/helpers/CareerHelper.js";
 	import type { ICareer } from "$lib/entities/career/Career.js";

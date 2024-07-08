@@ -54,6 +54,6 @@
 				rgba(0, 0, 0, 0.788235294117647) 20%,
 				rgba(42, 42, 42, 0.10980392156862745)
 			),
-			url("/images/backgrounds/background14.png");
+			url("/images/backgrounds/background14.webp");
 	}
 </style>

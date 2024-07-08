@@ -23,7 +23,7 @@ export class PropertyCategory extends BaseEntity<IPropertyCategory> {
 
 export interface IPropertyCategory {
 	id: number;
-	name: string;
-	properties: IProperty[];
-	weapons: IWeapon[];
+	name: "melee" | "range" | "necklace" | "charm" | "trinket";
+	properties?: IProperty[];
+	weapons?: IWeapon[];
 }

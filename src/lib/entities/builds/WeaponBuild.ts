@@ -53,10 +53,10 @@ export interface IWeaponBuild {
 	rarity?: ItemRarityEnum;
 	weapon: IWeapon;
 	powerLevel?: number;
-	property1: IProperty;
+	property1?: IProperty;
 	property1Value?: number;
-	property2: IProperty;
+	property2?: IProperty;
 	property2Value?: number;
-	trait: ITrait;
+	trait?: ITrait;
 	skin?: IWeaponSkin;
 }

@@ -26,6 +26,32 @@
 	let showDescriptions = $state(false);
 
 	let talentButtonHandler = (talentNumber: number, tier: number) => {
+		let talents = [talent1, talent2, talent3, talent4, talent5, talent6];
+
+		if (talents[tier - 1] === talentNumber) {
+			switch (tier) {
+				case 1:
+					talent1 = 0;
+					break;
+				case 2:
+					talent2 = 0;
+					break;
+				case 3:
+					talent3 = 0;
+					break;
+				case 4:
+					talent4 = 0;
+					break;
+				case 5:
+					talent5 = 0;
+					break;
+				case 6:
+					talent6 = 0;
+					break;
+			}
+			return;
+		}
+
 		switch (tier) {
 			case 1:
 				talent1 = talentNumber;
@@ -74,7 +100,9 @@
 						<div
 							class="talent-container {[talent1, talent2, talent3, talent4, talent5, talent6].includes(talent.talentNumber)
 								? 'selected'
-								: ''}"
+								: [talent1, talent2, talent3, talent4, talent5, talent6][Math.ceil(talent.talentNumber / 3) - 1] === 0
+									? 'unselected'
+									: ''}"
 						>
 							<button
 								class="talent-button-wrapper"
@@ -100,6 +128,9 @@
 <style>
 	.talent-container:not(.selected) {
 		filter: grayscale(1);
+	}
+	.talent-container.unselected {
+		filter: grayscale(0);
 	}
 	.talent-container:nth-of-type(3n + 1) {
 		box-shadow: inset 0 10px 10px -10px #fff;
@@ -313,102 +344,102 @@
 	.career-talents-container[data-career="1"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(87, 57, 57, 0.45), rgba(87, 57, 57, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="2"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(89, 98, 61, 0.45), rgba(89, 98, 61, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="3"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(9, 20, 41, 0.45), rgba(9, 20, 41, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="4"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(29, 37, 5, 0.45), rgba(29, 37, 5, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="5"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(10, 54, 63, 0.45), rgba(10, 54, 63, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="6"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(52, 0, 0, 0.45), rgba(52, 0, 0, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="7"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(10, 23, 8, 0.45), rgba(10, 23, 8, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="8"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(13, 26, 43, 0.45), rgba(13, 26, 43, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="9"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(31, 20, 40, 0.45), rgba(31, 20, 40, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="10"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(32, 38, 40, 0.45), rgba(32, 38, 40, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="11"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(40, 31, 15, 0.45), rgba(40, 31, 15, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="12"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(35, 35, 30, 0.45), rgba(35, 35, 30, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="13"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(46, 16, 0, 0.45), rgba(46, 16, 0, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="14"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(36, 6, 2, 0.45), rgba(36, 6, 2, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="15"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(89, 98, 61, 0.45), rgba(89, 98, 61, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="16"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgb(88 63 24 / 45%), rgb(88 63 24 / 45%)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="17"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgb(88 63 24 / 45%), rgb(88 63 24 / 45%)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="18"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(rgb(98 93 96 / 45%), rgb(49 49 49 / 45%)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="19"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(30, 10, 20, 0.45), rgba(30, 10, 20, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="20"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(30, 10, 20, 0.45), rgba(30, 10, 20, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 
 	.career-talents-container[data-career="1"] .talent-container.selected .talent-name,
