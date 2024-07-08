@@ -164,7 +164,21 @@ function loadCareerFromOldURL(
 	weapon = getWeapon(parseInt(rangeParams[0]), career.id === 6 || career.id === 16 ? "melee" : "range");
 	property1 = getProperty(weapon?.propertyCategory?.name as LegacyPropertyCategory, parseInt(rangeParams[1]), weapon.properties);
 	property2 = getProperty(weapon?.propertyCategory?.name as LegacyPropertyCategory, parseInt(rangeParams[2]), weapon.properties);
-	trait = getTrait(weapon?.traitCategory?.name as LegacyTraitCategory, parseInt(rangeParams[3]), weapon.traits);
+
+	let rangeTraitId = parseInt(rangeParams[3]);
+	if (weapon?.traitCategory?.name === "ranged_ammo") {
+		rangeTraitId = rangeTraitId > 2 ? (rangeTraitId === 3 || rangeTraitId === 8 ? 1 : rangeTraitId - 1) : rangeTraitId;
+	} else if (weapon?.traitCategory?.name === "ranged_heat") {
+		rangeTraitId =
+			rangeTraitId > 1
+				? rangeTraitId === 2 || rangeTraitId === 7
+					? 1
+					: rangeTraitId > 7
+					? rangeTraitId - 2
+					: rangeTraitId - 1
+				: rangeTraitId;
+	}
+	trait = getTrait(weapon?.traitCategory?.name as LegacyTraitCategory, rangeTraitId, weapon.traits);
 
 	let secondaryWeaponBuild: IWeaponBuild = {
 		weapon,
