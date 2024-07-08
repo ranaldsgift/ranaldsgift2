@@ -26,6 +26,32 @@
 	let showDescriptions = $state(false);
 
 	let talentButtonHandler = (talentNumber: number, tier: number) => {
+		let talents = [talent1, talent2, talent3, talent4, talent5, talent6];
+
+		if (talents[tier - 1] === talentNumber) {
+			switch (tier) {
+				case 1:
+					talent1 = 0;
+					break;
+				case 2:
+					talent2 = 0;
+					break;
+				case 3:
+					talent3 = 0;
+					break;
+				case 4:
+					talent4 = 0;
+					break;
+				case 5:
+					talent5 = 0;
+					break;
+				case 6:
+					talent6 = 0;
+					break;
+			}
+			return;
+		}
+
 		switch (tier) {
 			case 1:
 				talent1 = talentNumber;
@@ -74,7 +100,9 @@
 						<div
 							class="talent-container {[talent1, talent2, talent3, talent4, talent5, talent6].includes(talent.talentNumber)
 								? 'selected'
-								: ''}"
+								: [talent1, talent2, talent3, talent4, talent5, talent6][Math.ceil(talent.talentNumber / 3) - 1] === 0
+									? 'unselected'
+									: ''}"
 						>
 							<button
 								class="talent-button-wrapper"
@@ -100,6 +128,9 @@
 <style>
 	.talent-container:not(.selected) {
 		filter: grayscale(1);
+	}
+	.talent-container.unselected {
+		filter: grayscale(0);
 	}
 	.talent-container:nth-of-type(3n + 1) {
 		box-shadow: inset 0 10px 10px -10px #fff;
