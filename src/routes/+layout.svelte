@@ -3,7 +3,7 @@
 	import "../lib/styles/Borders.css";
 	import "../lib/styles/Background.css";
 	import "../lib/styles/Icons.css";
-	import { afterNavigate, invalidate, invalidateAll } from "$app/navigation";
+	import { afterNavigate, invalidateAll } from "$app/navigation";
 	import TopNavigation from "$lib/components/navigation/TopNavigation.svelte";
 	import { previousPage } from "$lib/stores/PageStores.svelte";
 	import { setUserState } from "$lib/state/UserState.svelte.js";
@@ -48,6 +48,8 @@
         }
 		previousPage.url = nav.from?.url.pathname ?? '/';
     });
+
+	$inspect(userState);
 </script>
 
 <svelte:head>
@@ -55,45 +57,52 @@
 </svelte:head>
 
 <TopNavigation></TopNavigation>
-	
-<div id="root-container">
-	<!-- Use wallpaper by default unless the user has stored the preference in their user profile or local storage cookie -->
-	{#if userState.showVideo}
-	<video muted playsInline autoPlay={true} loop={true} poster='/images/backgrounds/home-frame.webp' class="fixed">                
-		<source src='/videos/backgrounds/home.mp4' type="video/mp4" />
-	</video>
-	{:else}
-	<img src="/images/backgrounds/home-frame.webp" alt="Home Frame" class="fixed object-cover w-full h-full top-0 left-0" />
-	{/if}
+{#if userState.showVideo}
+<video muted playsInline autoPlay={true} loop={true} poster='/images/backgrounds/home-frame.webp' class="fixed">                
+	<source src='/videos/backgrounds/home.mp4' type="video/mp4" />
+</video>
+{:else}
+<img src="/images/backgrounds/home-frame.webp" alt="Home Frame" class="fixed object-cover w-full h-full top-0 left-0 z-[-1]" />
+{/if}
 
-	{#if MenuState.isOpen}	
-		<div id="page-container">
-			<MainMenu></MainMenu>
-		</div>
-	{:else if $page.error}
-		<div id="error-container" class="relative">
-			{@render children()}
-		</div>
-	{:else}
-		<a class="page-title label-01" href="/">Ranald's Gift</a>
-		<div class="page-title-background"></div>
-		<div id="page-container" class="border-06 background7 p-10">
-			{@render children()}
-		</div>
-	{/if}
+{#if MenuState.isOpen}	
+	<div id="page-container" class="top-10">
+		<MainMenu></MainMenu>
+	</div>
+{:else}
+<div class="flex-auto w-full h-full flex overflow-hidden pb-5">
+	<a class="page-title label-01" href="/">Ranald's Gift</a>
+	<div class="page-title-background"></div>
+	<div id="root-container" class="border-06 background7 p-10">
+		<!-- Use wallpaper by default unless the user has stored the preference in their user profile or local storage cookie -->
+
+		
+		{#if $page.error}
+			<div id="error-container" class="relative">
+				{@render children()}
+			</div>
+		{:else}
+			<div id="page-container">
+				{@render children()}
+			</div>
+		{/if}
+	</div>
 </div>
+{/if}
 
 <style>
 	#root-container {
 		position: relative;
 		width: 100%;
-		min-height: calc(100vh - 50px);
+		height: calc(100% - 50px);
 		object-fit: cover;
 		top: 50px;
 		left: 0;
-		padding: 0 20px 20px;
+		margin: 0 20px 0px 20px;
+		padding: 20px;
 		display: grid;
 		grid-template-rows: auto 1fr;
+		overflow: hidden;
 	}
 	video {
 		top: 0;
@@ -104,6 +113,9 @@
 		position: fixed;
 		background: url('/images/background2.jpg') center / cover;
 	}
+	:global(#page) {
+		padding: 20px;
+	}
     #page-container {
 		position: relative;
         display: grid;
@@ -113,16 +125,17 @@
         align-items: center;
 		min-width: 900px;
         width: 100%;
-		min-height: calc(100% - 70px);
 		border-radius: 8px;
 		margin: 0 auto;
+		overflow-y: auto;
+		overflow-x: hidden;
     }
 	.page-title {
 		text-align: center;
 		width: 662px;
 		position: absolute;
 		z-index: 2;
-		top: -37px;
+		top: 13px;
 		left: 50%;
 		translate: -50% 0%;
 		font-size: 1.4rem;
@@ -136,7 +149,7 @@
 		width: 417px;
 		height: 42px;
 		position: absolute;
-		top: -27px;
+		top: 23px;
 		z-index: 1;
 		left: 50%;
 		translate: -50% 0%;

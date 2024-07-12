@@ -26,24 +26,6 @@
 			}
 		};
 	};
-
-	$effect(() => {
-		adjustTopNavigation();
-		window.onscroll = () => {
-			adjustTopNavigation();
-		};
-	});
-
-	function adjustTopNavigation() {
-		const topNavigation = document.querySelector(".top-navigation-background");
-		if (topNavigation) {
-			if (window.scrollY > 0) {
-				topNavigation.classList.remove("collapsed");
-			} else {
-				topNavigation.classList.add("collapsed");
-			}
-		}
-	}
 </script>
 
 <div class="top-navigation">
@@ -55,7 +37,9 @@
 	</button>
 	<!-- User icon -->
 	<div class="icon-container flex-end ml-auto mr-4 flex gap-4 relative items-center">
-		<a href="/about" class="rg-icon main-logo">&nbsp;</a>
+		{#if !MenuState.isOpen}
+			<a href="/about" class="rg-icon main-logo">&nbsp;</a>
+		{/if}
 		<button class="background-toggle" title="Toggle Background Video" onclick={backgroundToggleClickHandler}></button>
 		<a href={userState.user?.id ? `/user/${userState.user.id}` : "/login"} class="user-icon"> </a>
 		{#if userState.user}
