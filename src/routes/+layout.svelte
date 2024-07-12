@@ -53,6 +53,8 @@
 <svelte:head>
 	<title>{MenuState.isOpen && $page.url.pathname !== '/' ? 'Menu - ranalds.gift' : ROOT_PAGE_TITLE}</title>
 </svelte:head>
+
+<TopNavigation></TopNavigation>
 	
 <div id="root-container">
 	<!-- Use wallpaper by default unless the user has stored the preference in their user profile or local storage cookie -->
@@ -61,10 +63,8 @@
 		<source src='/videos/backgrounds/home.mp4' type="video/mp4" />
 	</video>
 	{:else}
-		<img src="/images/backgrounds/home-frame.webp" alt="Home Frame" class="fixed object-cover w-full h-full top-0 left-0" />
+	<img src="/images/backgrounds/home-frame.webp" alt="Home Frame" class="fixed object-cover w-full h-full top-0 left-0" />
 	{/if}
-
-	<TopNavigation></TopNavigation>
 
 	{#if MenuState.isOpen}	
 		<div id="page-container">
@@ -87,9 +87,9 @@
 	#root-container {
 		position: relative;
 		width: 100%;
-		min-height: 100vh;
+		min-height: calc(100vh - 50px);
 		object-fit: cover;
-		top: 0;
+		top: 50px;
 		left: 0;
 		padding: 0 20px 20px;
 		display: grid;
@@ -102,6 +102,7 @@
 		height: 100vh;
 		object-fit: cover;
 		position: fixed;
+		background: url('/images/background2.jpg') center / cover;
 	}
     #page-container {
 		position: relative;
@@ -121,7 +122,7 @@
 		width: 662px;
 		position: absolute;
 		z-index: 2;
-		top: 13px;
+		top: -37px;
 		left: 50%;
 		translate: -50% 0%;
 		font-size: 1.4rem;
@@ -135,7 +136,7 @@
 		width: 417px;
 		height: 42px;
 		position: absolute;
-		top: 26px;
+		top: -27px;
 		z-index: 1;
 		left: 50%;
 		translate: -50% 0%;

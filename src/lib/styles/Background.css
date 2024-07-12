@@ -256,24 +256,11 @@
   .background-42 {
     background: url('/images/backgrounds/background-42.png')
   }
-
   .ranalds-finger {
     background: url('/images/icons/ranaldsfinger.png');
     height: 298px;
     width: 128px;
     margin: 0 auto;
-  }
-
-  .background-toggle {
-   background: url('/images/icons/background-toggle.png');
-   position: fixed;
-    right: 70px;
-    top: 0px;
-    width: 45px;
-    height: 45px;
-  }
-  .background-toggle:hover {
-   background: url('/images/icons/background-toggle-selected.png'); 
   }
   #app[data-showvideo='false'] .fullscreen-background-video {
     display: none;
