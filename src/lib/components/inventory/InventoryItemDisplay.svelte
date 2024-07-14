@@ -2,6 +2,7 @@
 	import type { IProperty } from "$lib/entities/Property";
 	import type { ITrait } from "$lib/entities/Trait";
 	import type { IWeapon } from "$lib/entities/Weapon";
+	import PropertyHelper from "$lib/helpers/PropertyHelper";
 	import TraitIcon from "./TraitIcon.svelte";
 
 	type Props = {
@@ -41,7 +42,9 @@
 		{/if}
 		<div class="item-properties-container">
 			<div class="relative">
-				<li class="item-property-1">{`+ ${property1.maximumValue.toFixed(1)}% ${property1.name}`}</li>
+				<li class="item-property-1">
+					{`+ ${property1.maximumValue.toFixed(1)}${PropertyHelper.getModifier(property1)} ${property1.name}`}
+				</li>
 				<select bind:value={property1}>
 					{#each properties as property}
 						<option value={property}>{property.name}</option>
@@ -49,7 +52,9 @@
 				</select>
 			</div>
 			<div class="relative">
-				<li class="item-property-2">{`+ ${property2.maximumValue.toFixed(1)}% ${property2.name}`}</li>
+				<li class="item-property-2">
+					{`+ ${property2.maximumValue.toFixed(1)}${PropertyHelper.getModifier(property2)} ${property2.name}`}
+				</li>
 				<select bind:value={property2}>
 					{#each properties as property}
 						<option value={property}>{property.name}</option>

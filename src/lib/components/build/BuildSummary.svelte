@@ -1,71 +1,56 @@
 <script lang="ts">
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
+	import type { ICharmBuild } from "$lib/entities/builds/CharmBuild";
+	import type { INecklaceBuild } from "$lib/entities/builds/NecklaceBuild";
+	import type { ITrinketBuild } from "$lib/entities/builds/TrinketBuild";
+	import type { IWeaponBuild } from "$lib/entities/builds/WeaponBuild";
+	import PropertyHelper from "$lib/helpers/PropertyHelper";
 	import TraitIcon from "../inventory/TraitIcon.svelte";
 	import WeaponIcon from "../inventory/WeaponIcon.svelte";
 
 	const { build }: { build: ICareerBuild } = $props();
 </script>
 
+{#snippet itemSummary(name: string, item: IWeaponBuild | INecklaceBuild | ICharmBuild | ITrinketBuild, itemIcon?: string)}
+	<div class="item-summary-header">
+		<p class="item-name">{name}</p>
+		{#if item.trait}
+		<p class="item-trait-name">{item.trait.name}</p>
+		{/if}
+	</div>
+	{#if "weapon" in item}
+	<WeaponIcon weapon={item.weapon}></WeaponIcon>
+	{:else if itemIcon}
+	<div class={itemIcon}></div>
+	{/if}
+	{#if item.trait}
+	<TraitIcon trait={item.trait}></TraitIcon>
+	{/if}
+	<div class="property-container">
+		{#if item.property1}
+		<li class="item-property-1">{`+ ${item.property1.maximumValue.toFixed(1)}${PropertyHelper.getModifier(item.property1)} ${item.property1.name}`}</li>
+		{/if}
+		{#if item.property2}
+		<li class="item-property-2">{`+ ${item.property2.maximumValue.toFixed(1)}${PropertyHelper.getModifier(item.property2)} ${item.property2.name}`}</li>
+		{/if}
+	</div>
+{/snippet}
+
 <div class="build-summary-container">
 	<div class="build-melee-summary">
-		<div class="item-summary-header">
-			<p class="item-name">{build.primaryWeapon.weapon.name}</p>
-			<p class="item-trait-name">{build.primaryWeapon.trait.name}</p>
-		</div>
-		<WeaponIcon weapon={build.primaryWeapon.weapon}></WeaponIcon>
-		<TraitIcon trait={build.primaryWeapon.trait}></TraitIcon>
-		<div class="property-container">
-			<li class="item-property-1">{`+ ${build.primaryWeapon.property1.maximumValue}% ${build.primaryWeapon.property1.name}`}</li>
-			<li class="item-property-2">{`+ ${build.primaryWeapon.property2.maximumValue}% ${build.primaryWeapon.property2.name}`}</li>
-		</div>
+		{@render itemSummary(build.primaryWeapon.weapon.name, build.primaryWeapon)}
 	</div>
 	<div class="build-range-summary">
-		<div class="item-summary-header">
-			<p class="item-name">{build.secondaryWeapon.weapon.name}</p>
-			<p class="item-trait-name">{build.secondaryWeapon.trait.name}</p>
-		</div>
-		<WeaponIcon weapon={build.secondaryWeapon.weapon}></WeaponIcon>
-		<TraitIcon trait={build.secondaryWeapon.trait}></TraitIcon>
-		<div class="property-container">
-			<li class="item-property-1">{`+ ${build.secondaryWeapon.property1.maximumValue}% ${build.secondaryWeapon.property1.name}`}</li>
-			<li class="item-property-2">{`+ ${build.secondaryWeapon.property2.maximumValue}% ${build.secondaryWeapon.property2.name}`}</li>
-		</div>
+		{@render itemSummary(build.secondaryWeapon.weapon.name, build.secondaryWeapon)}
 	</div>
 	<div class="build-jewelry-summary necklace-summary">
-		<div class="item-summary-header">
-			<p class="item-name">Necklace</p>
-			<p class="item-trait-name">{build.necklace.trait.name}</p>
-		</div>
-		<div class="jewelry-icon necklace-icon border-04"></div>
-		<TraitIcon trait={build.necklace.trait}></TraitIcon>
-		<div class="necklace-property-container property-container">
-			<li class="item-property-1">{`+ ${build.necklace.property1.maximumValue}% ${build.necklace.property1.name}`}</li>
-			<li class="item-property-2">{`+ ${build.necklace.property2.maximumValue}% ${build.necklace.property2.name}`}</li>
-		</div>
+		{@render itemSummary("Necklace", build.necklace, "jewelry-icon necklace-icon border-04")}
 	</div>
 	<div class="build-jewelry-summary charm-summary">
-		<div class="item-summary-header">
-			<p class="item-name">Charm</p>
-			<p class="item-trait-name">{build.charm.trait.name}</p>
-		</div>
-		<div class="jewelry-icon charm-icon border-04"></div>
-		<TraitIcon trait={build.charm.trait}></TraitIcon>
-		<div class="charm-property-container property-container">
-			<li class="item-property-1">{`+ ${build.charm.property1.maximumValue}% ${build.charm.property1.name}`}</li>
-			<li class="item-property-2">{`+ ${build.charm.property2.maximumValue}% ${build.charm.property2.name}`}</li>
-		</div>
+		{@render itemSummary("Charm", build.charm, "jewelry-icon charm-icon border-04")}
 	</div>
 	<div class="build-jewelry-summary trinket-summary">
-		<div class="item-summary-header">
-			<p class="item-name">Trinket</p>
-			<p class="item-trait-name">{build.trinket.trait.name}</p>
-		</div>
-		<div class="jewelry-icon trinket-icon border-04"></div>
-		<TraitIcon trait={build.trinket.trait}></TraitIcon>
-		<div class="trinket-property-container property-container">
-			<li class="item-property-1">{`+ ${build.trinket.property1.maximumValue}% ${build.trinket.property1.name}`}</li>
-			<li class="item-property-2">{`+ ${build.trinket.property2.maximumValue}% ${build.trinket.property2.name}`}</li>
-		</div>
+		{@render itemSummary("Trinket", build.trinket, "jewelry-icon trinket-icon border-04")}
 	</div>
 </div>
 
@@ -123,8 +108,9 @@
 		bottom: 0;
 		background-image: linear-gradient(90deg, #808080b3 10%, #80808000);
 	}
-	.build-summary-container .item-trait-name {
+	.item-trait-name {
 		font-size: 0.8em;
+		color: #30e158;
 	}
 	.build-summary-container > div {
 		background: linear-gradient(315deg, #ffffff1c, transparent);
