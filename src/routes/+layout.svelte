@@ -48,8 +48,6 @@
         }
 		previousPage.url = nav.from?.url.pathname ?? '/';
     });
-
-	$inspect(userState);
 </script>
 
 <svelte:head>

@@ -12,9 +12,23 @@
 		MenuState.toggle();
 	};
 
-	const backgroundToggleClickHandler = (event: MouseEvent) => {
+	const backgroundToggleClickHandler = async (event: MouseEvent) => {
 		userState.showVideo = !userState.showVideo;
 		localStorage.setItem("showVideo", userState.showVideo.toString());
+
+		if (userState.user) {
+			userState.user.showVideo = userState.showVideo;
+
+			const response = await fetch("/api/user/save", {
+				method: "POST",
+				body: JSON.stringify(userState.user),
+				headers: {
+					"content-type": "application/json",
+				},
+			});
+
+			await response.json();
+		}
 	};
 
 	const logoutHandler: SubmitFunction = async () => {
