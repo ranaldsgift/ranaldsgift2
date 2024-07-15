@@ -1,25 +1,33 @@
 import type { ICareer } from "$lib/entities/career/Career.js";
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
 import { StaticData } from "$lib/data/StaticData.js";
+import { LogHelper } from "$lib/helpers/LogHelper.js";
+import BuildHelper from "$lib/helpers/BuildHelper.js";
 
 interface ViewModel {
 	pageTitle: string;
 	careers: ICareer[];
 	selectedCareer: ICareer;
-	build: ICareerBuild;
+	build?: ICareerBuild;
 }
 
 export const load = async (event) => {
-	// THREE URL patterns, old/1.0/2.0
-	///:careerId?/:talents?/:primary?/:secondary?/:necklace?/:charm?/:trinket?
+	let viewModel: ViewModel = {
+		pageTitle: "Heroes",
+		careers: StaticData.careers,
+		selectedCareer: StaticData.careers[0],
+	};
 
-	// old
-	// https://www.ranalds.gift/heroes/1/112321/44,4,3,6/12,5,3,2/3,2,1/4,5,4/7,2,1
-
-	// 1.0
-	//https://www.ranalds.gift/heroes/1/112321/43-4-3-6/56-5-3-2/3-2-1/4-5-4/7-2-1
-
-	// 2.0
+	if (event.url.searchParams.size > 0) {
+		LogHelper.debug("Loading build from URL parameters");
+		const build = BuildHelper.getBuildFromSearchParams(event.url.searchParams);
+		if (build) {
+			LogHelper.debug("Build loaded from URL parameters");
+			console.log(build);
+			viewModel.build = build;
+			return { viewModel };
+		}
+	}
 
 	const necklaceProperties = StaticData.properties.filter((property) => property?.category?.name === "necklace");
 	const charmProperties = StaticData.properties.filter((property) => property?.category?.name === "charm");
@@ -67,12 +75,7 @@ export const load = async (event) => {
 		},
 	};
 
-	let viewModel: ViewModel = {
-		pageTitle: "Heroes",
-		careers: StaticData.careers,
-		selectedCareer: StaticData.careers[0],
-		build: initialBuild,
-	};
+	viewModel.build = initialBuild;
 
 	return {
 		viewModel,

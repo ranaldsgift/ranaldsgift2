@@ -4,17 +4,18 @@
 	import CareerSelection from "$lib/components/career/CareerSelection.svelte";
 	import CareerHelper from "$lib/helpers/CareerHelper.js";
 	import type { ICareer } from "$lib/entities/career/Career.js";
+	import BuildHelper from "$lib/helpers/BuildHelper.js";
 	const { data } = $props();
 
 	const { viewModel } = data;
 	const pageState = getHeroesPageState();
 
-	if (!viewModel) {
-		throw new Error("HeroesPageViewModel is required");
+	if (!viewModel || !viewModel.build) {
+		throw new Error("Invalid ViewModel for Heroes page");
 	}
 
 	if (!pageState.selectedCareer) {
-		pageState.selectedCareer = viewModel.selectedCareer;
+		pageState.selectedCareer = viewModel.build.career;
 	}
 
 	if (!pageState.build) {
@@ -24,6 +25,17 @@
 	// For debugging to track changes to the build
 	$inspect(pageState.build).with((type, value) => {
 		type === "update" ? console.trace(value) : null;
+	});
+
+	let searchParams = $derived.by(() => {
+		if (!pageState.build) {
+			return "";
+		}
+		return BuildHelper.getQueryStringFromBuild(pageState.build);
+	});
+
+	$effect(() => {
+		history.replaceState(null, "", searchParams);
 	});
 
 	const careerSelectionHandler = (career: ICareer) => {

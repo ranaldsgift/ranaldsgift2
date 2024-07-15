@@ -8,10 +8,34 @@
 	import TraitIcon from "../inventory/TraitIcon.svelte";
 	import WeaponIcon from "../inventory/WeaponIcon.svelte";
 
-	const { build }: { build: ICareerBuild } = $props();
+	type ItemBuild = IWeaponBuild | INecklaceBuild | ICharmBuild | ITrinketBuild;
+
+	type Props = {
+		build: ICareerBuild;
+	};
+
+	const { build }: Props = $props();
 </script>
 
-{#snippet itemSummary(name: string, item: IWeaponBuild | INecklaceBuild | ICharmBuild | ITrinketBuild, itemIcon?: string)}
+<div class="build-summary-container">
+	<div class="build-melee-summary">
+		{@render itemSummary(build.primaryWeapon.weapon.name, build.primaryWeapon)}
+	</div>
+	<div class="build-range-summary">
+		{@render itemSummary(build.secondaryWeapon.weapon.name, build.secondaryWeapon)}
+	</div>
+	<div class="build-jewelry-summary necklace-summary">
+		{@render itemSummary("Necklace", build.necklace, "jewelry-icon necklace-icon border-04")}
+	</div>
+	<div class="build-jewelry-summary charm-summary">
+		{@render itemSummary("Charm", build.charm, "jewelry-icon charm-icon border-04")}
+	</div>
+	<div class="build-jewelry-summary trinket-summary">
+		{@render itemSummary("Trinket", build.trinket, "jewelry-icon trinket-icon border-04")}
+	</div>
+</div>
+
+{#snippet itemSummary(name: string, item: ItemBuild, itemIcon?: string)}
 	<div class="item-summary-header">
 		<p class="item-name">{name}</p>
 		{#if item.trait}
@@ -36,24 +60,6 @@
 	</div>
 {/snippet}
 
-<div class="build-summary-container">
-	<div class="build-melee-summary">
-		{@render itemSummary(build.primaryWeapon.weapon.name, build.primaryWeapon)}
-	</div>
-	<div class="build-range-summary">
-		{@render itemSummary(build.secondaryWeapon.weapon.name, build.secondaryWeapon)}
-	</div>
-	<div class="build-jewelry-summary necklace-summary">
-		{@render itemSummary("Necklace", build.necklace, "jewelry-icon necklace-icon border-04")}
-	</div>
-	<div class="build-jewelry-summary charm-summary">
-		{@render itemSummary("Charm", build.charm, "jewelry-icon charm-icon border-04")}
-	</div>
-	<div class="build-jewelry-summary trinket-summary">
-		{@render itemSummary("Trinket", build.trinket, "jewelry-icon trinket-icon border-04")}
-	</div>
-</div>
-
 <style>
 	.build-summary-container {
 		display: grid;
@@ -62,12 +68,6 @@
 		color: #f0f0f0;
 		text-align: left;
 		grid-gap: 15px;
-	}
-	.build-summary-container li {
-		list-style-type: none;
-	}
-	.build-summary-container .weapon-background {
-		cursor: initial;
 	}
 	.build-melee-summary,
 	.build-range-summary,
@@ -78,14 +78,6 @@
 		grid-template-rows: 1fr 60px 1fr;
 		grid-row-gap: 10px;
 		grid-column-gap: 10px;
-	}
-	.build-melee-summary .trait-icon,
-	.build-range-summary .trait-icon {
-		grid-area: traitIcon;
-	}
-	.build-melee-summary .weapon-icon,
-	.build-range-summary .weapon-icon {
-		grid-area: itemIcon;
 	}
 	.property-container {
 		grid-area: propertyContainer;
@@ -140,19 +132,5 @@
 		border-image-repeat: repeat;
 		box-sizing: border-box;
 		pointer-events: none;
-	}
-
-	.view-build-page .build-summary-container {
-		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
-	}
-	.build-summary-container .trait-icon > .tooltip {
-		width: calc(100% + 20px);
-		transform: translateY(calc(-100% - 10px)) translateX(-103px);
-		box-sizing: border-box;
-	}
-	.build-summary-container .weapon-icon > .tooltip {
-		width: calc(100% + 20px);
-		transform: translateY(calc(-100% - 10px)) translateX(-33px);
-		box-sizing: border-box;
 	}
 </style>
