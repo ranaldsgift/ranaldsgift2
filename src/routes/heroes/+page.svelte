@@ -5,6 +5,7 @@
 	import CareerHelper from "$lib/helpers/CareerHelper.js";
 	import type { ICareer } from "$lib/entities/career/Career.js";
 	import BuildHelper from "$lib/helpers/BuildHelper.js";
+	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	const { data } = $props();
 
 	const { viewModel } = data;
@@ -40,22 +41,33 @@
 
 	const careerSelectionHandler = (career: ICareer) => {
 		if (pageState.build?.career !== career) {
-			let build = CareerHelper.getNewCareerBuildForCareer(career);
-			let mergedBuildState = Object.assign({}, pageState.build, build);
+			const build = CareerHelper.getNewCareerBuildForCareer(career);
+			const mergedBuildState = Object.assign({}, pageState.build, build);
 			pageState.build = mergedBuildState;
 		}
+	};
+
+	const copyButtonHandler = () => {
+		const url = `${window.location.origin}/heroes/${searchParams}`;
+		navigator.clipboard.writeText(url);
 	};
 </script>
 
 <svelte:head>
-	<title>{pageState.build?.career?.name ?? viewModel.pageTitle} - ranalds.gift</title>
+	<title>
+		{pageState.build?.career ? `${pageState.build.career.name} - ${pageState.build.career.hero.name}` : viewModel.pageTitle} - ranalds.gift
+	</title>
 </svelte:head>
+
+<PageButtonContainer>
+	<button class="button-02" onclick={copyButtonHandler}>Copy <span class="link"></span></button>
+</PageButtonContainer>
 
 {#if pageState.build}
 	<div id="page" class="heroes-page">
 		<CareerSelection bind:selectedCareer={pageState.selectedCareer} careers={viewModel.careers} handler={careerSelectionHandler}
 		></CareerSelection>
-		<CareerEditor bind:build={pageState.build}></CareerEditor>
+		<CareerEditor bind:build={pageState.build} bind:inventoryTab={pageState.inventoryTab.value}></CareerEditor>
 	</div>
 {:else}
 	<div id="page" class="heroes-page">
@@ -73,6 +85,12 @@
 		grid-template-columns: 1fr 980px 1fr !important;
 		gap: 18px;
 		grid-template-areas: "careerSelection careerContainer careerInventory" !important;
+	}
+	.link {
+		display: inline-block;
+		width: 28px;
+		height: 28px;
+		background: url("/images/icons/link.png") no-repeat center / 90%;
 	}
 	@media (min-width: 1820px) {
 		.heroes-page {

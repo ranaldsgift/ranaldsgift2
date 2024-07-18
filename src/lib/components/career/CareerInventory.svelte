@@ -4,117 +4,108 @@
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 	import type { IWeapon } from "$lib/entities/Weapon";
 	import InventoryItemDisplay from "../inventory/InventoryItemDisplay.svelte";
-	import { PropertiesStore, TraitsStore } from "$lib/stores/DataStores.ts";
 	import type { IProperty } from "$lib/entities/Property";
 	import type { ITrait } from "$lib/entities/Trait";
+	import type { InventoryTab } from "$lib/state/HeroesPageState.svelte";
+	import { StaticData } from "$lib/data/StaticData";
 
-	enum InventoryTabState {
-		Primary = "primary",
-		Secondary = "secondary",
-		Equipment = "equipment",
-	}
+	type Props = {
+		build: ICareerBuild;
+		inventoryTab: InventoryTab;
+	};
 
-	let { build = $bindable() }: { build: ICareerBuild } = $props();
-
-	let inventoryTabState = $state<InventoryTabState>(InventoryTabState.Primary);
+	let { build = $bindable(), inventoryTab = $bindable() }: Props = $props();
 
 	const primaryWeaponSelectHandler = (item: IWeapon) => {
-		if (!item.traits.map((item) => item.id).includes(build.primaryWeapon.trait.id)) {
+		if (build.primaryWeapon.trait && !item.traits.map((item) => item.id).includes(build.primaryWeapon.trait.id)) {
 			build.primaryWeapon.trait = item.traits[0];
 		}
-		if (!item.properties.map((item) => item.id).includes(build.primaryWeapon.property1.id)) {
+		if (build.primaryWeapon.property1 && !item.properties.map((item) => item.id).includes(build.primaryWeapon.property1.id)) {
 			build.primaryWeapon.property1 = item.properties[0];
 		}
-		if (!item.properties.map((item) => item.id).includes(build.primaryWeapon.property2.id)) {
+		if (build.primaryWeapon.property2 && !item.properties.map((item) => item.id).includes(build.primaryWeapon.property2.id)) {
 			build.primaryWeapon.property2 = item.properties[1];
 		}
 	};
 
 	const secondaryWeaponSelectHandler = (item: IWeapon) => {
-		if (!item.traits.map((item) => item.id).includes(build.secondaryWeapon.trait.id)) {
+		if (build.secondaryWeapon.trait && !item.traits.map((item) => item.id).includes(build.secondaryWeapon.trait.id)) {
 			build.secondaryWeapon.trait = item.traits[0];
 		}
-		if (!item.properties.map((item) => item.id).includes(build.secondaryWeapon.property1.id)) {
+		if (build.secondaryWeapon.property1 && !item.properties.map((item) => item.id).includes(build.secondaryWeapon.property1.id)) {
 			build.secondaryWeapon.property1 = item.properties[0];
 		}
-		if (!item.properties.map((item) => item.id).includes(build.secondaryWeapon.property2.id)) {
+		if (build.secondaryWeapon.property2 && !item.properties.map((item) => item.id).includes(build.secondaryWeapon.property2.id)) {
 			build.secondaryWeapon.property2 = item.properties[1];
 		}
 	};
 
-	let necklaceProperties: IProperty[] = $state([]);
-	let charmProperties: IProperty[] = $state([]);
-	let trinketProperties: IProperty[] = $state([]);
+	// TODO - Probably a good idea to make helper functions to retreive properties and traits by category
+	let necklaceProperties: IProperty[] = StaticData.properties.filter(
+		(property) => property.category && property.category.name === "necklace"
+	);
+	let charmProperties: IProperty[] = StaticData.properties.filter((property) => property.category && property.category.name === "charm");
+	let trinketProperties: IProperty[] = StaticData.properties.filter(
+		(property) => property.category && property.category.name === "trinket"
+	);
 
-	let necklaceTraits: ITrait[] = $state([]);
-	let charmTraits: ITrait[] = $state([]);
-	let trinketTraits: ITrait[] = $state([]);
+	let necklaceTraits: ITrait[] = StaticData.traits.filter((trait) => trait.category && trait.category.name === "defence_accessory");
+	let charmTraits: ITrait[] = StaticData.traits.filter((trait) => trait.category && trait.category.name === "offence_accessory");
+	let trinketTraits: ITrait[] = StaticData.traits.filter((trait) => trait.category && trait.category.name === "utility_accessory");
 
-	let loadPropertiesAndTraits = async () => {
-		const { items: propertiesData } = await PropertiesStore.loadData();
-		necklaceProperties = propertiesData.filter((property) => property.category.name === "necklace");
-		charmProperties = propertiesData.filter((property) => property.category.name === "charm");
-		trinketProperties = propertiesData.filter((property) => property.category.name === "trinket");
+	if (!build.necklace) {
+		build.necklace = {
+			trait: necklaceTraits[0],
+			property1: necklaceProperties[0],
+			property2: necklaceProperties[1],
+		};
+	}
 
-		const { items: traitsData } = await TraitsStore.loadData();
-		necklaceTraits = traitsData.filter((trait) => trait.category.name === "defence_accessory");
-		charmTraits = traitsData.filter((trait) => trait.category.name === "offence_accessory");
-		trinketTraits = traitsData.filter((trait) => trait.category.name === "utility_accessory");
+	if (!build.charm) {
+		build.charm = {
+			trait: charmTraits[0],
+			property1: charmProperties[0],
+			property2: charmProperties[1],
+		};
+	}
 
-		if (!build.necklace) {
-			build.necklace = {
-				trait: necklaceTraits[0],
-				property1: necklaceProperties[0],
-				property2: necklaceProperties[1],
-			};
-		}
-
-		if (!build.charm) {
-			build.charm = {
-				trait: charmTraits[0],
-				property1: charmProperties[0],
-				property2: charmProperties[1],
-			};
-		}
-
-		if (!build.trinket) {
-			build.trinket = {
-				trait: trinketTraits[0],
-				property1: trinketProperties[0],
-				property2: trinketProperties[1],
-			};
-		}
-	};
+	if (!build.trinket) {
+		build.trinket = {
+			trait: trinketTraits[0],
+			property1: trinketProperties[0],
+			property2: trinketProperties[1],
+		};
+	}
 </script>
 
 <div class="container-tabs inventory-container top-left-shadow self-start">
 	<div class="container-tabs-list grid grid-flow-col grid-cols-3">
 		<button
-			style={inventoryTabState !== InventoryTabState.Primary ? "filter: grayscale(1);" : ""}
+			style={inventoryTab !== "PRIMARY" ? "filter: grayscale(1);" : ""}
 			onclick={() => {
-				inventoryTabState = InventoryTabState.Primary;
+				inventoryTab = "PRIMARY";
 			}}
 		>
 			<ContainerTitle>Primary</ContainerTitle>
 		</button>
 		<button
-			style={inventoryTabState !== InventoryTabState.Secondary ? "filter: grayscale(1);" : ""}
+			style={inventoryTab !== "SECONDARY" ? "filter: grayscale(1);" : ""}
 			onclick={() => {
-				inventoryTabState = InventoryTabState.Secondary;
+				inventoryTab = "SECONDARY";
 			}}
 		>
 			<ContainerTitle>Secondary</ContainerTitle>
 		</button>
 		<button
-			style={inventoryTabState !== InventoryTabState.Equipment ? "filter: grayscale(1);" : ""}
+			style={inventoryTab !== "EQUIPMENT" ? "filter: grayscale(1);" : ""}
 			onclick={() => {
-				inventoryTabState = InventoryTabState.Equipment;
+				inventoryTab = "EQUIPMENT";
 			}}
 		>
 			<ContainerTitle>Equipment</ContainerTitle>
 		</button>
 	</div>
-	<div class={inventoryTabState !== InventoryTabState.Primary ? "hidden" : ""}>
+	<div class={inventoryTab !== "PRIMARY" ? "hidden" : ""}>
 		<ItemSelect
 			title="primary"
 			bind:selectedItem={build.primaryWeapon.weapon}
@@ -130,7 +121,7 @@
 			traits={build.primaryWeapon.weapon.traits}
 		></InventoryItemDisplay>
 	</div>
-	<div class={inventoryTabState !== InventoryTabState.Secondary ? "hidden" : ""}>
+	<div class={inventoryTab !== "SECONDARY" ? "hidden" : ""}>
 		<ItemSelect
 			title="secondary"
 			bind:selectedItem={build.secondaryWeapon.weapon}
@@ -146,38 +137,31 @@
 			traits={build.secondaryWeapon.weapon.traits}
 		></InventoryItemDisplay>
 	</div>
-	<div class="jewelry-tab {inventoryTabState !== InventoryTabState.Equipment ? 'hidden' : ''}">
-		{#await loadPropertiesAndTraits()}
-			<span>Loading Necklaces, Charms and Trinkets...</span>
-		{:then}
-			<InventoryItemDisplay
-				bind:trait={build.necklace.trait}
-				bind:property1={build.necklace.property1}
-				bind:property2={build.necklace.property2}
-				properties={necklaceProperties}
-				traits={necklaceTraits}
-				header="Necklace"
-			></InventoryItemDisplay>
-			<InventoryItemDisplay
-				bind:trait={build.charm.trait}
-				bind:property1={build.charm.property1}
-				bind:property2={build.charm.property2}
-				properties={charmProperties}
-				traits={charmTraits}
-				header="Charm"
-			></InventoryItemDisplay>
-			<InventoryItemDisplay
-				bind:trait={build.trinket.trait}
-				bind:property1={build.trinket.property1}
-				bind:property2={build.trinket.property2}
-				properties={trinketProperties}
-				traits={trinketTraits}
-				header="Trinket"
-			></InventoryItemDisplay>
-		{/await}
-		<!-- <InventoryItemDisplay trait={state.traits[2]} properties={[state.properties[4], state.properties[5]]} item={{name: 'Necklace', propertyCategory: 'necklace', traitCategory: 'necklace'}}></InventoryItemDisplay>
-		<InventoryItemDisplay trait={state.traits[3]} properties={[state.properties[6], state.properties[7]]} item={{name: 'Charm', propertyCategory: 'charm', traitCategory: 'charm'}}></InventoryItemDisplay>
-		<InventoryItemDisplay trait={state.traits[4]} properties={[state.properties[8], state.properties[9]]} item={{name: 'Trinket', propertyCategory: 'trinket', traitCategory: 'trinket'}}></InventoryItemDisplay> -->
+	<div class="jewelry-tab {inventoryTab !== 'EQUIPMENT' ? 'hidden' : ''}">
+		<InventoryItemDisplay
+			bind:trait={build.necklace.trait}
+			bind:property1={build.necklace.property1}
+			bind:property2={build.necklace.property2}
+			properties={necklaceProperties}
+			traits={necklaceTraits}
+			header="Necklace"
+		></InventoryItemDisplay>
+		<InventoryItemDisplay
+			bind:trait={build.charm.trait}
+			bind:property1={build.charm.property1}
+			bind:property2={build.charm.property2}
+			properties={charmProperties}
+			traits={charmTraits}
+			header="Charm"
+		></InventoryItemDisplay>
+		<InventoryItemDisplay
+			bind:trait={build.trinket.trait}
+			bind:property1={build.trinket.property1}
+			bind:property2={build.trinket.property2}
+			properties={trinketProperties}
+			traits={trinketTraits}
+			header="Trinket"
+		></InventoryItemDisplay>
 	</div>
 </div>
 

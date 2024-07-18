@@ -21,22 +21,25 @@
 	initializeHeroesPageState();
 
 	$effect(() => {
-		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
+		const { data: supabaseData } = supabase.auth.onAuthStateChange((_, newSession) => {
 			if (newSession?.expires_at !== session?.expires_at || _ === 'INITIAL_SESSION') {
 				invalidateAll();
 			}
-			
-			setTimeout(() => {
-				if (newSession && _ !== 'SIGNED_OUT') {
-					userState.user = user;
-				}
-				else {
-					userState.reset();
-				}
-			}, 0);
 		});
 
-		return () => data.subscription.unsubscribe();
+		return () => supabaseData.subscription.unsubscribe();
+	});
+
+	$effect(() => {
+		if (user && session) {
+			if (userState.user?.id !== user.id) {
+				userState.user = user;
+				userState.showVideo.value = user.showVideo;
+			}
+		}
+		else {
+			userState.reset();
+		}
 	});
 
 	afterNavigate((nav) => {
@@ -55,7 +58,8 @@
 </svelte:head>
 
 <TopNavigation></TopNavigation>
-{#if userState.showVideo}
+
+{#if userState.showVideo.value}
 <video muted playsInline autoPlay={true} loop={true} poster='/images/backgrounds/home-frame.webp' class="fixed">                
 	<source src='/videos/backgrounds/home.mp4' type="video/mp4" />
 </video>
@@ -71,10 +75,7 @@
 <div class="flex-auto w-full h-full flex overflow-hidden pb-5">
 	<a class="page-title label-01" href="/">Ranald's Gift</a>
 	<div class="page-title-background"></div>
-	<div id="root-container" class="border-06 background7 p-10">
-		<!-- Use wallpaper by default unless the user has stored the preference in their user profile or local storage cookie -->
-
-		
+	<div id="root-container" class="border-06 background7 p-10">		
 		{#if $page.error}
 			<div id="error-container" class="relative">
 				{@render children()}
