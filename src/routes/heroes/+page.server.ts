@@ -1,7 +1,6 @@
 import type { ICareer } from "$lib/entities/career/Career.js";
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
 import { StaticData } from "$lib/data/StaticData.js";
-import { LogHelper } from "$lib/helpers/LogHelper.js";
 import BuildHelper from "$lib/helpers/BuildHelper.js";
 
 interface ViewModel {
@@ -19,11 +18,8 @@ export const load = async (event) => {
 	};
 
 	if (event.url.searchParams.size > 0) {
-		LogHelper.debug("Loading build from URL parameters");
 		const build = BuildHelper.getBuildFromSearchParams(event.url.searchParams);
 		if (build) {
-			LogHelper.debug("Build loaded from URL parameters");
-			console.log(build);
 			viewModel.build = build;
 			return { viewModel };
 		}
@@ -37,7 +33,7 @@ export const load = async (event) => {
 	const charmTraits = StaticData.traits.filter((trait) => trait?.category?.name === "offence_accessory");
 	const trinketTraits = StaticData.traits.filter((trait) => trait?.category?.name === "utility_accessory");
 
-	let initialBuild = {
+	let initialBuild: ICareerBuild = {
 		career: StaticData.careers[0],
 		primaryWeapon: {
 			weapon: StaticData.careers[0].primaryWeapons[0],
@@ -51,12 +47,6 @@ export const load = async (event) => {
 			property2: StaticData.careers[0].secondaryWeapons[0].properties[1],
 			trait: StaticData.careers[0].secondaryWeapons[0].traits[0],
 		},
-		talent1: 0,
-		talent2: 0,
-		talent3: 0,
-		talent4: 0,
-		talent5: 0,
-		talent6: 0,
 		powerLevel: 300,
 		necklace: {
 			trait: necklaceTraits[0],

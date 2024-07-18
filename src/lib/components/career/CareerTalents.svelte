@@ -1,15 +1,15 @@
 <script lang="ts">
-	import type { ICareerTalent } from "$lib/entities/Career";
+	import type { ICareerTalent } from "$lib/entities/career/CareerTalent";
 
 	type Props = {
 		talents: ICareerTalent[];
 		careerId: number;
-		talent1?: number;
-		talent2?: number;
-		talent3?: number;
-		talent4?: number;
-		talent5?: number;
-		talent6?: number;
+		talent1?: ICareerTalent;
+		talent2?: ICareerTalent;
+		talent3?: ICareerTalent;
+		talent4?: ICareerTalent;
+		talent5?: ICareerTalent;
+		talent6?: ICareerTalent;
 	};
 
 	let {
@@ -25,28 +25,32 @@
 
 	let showDescriptions = $state(false);
 
-	let talentButtonHandler = (talentNumber: number, tier: number) => {
+	let talentButtonHandler = (talent: ICareerTalent) => {
+		let tier = Math.ceil(talent.talentNumber / 3);
 		let talents = [talent1, talent2, talent3, talent4, talent5, talent6];
 
-		if (talents[tier - 1] === talentNumber) {
+		console.log(talents[tier - 1]?.talentNumber);
+		console.log(talent);
+
+		if (talents[tier - 1]?.talentNumber === talent.talentNumber) {
 			switch (tier) {
 				case 1:
-					talent1 = 0;
+					talent1 = undefined;
 					break;
 				case 2:
-					talent2 = 0;
+					talent2 = undefined;
 					break;
 				case 3:
-					talent3 = 0;
+					talent3 = undefined;
 					break;
 				case 4:
-					talent4 = 0;
+					talent4 = undefined;
 					break;
 				case 5:
-					talent5 = 0;
+					talent5 = undefined;
 					break;
 				case 6:
-					talent6 = 0;
+					talent6 = undefined;
 					break;
 			}
 			return;
@@ -54,22 +58,22 @@
 
 		switch (tier) {
 			case 1:
-				talent1 = talentNumber;
+				talent1 = talent;
 				break;
 			case 2:
-				talent2 = talentNumber;
+				talent2 = talent;
 				break;
 			case 3:
-				talent3 = talentNumber;
+				talent3 = talent;
 				break;
 			case 4:
-				talent4 = talentNumber;
+				talent4 = talent;
 				break;
 			case 5:
-				talent5 = talentNumber;
+				talent5 = talent;
 				break;
 			case 6:
-				talent6 = talentNumber;
+				talent6 = talent;
 				break;
 		}
 	};
@@ -79,9 +83,6 @@
 	<div class="career-talents-container relative" data-career={careerId}>
 		<div class="hero-talents-grid-bg background-26"></div>
 		<div class="hero-talents-grid-border border-01"></div>
-		<div class="career-talents-header">
-			<p class="career-talents-header-text">Talents</p>
-		</div>
 		<div class="career-talents">
 			<div class="hero-talents-container" data-show-descriptions={showDescriptions}>
 				<div class="hero-talents-grid" data-career={careerId}>
@@ -98,16 +99,16 @@
 							></span>
 						{/if}
 						<div
-							class="talent-container {[talent1, talent2, talent3, talent4, talent5, talent6].includes(talent.talentNumber)
+							class="talent-container {[talent1, talent2, talent3, talent4, talent5, talent6].filter(
+								(t) => t?.talentNumber === talent.talentNumber
+							).length > 0
 								? 'selected'
-								: [talent1, talent2, talent3, talent4, talent5, talent6][Math.ceil(talent.talentNumber / 3) - 1] === 0
+								: [talent1, talent2, talent3, talent4, talent5, talent6][Math.ceil(talent.talentNumber / 3) - 1]
+											?.talentNumber === 0
 									? 'unselected'
 									: ''}"
 						>
-							<button
-								class="talent-button-wrapper"
-								onclick={() => talentButtonHandler(talent.talentNumber, Math.ceil(talent.talentNumber / 3))}
-							>
+							<button class="talent-button-wrapper" onclick={() => talentButtonHandler(talent)}>
 								<span
 									class="talent-icon size-[84px] block"
 									style="background-image: url('/images/careers/{careerId}/talents/talent-{talent.talentNumber < 10

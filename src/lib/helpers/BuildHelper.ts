@@ -72,17 +72,18 @@ class BuildHelper {
 					}
 				}
 
-				const talents = searchParams.get("talents");
-				if (talents?.length !== 6) {
+				const talentsParam = searchParams.get("talents");
+				if (talentsParam?.split("-").length !== 6) {
 					return null;
 				}
 
-				build.talent1 = parseInt(talents[0]);
-				build.talent2 = parseInt(talents[1]);
-				build.talent3 = parseInt(talents[2]);
-				build.talent4 = parseInt(talents[3]);
-				build.talent5 = parseInt(talents[4]);
-				build.talent6 = parseInt(talents[5]);
+				const talents = talentsParam.split("-").map((talent) => parseInt(talent));
+				build.talent1 = build.career.talents.find((talent) => talent.id === talents[0]);
+				build.talent2 = build.career.talents.find((talent) => talent.id === talents[1]);
+				build.talent3 = build.career.talents.find((talent) => talent.id === talents[2]);
+				build.talent4 = build.career.talents.find((talent) => talent.id === talents[3]);
+				build.talent5 = build.career.talents.find((talent) => talent.id === talents[4]);
+				build.talent6 = build.career.talents.find((talent) => talent.id === talents[5]);
 
 				const necklaceParams = searchParams.get("necklace");
 				if (necklaceParams?.split("-").length === 3) {
@@ -151,8 +152,12 @@ class BuildHelper {
 	}
 
 	static getQueryStringFromBuild(build: ICareerBuild): string {
+		let talentParams = `${build.talent1?.talentNumber ?? 0}-${build.talent2?.talentNumber ?? 0}-${build.talent3?.talentNumber ?? 0}-${
+			build.talent4?.talentNumber ?? 0
+		}-${build.talent5?.talentNumber ?? 0}-${build.talent6?.talentNumber ?? 0}`;
+
 		return `
-        ?career=${build.career.id}&talents=${build.talent1}${build.talent2}${build.talent3}${build.talent4}${build.talent5}${build.talent6}
+        ?career=${build.career.id}&talents=${talentParams}
 		&primary=${build.primaryWeapon.weapon.id}
 			-${build.primaryWeapon.property1?.id}
 			-${build.primaryWeapon.property2?.id}
