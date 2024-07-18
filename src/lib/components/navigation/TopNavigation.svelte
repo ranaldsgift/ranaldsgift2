@@ -9,15 +9,16 @@
 
 	const menuClickHandler = (event: MouseEvent) => {
 		event.preventDefault();
+		if ($page.url.pathname === "/") return;
 		MenuState.toggle();
 	};
 
 	const backgroundToggleClickHandler = async (event: MouseEvent) => {
-		userState.showVideo = !userState.showVideo;
-		localStorage.setItem("showVideo", userState.showVideo.toString());
+		userState.showVideo.value = !userState.showVideo.value;
+		localStorage.setItem("showVideo", userState.showVideo.value.toString());
 
 		if (userState.user) {
-			userState.user.showVideo = userState.showVideo;
+			userState.user.showVideo = userState.showVideo.value;
 
 			const response = await fetch("/api/user/save", {
 				method: "POST",
@@ -74,12 +75,12 @@
 	.top-navigation {
 		display: flex;
 		height: 50px;
-		position: fixed;
+		position: absolute;
 		left: -4px;
 		top: -4px;
 		padding-top: 4px;
 		width: calc(100% + 8px);
-		z-index: 999;
+		z-index: 1;
 	}
 	.top-navigation-background {
 		display: grid;
