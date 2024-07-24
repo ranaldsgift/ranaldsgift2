@@ -1,22 +1,58 @@
 <script lang="ts">
-	import { User } from '$lib/entities/User';
-	import { DataHelper } from '$lib/helpers/DataHelper';
-    import type { PageData } from './$types';
-    
-    export let data: PageData;
-    const userData = DataHelper.deserialize(User, data.userData);
+	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
+	import { type IUser } from "$lib/entities/User";
+	import type { PageData } from "./$types";
+
+	const { data }: { data: PageData } = $props();
+	const userData = JSON.parse(data.userData) as IUser;
 </script>
 
 <div id="page">
-    {#if userData}
-    <div>
-        <h1>User Profile</h1>
-        <span>{userData.id}</span>
-        <span>{userData.name}</span>
-    </div>
-    {:else}
-    <div>
-        <h1>User not found</h1>
-    </div>
-    {/if}
+	{#if userData}
+		{#if data.sessionUser?.id === userData.id}
+			<PageButtonContainer>
+				<a class="button-02" href={`/user/${userData.id}/edit`}>Edit</a>
+			</PageButtonContainer>
+		{/if}
+		<div>
+			<div class="user-info-container background-14 border-08">
+				<span>Username</span>
+				<span>{userData.name}</span>
+				<span>Steam Friend Code</span>
+				<span>{userData.steam}</span>
+				<span>Discord</span>
+				<span>{userData.discord}</span>
+				<span>Twitch</span>
+				<a href={`https://twitch.tv/${userData.twitch}`}>{userData.twitch}</a>
+				<span>Youtube</span>
+				<a href={`https://youtube.com/${userData.youtube}`}>{userData.youtube}</a>
+			</div>
+		</div>
+	{:else}
+		<div>
+			<h1>User not found</h1>
+		</div>
+	{/if}
 </div>
+
+<style>
+	.user-info-container {
+		color: #8bc34a;
+		font-size: 1.5em;
+		display: grid;
+		grid-template-columns: max-content 1fr;
+		justify-items: left;
+		text-align: left;
+		grid-column-gap: 15px;
+		grid-row-gap: 5px;
+		padding: 20px;
+		position: relative;
+		grid-row-gap: 10px;
+	}
+	.user-info-container > span:nth-child(2n + 1) {
+		color: #808080;
+	}
+	.user-info-container a {
+		color: #0096fb;
+	}
+</style>

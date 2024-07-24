@@ -42,9 +42,9 @@ export class TrinketBuild extends AuthoredEntity<ITrinketBuild> {
 export interface ITrinketBuild {
 	rarity?: ItemRarityEnum;
 	powerLevel?: number;
-	property1: IProperty;
+	property1?: IProperty;
 	property1Value?: number;
-	property2: IProperty;
+	property2?: IProperty;
 	property2Value?: number;
-	trait: ITrait;
+	trait?: ITrait;
 }

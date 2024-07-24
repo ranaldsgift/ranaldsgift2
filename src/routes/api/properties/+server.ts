@@ -5,7 +5,6 @@ import { error } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async ({ url }) => {
 	let data = null;
-	let dataCount = null;
 	try {
 		data = await PropertiesCache.getAll();
 	} catch (err) {
@@ -14,8 +13,8 @@ export const GET: RequestHandler = async ({ url }) => {
 	}
 
 	const response = DataHelper.serialize({
-		items: data.map((item) => item.toObject()),
-		count: dataCount,
+		items: data,
+		count: data.length,
 	});
 
 	return new Response(response);

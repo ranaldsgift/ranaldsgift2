@@ -1,15 +1,15 @@
 <script lang="ts">
-	import type { ICareerTalent } from "$lib/entities/Career";
+	import type { ICareerTalent } from "$lib/entities/career/CareerTalent";
 
 	type Props = {
 		talents: ICareerTalent[];
 		careerId: number;
-		talent1?: number;
-		talent2?: number;
-		talent3?: number;
-		talent4?: number;
-		talent5?: number;
-		talent6?: number;
+		talent1?: ICareerTalent;
+		talent2?: ICareerTalent;
+		talent3?: ICareerTalent;
+		talent4?: ICareerTalent;
+		talent5?: ICareerTalent;
+		talent6?: ICareerTalent;
 	};
 
 	let {
@@ -25,25 +25,55 @@
 
 	let showDescriptions = $state(false);
 
-	let talentButtonHandler = (talentNumber: number, tier: number) => {
+	let talentButtonHandler = (talent: ICareerTalent) => {
+		let tier = Math.ceil(talent.talentNumber / 3);
+		let talents = [talent1, talent2, talent3, talent4, talent5, talent6];
+
+		console.log(talents[tier - 1]?.talentNumber);
+		console.log(talent);
+
+		if (talents[tier - 1]?.talentNumber === talent.talentNumber) {
+			switch (tier) {
+				case 1:
+					talent1 = undefined;
+					break;
+				case 2:
+					talent2 = undefined;
+					break;
+				case 3:
+					talent3 = undefined;
+					break;
+				case 4:
+					talent4 = undefined;
+					break;
+				case 5:
+					talent5 = undefined;
+					break;
+				case 6:
+					talent6 = undefined;
+					break;
+			}
+			return;
+		}
+
 		switch (tier) {
 			case 1:
-				talent1 = talentNumber;
+				talent1 = talent;
 				break;
 			case 2:
-				talent2 = talentNumber;
+				talent2 = talent;
 				break;
 			case 3:
-				talent3 = talentNumber;
+				talent3 = talent;
 				break;
 			case 4:
-				talent4 = talentNumber;
+				talent4 = talent;
 				break;
 			case 5:
-				talent5 = talentNumber;
+				talent5 = talent;
 				break;
 			case 6:
-				talent6 = talentNumber;
+				talent6 = talent;
 				break;
 		}
 	};
@@ -53,9 +83,6 @@
 	<div class="career-talents-container relative" data-career={careerId}>
 		<div class="hero-talents-grid-bg background-26"></div>
 		<div class="hero-talents-grid-border border-01"></div>
-		<div class="career-talents-header">
-			<p class="career-talents-header-text">Talents</p>
-		</div>
 		<div class="career-talents">
 			<div class="hero-talents-container" data-show-descriptions={showDescriptions}>
 				<div class="hero-talents-grid" data-career={careerId}>
@@ -72,14 +99,16 @@
 							></span>
 						{/if}
 						<div
-							class="talent-container {[talent1, talent2, talent3, talent4, talent5, talent6].includes(talent.talentNumber)
+							class="talent-container {[talent1, talent2, talent3, talent4, talent5, talent6].filter(
+								(t) => t?.talentNumber === talent.talentNumber
+							).length > 0
 								? 'selected'
-								: ''}"
+								: [talent1, talent2, talent3, talent4, talent5, talent6][Math.ceil(talent.talentNumber / 3) - 1]
+											?.talentNumber === 0
+									? 'unselected'
+									: ''}"
 						>
-							<button
-								class="talent-button-wrapper"
-								onclick={() => talentButtonHandler(talent.talentNumber, Math.ceil(talent.talentNumber / 3))}
-							>
+							<button class="talent-button-wrapper" onclick={() => talentButtonHandler(talent)}>
 								<span
 									class="talent-icon size-[84px] block"
 									style="background-image: url('/images/careers/{careerId}/talents/talent-{talent.talentNumber < 10
@@ -100,6 +129,9 @@
 <style>
 	.talent-container:not(.selected) {
 		filter: grayscale(1);
+	}
+	.talent-container.unselected {
+		filter: grayscale(0);
 	}
 	.talent-container:nth-of-type(3n + 1) {
 		box-shadow: inset 0 10px 10px -10px #fff;
@@ -313,102 +345,102 @@
 	.career-talents-container[data-career="1"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(87, 57, 57, 0.45), rgba(87, 57, 57, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="2"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(89, 98, 61, 0.45), rgba(89, 98, 61, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="3"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(9, 20, 41, 0.45), rgba(9, 20, 41, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="4"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(29, 37, 5, 0.45), rgba(29, 37, 5, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="5"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(10, 54, 63, 0.45), rgba(10, 54, 63, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="6"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(52, 0, 0, 0.45), rgba(52, 0, 0, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="7"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(10, 23, 8, 0.45), rgba(10, 23, 8, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="8"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(13, 26, 43, 0.45), rgba(13, 26, 43, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="9"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(31, 20, 40, 0.45), rgba(31, 20, 40, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="10"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(32, 38, 40, 0.45), rgba(32, 38, 40, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="11"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(40, 31, 15, 0.45), rgba(40, 31, 15, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="12"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(35, 35, 30, 0.45), rgba(35, 35, 30, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="13"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(46, 16, 0, 0.45), rgba(46, 16, 0, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="14"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(36, 6, 2, 0.45), rgba(36, 6, 2, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="15"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(89, 98, 61, 0.45), rgba(89, 98, 61, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="16"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgb(88 63 24 / 45%), rgb(88 63 24 / 45%)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="17"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgb(88 63 24 / 45%), rgb(88 63 24 / 45%)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="18"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(rgb(98 93 96 / 45%), rgb(49 49 49 / 45%)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="19"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(30, 10, 20, 0.45), rgba(30, 10, 20, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 	.career-talents-container[data-career="20"] .hero-talents-grid-bg {
 		background:
 			linear-gradient(-16deg, rgba(30, 10, 20, 0.45), rgba(30, 10, 20, 0.45)),
-			url("/images/backgrounds/background26.png") bottom;
+			url("/images/backgrounds/background26.webp") bottom;
 	}
 
 	.career-talents-container[data-career="1"] .talent-container.selected .talent-name,

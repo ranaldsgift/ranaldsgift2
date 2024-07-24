@@ -1,4 +1,4 @@
-import { StaticData } from "$lib/data/HeroData";
+import { StaticData } from "$lib/data/StaticData";
 import { ROOT_PAGE_TITLE } from "$lib/data/constants/constants";
 import { test, expect } from "@playwright/test";
 

@@ -2,12 +2,13 @@
 	import type { IProperty } from "$lib/entities/Property";
 	import type { ITrait } from "$lib/entities/Trait";
 	import type { IWeapon } from "$lib/entities/Weapon";
+	import PropertyHelper from "$lib/helpers/PropertyHelper";
 	import TraitIcon from "./TraitIcon.svelte";
 
 	type Props = {
-		property1: IProperty;
-		property2: IProperty;
-		trait: ITrait;
+		property1?: IProperty;
+		property2?: IProperty;
+		trait?: ITrait;
 		weapon?: IWeapon;
 		header?: string;
 		powerLevel?: number;
@@ -41,7 +42,9 @@
 		{/if}
 		<div class="item-properties-container">
 			<div class="relative">
-				<li class="item-property-1">{`+ ${property1.maximumValue.toFixed(1)}% ${property1.name}`}</li>
+				<li class="item-property-1">
+					{property1 ? `+ ${property1.maximumValue.toFixed(1)}${PropertyHelper.getModifier(property1)} ${property1.name}` : ""}
+				</li>
 				<select bind:value={property1}>
 					{#each properties as property}
 						<option value={property}>{property.name}</option>
@@ -49,7 +52,9 @@
 				</select>
 			</div>
 			<div class="relative">
-				<li class="item-property-2">{`+ ${property2.maximumValue.toFixed(1)}% ${property2.name}`}</li>
+				<li class="item-property-2">
+					{property2 ? `+ ${property2.maximumValue.toFixed(1)}${PropertyHelper.getModifier(property2)} ${property2.name}` : ""}
+				</li>
 				<select bind:value={property2}>
 					{#each properties as property}
 						<option value={property}>{property.name}</option>
@@ -57,18 +62,20 @@
 				</select>
 			</div>
 		</div>
-		<div class="item-trait-container">
-			<TraitIcon {trait}></TraitIcon>
-			<div class="relative">
-				<p class="item-trait-name">{trait.name}</p>
-				<select bind:value={trait}>
-					{#each traits as trait}
-						<option value={trait}>{trait.name}</option>
-					{/each}
-				</select>
+		{#if trait}
+			<div class="item-trait-container">
+				<TraitIcon {trait}></TraitIcon>
+				<div class="relative">
+					<p class="item-trait-name">{trait.name}</p>
+					<select bind:value={trait}>
+						{#each traits as trait}
+							<option value={trait}>{trait.name}</option>
+						{/each}
+					</select>
+				</div>
+				<p class="item-trait-description">{trait.description}</p>
 			</div>
-			<p class="item-trait-description">{trait.description}</p>
-		</div>
+		{/if}
 	</div>
 	{#if weapon && weapon.tooltips}
 		<p class="inventory-item-footer border-01">
@@ -243,9 +250,5 @@
 	}
 	.inventory-item-container-header {
 		text-align: center;
-	}
-	.inventory-item-display-container[data-id="71"] .item-trait-container select option[value="2"],
-	.inventory-item-display-container[data-id="71"] .item-trait-container select option[value="6"] {
-		display: none;
 	}
 </style>

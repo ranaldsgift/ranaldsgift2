@@ -23,7 +23,21 @@ export class TraitCategory extends BaseEntity<ITraitCategory> {
 
 export interface ITraitCategory {
 	id: number;
-	name: string;
+	name:
+		| "deus_melee"
+		| "deus_ranged_energy"
+		| "deus_ranged_heat"
+		| "melee"
+		| "defence_accessory"
+		| "deus_ranged"
+		| "deus_ranged_ammo"
+		| "ranged_ammo"
+		| "deus_shield_melee"
+		| "ranged_heat"
+		| "ranged_energy"
+		| "deus_heavy_melee"
+		| "utility_accessory"
+		| "offence_accessory";
 	traits?: ITrait[];
 	weapons?: IWeapon[];
 }

@@ -4,7 +4,6 @@ import { error } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async ({ url }) => {
 	let data = null;
-	let dataCount = null;
 	try {
 		data = await CareerCache.getSorted();
 	} catch (err) {
@@ -14,7 +13,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	const response = JSON.stringify({
 		items: data,
-		count: dataCount,
+		count: data.length,
 	});
 
 	return new Response(response);

@@ -5,16 +5,14 @@
 	import CareerTalents from "$lib/components/career/CareerTalents.svelte";
 	import ContainerTitle from "$lib/components/ContainerTitle.svelte";
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
+	import type { InventoryTab } from "$lib/state/HeroesPageState.svelte";
 
-	let { build = $bindable() }: { build: ICareerBuild } = $props();
+	type Props = {
+		build: ICareerBuild;
+		inventoryTab: InventoryTab;
+	};
 
-	enum InventoryTabState {
-		Primary = "primary",
-		Secondary = "secondary",
-		Equipment = "equipment",
-	}
-
-	let inventoryTabState = $state<InventoryTabState>(InventoryTabState.Primary);
+	let { build = $bindable(), inventoryTab = $bindable() }: Props = $props();
 </script>
 
 <!-- TODO - Add Floating Copy URL Button -->
@@ -41,7 +39,7 @@
 		</div>
 	</div>
 </div>
-<CareerInventory bind:build></CareerInventory>
+<CareerInventory bind:build bind:inventoryTab></CareerInventory>
 
 <style>
 	.career-container {
@@ -54,6 +52,6 @@
 				rgba(0, 0, 0, 0.788235294117647) 20%,
 				rgba(42, 42, 42, 0.10980392156862745)
 			),
-			url("/images/backgrounds/background14.png");
+			url("/images/backgrounds/background14.webp");
 	}
 </style>

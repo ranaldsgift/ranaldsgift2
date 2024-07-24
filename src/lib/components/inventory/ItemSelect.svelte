@@ -17,16 +17,22 @@
 			handler(item);
 		}
 	};
+
+	const keydownHandler = (event: KeyboardEvent) => {
+		if (event.key !== "Enter" && event.key !== " ") return;
+		event.preventDefault();
+		if (event.target instanceof HTMLElement) event.target.click();
+	};
 </script>
 
 <div class="inventory-item-container border-01 background-27">
 	<p class="inventory-item-container-header uppercase text-center pt-4">{title}</p>
 	<div class="divider-06"></div>
 	<div class="px-5 pb-5 flex flex-wrap justify-center gap-2">
-		{#each items as item}
-			<button class="inventory-item" onclick={() => selectHandler(item)}>
+		{#each items as item, index}
+			<span class="inventory-item" onclick={() => selectHandler(item)} role="button" tabindex={index} onkeydown={keydownHandler}>
 				<WeaponIcon weapon={item} class={selectedItem.id === item.id ? "selected" : ""}></WeaponIcon>
-			</button>
+			</span>
 		{/each}
 	</div>
 </div>
