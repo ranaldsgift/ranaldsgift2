@@ -4,28 +4,42 @@
 	import type { PageData } from "./$types";
 
 	const { data }: { data: PageData } = $props();
-	const userData = JSON.parse(data.userData) as IUser;
+	const user = $state<IUser>(JSON.parse(data.userData) as IUser);
+
+	const saveUserHandler = async () => {
+		const response = await fetch("/api/user/save", {
+			method: "POST",
+			body: JSON.stringify(user),
+			headers: {
+				"content-type": "application/json",
+			},
+		});
+
+		if (response.ok) {
+			alert("User saved");
+		} else {
+			alert("Failed to save user");
+		}
+	};
 </script>
 
 <div id="page">
-	{#if userData}
-		{#if data.sessionUser?.id === userData.id}
-			<PageButtonContainer>
-				<a class="button-02" href={`/user/${userData.id}/edit`}>Edit</a>
-			</PageButtonContainer>
-		{/if}
+	{#if user && data.sessionUser?.id === user.id}
+		<PageButtonContainer>
+			<button class="button-02" onclick={saveUserHandler}>Save</button>
+		</PageButtonContainer>
 		<div>
 			<div class="user-info-container background-14 border-08">
 				<span>Username</span>
-				<span>{userData.name}</span>
+				<input bind:value={user.name} />
 				<span>Steam Friend Code</span>
-				<span>{userData.steam}</span>
+				<input bind:value={user.steam} />
 				<span>Discord</span>
-				<span>{userData.discord}</span>
+				<input bind:value={user.discord} />
 				<span>Twitch</span>
-				<a href={`https://twitch.tv/${userData.twitch}`}>{userData.twitch}</a>
+				<input bind:value={user.twitch} />
 				<span>Youtube</span>
-				<a href={`https://youtube.com/${userData.youtube}`}>{userData.youtube}</a>
+				<input bind:value={user.youtube} />
 			</div>
 		</div>
 	{:else}

@@ -54,16 +54,23 @@ export const actions: Actions = {
 	},
 
 	save: async ({ request, locals }) => {
-		const user = await locals.sessionUserProfile;
-		if (!user) {
+		const sessionUser = locals.sessionUser;
+		if (!locals.sessionUser || !locals.sessionUserProfile || locals.sessionUser.id !== locals.sessionUserProfile.id) {
 			error(401, "Unauthorized");
 		}
 
 		const formData = await request.formData();
-		const userForm = FormHelper.deserializeFormData<User>(User, formData);
+		const user = FormHelper.deserializeFormData<User>(User, formData);
 
-		if (!userForm || userForm.id !== user.id) {
-			error(401, "Unauthorized");
+		if (!user) {
+			error(401, "User not found");
+		}
+
+		if (user.id !== locals.sessionUser.id) {
+			// Allow Admins and Moderators to edit other users
+			if (locals.sessionUserProfile.role !== "Admin" && locals.sessionUserProfile.role !== "Moderator") {
+				error(401, "Unauthorized");
+			}
 		}
 
 		try {

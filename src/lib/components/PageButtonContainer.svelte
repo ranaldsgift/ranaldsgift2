@@ -8,6 +8,6 @@
     const { children }: Props = $props();
 </script>
 
-<div class="fixed z-10 top-[35px] right-[180px]">
+<div class="fixed z-10 top-[38px] left-[150px]">
     {@render children()}
 </div>
