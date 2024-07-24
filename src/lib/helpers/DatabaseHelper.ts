@@ -1,7 +1,7 @@
 import { Career } from "$lib/entities/career/Career";
 import { CareerPerk } from "$lib/entities/career/CareerPerk";
 import { CareerSkill } from "$lib/entities/career/CareerSkill";
-import { CareerTalent } from "$lib/entities/career/CareerTalent";
+import { CareerTalent, type ICareerTalent } from "$lib/entities/career/CareerTalent";
 import { CareerPassive } from "$lib/entities/career/CareerPassive";
 import { Hero } from "$lib/entities/Hero";
 import { Weapon, WeaponTooltip } from "$lib/entities/Weapon";
@@ -1022,12 +1022,59 @@ export class DatabaseHelper {
 			build.trinket = trinket;
 
 			// Setting Talents
-			build.talent1 = firebaseBuild.talent1;
-			build.talent2 = firebaseBuild.talent2 + 3;
-			build.talent3 = firebaseBuild.talent3 + 6;
-			build.talent4 = firebaseBuild.talent4 + 9;
-			build.talent5 = firebaseBuild.talent5 + 12;
-			build.talent6 = firebaseBuild.talent6 + 15;
+			let talent1 = build.career.talents.find((talent) => {
+				return talent.talentNumber === firebaseBuild.talent1;
+			});
+			if (!talent1) {
+				LogHelper.error(`Talent with number ${firebaseBuild.talent1} not found for career ${career.name}`);
+				continue;
+			}
+			build.talent1 = talent1;
+
+			let talent2 = build.career.talents.find((talent) => {
+				return talent.talentNumber === firebaseBuild.talent2 + 3;
+			});
+			if (!talent2) {
+				LogHelper.error(`Talent with number ${firebaseBuild.talent2 + 3} not found for career ${career.name}`);
+				continue;
+			}
+			build.talent2 = talent2;
+
+			let talent3 = build.career.talents.find((talent) => {
+				return talent.talentNumber === firebaseBuild.talent3 + 6;
+			});
+			if (!talent3) {
+				LogHelper.error(`Talent with number ${firebaseBuild.talent3 + 6} not found for career ${career.name}`);
+				continue;
+			}
+			build.talent3 = talent3;
+
+			let talent4 = build.career.talents.find((talent) => {
+				return talent.talentNumber === firebaseBuild.talent4 + 9;
+			});
+			if (!talent4) {
+				LogHelper.error(`Talent with number ${firebaseBuild.talent4 + 9} not found for career ${career.name}`);
+				continue;
+			}
+			build.talent4 = talent4;
+
+			let talent5 = build.career.talents.find((talent) => {
+				return talent.talentNumber === firebaseBuild.talent5 + 12;
+			});
+			if (!talent5) {
+				LogHelper.error(`Talent with number ${firebaseBuild.talent5 + 12} not found for career ${career.name}`);
+				continue;
+			}
+			build.talent5 = talent5;
+
+			let talent6 = build.career.talents.find((talent) => {
+				return talent.talentNumber === firebaseBuild.talent6 + 15;
+			});
+			if (!talent6) {
+				LogHelper.error(`Talent with number ${firebaseBuild.talent6 + 15} not found for career ${career.name}`);
+				continue;
+			}
+			build.talent6 = talent6;
 
 			// Setting Roles
 			if (firebaseBuild.roles) {

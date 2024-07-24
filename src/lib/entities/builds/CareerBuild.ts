@@ -13,6 +13,7 @@ import { TwitchSetting, type ITwitchSetting } from "../TwitchSetting";
 import { BuildRole, type IBuildRole } from "../BuildRole";
 import { AuthoredEntity } from "../AuthoredEntity";
 import { PageViewsCareerBuild, type IPageViewsCareerBuild } from "../PageViewCareerBuild";
+import { CareerTalent, type ICareerTalent } from "../career/CareerTalent";
 
 @Entity({})
 export class CareerBuild extends AuthoredEntity<ICareerBuild> {
@@ -60,23 +61,29 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@Column("smallint", { default: 300 })
 	powerLevel!: number;
 
-	@Column("smallint")
-	talent1!: number;
+	@Type(() => CareerTalent)
+	@ManyToOne(() => CareerTalent, { eager: true })
+	talent1!: CareerTalent;
 
-	@Column("smallint")
-	talent2!: number;
+	@Type(() => CareerTalent)
+	@ManyToOne(() => CareerTalent, { eager: true })
+	talent2!: CareerTalent;
 
-	@Column("smallint")
-	talent3!: number;
+	@Type(() => CareerTalent)
+	@ManyToOne(() => CareerTalent, { eager: true })
+	talent3!: CareerTalent;
 
-	@Column("smallint")
-	talent4!: number;
+	@Type(() => CareerTalent)
+	@ManyToOne(() => CareerTalent, { eager: true })
+	talent4!: CareerTalent;
 
-	@Column("smallint")
-	talent5!: number;
+	@Type(() => CareerTalent)
+	@ManyToOne(() => CareerTalent, { eager: true })
+	talent5!: CareerTalent;
 
-	@Column("smallint")
-	talent6!: number;
+	@Type(() => CareerTalent)
+	@ManyToOne(() => CareerTalent, { eager: true })
+	talent6!: CareerTalent;
 
 	@Type(() => Difficulty)
 	@ManyToOne(() => Difficulty, { eager: true })
@@ -119,12 +126,12 @@ export interface ICareerBuild {
 	primaryWeapon: IWeaponBuild;
 	secondaryWeapon: IWeaponBuild;
 	powerLevel?: number;
-	talent1: number;
-	talent2: number;
-	talent3: number;
-	talent4: number;
-	talent5: number;
-	talent6: number;
+	talent1?: ICareerTalent;
+	talent2?: ICareerTalent;
+	talent3?: ICareerTalent;
+	talent4?: ICareerTalent;
+	talent5?: ICareerTalent;
+	talent6?: ICareerTalent;
 	difficulty?: IDifficulty;
 	mission?: IMission;
 	potion?: IPotion;

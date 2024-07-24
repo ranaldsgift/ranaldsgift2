@@ -1,29 +1,25 @@
-import { browser } from "$app/environment";
-import type { IUser, User } from "$lib/entities/User";
+import type { IUser } from "$lib/entities/User";
 import { getContext, setContext } from "svelte";
+import { LocalStorageState } from "./LocalStorageState.svelte";
 
 class UserState {
-	id: string | null = $state(null);
 	user: IUser | null = $state(null);
-	showVideo: boolean = $derived.by(() => {
-		if (this.user?.showVideo) return this.user.showVideo;
-
-		if (browser) {
-			return localStorage.getItem("showVideo") === "true";
-		}
-
-		return false;
-	});
+	showVideo: LocalStorageState<boolean> = new LocalStorageState("showVideo", false);
 
 	constructor(user: IUser | null) {
 		if (user) {
 			this.user = user;
-			this.id = user.id;
+			this.showVideo.value = user.showVideo;
 		}
+
+		$effect(() => {
+			if (this.user) {
+				this.showVideo.value = this.user.showVideo;
+			}
+		});
 	}
 
 	reset() {
-		this.id = null;
 		this.user = null;
 	}
 }

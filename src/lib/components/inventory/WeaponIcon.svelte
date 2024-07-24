@@ -17,7 +17,7 @@
 	<div class="tooltip border-35">
 		<span class="name header-underline">{weapon.name}</span>
 		<span class="description">
-			{weapon.description}
+			{weapon.tooltips.map((tooltip) => tooltip.name).join(", ")}
 		</span>
 	</div>
 </div>
@@ -45,21 +45,20 @@
 	}
 	.weapon-icon > .tooltip {
 		padding: 1.5rem;
-		z-index: 3;
-		max-width: 400px;
-		transform: translateY(calc(-100% - 10px));
+		z-index: 1000;
 		background: linear-gradient(0deg, #000000cf, #00000030), url("/images/backgrounds/background29.png");
 		background-size: cover;
 		text-transform: none;
 		position: absolute;
-		display: grid;
+		display: none;
 		grid-auto-flow: row;
 		grid-row-gap: 5px;
 		box-shadow: inset 0 0 10px 5px #000000;
-		visibility: hidden;
+		translate: calc(-100% + 82px) calc(-100% - 10px);
+		width: max-content;
 	}
 	.weapon-icon:hover > .tooltip {
-		visibility: visible;
+		display: grid;
 	}
 
 	.weapon-icon .tooltip .description {
