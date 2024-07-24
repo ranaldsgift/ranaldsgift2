@@ -12,6 +12,8 @@
 	import MainMenu from "$lib/components/navigation/MainMenu.svelte";
 	import { page } from "$app/stores";
 	import { ROOT_PAGE_TITLE } from "$lib/data/constants/constants.js";
+	import { Toaster } from "$lib/components/ui/sonner";
+
 	let { data, children } = $props();
 
 	let user = $derived(data.sessionUserProfile);
@@ -57,6 +59,8 @@
 	<title>{MenuState.isOpen && $page.url.pathname !== '/' ? 'Menu - ranalds.gift' : ROOT_PAGE_TITLE}</title>
 </svelte:head>
 
+<Toaster />
+
 <TopNavigation></TopNavigation>
 
 {#if userState.showVideo.value}
@@ -66,25 +70,22 @@
 {:else}
 <img src="/images/backgrounds/home-frame.webp" alt="Home Frame" class="fixed object-cover w-full h-full top-0 left-0 z-[-1]" />
 {/if}
-
-{#if MenuState.isOpen}	
-	<div id="page-container" class="top-10">
-		<MainMenu></MainMenu>
-	</div>
+{#if MenuState.isOpen}
+<div id="page-container" class="top-10">
+	<MainMenu></MainMenu>
+</div>
+{:else if $page.error}
+<div>
+	{@render children()}
+</div>
 {:else}
 <div class="flex-auto w-full h-full flex overflow-hidden pb-5">
 	<a class="page-title label-01" href="/">Ranald's Gift</a>
 	<div class="page-title-background"></div>
-	<div id="root-container" class="border-06 background7 p-10">		
-		{#if $page.error}
-			<div id="error-container" class="relative">
-				{@render children()}
-			</div>
-		{:else}
-			<div id="page-container">
-				{@render children()}
-			</div>
-		{/if}
+	<div id="root-container" class="border-06 background7 p-10 rounded-[8px]">
+		<div id="page-container">
+			{@render children()}
+		</div>
 	</div>
 </div>
 {/if}
@@ -111,9 +112,6 @@
 		object-fit: cover;
 		position: fixed;
 		background: url('/images/background2.jpg') center / cover;
-	}
-	:global(#page) {
-		padding: 20px;
 	}
     #page-container {
 		position: relative;

@@ -4,6 +4,7 @@
 	import { MenuState } from "$lib/state/MenuState.svelte";
 	import { getUserState } from "$lib/state/UserState.svelte";
 	import type { SubmitFunction } from "@sveltejs/kit";
+	import { toast } from "svelte-sonner";
 
 	const userState = getUserState();
 
@@ -38,6 +39,9 @@
 
 			if (!error) {
 				userState.reset();
+				toast("You have been logged out.", {
+					position: "bottom-center",
+				});
 			}
 		};
 	};

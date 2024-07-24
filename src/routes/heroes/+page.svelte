@@ -6,13 +6,16 @@
 	import type { ICareer } from "$lib/entities/career/Career.js";
 	import BuildHelper from "$lib/helpers/BuildHelper.js";
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
-	const { data } = $props();
+	import { toast } from "svelte-sonner";
+	import { error } from "@sveltejs/kit";
+	import { goto, replaceState } from "$app/navigation";
 
+	const { data } = $props();
 	const { viewModel } = data;
 	const pageState = getHeroesPageState();
 
 	if (!viewModel || !viewModel.build) {
-		throw new Error("Invalid ViewModel for Heroes page");
+		error(404, "Heroes Page - Invalid ViewModel");
 	}
 
 	if (!pageState.selectedCareer) {
@@ -36,7 +39,7 @@
 	});
 
 	$effect(() => {
-		history.replaceState(null, "", searchParams);
+		goto(`${searchParams}`, { replaceState: true, keepFocus: true });
 	});
 
 	const careerSelectionHandler = (career: ICareer) => {
@@ -50,6 +53,10 @@
 	const copyButtonHandler = () => {
 		const url = `${window.location.origin}/heroes/${searchParams}`;
 		navigator.clipboard.writeText(url);
+
+		toast("Copied to clipboard", {
+			position: "bottom-center",
+		});
 	};
 </script>
 
@@ -78,6 +85,9 @@
 {/if}
 
 <style>
+	#page {
+		padding: 20px;
+	}
 	.heroes-page {
 		display: grid;
 		align-self: start;
