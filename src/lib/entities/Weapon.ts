@@ -2,10 +2,10 @@ import { Type } from "class-transformer";
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Career, type ICareer } from "./career/Career";
 import { Trait, type ITrait } from "./Trait";
-import { TraitCategory, type ITraitCategory } from "./TraitCategory";
 import { Property, type IProperty } from "./Property";
-import { PropertyCategory, type IPropertyCategory } from "./PropertyCategory";
 import { BaseEntity } from "./BaseEntity";
+import TraitCategoryEnum from "$lib/enums/TraitCategoryEnum";
+import PropertyCategoryEnum from "$lib/enums/PropertyCategoryEnum";
 
 @Entity()
 export class Weapon extends BaseEntity<IWeapon> {
@@ -58,13 +58,17 @@ export class Weapon extends BaseEntity<IWeapon> {
 	@ManyToMany(() => Career, (career) => career.secondaryWeapons, { nullable: true })
 	canWieldSecondary!: Career[];
 
-	@Type(() => TraitCategory)
-	@ManyToOne(() => TraitCategory, (category) => category.weapons, { cascade: true })
-	traitCategory!: TraitCategory;
+	@Column({
+		type: "enum",
+		enum: TraitCategoryEnum,
+	})
+	traitCategory!: TraitCategoryEnum;
 
-	@Type(() => PropertyCategory)
-	@ManyToOne(() => PropertyCategory, (category) => category.weapons, { cascade: true })
-	propertyCategory!: PropertyCategory;
+	@Column({
+		type: "enum",
+		enum: PropertyCategoryEnum,
+	})
+	propertyCategory!: PropertyCategoryEnum;
 
 	@Type(() => Property)
 	@ManyToMany(() => Property)
@@ -107,8 +111,8 @@ export interface IWeapon {
 	rightClickMovementModifier: number | null;
 	canWieldPrimary?: ICareer[];
 	canWieldSecondary?: ICareer[];
-	traitCategory?: ITraitCategory;
-	propertyCategory?: IPropertyCategory;
+	traitCategory?: TraitCategoryEnum;
+	propertyCategory?: PropertyCategoryEnum;
 	properties: IProperty[];
 	traits: ITrait[];
 	tooltips: IWeaponTooltip[];

@@ -17,8 +17,6 @@ export class WeaponCache {
 						properties: true,
 						traits: true,
 						tooltips: true,
-						propertyCategory: true,
-						traitCategory: true,
 					},
 					relationLoadStrategy: "query",
 					order: {
@@ -42,5 +40,10 @@ export class WeaponCache {
 	public static async get(id: number): Promise<IWeapon> {
 		const instance = await WeaponCache.getInstance();
 		return instance.get(id);
+	}
+
+	public static async findByCodename(codename: string): Promise<IWeapon | null> {
+		const instance = await WeaponCache.getInstance();
+		return instance.getAll().find((weapon) => weapon.codename === codename) ?? null;
 	}
 }

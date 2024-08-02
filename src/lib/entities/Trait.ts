@@ -1,7 +1,6 @@
-import { Type } from "class-transformer";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { BaseEntity } from "./BaseEntity";
-import { TraitCategory, type ITraitCategory } from "./TraitCategory";
+import TraitCategoryEnum from "$lib/enums/TraitCategoryEnum";
 
 @Entity()
 export class Trait extends BaseEntity<ITrait> {
@@ -14,14 +13,16 @@ export class Trait extends BaseEntity<ITrait> {
 	@Column("varchar", { nullable: true })
 	description!: string;
 
-	@Type(() => TraitCategory)
-	@ManyToOne(() => TraitCategory, (category) => category.traits)
-	category!: TraitCategory;
+	@Column({
+		type: "enum",
+		enum: TraitCategoryEnum,
+	})
+	category!: TraitCategoryEnum;
 }
 
 export interface ITrait {
 	id: number;
 	name: string;
 	description: string;
-	category?: ITraitCategory;
+	category: TraitCategoryEnum;
 }

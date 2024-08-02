@@ -13,9 +13,7 @@ import { PageViewsCareerBuild } from "$lib/entities/PageViewCareerBuild";
 import { Patch } from "$lib/entities/Patch";
 import { Potion } from "$lib/entities/Potion";
 import { Property } from "$lib/entities/Property";
-import { PropertyCategory } from "$lib/entities/PropertyCategory";
 import { Trait } from "$lib/entities/Trait";
-import { TraitCategory } from "$lib/entities/TraitCategory";
 import { TwitchSetting } from "$lib/entities/TwitchSetting";
 import { User } from "$lib/entities/User";
 import { UserRole } from "$lib/entities/UserRole";
@@ -75,9 +73,7 @@ class TypeOrm {
 					WeaponTooltip,
 					WeaponSkin,
 					Property,
-					PropertyCategory,
 					Trait,
-					TraitCategory,
 					BuildRole,
 					Difficulty,
 					Mission,

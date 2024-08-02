@@ -36,13 +36,13 @@ export const load = async (event) => {
 		}
 	}
 
-	const necklaceProperties = properties.filter((property) => property?.category?.name === "necklace");
-	const charmProperties = properties.filter((property) => property?.category?.name === "charm");
-	const trinketProperties = properties.filter((property) => property?.category?.name === "trinket");
+	const necklaceProperties = properties.filter((property) => property?.category === "necklace");
+	const charmProperties = properties.filter((property) => property?.category === "charm");
+	const trinketProperties = properties.filter((property) => property?.category === "trinket");
 
-	const necklaceTraits = traits.filter((trait) => trait?.category?.name === "defence_accessory");
-	const charmTraits = traits.filter((trait) => trait?.category?.name === "offence_accessory");
-	const trinketTraits = traits.filter((trait) => trait?.category?.name === "utility_accessory");
+	const necklaceTraits = traits.filter((trait) => trait?.category === "defence_accessory");
+	const charmTraits = traits.filter((trait) => trait?.category === "offence_accessory");
+	const trinketTraits = traits.filter((trait) => trait?.category === "utility_accessory");
 
 	let initialBuild: ICareerBuild = {
 		career: careers[0],

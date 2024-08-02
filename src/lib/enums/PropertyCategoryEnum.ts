@@ -1,11 +1,9 @@
 enum PropertyCategoryEnum {
-	Necklace = "necklace",
-	Charm = "charm",
-	Trinket = "trinket",
+	MELEE = "melee",
+	RANGE = "range",
+	NECKLACE = "necklace",
+	CHARM = "charm",
+	TRINKET = "trinket",
 }
 
-enum TraitCategoryEnum {
-	Necklace = "defence_accessory",
-	Charm = "offence_accessory",
-	Trinket = "utility_accessory",
-}
+export default PropertyCategoryEnum;
