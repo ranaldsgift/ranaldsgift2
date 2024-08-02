@@ -1,26 +1,23 @@
-import { StaticData } from "$lib/data/StaticData.js";
-import { WeaponData } from "$lib/data/WeaponData.js";
+import { CareerCache } from "$lib/cache/CareerCache.js";
+import { PropertiesCache } from "$lib/cache/PropertiesCache.js";
+import { TraitsCache } from "$lib/cache/TraitsCache.js";
+import { WeaponCache } from "$lib/cache/WeaponCache.js";
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
 import type { INecklaceBuild } from "$lib/entities/builds/NecklaceBuild.js";
 import type { IWeaponBuild } from "$lib/entities/builds/WeaponBuild.js";
-import type { ICareer } from "$lib/entities/career/Career.js";
 import type { IProperty } from "$lib/entities/Property.js";
 import type { ITrait } from "$lib/entities/Trait.js";
+import PropertyCategoryEnum from "$lib/enums/PropertyCategoryEnum.js";
+import TraitCategoryEnum from "$lib/enums/TraitCategoryEnum.js";
+import BuildHelper from "$lib/helpers/BuildHelper.js";
 import { LegacyDataHelper, type LegacyPropertyCategory, type LegacyTraitCategory } from "$lib/helpers/LegacyDataHelper.js";
-import { error } from "@sveltejs/kit";
-
-interface ViewModel {
-	pageTitle: string;
-	careers: ICareer[];
-	selectedCareer: ICareer;
-	build: ICareerBuild;
-}
+import { error, redirect } from "@sveltejs/kit";
 
 export const load = async (event) => {
 	let careerBuild: ICareerBuild;
 
 	if (event.params.primary.includes(",")) {
-		careerBuild = loadCareerFromOldURL(
+		careerBuild = await loadCareerFromOldURL(
 			event.params.careerId,
 			event.params.talents,
 			event.params.primary,
@@ -30,7 +27,7 @@ export const load = async (event) => {
 			event.params.trinket
 		);
 	} else if (event.params.primary.includes("-")) {
-		careerBuild = loadCareerFromNewURL(
+		careerBuild = await loadCareerFromNewURL(
 			event.params.careerId,
 			event.params.talents,
 			event.params.primary,
@@ -44,16 +41,7 @@ export const load = async (event) => {
 		error(404, "Invalid URL parameters");
 	}
 
-	// TODO - Redirect to /heroes URL with route params
-
-	let viewModel: ViewModel = {
-		pageTitle: "Heroes",
-		careers: StaticData.careers,
-		selectedCareer: StaticData.careers[0],
-		build: careerBuild,
-	};
-
-	return { viewModel };
+	redirect(301, `/heroes/${BuildHelper.getQueryStringFromBuild(careerBuild)}`);
 };
 
 function getTrait(category: LegacyTraitCategory, id: number, traits: ITrait[]) {
@@ -69,6 +57,7 @@ function getTrait(category: LegacyTraitCategory, id: number, traits: ITrait[]) {
 }
 
 function getProperty(category: LegacyPropertyCategory, id: number, properties: IProperty[]) {
+	console.log(category);
 	let propertyName = LegacyDataHelper.getPropertyName(category, id);
 	let property = properties.find((property) => {
 		return property.name === propertyName;
@@ -80,11 +69,14 @@ function getProperty(category: LegacyPropertyCategory, id: number, properties: I
 	return property;
 }
 
-function getWeapon(id: number, type: "melee" | "range") {
+async function getWeapon(id: number, type: "melee" | "range") {
 	let weaponCodename = LegacyDataHelper.getOldWeaponCodename(id, type);
-	let weapon = WeaponData.find((weapon) => {
-		return weapon.codename === weaponCodename;
-	});
+
+	if (!weaponCodename) {
+		error(404, `Weapon with id ${id} not found`);
+	}
+
+	let weapon = await WeaponCache.findByCodename(weaponCodename);
 
 	if (!weapon) {
 		error(404, `Weapon with id ${id} not found`);
@@ -93,7 +85,7 @@ function getWeapon(id: number, type: "melee" | "range") {
 	return weapon;
 }
 
-function loadCareerFromOldURL(
+async function loadCareerFromOldURL(
 	careerId: string,
 	talentsParam: string,
 	meleeParam: string,
@@ -101,7 +93,7 @@ function loadCareerFromOldURL(
 	necklaceParam: string,
 	charmParam: string,
 	trinketParam: string
-): ICareerBuild {
+): Promise<ICareerBuild> {
 	let careerBuild: ICareerBuild;
 	let talents: number[];
 	let primaryWeapon: IWeaponBuild;
@@ -110,9 +102,8 @@ function loadCareerFromOldURL(
 	let charm: INecklaceBuild;
 	let trinket: INecklaceBuild;
 
-	let career = StaticData.careers.find((career) => {
-		return career.id === parseInt(careerId);
-	});
+	let career = await CareerCache.get(parseInt(careerId));
+
 	if (!career) {
 		error(404, `Career with id ${careerId} not found`);
 	}
@@ -144,10 +135,15 @@ function loadCareerFromOldURL(
 	}
 
 	let meleeParams = meleeParam.split(",");
-	let weapon = getWeapon(parseInt(meleeParams[0]), "melee");
-	let property1 = getProperty(weapon?.propertyCategory?.name as LegacyPropertyCategory, parseInt(meleeParams[1]), weapon.properties);
-	let property2 = getProperty(weapon?.propertyCategory?.name as LegacyPropertyCategory, parseInt(meleeParams[2]), weapon.properties);
-	let trait = getTrait(weapon?.traitCategory?.name as LegacyTraitCategory, parseInt(meleeParams[3]), weapon.traits);
+	let weapon = await getWeapon(parseInt(meleeParams[0]), "melee");
+
+	if (!weapon) {
+		error(404, `Weapon with id ${meleeParams[0]} not found`);
+	}
+
+	let property1 = getProperty(weapon?.propertyCategory as LegacyPropertyCategory, parseInt(meleeParams[1]), weapon.properties);
+	let property2 = getProperty(weapon?.propertyCategory as LegacyPropertyCategory, parseInt(meleeParams[2]), weapon.properties);
+	let trait = getTrait(weapon?.traitCategory as LegacyTraitCategory, parseInt(meleeParams[3]), weapon.traits);
 
 	let primaryWeaponBuild: IWeaponBuild = {
 		weapon,
@@ -161,14 +157,19 @@ function loadCareerFromOldURL(
 		error(404, `Invalid range weapon parameters: ${rangeParam}`);
 	}
 	let rangeParams = rangeParam.split(",");
-	weapon = getWeapon(parseInt(rangeParams[0]), career.id === 6 || career.id === 16 ? "melee" : "range");
-	property1 = getProperty(weapon?.propertyCategory?.name as LegacyPropertyCategory, parseInt(rangeParams[1]), weapon.properties);
-	property2 = getProperty(weapon?.propertyCategory?.name as LegacyPropertyCategory, parseInt(rangeParams[2]), weapon.properties);
+	weapon = await getWeapon(parseInt(rangeParams[0]), career.id === 6 || career.id === 16 ? "melee" : "range");
+
+	if (!weapon) {
+		error(404, `Weapon with id ${rangeParams[0]} not found`);
+	}
+
+	property1 = getProperty(weapon?.propertyCategory as LegacyPropertyCategory, parseInt(rangeParams[1]), weapon.properties);
+	property2 = getProperty(weapon?.propertyCategory as LegacyPropertyCategory, parseInt(rangeParams[2]), weapon.properties);
 
 	let rangeTraitId = parseInt(rangeParams[3]);
-	if (weapon?.traitCategory?.name === "ranged_ammo") {
+	if (weapon?.traitCategory === "ranged_ammo") {
 		rangeTraitId = rangeTraitId > 2 ? (rangeTraitId === 3 || rangeTraitId === 8 ? 1 : rangeTraitId - 1) : rangeTraitId;
-	} else if (weapon?.traitCategory?.name === "ranged_heat") {
+	} else if (weapon?.traitCategory === "ranged_heat") {
 		rangeTraitId =
 			rangeTraitId > 1
 				? rangeTraitId === 2 || rangeTraitId === 7
@@ -178,7 +179,7 @@ function loadCareerFromOldURL(
 					: rangeTraitId - 1
 				: rangeTraitId;
 	}
-	trait = getTrait(weapon?.traitCategory?.name as LegacyTraitCategory, rangeTraitId, weapon.traits);
+	trait = getTrait(weapon?.traitCategory as LegacyTraitCategory, rangeTraitId, weapon.traits);
 
 	let secondaryWeaponBuild: IWeaponBuild = {
 		weapon,
@@ -193,12 +194,8 @@ function loadCareerFromOldURL(
 	}
 
 	let necklaceParams = necklaceParam.split(",");
-	let properties = StaticData.properties.filter((property) => {
-		return property.category?.name === "necklace";
-	});
-	let traits = StaticData.traits.filter((trait) => {
-		return trait.category?.name === "defence_accessory";
-	});
+	let properties = await PropertiesCache.getAllForCategory(PropertyCategoryEnum.NECKLACE);
+	let traits = await TraitsCache.getAllForCategory(TraitCategoryEnum.Necklace);
 
 	property1 = getProperty("necklace", parseInt(necklaceParams[0]), properties);
 	property2 = getProperty("necklace", parseInt(necklaceParams[1]), properties);
@@ -216,12 +213,9 @@ function loadCareerFromOldURL(
 	}
 
 	let charmParams = charmParam.split(",");
-	properties = StaticData.properties.filter((property) => {
-		return property.category?.name === "charm";
-	});
-	traits = StaticData.traits.filter((trait) => {
-		return trait.category?.name === "offence_accessory";
-	});
+	properties = await PropertiesCache.getAllForCategory(PropertyCategoryEnum.CHARM);
+	traits = await TraitsCache.getAllForCategory(TraitCategoryEnum.Charm);
+
 	property1 = getProperty("charm", parseInt(charmParams[0]), properties);
 	property2 = getProperty("charm", parseInt(charmParams[1]), properties);
 	trait = getTrait("offence_accessory", parseInt(charmParams[2]), traits);
@@ -238,12 +232,8 @@ function loadCareerFromOldURL(
 	}
 
 	let trinketParams = trinketParam.split(",");
-	properties = StaticData.properties.filter((property) => {
-		return property.category?.name === "trinket";
-	});
-	traits = StaticData.traits.filter((trait) => {
-		return trait.category?.name === "utility_accessory";
-	});
+	properties = await PropertiesCache.getAllForCategory(PropertyCategoryEnum.TRINKET);
+	traits = await TraitsCache.getAllForCategory(TraitCategoryEnum.Trinket);
 
 	property1 = getProperty("trinket", parseInt(trinketParams[0]), properties);
 	property2 = getProperty("trinket", parseInt(trinketParams[1]), properties);
@@ -258,12 +248,12 @@ function loadCareerFromOldURL(
 
 	careerBuild = {
 		career: career,
-		talent1: talents[0],
-		talent2: talents[1] + 3,
-		talent3: talents[2] + 6,
-		talent4: talents[3] + 9,
-		talent5: talents[4] + 12,
-		talent6: talents[5] + 15,
+		talent1: career.talents.find((talent) => talent.talentNumber === talents[0]),
+		talent2: career.talents.find((talent) => talent.talentNumber === talents[1] + 3),
+		talent3: career.talents.find((talent) => talent.talentNumber === talents[2] + 6),
+		talent4: career.talents.find((talent) => talent.talentNumber === talents[3] + 9),
+		talent5: career.talents.find((talent) => talent.talentNumber === talents[4] + 12),
+		talent6: career.talents.find((talent) => talent.talentNumber === talents[5] + 15),
 		primaryWeapon: primaryWeapon,
 		secondaryWeapon: secondaryWeapon,
 		necklace: necklace,
@@ -274,7 +264,7 @@ function loadCareerFromOldURL(
 	return careerBuild;
 }
 
-function loadCareerFromNewURL(
+async function loadCareerFromNewURL(
 	careerId: string,
 	talentsParam: string,
 	primaryParam: string,
@@ -283,7 +273,7 @@ function loadCareerFromNewURL(
 	charmParam: string,
 	trinketParam: string,
 	separator: string
-): ICareerBuild {
+): Promise<ICareerBuild> {
 	let careerBuild: ICareerBuild;
 	let talents: number[];
 	let primaryWeapon: IWeaponBuild;
@@ -292,9 +282,7 @@ function loadCareerFromNewURL(
 	let charm: INecklaceBuild;
 	let trinket: INecklaceBuild;
 
-	let career = StaticData.careers.find((career) => {
-		return career.id === parseInt(careerId);
-	});
+	let career = await CareerCache.get(parseInt(careerId));
 	if (!career) {
 		error(404, `Career with id ${careerId} not found`);
 	}
@@ -326,17 +314,15 @@ function loadCareerFromNewURL(
 	}
 
 	let meleeParams = primaryParam.split(separator);
-	let weapon = WeaponData.find((weapon) => {
-		return weapon.id === parseInt(meleeParams[0]);
-	});
+	let weapon = await WeaponCache.get(parseInt(meleeParams[0]));
 
 	if (!weapon) {
 		error(404, `Weapon with id ${meleeParams[0]} not found`);
 	}
 
-	let property1 = getProperty(weapon?.propertyCategory?.name as LegacyPropertyCategory, parseInt(meleeParams[1]), weapon.properties);
-	let property2 = getProperty(weapon?.propertyCategory?.name as LegacyPropertyCategory, parseInt(meleeParams[2]), weapon.properties);
-	let trait = getTrait(weapon?.traitCategory?.name as LegacyTraitCategory, parseInt(meleeParams[3]), weapon.traits);
+	let property1 = getProperty(weapon?.propertyCategory as LegacyPropertyCategory, parseInt(meleeParams[1]), weapon.properties);
+	let property2 = getProperty(weapon?.propertyCategory as LegacyPropertyCategory, parseInt(meleeParams[2]), weapon.properties);
+	let trait = getTrait(weapon?.traitCategory as LegacyTraitCategory, parseInt(meleeParams[3]), weapon.traits);
 
 	let primaryWeaponBuild: IWeaponBuild = {
 		weapon,
@@ -350,17 +336,15 @@ function loadCareerFromNewURL(
 		error(404, `Invalid range weapon parameters: ${secondaryParam}`);
 	}
 	let rangeParams = secondaryParam.split(separator);
-	weapon = WeaponData.find((weapon) => {
-		return weapon.id === parseInt(rangeParams[0]);
-	});
+	weapon = await WeaponCache.get(parseInt(rangeParams[0]));
 
 	if (!weapon) {
 		error(404, `Weapon with id ${rangeParams[0]} not found`);
 	}
 
-	property1 = getProperty(weapon?.propertyCategory?.name as LegacyPropertyCategory, parseInt(rangeParams[1]), weapon.properties);
-	property2 = getProperty(weapon?.propertyCategory?.name as LegacyPropertyCategory, parseInt(rangeParams[2]), weapon.properties);
-	trait = getTrait(weapon?.traitCategory?.name as LegacyTraitCategory, parseInt(rangeParams[3]), weapon.traits);
+	property1 = getProperty(weapon?.propertyCategory as LegacyPropertyCategory, parseInt(rangeParams[1]), weapon.properties);
+	property2 = getProperty(weapon?.propertyCategory as LegacyPropertyCategory, parseInt(rangeParams[2]), weapon.properties);
+	trait = getTrait(weapon?.traitCategory as LegacyTraitCategory, parseInt(rangeParams[3]), weapon.traits);
 
 	let secondaryWeaponBuild: IWeaponBuild = {
 		weapon,
@@ -375,12 +359,8 @@ function loadCareerFromNewURL(
 	}
 
 	let necklaceParams = necklaceParam.split(separator);
-	let properties = StaticData.properties.filter((property) => {
-		return property.category?.name === "necklace";
-	});
-	let traits = StaticData.traits.filter((trait) => {
-		return trait.category?.name === "defence_accessory";
-	});
+	let properties = await PropertiesCache.getAllForCategory(PropertyCategoryEnum.NECKLACE);
+	let traits = await TraitsCache.getAllForCategory(TraitCategoryEnum.Necklace);
 
 	property1 = getProperty("necklace", parseInt(necklaceParams[0]), properties);
 	property2 = getProperty("necklace", parseInt(necklaceParams[1]), properties);
@@ -398,12 +378,9 @@ function loadCareerFromNewURL(
 	}
 
 	let charmParams = charmParam.split(separator);
-	properties = StaticData.properties.filter((property) => {
-		return property.category?.name === "charm";
-	});
-	traits = StaticData.traits.filter((trait) => {
-		return trait.category?.name === "offence_accessory";
-	});
+	properties = await PropertiesCache.getAllForCategory(PropertyCategoryEnum.CHARM);
+	traits = await TraitsCache.getAllForCategory(TraitCategoryEnum.Charm);
+
 	property1 = getProperty("charm", parseInt(charmParams[0]), properties);
 	property2 = getProperty("charm", parseInt(charmParams[1]), properties);
 	trait = getTrait("offence_accessory", parseInt(charmParams[2]), traits);
@@ -420,12 +397,8 @@ function loadCareerFromNewURL(
 	}
 
 	let trinketParams = trinketParam.split(separator);
-	properties = StaticData.properties.filter((property) => {
-		return property.category?.name === "trinket";
-	});
-	traits = StaticData.traits.filter((trait) => {
-		return trait.category?.name === "utility_accessory";
-	});
+	properties = await PropertiesCache.getAllForCategory(PropertyCategoryEnum.TRINKET);
+	traits = await TraitsCache.getAllForCategory(TraitCategoryEnum.Trinket);
 
 	property1 = getProperty("trinket", parseInt(trinketParams[0]), properties);
 	property2 = getProperty("trinket", parseInt(trinketParams[1]), properties);
@@ -440,12 +413,12 @@ function loadCareerFromNewURL(
 
 	careerBuild = {
 		career: career,
-		talent1: talents[0],
-		talent2: talents[1] + 3,
-		talent3: talents[2] + 6,
-		talent4: talents[3] + 9,
-		talent5: talents[4] + 12,
-		talent6: talents[5] + 15,
+		talent1: career.talents.find((talent) => talent.talentNumber === talents[0]),
+		talent2: career.talents.find((talent) => talent.talentNumber === talents[1] + 3),
+		talent3: career.talents.find((talent) => talent.talentNumber === talents[2] + 6),
+		talent4: career.talents.find((talent) => talent.talentNumber === talents[3] + 9),
+		talent5: career.talents.find((talent) => talent.talentNumber === talents[4] + 12),
+		talent6: career.talents.find((talent) => talent.talentNumber === talents[5] + 15),
 		primaryWeapon: primaryWeapon,
 		secondaryWeapon: secondaryWeapon,
 		necklace: necklace,

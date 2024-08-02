@@ -1,4 +1,5 @@
 import { Property, type IProperty } from "$lib/entities/Property";
+import type PropertyCategoryEnum from "$lib/enums/PropertyCategoryEnum";
 import redis from "$lib/server/redis";
 import StaticDataCache from "./StaticDataCache";
 
@@ -12,11 +13,7 @@ export class PropertiesCache {
 			let properties = await redis.get<IProperty[]>("properties");
 
 			if (!properties) {
-				const propertyData = await Property.find({
-					relations: {
-						category: true,
-					},
-				});
+				const propertyData = await Property.find();
 				properties = propertyData.map((property) => property.toObject());
 			}
 
@@ -29,7 +26,7 @@ export class PropertiesCache {
 
 	public static async getAllForCategory(category: PropertyCategoryEnum): Promise<IProperty[]> {
 		const instance = await PropertiesCache.getInstance();
-		return instance.getAll().filter((property) => property.category?.name === category);
+		return instance.getAll().filter((property) => property.category === category);
 	}
 
 	public static async getAll(): Promise<IProperty[]> {

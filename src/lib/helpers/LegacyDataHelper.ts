@@ -20,6 +20,7 @@ import { unlistedPerksData } from "$lib/data/legacy/UnlistedPerks";
 import { traitsDataMap } from "$lib/data/legacy/TraitsDataMap";
 import { meleeWeaponsData } from "$lib/data/legacy/MeleeWeapons";
 import { rangeWeaponsData } from "$lib/data/legacy/RangeWeapons";
+import type TraitCategoryEnum from "$lib/enums/TraitCategoryEnum";
 
 let weapons: any = null;
 

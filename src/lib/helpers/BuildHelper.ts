@@ -153,24 +153,15 @@ class BuildHelper {
 			build.talent4?.talentNumber ?? 0
 		}-${build.talent5?.talentNumber ?? 0}-${build.talent6?.talentNumber ?? 0}`;
 
-		return `?career=${build.career.id}&talents=${talentParams}
-		&primary=${build.primaryWeapon.weapon.id}
-			-${build.primaryWeapon.property1?.id}
-			-${build.primaryWeapon.property2?.id}
-			-${build.primaryWeapon.trait?.id}
-		&secondary=${build.secondaryWeapon.weapon.id}
-			-${build.secondaryWeapon.property1?.id}
-			-${build.secondaryWeapon.property2?.id}
-			-${build.secondaryWeapon.trait?.id}
-		&necklace=${build.necklace.property1?.id}
-			-${build.necklace.property2?.id}
-			-${build.necklace.trait?.id}
-		&charm=${build.charm.property1?.id}
-			-${build.charm.property2?.id}
-			-${build.charm.trait?.id}
-		&trinket=${build.trinket.property1?.id}
-			-${build.trinket.property2?.id}
-			-${build.trinket.trait?.id}`;
+		let searchParams = "?";
+		searchParams += `career=${build.career.id}`;
+		searchParams += `&talents=${talentParams}`;
+		searchParams += `&primary=${build.primaryWeapon.weapon.id}-${build.primaryWeapon.property1?.id}-${build.primaryWeapon.property2?.id}-${build.primaryWeapon.trait?.id}`;
+		searchParams += `&secondary=${build.secondaryWeapon.weapon.id}-${build.secondaryWeapon.property1?.id}-${build.secondaryWeapon.property2?.id}-${build.secondaryWeapon.trait?.id}`;
+		searchParams += `&necklace=${build.necklace.property1?.id}-${build.necklace.property2?.id}-${build.necklace.trait?.id}`;
+		searchParams += `&charm=${build.charm.property1?.id}-${build.charm.property2?.id}-${build.charm.trait?.id}`;
+		searchParams += `&trinket=${build.trinket.property1?.id}-${build.trinket.property2?.id}-${build.trinket.trait?.id}`;
+		return searchParams;
 	}
 
 	static getSearchParamsFromBuild(build: ICareerBuild): { key: string; value: string }[] {

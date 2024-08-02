@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Seo from "$lib/components/SEO.svelte";
+
 	type ResourceList = {
 		title: string;
 		links: {
@@ -222,6 +224,8 @@
 		},
 	];
 </script>
+
+<Seo title="Resources" description="A collection of resources for Vermintide 2 players." />
 
 <div id="page">
 	<div class="flex flex-wrap gap-5 justify-center">

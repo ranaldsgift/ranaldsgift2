@@ -1,5 +1,13 @@
-<script>
-    export let url;
+<script lang="ts">
+	import type { Snippet } from "svelte";
+
+    type Props = {
+        url: string;
+        class?: string;
+        children: Snippet
+    }
+
+    let { url, children, class: CLASS }: Props = $props();
 </script>
 
 <style>
@@ -11,7 +19,7 @@
         width: 100%;
         height: 55px;
         padding: 0 20px;
-        color: #928962 !important;
+        color: #928962;
         background: url('/images/labels/label-06.png') no-repeat center;
         background-size: cover;
         align-content: center;
@@ -56,4 +64,6 @@
     }
 </style>
 
-<a href={url}><slot/></a>
+<a href={url} class={CLASS}>
+    {@render children()}
+</a>

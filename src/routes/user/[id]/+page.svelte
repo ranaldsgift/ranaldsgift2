@@ -1,5 +1,6 @@
 <script lang="ts">
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
+	import Seo from "$lib/components/SEO.svelte";
 	import { type IUser } from "$lib/entities/User";
 	import type { PageData } from "./$types";
 
@@ -7,7 +8,12 @@
 	const userData = JSON.parse(data.userData) as IUser;
 </script>
 
-<div id="page">
+<Seo
+	title={`${userData.name}'s Profile'`}
+	description={`${userData.name}'s Profile. Contains a list of ${userData.name}'s authored builds.`}
+/>
+
+<div>
 	{#if userData}
 		{#if data.sessionUser?.id === userData.id}
 			<PageButtonContainer>
