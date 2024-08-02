@@ -8,9 +8,7 @@ import { Weapon, WeaponTooltip } from "$lib/entities/Weapon";
 import { LegacyDataHelper, type LegacyTraitCategory } from "./LegacyDataHelper";
 import { LogHelper } from "./LogHelper";
 import { Trait } from "$lib/entities/Trait";
-import { TraitCategory } from "$lib/entities/TraitCategory";
 import { Property } from "$lib/entities/Property";
-import { PropertyCategory } from "$lib/entities/PropertyCategory";
 import { unlistedPerksData } from "$lib/data/legacy/UnlistedPerks";
 import { roleData } from "$lib/data/legacy/Roles";
 import { BuildRole } from "$lib/entities/BuildRole";
@@ -26,7 +24,6 @@ import { difficultyData } from "$lib/data/legacy/Difficulties";
 import { Difficulty } from "$lib/entities/Difficulty";
 import { firebaseData } from "$lib/data/legacy/FirebaseBackup";
 import { User } from "$lib/entities/User";
-import { UserRole } from "$lib/entities/UserRole";
 import { EnumHelper } from "./EnumHelper";
 import { UserRoleEnum } from "$lib/enums/UserRoleEnum";
 import { PatchTypeEnum } from "$lib/enums/PatchTypeEnum";
@@ -40,6 +37,10 @@ import { TrinketBuild } from "$lib/entities/builds/TrinketBuild";
 import { BookSetting } from "$lib/entities/BookSetting";
 import { bookData } from "$lib/data/legacy/Books";
 import { env } from "$env/dynamic/private";
+import PropertyCategoryEnum from "$lib/enums/PropertyCategoryEnum";
+import TraitCategoryEnum from "$lib/enums/TraitCategoryEnum";
+import { CareerCache } from "$lib/cache/CareerCache";
+import { plainToInstance } from "class-transformer";
 
 // Use this flag to import data from Firebase into Supabase
 let IMPORT_FIREBASE_DATA = true;
@@ -65,7 +66,6 @@ export class DatabaseHelper {
 			await this.createTwitchSettings();
 			await this.createBookSettings();
 			await this.createDifficulties();
-			await this.createUserRoles();
 
 			// TODO - Realistically this logic is not related to this app and should be a separate service
 			// It may be worth keeping just to be used to populate the database with "dummy" data for "testing"
@@ -268,24 +268,23 @@ export class DatabaseHelper {
 				weapon.rightClickMovementModifier = parseFloat(oldWeapon.rightClickMovementModifier);
 			}
 
-			var traitCategory = await TraitCategory.findOne({ where: { name: oldWeapon.traitCategory } });
+			const traitCategory = EnumHelper.getValues(TraitCategoryEnum).find((value) => value === oldWeapon.traitCategory);
 			if (!traitCategory) {
-				traitCategory = new TraitCategory();
-				traitCategory.name = oldWeapon.traitCategory;
-				await traitCategory.save();
+				LogHelper.error(`Trait category with name ${oldWeapon.traitCategory} is unknown.`);
+				continue;
 			}
+
 			weapon.traitCategory = traitCategory;
-			const traits = await Trait.find({ where: { category: { id: traitCategory.id } } });
+			const traits = await Trait.find({ where: { category: traitCategory } });
 			weapon.traits = traits;
 
-			var propertyCategory = await PropertyCategory.findOne({ where: { name: oldWeapon.propertyCategory } });
+			const propertyCategory = EnumHelper.getValues(PropertyCategoryEnum).find((value) => value === oldWeapon.propertyCategory);
 			if (!propertyCategory) {
-				propertyCategory = new PropertyCategory();
-				propertyCategory.name = oldWeapon.propertyCategory;
-				await propertyCategory.save();
+				LogHelper.error(`Property category with name ${oldWeapon.propertyCategory} is unknown.`);
+				continue;
 			}
 			weapon.propertyCategory = propertyCategory;
-			const properties = await Property.find({ where: { category: { id: propertyCategory.id } } });
+			const properties = await Property.find({ where: { category: propertyCategory } });
 			weapon.properties = properties;
 
 			await weapon.save();
@@ -303,15 +302,14 @@ export class DatabaseHelper {
 		const legacyProperties = LegacyDataHelper.getProperties();
 
 		for (var oldPropertyCategory of legacyProperties) {
-			var propertyCategory = await PropertyCategory.findOne({ where: { name: oldPropertyCategory.name } });
+			const propertyCategory = EnumHelper.getValues(PropertyCategoryEnum).find((key) => key === oldPropertyCategory.name);
 			if (!propertyCategory) {
-				propertyCategory = new PropertyCategory();
-				propertyCategory.name = oldPropertyCategory.name;
-				await propertyCategory.save();
+				LogHelper.error(`Property category with name ${oldPropertyCategory.name} is unknown.`);
+				continue;
 			}
 
 			for (var oldProperty of oldPropertyCategory.properties) {
-				var property = await Property.findOne({ where: { name: oldProperty.name, category: { name: oldPropertyCategory.name } } });
+				var property = await Property.findOne({ where: { name: oldProperty.name, category: propertyCategory } });
 
 				if (property) {
 					LogHelper.info(`Property with name ${oldProperty.name} already exists in the database. Skipping...`);
@@ -342,15 +340,14 @@ export class DatabaseHelper {
 		const legacyTraits = LegacyDataHelper.getTraits();
 
 		for (var oldTraitCategory of legacyTraits) {
-			var traitCategory = await TraitCategory.findOne({ where: { name: oldTraitCategory.name } });
+			const traitCategory = EnumHelper.getValues(TraitCategoryEnum).find((key) => key === oldTraitCategory.name);
 			if (!traitCategory) {
-				traitCategory = new TraitCategory();
-				traitCategory.name = oldTraitCategory.name;
-				await traitCategory.save();
+				LogHelper.error(`Trait category with name ${oldTraitCategory.name} is unknown.`);
+				continue;
 			}
 
 			for (var oldTrait of oldTraitCategory.traits) {
-				var trait = await Trait.findOne({ where: { name: oldTrait.name, category: { name: oldTraitCategory.name } } });
+				var trait = await Trait.findOne({ where: { name: oldTrait.name, category: traitCategory } });
 
 				if (trait) {
 					LogHelper.info(`Trait with name ${oldTrait.name} already exists in the database. Skipping...`);
@@ -551,25 +548,6 @@ export class DatabaseHelper {
 		LogHelper.info("Created Twitch settings successfully!");
 	}
 
-	private static async createUserRoles() {
-		LogHelper.info("Creating user roles...");
-
-		for (var roleName of EnumHelper.getKeys(UserRoleEnum)) {
-			var userRole = await UserRole.findOne({ where: { name: roleName } });
-
-			if (userRole) {
-				LogHelper.info(`User role with name ${roleName} already exists in the database. Skipping...`);
-				continue;
-			}
-
-			userRole = new UserRole();
-			userRole.name = roleName;
-			await userRole.save();
-		}
-
-		LogHelper.info("Created user roles successfully!");
-	}
-
 	/**
 	 * Use this function to migrate user data from Firebase to the the supabase database
 	 */
@@ -578,8 +556,6 @@ export class DatabaseHelper {
 
 		const firebaseUserIds: string[] = Object.keys(firebaseData.__collections__.users);
 		const firebaseUserData: FirebaseUserData[] = Object.values(firebaseData.__collections__.users);
-
-		var memberRole = await UserRole.findOne({ where: { name: UserRoleEnum.Member } });
 
 		const {
 			data: { users },
@@ -622,11 +598,8 @@ export class DatabaseHelper {
 			user.youtube = firebaseUserData[i].youtube;
 			user.twitch = firebaseUserData[i].twitch;
 			user.steam = firebaseUserData[i].steam;
-			user.showVideo = firebaseUserData[i].showVideo;
-
-			if (memberRole) {
-				user.roles = [memberRole];
-			}
+			user.showVideo = firebaseUserData[i].showVideo ?? false;
+			user.role = UserRoleEnum.Member;
 
 			var seconds = firebaseUserData[i].dateCreated.value._seconds;
 			var nanoseconds = firebaseUserData[i].dateCreated.value._nanoseconds;
@@ -686,14 +659,14 @@ export class DatabaseHelper {
 	 */
 	private static async importFirebaseBuildData() {
 		LogHelper.info("Importing build data from Firebase...");
-		// This is a placeholder for the actual implementation
+
 		const buildIds = Object.keys(firebaseData.__collections__.builds);
 		const buildData: FirebaseBuild[] = Object.values(firebaseData.__collections__.builds);
 
-		const traitData = await Trait.find({ relations: { category: true } });
-		const propertyData = await Property.find({ relations: { category: true } });
-		const weaponData = await Weapon.find({ relations: { traitCategory: true, propertyCategory: true } });
-		const careerData = await Career.find();
+		const traitData = await Trait.find();
+		const propertyData = await Property.find();
+		const weaponData = await Weapon.find();
+		const careerData = (await CareerCache.getAll()).map((career) => plainToInstance(Career, career));
 
 		const buildRoleData = await BuildRole.find();
 		const difficultyData = await Difficulty.find();
@@ -751,47 +724,47 @@ export class DatabaseHelper {
 			primaryWeaponBuild.weapon = primaryWeapon;
 
 			let primaryLegacyProperty1 = LegacyDataHelper.getPropertyFromCategory(
-				primaryWeapon.propertyCategory.name,
+				primaryWeapon.propertyCategory,
 				firebaseBuild.primaryWeapon.property1Id
 			);
 
 			let primaryWeaponProperty1 = propertyData.find((property) => {
-				return property.name === primaryLegacyProperty1?.name && property.category.name === primaryWeapon.propertyCategory.name;
+				return property.name === primaryLegacyProperty1?.name && property.category === primaryWeapon.propertyCategory;
 			});
 			if (!primaryWeaponProperty1) {
 				LogHelper.error(
-					`Property with name ${primaryLegacyProperty1?.name} for category ${primaryWeapon.propertyCategory.name} not found in the database.`
+					`Property with name ${primaryLegacyProperty1?.name} for category ${primaryWeapon.propertyCategory} not found in the database.`
 				);
 				continue;
 			}
 			primaryWeaponBuild.property1 = primaryWeaponProperty1;
 
 			let primaryLegacyProperty2 = LegacyDataHelper.getPropertyFromCategory(
-				primaryWeapon.propertyCategory.name,
+				primaryWeapon.propertyCategory,
 				firebaseBuild.primaryWeapon.property2Id
 			);
 
 			let primaryWeaponProperty2 = propertyData.find((property) => {
-				return property.name === primaryLegacyProperty2?.name && property.category.name === primaryWeapon.propertyCategory.name;
+				return property.name === primaryLegacyProperty2?.name && property.category === primaryWeapon.propertyCategory;
 			});
 			if (!primaryWeaponProperty2) {
 				LogHelper.error(
-					`Property with name ${primaryLegacyProperty2?.name} for category ${primaryWeapon.propertyCategory.name} not found in the database.`
+					`Property with name ${primaryLegacyProperty2?.name} for category ${primaryWeapon.propertyCategory} not found in the database.`
 				);
 				continue;
 			}
 			primaryWeaponBuild.property2 = primaryWeaponProperty2;
 
 			let primaryLegacyTrait = LegacyDataHelper.getTraitMapById(
-				primaryWeapon.traitCategory.name as LegacyTraitCategory,
+				primaryWeapon.traitCategory as LegacyTraitCategory,
 				firebaseBuild.primaryWeapon.traitId
 			);
 			let primaryWeaponTrait = traitData.find((trait) => {
-				return trait.name === primaryLegacyTrait?.name && trait.category.name === primaryWeapon.traitCategory.name;
+				return trait.name === primaryLegacyTrait?.name && trait.category === primaryWeapon.traitCategory;
 			});
 			if (!primaryWeaponTrait) {
 				LogHelper.error(
-					`Trait with name ${primaryLegacyTrait?.name} for category ${primaryWeapon.traitCategory.name} not found in the database.`
+					`Trait with name ${primaryLegacyTrait?.name} for category ${primaryWeapon.traitCategory} not found in the database.`
 				);
 				LogHelper.error(
 					`Could not find firebase trait ID ${firebaseBuild.primaryWeapon.traitId} for weapon ID ${firebaseBuild.primaryWeapon.id}`
@@ -815,45 +788,45 @@ export class DatabaseHelper {
 			secondaryWeaponBuild.weapon = secondaryWeapon;
 
 			let secondaryLegacyProperty1 = LegacyDataHelper.getPropertyFromCategory(
-				secondaryWeapon.propertyCategory.name,
+				secondaryWeapon.propertyCategory,
 				firebaseBuild.secondaryWeapon.property1Id
 			);
 			let secondaryWeaponProperty1 = propertyData.find((property) => {
-				return property.name === secondaryLegacyProperty1?.name && property.category.name === secondaryWeapon.propertyCategory.name;
+				return property.name === secondaryLegacyProperty1?.name && property.category === secondaryWeapon.propertyCategory;
 			});
 			if (!secondaryWeaponProperty1) {
 				LogHelper.error(
-					`Property with name ${secondaryLegacyProperty1?.name} for category ${secondaryWeapon.propertyCategory.name} not found in the database.`
+					`Property with name ${secondaryLegacyProperty1?.name} for category ${secondaryWeapon.propertyCategory} not found in the database.`
 				);
 				continue;
 			}
 			secondaryWeaponBuild.property1 = secondaryWeaponProperty1;
 
 			let secondaryLegacyProperty2 = LegacyDataHelper.getPropertyFromCategory(
-				secondaryWeapon.propertyCategory.name,
+				secondaryWeapon.propertyCategory,
 				firebaseBuild.secondaryWeapon.property2Id
 			);
 			let secondaryWeaponProperty2 = propertyData.find((property) => {
-				return property.name === secondaryLegacyProperty2?.name && property.category.name === secondaryWeapon.propertyCategory.name;
+				return property.name === secondaryLegacyProperty2?.name && property.category === secondaryWeapon.propertyCategory;
 			});
 			if (!secondaryWeaponProperty2) {
 				LogHelper.error(
-					`Property with name ${secondaryLegacyProperty2?.name} for category ${secondaryWeapon.propertyCategory.name} not found in the database.`
+					`Property with name ${secondaryLegacyProperty2?.name} for category ${secondaryWeapon.propertyCategory} not found in the database.`
 				);
 				continue;
 			}
 			secondaryWeaponBuild.property2 = secondaryWeaponProperty2;
 
 			let secondaryLegacyTrait = LegacyDataHelper.getTraitMapById(
-				secondaryWeapon.traitCategory.name as LegacyTraitCategory,
+				secondaryWeapon.traitCategory as LegacyTraitCategory,
 				firebaseBuild.secondaryWeapon.traitId
 			);
 			let secondaryWeaponTrait = traitData.find((trait) => {
-				return trait.name === secondaryLegacyTrait?.name && trait.category.name === secondaryWeapon.traitCategory.name;
+				return trait.name === secondaryLegacyTrait?.name && trait.category === secondaryWeapon.traitCategory;
 			});
 			if (!secondaryWeaponTrait) {
 				LogHelper.error(
-					`Trait with name ${secondaryLegacyTrait?.name} for category ${secondaryWeapon.traitCategory.name} not found in the database.`
+					`Trait with name ${secondaryLegacyTrait?.name} for category ${secondaryWeapon.traitCategory} not found in the database.`
 				);
 				LogHelper.error(`Could not find firebase trait ID ${firebaseBuild.secondaryWeapon.traitId}`);
 				continue;
@@ -868,7 +841,7 @@ export class DatabaseHelper {
 			let charmProperty1 = propertyData.find((property) => {
 				return (
 					property.name === LegacyDataHelper.getPropertyFromCategory("charm", firebaseBuild.charm.property1Id)?.name &&
-					property.category.name === "charm"
+					property.category === "charm"
 				);
 			});
 			if (!charmProperty1) {
@@ -884,7 +857,7 @@ export class DatabaseHelper {
 			let charmProperty2 = propertyData.find((property) => {
 				return (
 					property.name === LegacyDataHelper.getPropertyFromCategory("charm", firebaseBuild.charm.property2Id)?.name &&
-					property.category.name === "charm"
+					property.category === "charm"
 				);
 			});
 			if (!charmProperty2) {
@@ -900,7 +873,7 @@ export class DatabaseHelper {
 			let charmTrait = traitData.find((trait) => {
 				return (
 					trait.name === LegacyDataHelper.getTraitMapById("offence_accessory", firebaseBuild.charm.traitId)?.name &&
-					trait.category.name === "offence_accessory"
+					trait.category === "offence_accessory"
 				);
 			});
 			if (!charmTrait) {
@@ -921,7 +894,7 @@ export class DatabaseHelper {
 			let necklaceProperty1 = propertyData.find((property) => {
 				return (
 					property.name === LegacyDataHelper.getPropertyFromCategory("necklace", firebaseBuild.necklace.property1Id)?.name &&
-					property.category.name === "necklace"
+					property.category === "necklace"
 				);
 			});
 			if (!necklaceProperty1) {
@@ -937,7 +910,7 @@ export class DatabaseHelper {
 			let necklaceProperty2 = propertyData.find((property) => {
 				return (
 					property.name === LegacyDataHelper.getPropertyFromCategory("necklace", firebaseBuild.necklace.property2Id)?.name &&
-					property.category.name === "necklace"
+					property.category === "necklace"
 				);
 			});
 			if (!necklaceProperty2) {
@@ -953,7 +926,7 @@ export class DatabaseHelper {
 			let necklaceTrait = traitData.find((trait) => {
 				return (
 					trait.name === LegacyDataHelper.getTraitMapById("defence_accessory", firebaseBuild.necklace.traitId)?.name &&
-					trait.category.name === "defence_accessory"
+					trait.category === "defence_accessory"
 				);
 			});
 			if (!necklaceTrait) {
@@ -974,7 +947,7 @@ export class DatabaseHelper {
 			let trinketProperty1 = propertyData.find((property) => {
 				return (
 					property.name === LegacyDataHelper.getPropertyFromCategory("trinket", firebaseBuild.trinket.property1Id)?.name &&
-					property.category.name === "trinket"
+					property.category === "trinket"
 				);
 			});
 			if (!trinketProperty1) {
@@ -990,7 +963,7 @@ export class DatabaseHelper {
 			let trinketProperty2 = propertyData.find((property) => {
 				return (
 					property.name === LegacyDataHelper.getPropertyFromCategory("trinket", firebaseBuild.trinket.property2Id)?.name &&
-					property.category.name === "trinket"
+					property.category === "trinket"
 				);
 			});
 			if (!trinketProperty2) {
@@ -1006,7 +979,7 @@ export class DatabaseHelper {
 			let trinketTrait = traitData.find((trait) => {
 				return (
 					trait.name === LegacyDataHelper.getTraitMapById("utility_accessory", firebaseBuild.trinket.traitId)?.name &&
-					trait.category.name === "utility_accessory"
+					trait.category === "utility_accessory"
 				);
 			});
 			if (!trinketTrait) {
@@ -1180,7 +1153,7 @@ interface FirebaseUserData {
 	youtube: string;
 	twitch: string;
 	steam: string;
-	showVideo: boolean;
+	showVideo?: boolean;
 	dateCreated: {
 		value: { _seconds: number; _nanoseconds: number };
 	};
@@ -1192,11 +1165,11 @@ interface FirebaseUserData {
 
 interface FirebaseBuild {
 	careerId: number;
-	favorites: [];
+	favorites: never[];
 	secondaryWeapon: { traitId: number; property2Id: number; id: number; property1Id: number };
 	trinket: { traitId: number; property2Id: number; property1Id: number };
 	roles: number[];
-	book: number;
+	book?: number;
 	primaryWeapon: { traitId: number; property2Id: number; id: number; property1Id: number };
 	heroId: number;
 	description: string;
@@ -1205,14 +1178,14 @@ interface FirebaseBuild {
 		value: { _seconds: number; _nanoseconds: number };
 	};
 	isDeleted: boolean;
-	potion: number;
-	twitch: number;
+	potion?: number;
+	twitch?: number;
 	dateModified: {
 		value: { _seconds: number; _nanoseconds: number };
 	};
 	necklace: { traitId: number; property2Id: number; property1Id: number };
 	userId: string;
-	difficulty: number;
+	difficulty?: number;
 	talent6: number;
 	mission: number;
 	talent4: number;
@@ -1223,7 +1196,7 @@ interface FirebaseBuild {
 	talent3: number;
 	talent1: number;
 	username: string;
-	favoriteCount: 0;
-	likeCount: 0;
+	favoriteCount: number;
+	likeCount: number;
 	likes: string[];
 }

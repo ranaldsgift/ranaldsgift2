@@ -1,7 +1,6 @@
-import { Type } from "class-transformer";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { BaseEntity } from "./BaseEntity";
-import { PropertyCategory, type IPropertyCategory } from "./PropertyCategory";
+import PropertyCategoryEnum from "$lib/enums/PropertyCategoryEnum";
 
 @Entity()
 export class Property extends BaseEntity<IProperty> {
@@ -23,9 +22,11 @@ export class Property extends BaseEntity<IProperty> {
 	@Column("double precision")
 	step!: number;
 
-	@Type(() => PropertyCategory)
-	@ManyToOne(() => PropertyCategory, (category) => category.properties)
-	category!: PropertyCategory;
+	@Column({
+		type: "enum",
+		enum: PropertyCategoryEnum,
+	})
+	category!: PropertyCategoryEnum;
 }
 
 export interface IProperty {
@@ -35,5 +36,5 @@ export interface IProperty {
 	minimumValue: number;
 	maximumValue: number;
 	step: number;
-	category?: IPropertyCategory;
+	category: PropertyCategoryEnum;
 }

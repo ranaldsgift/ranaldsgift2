@@ -53,13 +53,13 @@
 		const propertyData = await PropertiesStore.loadData();
 		const traitsData = await TraitsStore.loadData();
 
-		necklaceProperties = propertyData.items.filter((property) => property.category?.name === "necklace");
-		charmProperties = propertyData.items.filter((property) => property.category?.name === "charm");
-		trinketProperties = propertyData.items.filter((property) => property.category?.name === "trinket");
+		necklaceProperties = propertyData.items.filter((property) => property.category === "necklace");
+		charmProperties = propertyData.items.filter((property) => property.category === "charm");
+		trinketProperties = propertyData.items.filter((property) => property.category === "trinket");
 
-		necklaceTraits = traitsData.items.filter((trait) => trait.category?.name === "defence_accessory");
-		charmTraits = traitsData.items.filter((trait) => trait.category?.name === "offence_accessory");
-		trinketTraits = traitsData.items.filter((trait) => trait.category?.name === "utility_accessory");
+		necklaceTraits = traitsData.items.filter((trait) => trait.category === "defence_accessory");
+		charmTraits = traitsData.items.filter((trait) => trait.category === "offence_accessory");
+		trinketTraits = traitsData.items.filter((trait) => trait.category === "utility_accessory");
 
 		if (!build.necklace) {
 			build.necklace = {

@@ -1,4 +1,5 @@
 import { Trait, type ITrait } from "$lib/entities/Trait";
+import type TraitCategoryEnum from "$lib/enums/TraitCategoryEnum";
 import redis from "$lib/server/redis";
 import StaticDataCache from "./StaticDataCache";
 
@@ -12,7 +13,7 @@ export class TraitsCache {
 			let traits = await redis.get<ITrait[]>("traits");
 
 			if (!traits) {
-				const traitsData = await Trait.find({ relations: { category: true } });
+				const traitsData = await Trait.find();
 				traits = traitsData.map((trait) => trait.toObject());
 			}
 			for (const trait of traits) {
@@ -24,7 +25,7 @@ export class TraitsCache {
 
 	public static async getAllForCategory(category: TraitCategoryEnum): Promise<ITrait[]> {
 		const instance = await TraitsCache.getInstance();
-		return instance.getAll().filter((trait) => trait.category?.name === category);
+		return instance.getAll().filter((trait) => trait.category === category);
 	}
 
 	public static async getAll(): Promise<ITrait[]> {

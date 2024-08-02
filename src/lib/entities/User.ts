@@ -1,8 +1,8 @@
 import { Type } from "class-transformer";
 import { Entity, Column, PrimaryColumn, ManyToOne, OneToMany, ManyToMany, JoinTable } from "typeorm";
 import { TimestampedEntity } from "./TimestampedEntity";
-import { UserRole, type IUserRole } from "./UserRole";
 import { CareerBuild, type ICareerBuild } from "./builds/CareerBuild";
+import { UserRoleEnum } from "$lib/enums/UserRoleEnum";
 
 @Entity()
 export class User extends TimestampedEntity<IUser> {
@@ -15,10 +15,8 @@ export class User extends TimestampedEntity<IUser> {
 	@Column("varchar", { unique: true, nullable: true })
 	name!: string;
 
-	@Type(() => UserRole)
-	@ManyToMany(() => UserRole, (role) => role.users, { eager: true })
-	@JoinTable()
-	roles!: UserRole[];
+	@Column({ type: "enum", enum: UserRoleEnum, default: UserRoleEnum.Member })
+	role!: UserRoleEnum;
 
 	@Column("varchar", { nullable: true })
 	avatar!: string;
@@ -37,6 +35,12 @@ export class User extends TimestampedEntity<IUser> {
 
 	@Column("boolean", { default: false })
 	showVideo!: boolean;
+
+	@Column("boolean", { default: false })
+	isSupporter!: boolean;
+
+	@Column("boolean", { default: false })
+	isDeveloper!: boolean;
 
 	@Type(() => CareerBuild)
 	@OneToMany(() => CareerBuild, (favorite) => favorite.user)
@@ -62,13 +66,15 @@ export interface IUser {
 	id: string;
 	firebaseId: string;
 	name: string;
-	roles: IUserRole[];
+	role: UserRoleEnum;
 	avatar: string;
 	discord: string;
 	steam: string;
 	twitch: string;
 	youtube: string;
 	showVideo: boolean;
+	isSupporter: boolean;
+	isDeveloper: boolean;
 	authoredBuilds: ICareerBuild[];
 	favoriteBuilds: ICareerBuild[];
 	ratedBuilds: ICareerBuild[];

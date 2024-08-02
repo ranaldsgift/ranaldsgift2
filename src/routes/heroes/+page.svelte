@@ -9,6 +9,7 @@
 	import { toast } from "svelte-sonner";
 	import { error } from "@sveltejs/kit";
 	import { goto, replaceState } from "$app/navigation";
+	import { page } from "$app/stores";
 
 	const { data } = $props();
 	const { viewModel } = data;
@@ -39,7 +40,9 @@
 	});
 
 	$effect(() => {
-		goto(`${searchParams}`, { replaceState: true, keepFocus: true });
+		if ($page.url.search !== searchParams) {
+			goto(`${searchParams}`, { replaceState: true, keepFocus: true });
+		}
 	});
 
 	const careerSelectionHandler = (career: ICareer) => {
@@ -54,7 +57,7 @@
 		const url = `${window.location.origin}/heroes/${searchParams}`;
 		navigator.clipboard.writeText(url);
 
-		toast("Copied to clipboard", {
+		toast(`Copied ${pageState.build?.career.name} build to clipboard`, {
 			position: "bottom-center",
 		});
 	};
