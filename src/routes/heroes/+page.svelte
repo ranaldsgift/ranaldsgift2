@@ -10,6 +10,7 @@
 	import { error } from "@sveltejs/kit";
 	import { goto, replaceState } from "$app/navigation";
 	import { page } from "$app/stores";
+	import Seo from "$lib/components/SEO.svelte";
 
 	const { data } = $props();
 	const { viewModel } = data;
@@ -61,16 +62,32 @@
 			position: "bottom-center",
 		});
 	};
+
+	let pageTitle = $derived(`${pageState.build.career.name} - ${pageState.build.career.hero.name}`);
+	let pageDescription = $derived(
+		`${pageState.build.career.name} career build for ${pageState.build.career.hero.name}. 
+		${pageState.build.primaryWeapon.weapon.name} with ${pageState.build.primaryWeapon.property1?.name}, ${pageState.build.primaryWeapon.property2?.name}, and ${pageState.build.primaryWeapon.trait?.name}.
+		${pageState.build.secondaryWeapon.weapon.name} with ${pageState.build.secondaryWeapon.property1?.name}, ${pageState.build.secondaryWeapon.property2?.name}, and ${pageState.build.secondaryWeapon.trait?.name}.
+		Necklace with ${pageState.build.necklace.property1?.name}, ${pageState.build.necklace.property2?.name}, and ${pageState.build.necklace.trait?.name}.
+		Charm with ${pageState.build.charm.property1?.name}, ${pageState.build.charm.property2?.name}, and ${pageState.build.charm.trait?.name}.
+		Trinket with ${pageState.build.trinket.property1?.name}, ${pageState.build.trinket.property2?.name}, and ${pageState.build.trinket.trait?.name}.`
+	);
 </script>
 
-<svelte:head>
-	<title>
-		{pageState.build?.career ? `${pageState.build.career.name} - ${pageState.build.career.hero.name}` : viewModel.pageTitle} - ranalds.gift
-	</title>
-</svelte:head>
+<Seo title={pageTitle} description={pageDescription} />
 
 <PageButtonContainer>
-	<button class="button-02" onclick={copyButtonHandler}>Copy <span class="link"></span></button>
+	<button class="button-02" onclick={copyButtonHandler}
+		>Copy<svg class="mt-[-2px]" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
+			><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"
+				><path
+					d="M10.046 14c-1.506-1.512-1.37-4.1.303-5.779l4.848-4.866c1.673-1.68 4.25-1.816 5.757-.305c1.506 1.512 1.37 4.1-.303 5.78l-2.424 2.433"
+				/><path
+					d="M13.954 10c1.506 1.512 1.37 4.1-.303 5.779l-2.424 2.433l-2.424 2.433c-1.673 1.68-4.25 1.816-5.757.305c-1.506-1.512-1.37-4.1.303-5.78l2.424-2.433"
+				/></g
+			></svg
+		></button
+	>
 </PageButtonContainer>
 
 {#if pageState.build}

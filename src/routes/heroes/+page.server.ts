@@ -1,21 +1,14 @@
-import type { ICareer } from "$lib/entities/career/Career.js";
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
 import BuildHelper from "$lib/helpers/BuildHelper.js";
 import { CareerCache } from "$lib/cache/CareerCache.js";
 import { PropertiesCache } from "$lib/cache/PropertiesCache.js";
 import { TraitsCache } from "$lib/cache/TraitsCache.js";
-
-interface ViewModel {
-	pageTitle: string;
-	careers: ICareer[];
-	selectedCareer: ICareer;
-	build?: ICareerBuild;
-}
+import type { HeroesPageViewModel } from "$lib/viewmodels/HeroesPageViewModel.svelte.js";
 
 export const load = async (event) => {
 	const careers = await CareerCache.getSorted();
-	let viewModel: ViewModel = {
-		pageTitle: "Heroes",
+	let viewModel: HeroesPageViewModel = {
+		title: `${careers[0].name} - ${careers[0].hero.name}`,
 		careers: careers,
 		selectedCareer: careers[0],
 	};
