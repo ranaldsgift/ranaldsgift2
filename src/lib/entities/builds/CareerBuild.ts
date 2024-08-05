@@ -14,6 +14,7 @@ import { BuildRole, type IBuildRole } from "../BuildRole";
 import { AuthoredEntity } from "../AuthoredEntity";
 import { PageViewsCareerBuild, type IPageViewsCareerBuild } from "../PageViewCareerBuild";
 import { CareerTalent, type ICareerTalent } from "../career/CareerTalent";
+import type { IUser } from "../User";
 
 @Entity({})
 export class CareerBuild extends AuthoredEntity<ICareerBuild> {
@@ -29,32 +30,35 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@Column("varchar")
 	description!: string;
 
+	@Column("number", { nullable: true })
+	careerId?: number;
+
 	@Type(() => Career)
 	@ManyToOne(() => Career)
 	career!: Career;
 
 	@Type(() => WeaponBuild)
-	@OneToOne(() => WeaponBuild, { cascade: true })
+	@OneToOne(() => WeaponBuild, { eager: true, cascade: true })
 	@JoinColumn()
 	primaryWeapon!: WeaponBuild;
 
 	@Type(() => WeaponBuild)
-	@OneToOne(() => WeaponBuild, { cascade: true })
+	@OneToOne(() => WeaponBuild, { eager: true, cascade: true })
 	@JoinColumn()
 	secondaryWeapon!: WeaponBuild;
 
 	@Type(() => CharmBuild)
-	@OneToOne(() => CharmBuild, { cascade: true })
+	@OneToOne(() => CharmBuild, { eager: true, cascade: true })
 	@JoinColumn()
 	charm!: CharmBuild;
 
 	@Type(() => NecklaceBuild)
-	@OneToOne(() => NecklaceBuild, { cascade: true })
+	@OneToOne(() => NecklaceBuild, { eager: true, cascade: true })
 	@JoinColumn()
 	necklace!: NecklaceBuild;
 
 	@Type(() => TrinketBuild)
-	@OneToOne(() => TrinketBuild, { cascade: true })
+	@OneToOne(() => TrinketBuild, { eager: true, cascade: true })
 	@JoinColumn()
 	trinket!: TrinketBuild;
 
@@ -119,6 +123,8 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 }
 
 export interface ICareerBuild {
+	id?: number;
+	user?: IUser;
 	firebaseId?: string;
 	name?: string;
 	description?: string;

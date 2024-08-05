@@ -22,7 +22,7 @@ export class Weapon extends BaseEntity<IWeapon> {
 	description!: string;
 
 	@Type(() => WeaponTooltip)
-	@ManyToMany(() => WeaponTooltip, { cascade: true })
+	@ManyToMany(() => WeaponTooltip, { eager: true, cascade: true })
 	@JoinTable()
 	tooltips!: WeaponTooltip[];
 

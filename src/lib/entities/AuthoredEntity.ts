@@ -8,7 +8,7 @@ import type { SaveOptions } from "typeorm/browser";
 
 export abstract class AuthoredEntity<TModel> extends TimestampedEntity<TModel> {
 	@Type(() => User)
-	@ManyToOne((type) => User, { nullable: false, eager: true })
+	@ManyToOne((type) => User, { nullable: false })
 	user!: User;
 
 	@Column("boolean", { default: false })
