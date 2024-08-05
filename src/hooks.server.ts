@@ -90,10 +90,6 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	event.locals.session = session;
 	event.locals.sessionUser = user;
 
-	if (!event.locals.session && event.url.pathname.endsWith("/edit")) {
-		throw error(401, "Unauthorized");
-	}
-
 	return resolve(event);
 };
 
