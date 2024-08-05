@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ICareer } from "$lib/entities/Career";
+	import type { ICareer } from "$lib/entities/career/Career";
 	import CooldownBar from "./CooldownBar.svelte";
 	import HealthBar from "./HealthBar.svelte";
 
