@@ -21,7 +21,7 @@
 		if (userState.user) {
 			userState.user.showVideo = userState.showVideo.value;
 
-			const response = await fetch("/api/user/save", {
+			const response = await fetch("/rg/api/user/save", {
 				method: "POST",
 				body: JSON.stringify(userState.user),
 				headers: {
@@ -62,7 +62,7 @@
 		<button class="background-toggle" title="Toggle Background Video" onclick={backgroundToggleClickHandler}></button>
 		<a href={userState.user?.id ? `/user/${userState.user.id}` : "/login"} class="user-icon"> </a>
 		{#if userState.user}
-			<form action="/api/user?/logout" method="POST" use:enhance={logoutHandler}>
+			<form action="/rg/api/user?/logout" method="POST" use:enhance={logoutHandler}>
 				<button type="submit">Logout</button>
 			</form>
 		{/if}

@@ -7,7 +7,7 @@
 	const user = $state<IUser>(JSON.parse(data.userData) as IUser);
 
 	const saveUserHandler = async () => {
-		const response = await fetch("/api/user/save", {
+		const response = await fetch("/rg/api/user/save", {
 			method: "POST",
 			body: JSON.stringify(user),
 			headers: {

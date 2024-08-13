@@ -10,7 +10,7 @@
 
 <form
 	method="POST"
-	action="/api/user?/login&redirectTo={$page.url.href}"
+	action="/rg/api/user?/login&redirectTo={$page.url.href}"
 	class="m-auto max-w-xl relative mt-10"
 	use:enhance={() => {
 		return async ({ result }) => {
