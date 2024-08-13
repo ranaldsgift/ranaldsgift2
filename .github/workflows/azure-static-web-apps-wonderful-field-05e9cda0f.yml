@@ -11,6 +11,20 @@ on:
 
 jobs:
   build_and_deploy_job:
+    env: 
+      PRIVATE_INITIALIZE_DB: ${{ secrets.PRIVATE_INITIALIZE_DB }}
+      PRIVATE_SYNCHRONIZE_DB: ${{ secrets.PRIVATE_SYNCHRONIZE_DB }}
+      PRIVATE_DATABASE_AUTHORIZATION_BYPASS_KEY: ${{ secrets.PRIVATE_DATABASE_AUTHORIZATION_BYPASS_KEY }}
+      PRIVATE_UPSTASH_REDIS_REST_URL: ${{ secrets.PRIVATE_UPSTASH_REDIS_REST_URL }}
+      PRIVATE_UPSTASH_REDIS_REST_TOKEN: ${{ secrets.PRIVATE_UPSTASH_REDIS_REST_TOKEN }}
+      PRIVATE_SUPABASE_HOST: ${{ secrets.PRIVATE_SUPABASE_HOST }}
+      PRIVATE_SUPABASE_PORT: ${{ secrets.PRIVATE_SUPABASE_PORT }}
+      PRIVATE_SUPABASE_USERNAME: ${{ secrets.PRIVATE_SUPABASE_USERNAME }}
+      PRIVATE_SUPABASE_PASSWORD: ${{ secrets.PRIVATE_SUPABASE_PASSWORD }}
+      PRIVATE_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PRIVATE_SUPABASE_SERVICE_ROLE_KEY }}
+      PUBLIC_SUPABASE_URL: ${{vars.PUBLIC_SUPABASE_URL }}
+      PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
+      
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
