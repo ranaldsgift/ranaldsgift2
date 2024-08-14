@@ -30,6 +30,7 @@ import { DatabaseHelper } from "$lib/helpers/DatabaseHelper";
 import { LogHelper } from "$lib/helpers/LogHelper";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { DataSource } from "typeorm";
+import { DifficultyModifier } from "$lib/entities/DifficultyModifier";
 
 let PRIVATE_SUPABASE_HOST = env.PRIVATE_SUPABASE_HOST;
 let PRIVATE_SUPABASE_PASSWORD = env.PRIVATE_SUPABASE_PASSWORD;
@@ -76,6 +77,7 @@ class TypeOrm {
 					Trait,
 					BuildRole,
 					Difficulty,
+					DifficultyModifier,
 					Mission,
 					Patch,
 					Potion,

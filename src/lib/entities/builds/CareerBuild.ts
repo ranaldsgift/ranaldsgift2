@@ -15,6 +15,8 @@ import { AuthoredEntity } from "../AuthoredEntity";
 import { PageViewsCareerBuild, type IPageViewsCareerBuild } from "../PageViewCareerBuild";
 import { CareerTalent, type ICareerTalent } from "../career/CareerTalent";
 import type { IUser } from "../User";
+import { DifficultyModifier, type IDifficultyModifier } from "../DifficultyModifier";
+import { GameModeEnum } from "$lib/enums/GameModeEnum";
 
 @Entity({})
 export class CareerBuild extends AuthoredEntity<ICareerBuild> {
@@ -93,6 +95,13 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@ManyToOne(() => Difficulty, { eager: true })
 	difficulty!: Difficulty;
 
+	@Type(() => DifficultyModifier)
+	@ManyToOne(() => DifficultyModifier, { eager: true })
+	difficultyModifier!: DifficultyModifier;
+
+	@Column("boolean", { default: false })
+	deathwish!: boolean;
+
 	@Type(() => Mission)
 	@ManyToOne(() => Mission, { eager: true })
 	mission!: Mission;
@@ -117,6 +126,13 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@Column("varchar", { array: true })
 	videos!: string[];
 
+	@Column({
+		type: "enum",
+		enum: GameModeEnum,
+		default: GameModeEnum.Adventure,
+	})
+	gamemode!: GameModeEnum;
+
 	@Type()
 	@OneToOne(() => PageViewsCareerBuild)
 	pageView!: PageViewsCareerBuild;
@@ -128,6 +144,7 @@ export interface ICareerBuild {
 	firebaseId?: string;
 	name?: string;
 	description?: string;
+	careerId?: number;
 	career: ICareer;
 	primaryWeapon: IWeaponBuild;
 	secondaryWeapon: IWeaponBuild;
@@ -139,6 +156,8 @@ export interface ICareerBuild {
 	talent5?: ICareerTalent;
 	talent6?: ICareerTalent;
 	difficulty?: IDifficulty;
+	difficultyModifier?: IDifficultyModifier;
+	deathwish?: boolean;
 	mission?: IMission;
 	potion?: IPotion;
 	book?: IBookSetting;
@@ -149,4 +168,5 @@ export interface ICareerBuild {
 	necklace: INecklaceBuild;
 	charm: ICharmBuild;
 	trinket: ITrinketBuild;
+	gamemode?: GameModeEnum;
 }
