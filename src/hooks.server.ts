@@ -1,12 +1,12 @@
 import "reflect-metadata";
 import { createServerClient } from "@supabase/ssr";
-import { type Handle, redirect, error } from "@sveltejs/kit";
+import { type Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from "$env/static/public";
 import TypeOrm from "$lib/server/db";
 import { env } from "$env/dynamic/private";
 import { User } from "$lib/entities/User";
-import { LogHelper } from "$lib/helpers/LogHelper";
+import type { Session } from "@supabase/supabase-js";
 
 // This key must be set in the environment variables in order to import data from Firebase into Supabase
 let PRIVATE_SUPABASE_SERVICE_ROLE_KEY = env.PRIVATE_SUPABASE_SERVICE_ROLE_KEY;
@@ -15,32 +15,19 @@ const supabase: Handle = async ({ event, resolve }) => {
 	if (PRIVATE_SUPABASE_SERVICE_ROLE_KEY) {
 		event.locals.supabaseServiceClient = createServerClient(PUBLIC_SUPABASE_URL, PRIVATE_SUPABASE_SERVICE_ROLE_KEY, {
 			cookies: {
-				get: (key) => event.cookies.get(key),
-				set: (key, value, options) => {
-					event.cookies.set(key, value, {
-						...options,
-						path: "/",
+				getAll: () => event.cookies.getAll(),
+				setAll: (cookiesToSet) => {
+					cookiesToSet.forEach(({ name, value, options }) => {
+						event.cookies.set(name, value, { ...options, path: "/" });
 					});
-				},
-				remove: (key, options) => {
-					event.cookies.delete(key, { ...options, path: "/" });
 				},
 			},
 		});
 	}
-	/**
-	 * Creates a Supabase client specific to this server request.
-	 *
-	 * The Supabase client gets the Auth token from the request cookies.
-	 */
+
 	event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
 		cookies: {
 			getAll: () => event.cookies.getAll(),
-			/**
-			 * SvelteKit's cookies API requires `path` to be explicitly set in
-			 * the cookie options. Setting `path` to `/` replicates previous/
-			 * standard behavior.
-			 */
 			setAll: (cookiesToSet) => {
 				cookiesToSet.forEach(({ name, value, options }) => {
 					event.cookies.set(name, value, { ...options, path: "/" });
@@ -49,17 +36,15 @@ const supabase: Handle = async ({ event, resolve }) => {
 		},
 	});
 
-	/**
-	 * Unlike `supabase.auth.getSession()`, which returns the session _without_
-	 * validating the JWT, this function also calls `getUser()` to validate the
-	 * JWT before returning the session.
-	 */
-	event.locals.safeGetSession = async () => {
+	const getSessionAndUser = async () => {
 		const {
 			data: { session },
 		} = await event.locals.supabase.auth.getSession();
 		if (!session) {
-			return { session: null, user: null };
+			return {
+				session: null,
+				user: null,
+			};
 		}
 
 		const {
@@ -68,11 +53,21 @@ const supabase: Handle = async ({ event, resolve }) => {
 		} = await event.locals.supabase.auth.getUser();
 		if (error) {
 			// JWT validation has failed
-			return { session: null, user: null };
+			return {
+				session: null,
+				user: null,
+			};
 		}
 
-		return { session, user };
+		const sessionWithUserFromUser = { ...session, user: { ...user } } as Session;
+
+		return { session: sessionWithUserFromUser, user };
 	};
+
+	const { session, user } = await getSessionAndUser();
+
+	event.locals.session = session;
+	event.locals.sessionUser = user;
 
 	return resolve(event, {
 		filterSerializedResponseHeaders(name) {
@@ -85,31 +80,40 @@ const supabase: Handle = async ({ event, resolve }) => {
 	});
 };
 
-const authGuard: Handle = async ({ event, resolve }) => {
-	const { session, user } = await event.locals.safeGetSession();
-	event.locals.session = session;
-	event.locals.sessionUser = user;
+export const ormHook: Handle = async ({ event, resolve }) => {
+	// Initialize connection to database
+	await TypeOrm.getDb(event.locals.supabaseServiceClient);
 
 	return resolve(event);
 };
 
-export const mainHook: Handle = async ({ event, resolve }) => {
-	LogHelper.debug("Running Main Hook...");
-
-	// Initialize connection to database
-	await TypeOrm.getDb(event.locals.supabaseServiceClient);
-
+export const userHook: Handle = async ({ event, resolve }) => {
 	if (event.locals.sessionUser?.id) {
-		const userProfile = await User.findOne({ where: { id: event.locals.sessionUser?.id } });
+		const userProfile = await User.createQueryBuilder("user")
+			.where({ id: event.locals.sessionUser?.id })
+			.select([
+				"user.id",
+				"user.name",
+				"user.role",
+				"user.showVideo",
+				"user.isSupporter",
+				"user.isDeveloper",
+				"authoredBuild.id",
+				"ratedBuild.id",
+				"favoriteBuild.id",
+			])
+			.leftJoin("user.authoredBuilds", "authoredBuild")
+			.leftJoin("user.ratedBuilds", "ratedBuild")
+			.leftJoin("user.favoriteBuilds", "favoriteBuild")
+			.getOne();
+
 		if (userProfile) {
-			event.locals.sessionUserProfile = userProfile.toObject();
+			event.locals.sessionUserProfile = userProfile.toObject({ exposeUnsetFields: false });
 		}
 	} else {
 		event.locals.sessionUserProfile = null;
 	}
-
-	const response = await resolve(event);
-	return response;
+	return resolve(event);
 };
 
-export const handle: Handle = sequence(supabase, authGuard, mainHook);
+export const handle: Handle = sequence(supabase, ormHook, userHook);

@@ -2,7 +2,6 @@ import { createBrowserClient, createServerClient, isBrowser, parse } from "@supa
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from "$env/static/public";
 
 import type { LayoutLoad } from "./$types";
-import { LogHelper } from "$lib/helpers/LogHelper";
 
 export const load: LayoutLoad = async ({ data, depends, fetch }) => {
 	/**
@@ -33,13 +32,8 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
 	 * safe, and on the server, it reads `session` from the `LayoutData`, which
 	 * safely checked the session using `safeGetSession`.
 	 */
-	const {
-		data: { session },
-	} = await supabase.auth.getSession();
+	const session = isBrowser() ? (await supabase.auth.getSession()).data.session : data.session;
+	const sessionUser = session?.user ?? null;
 
-	const {
-		data: { user },
-	} = await supabase.auth.getUser();
-
-	return { session, supabase, sessionUser: user, sessionUserProfile: data.sessionUserProfile };
+	return { session, supabase, sessionUser, sessionUserProfile: data.sessionUserProfile };
 };

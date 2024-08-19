@@ -4,7 +4,7 @@ import { plainToInstance } from "class-transformer";
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request, locals }) {
-	const { session, user } = await locals.safeGetSession();
+	const { session, user } = { session: locals.session, user: locals.sessionUser };
 
 	if (!user) {
 		return json({ error: "Unauthorized" }, { status: 401 });
@@ -17,7 +17,9 @@ export async function POST({ request, locals }) {
 	}
 
 	if (user.id !== userPojo.id) {
-		return json({ error: "Unauthorized" }, { status: 401 });
+		if (user.role !== "Admin" && user.role !== "Moderator") {
+			return json({ error: "Unauthorized" }, { status: 401 });
+		}
 	}
 
 	const userEntity = plainToInstance(User, userPojo);
