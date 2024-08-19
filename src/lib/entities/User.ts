@@ -43,16 +43,16 @@ export class User extends TimestampedEntity<IUser> {
 	isDeveloper!: boolean;
 
 	@Type(() => CareerBuild)
-	@OneToMany(() => CareerBuild, (favorite) => favorite.user)
+	@OneToMany(() => CareerBuild, (build) => build.user)
 	authoredBuilds!: CareerBuild[];
 
 	@Type(() => CareerBuild)
-	@ManyToMany(() => CareerBuild)
+	@ManyToMany(() => CareerBuild, (build) => build.userFavorites)
 	@JoinTable()
 	favoriteBuilds!: CareerBuild[];
 
 	@Type(() => CareerBuild)
-	@ManyToMany(() => CareerBuild)
+	@ManyToMany(() => CareerBuild, (build) => build.userRatings)
 	@JoinTable()
 	ratedBuilds!: CareerBuild[];
 

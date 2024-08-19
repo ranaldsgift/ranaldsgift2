@@ -14,7 +14,7 @@ import { BuildRole, type IBuildRole } from "../BuildRole";
 import { AuthoredEntity } from "../AuthoredEntity";
 import { PageViewsCareerBuild, type IPageViewsCareerBuild } from "../PageViewCareerBuild";
 import { CareerTalent, type ICareerTalent } from "../career/CareerTalent";
-import type { IUser } from "../User";
+import { User, type IUser } from "../User";
 import { DifficultyModifier, type IDifficultyModifier } from "../DifficultyModifier";
 import { GameModeEnum } from "$lib/enums/GameModeEnum";
 
@@ -136,6 +136,14 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@Type()
 	@OneToOne(() => PageViewsCareerBuild)
 	pageView!: PageViewsCareerBuild;
+
+	@Type(() => User)
+	@ManyToMany(() => User, (user) => user.ratedBuilds)
+	userRatings!: User[];
+
+	@Type(() => User)
+	@ManyToMany(() => User, (user) => user.favoriteBuilds)
+	userFavorites!: User[];
 }
 
 export interface ICareerBuild {
@@ -169,4 +177,8 @@ export interface ICareerBuild {
 	charm: ICharmBuild;
 	trinket: ITrinketBuild;
 	gamemode?: GameModeEnum;
+	userRatings?: IUser[];
+	userFavorites?: IUser[];
+	dateModified: Date;
+	dateCreated: Date;
 }
