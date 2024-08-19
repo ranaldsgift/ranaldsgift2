@@ -1,9 +1,8 @@
 <script lang="ts">
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import { type IUser } from "$lib/entities/User";
-	import type { PageData } from "./$types";
 
-	const { data }: { data: PageData } = $props();
+	const { data } = $props();
 	const user = $state<IUser>(JSON.parse(data.userData) as IUser);
 
 	const saveUserHandler = async () => {
