@@ -2,36 +2,32 @@
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import Seo from "$lib/components/SEO.svelte";
 	import { type IUser } from "$lib/entities/User";
-	import type { PageData } from "./$types";
 
-	const { data }: { data: PageData } = $props();
-	const userData = JSON.parse(data.userData) as IUser;
+	const { data } = $props();
+	const user = JSON.parse(data.userData) as IUser;
 </script>
 
-<Seo
-	title={`${userData.name}'s Profile'`}
-	description={`${userData.name}'s Profile. Contains a list of ${userData.name}'s authored builds.`}
-/>
+<Seo title={`${user.name}'s Profile'`} description={`${user.name}'s Profile. Contains a list of ${user.name}'s authored builds.`} />
 
 <div>
-	{#if userData}
-		{#if data.sessionUser?.id === userData.id}
+	{#if user}
+		{#if data.sessionUser?.id === user.id}
 			<PageButtonContainer>
-				<a class="button-02" href={`/user/${userData.id}/edit`}>Edit</a>
+				<a class="button-02" href={`/user/${user.id}/edit`}>Edit</a>
 			</PageButtonContainer>
 		{/if}
 		<div>
 			<div class="user-info-container background-14 border-08">
 				<span>Username</span>
-				<span>{userData.name}</span>
+				<span>{user.name}</span>
 				<span>Steam Friend Code</span>
-				<span>{userData.steam}</span>
+				<span>{user.steam}</span>
 				<span>Discord</span>
-				<span>{userData.discord}</span>
+				<span>{user.discord}</span>
 				<span>Twitch</span>
-				<a href={`https://twitch.tv/${userData.twitch}`}>{userData.twitch}</a>
+				<a href={`https://twitch.tv/${user.twitch}`}>{user.twitch}</a>
 				<span>Youtube</span>
-				<a href={`https://youtube.com/${userData.youtube}`}>{userData.youtube}</a>
+				<a href={`https://youtube.com/${user.youtube}`}>{user.youtube}</a>
 			</div>
 		</div>
 	{:else}

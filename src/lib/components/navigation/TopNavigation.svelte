@@ -14,16 +14,13 @@
 		MenuState.toggle();
 	};
 
-	const backgroundToggleClickHandler = async (event: MouseEvent) => {
-		userState.showVideo.value = !userState.showVideo.value;
+	const backgroundToggleClickHandler = async (event: Event) => {
 		localStorage.setItem("showVideo", userState.showVideo.value.toString());
 
 		if (userState.user) {
-			userState.user.showVideo = userState.showVideo.value;
-
-			const response = await fetch("/api/user/save", {
+			const response = await fetch("/api/user/background", {
 				method: "POST",
-				body: JSON.stringify(userState.user),
+				body: JSON.stringify({ showVideo: userState.showVideo.value }),
 				headers: {
 					"content-type": "application/json",
 				},
@@ -59,7 +56,13 @@
 		{#if !MenuState.isOpen}
 			<a href="/about" class="rg-icon main-logo">&nbsp;</a>
 		{/if}
-		<button class="background-toggle" title="Toggle Background Video" onclick={backgroundToggleClickHandler}></button>
+		<input
+			type="checkbox"
+			class="background-toggle"
+			bind:checked={userState.showVideo.value}
+			title="Toggle Background Video"
+			onchange={backgroundToggleClickHandler}
+		/>
 		<a href={userState.user?.id ? `/user/${userState.user.id}` : "/login"} class="user-icon"> </a>
 		{#if userState.user}
 			<form action="/api/user?/logout" method="POST" use:enhance={logoutHandler}>
@@ -108,6 +111,7 @@
 	}
 
 	.background-toggle {
+		appearance: none;
 		background: url("/images/icons/background-toggle.png") no-repeat;
 		width: 45px;
 		height: 45px;
