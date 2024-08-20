@@ -1,36 +1,64 @@
 <script lang="ts">
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
-	import CareerDetails from "$lib/components/career/CareerDetails.svelte";
 	import CareerTalents from "$lib/components/career/CareerTalents.svelte";
 	import BuildSummary from "./BuildSummary.svelte";
+	import ContainerTitle from "../ContainerTitle.svelte";
+	import BuildHeader from "./BuildHeader.svelte";
+	import CareerSummaryContainer from "../career/CareerSummaryContainer.svelte";
+	import BuildOptionsViewer from "./BuildOptionsViewer.svelte";
+	import BuildTalentSummary from "./BuildTalentSummary.svelte";
+	import TextEditor from "../TextEditor.svelte";
 
 	type Props = {
 		build: ICareerBuild;
+		patchNumber?: string;
 	};
 
-	const { build }: Props = $props();
+	const { build, patchNumber }: Props = $props();
 </script>
 
-<h1>{build.name}</h1>
-<p>{build.description}</p>
-
-<div class="build-summary-container border-01 p-5">
-	<CareerDetails career={build.career}></CareerDetails>
-	<div class="divider-03 h-[48px]"></div>
-	<BuildSummary {build}></BuildSummary>
+<div class="build-viewer top-left-shadow">
+	<ContainerTitle>Summary</ContainerTitle>
+	<!-- 	<div class="build-main-summary-container">
+		<BuildHeader></BuildHeader>
+		<HeroDetails careerId={state.careerId}></HeroDetails>
+		<BuildSummary></BuildSummary>
+		<BuildOptions hideEmpty={true}></BuildOptions>
+		<BuildGuide description={state.description}></BuildGuide>
+	</div> -->
+	<div class="build-summary-container border-01 p-5">
+		<BuildHeader {build} {patchNumber}></BuildHeader>
+		<div class="summary-container">
+			<CareerSummaryContainer career={build.career}></CareerSummaryContainer>
+			<BuildTalentSummary {build}></BuildTalentSummary>
+		</div>
+		<div class="divider-03 h-[48px]"></div>
+		<BuildSummary {build}></BuildSummary>
+		<BuildOptionsViewer {build}></BuildOptionsViewer>
+	</div>
+	{#if build.description}
+		<div class="build-description-container border-09 py-5 px-8">
+			<TextEditor readOnly={true} content={build.description}></TextEditor>
+		</div>
+	{/if}
+	<div class="build-talents-container">
+		<CareerTalents
+			careerId={build.career.id}
+			talents={build.career.talents}
+			talent1={build.talent1}
+			talent2={build.talent2}
+			talent3={build.talent3}
+			talent4={build.talent4}
+			talent5={build.talent5}
+			talent6={build.talent6}
+		></CareerTalents>
+	</div>
 </div>
-<CareerTalents
-	careerId={build.career.id}
-	talents={build.career.talents}
-	talent1={build.talent1}
-	talent2={build.talent2}
-	talent3={build.talent3}
-	talent4={build.talent4}
-	talent5={build.talent5}
-	talent6={build.talent6}
-></CareerTalents>
 
 <style>
+	.build-viewer {
+		grid-area: buildViewer;
+	}
 	.build-summary-container {
 		background: linear-gradient(
 				270deg,
@@ -39,5 +67,18 @@
 				rgba(42, 42, 42, 0.10980392156862745)
 			),
 			url("/images/backgrounds/background14.webp");
+	}
+	.build-description-container {
+		background: linear-gradient(180deg, rgba(43, 18, 18, 0.2784313725490196) 35%, rgba(0, 0, 0, 0.30196078431372547));
+		-webkit-backdrop-filter: blur(10px);
+		backdrop-filter: blur(10px);
+	}
+	.summary-container {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-template-rows: auto;
+		grid-template-areas: "careerSummary buildTalentSummary";
+		grid-gap: 20px;
+		margin-top: 20px;
 	}
 </style>

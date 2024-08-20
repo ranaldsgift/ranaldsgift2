@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { ICareerTalent } from "$lib/entities/career/CareerTalent";
+	import CareerTalentIcon from "./CareerTalentIcon.svelte";
 
 	type Props = {
 		talents: ICareerTalent[];
@@ -28,9 +29,6 @@
 	let talentButtonHandler = (talent: ICareerTalent) => {
 		let tier = Math.ceil(talent.talentNumber / 3);
 		let talents = [talent1, talent2, talent3, talent4, talent5, talent6];
-
-		console.log(talents[tier - 1]?.talentNumber);
-		console.log(talent);
 
 		if (talents[tier - 1]?.talentNumber === talent.talentNumber) {
 			switch (tier) {
@@ -109,12 +107,8 @@
 									: ''}"
 						>
 							<button class="talent-button-wrapper" onclick={() => talentButtonHandler(talent)}>
-								<span
-									class="talent-icon size-[84px] block"
-									style="background-image: url('/images/careers/{careerId}/talents/talent-{talent.talentNumber < 10
-										? '0'
-										: ''}{talent.talentNumber}.png')"
-								></span>
+								<CareerTalentIcon size="84px" {careerId} talentNumber={talent.talentNumber} class="z-[-1]"
+								></CareerTalentIcon>
 								<p class="talent-name">{talent.name}</p>
 								<p class="talent-description">{talent.description}</p>
 							</button>

@@ -1,5 +1,4 @@
 import { PropertiesCache } from "$lib/cache/PropertiesCache";
-import { DataHelper } from "$lib/helpers/DataHelper";
 import type { RequestHandler } from "./$types";
 import { error } from "@sveltejs/kit";
 
@@ -12,7 +11,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		error(500, "Internal Server Error");
 	}
 
-	const response = DataHelper.serialize({
+	const response = JSON.stringify({
 		items: data,
 		count: data.length,
 	});

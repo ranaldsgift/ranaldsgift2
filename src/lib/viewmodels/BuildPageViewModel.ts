@@ -13,4 +13,5 @@ export interface BuildPageViewModel extends PageViewModel {
 	similarBuildsFromAuthor?: ICareerBuild[];
 	ratedByUser?: boolean;
 	favoritedByUser?: boolean;
+	patchNumber?: string;
 }

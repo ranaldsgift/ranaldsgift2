@@ -84,6 +84,9 @@
 		align-content: start;
 		display: grid;
 	}
+	.property-container li {
+		list-style: none;
+	}
 	.item-summary-header {
 		grid-area: itemSummaryHeader;
 		font-size: 1.4em;

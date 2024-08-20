@@ -6,6 +6,7 @@
 	import ContainerTitle from "$lib/components/ContainerTitle.svelte";
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 	import type { InventoryTab } from "$lib/state/HeroesPageState.svelte";
+	import BuildTalentSummary from "../build/BuildTalentSummary.svelte";
 
 	type Props = {
 		build: ICareerBuild;
