@@ -37,7 +37,7 @@
         grid-column-gap: 20px;
         grid-row-gap: 10px;
         grid-template-areas:
-            "heroPortrait heroTalentsSummary"
+            "heroPortrait buildTalentSummary"
             "heroName heroName"
             "heroAttributes heroAttributes" !important;
     }

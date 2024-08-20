@@ -2,6 +2,7 @@
 	import "../app.css";
 	import "../lib/styles/Borders.css";
 	import "../lib/styles/Background.css";
+	import "../lib/styles/Dividers.css";
 	import "../lib/styles/Icons.css";
 	import { afterNavigate, invalidateAll } from "$app/navigation";
 	import TopNavigation from "$lib/components/navigation/TopNavigation.svelte";
