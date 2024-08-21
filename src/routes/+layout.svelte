@@ -44,6 +44,15 @@
 		}
 	});
 
+	$effect(() => {
+		if (userState.showVideo.value) {
+			document.body.classList.add('show-video');
+		}
+		else {
+			document.body.classList.remove('show-video');
+		}
+	});
+
 	afterNavigate((nav) => {
 		menuState.isOpen = nav.to?.url.pathname === "/menu" || nav.to?.url.pathname === "/" ? true : false;
 

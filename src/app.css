@@ -80,7 +80,11 @@
 html, body {
     height: 100%;
 }
-::-webkit-scrollbar {
+body::-webkit-scrollbar {
+  width: 30px;
+  background: url('/images/scrollers/scroll-15.png') repeat-y 2px, url('/images/backgrounds/home-frame.webp') center right / cover;
+}
+body.show-video::-webkit-scrollbar {
     width: 30px;
     background: url('/images/scrollers/scroll-15.png') repeat-y 2px, url('/images/background2.jpg') center right / cover;
 }

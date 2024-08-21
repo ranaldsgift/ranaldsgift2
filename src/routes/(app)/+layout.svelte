@@ -13,7 +13,7 @@
 	<source src='/videos/backgrounds/home.mp4' type="video/mp4" />
 </video>
 {:else}
-<img src="/images/backgrounds/home-frame.webp" alt="Home Frame" class="app-background fixed object-cover w-full h-full top-0 left-0 z-[-1]" />
+<div class="app-background image fixed object-cover w-full h-full top-0 left-0 z-[-1]"></div>
 {/if}
 
 <div class="frame-container flex-auto w-full h-full flex overflow-hidden pb-5">
@@ -45,6 +45,9 @@
 	.app-background {
 		clip-path: polygon(0% 0%, 0% 100%, 40px 100%, 40px 60px, calc(100% - 40px) 60px, calc(100% - 40px) calc(100% - 40px), 40px calc(100% - 40px), 40px 100%, 100% 100%, 100% 0%);
 		z-index: 9999;
+	}
+	.app-background.image {		
+		background: url(/images/backgrounds/home-frame.webp) no-repeat center left / calc(100% + 32px) 100%;
 	}
 	video {
 		top: 0;
