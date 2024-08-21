@@ -1,5 +1,9 @@
 <script>
 	import ButtonLink from "$lib/components/ButtonLink.svelte";
+	import { getMenuState } from "$lib/state/MenuState.svelte";
+
+	const menuState = getMenuState();
+	menuState.isOpen = true;
 </script>
 
 <nav>

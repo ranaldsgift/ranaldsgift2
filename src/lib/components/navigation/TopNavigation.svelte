@@ -1,18 +1,13 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { page } from "$app/stores";
-	import { MenuState } from "$lib/state/MenuState.svelte";
+	import { getMenuState } from "$lib/state/MenuState.svelte";
 	import { getUserState } from "$lib/state/UserState.svelte";
 	import type { SubmitFunction } from "@sveltejs/kit";
 	import { toast } from "svelte-sonner";
 
 	const userState = getUserState();
-
-	const menuClickHandler = (event: MouseEvent) => {
-		event.preventDefault();
-		if ($page.url.pathname === "/") return;
-		MenuState.toggle();
-	};
+	const menuState = getMenuState();
 
 	const backgroundToggleClickHandler = async (event: Event) => {
 		localStorage.setItem("showVideo", userState.showVideo.value.toString());
@@ -45,16 +40,13 @@
 </script>
 
 <div class="top-navigation">
-	<div class="top-navigation-background background-35 border-11 collapsed">
-		<a href="/">Ranald's Gift</a>
-	</div>
-	<button class="ml-4 menu-icon" onclick={menuClickHandler}>
+	<a href="/menu" class="ml-4 menu-icon">
 		<div class="overlay"></div>
-	</button>
+	</a>
 	<!-- User icon -->
 	<div class="icon-container flex-end ml-auto mr-4 flex gap-4 relative items-center">
-		{#if !MenuState.isOpen}
-			<a href="/about" class="rg-icon main-logo">&nbsp;</a>
+		{#if !menuState.isOpen}
+			<a href="/about" class="rg-icon mb-[-4px]">&nbsp;</a>
 		{/if}
 		<input
 			type="checkbox"
@@ -74,20 +66,20 @@
 
 <style>
 	.icon-container {
-		height: 50px;
+		height: 40px;
 	}
 	.icon-container > * {
 		cursor: pointer;
 	}
 	.top-navigation {
 		display: flex;
-		height: 50px;
-		position: absolute;
+		height: 40px;
+		position: fixed;
 		left: -4px;
 		top: -4px;
 		padding-top: 4px;
 		width: calc(100% + 8px);
-		z-index: 1;
+		z-index: 10000;
 	}
 	.top-navigation-background {
 		display: grid;
@@ -126,6 +118,9 @@
 		height: 41px;
 		align-self: flex-end;
 		justify-self: end;
+	}
+	.rg-icon:hover {
+		background: url("/images/icons/rg-flip.png") center / 41px 41px;
 	}
 	a,
 	button {

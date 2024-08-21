@@ -3,7 +3,7 @@ import BuildHelper from "$lib/helpers/BuildHelper.js";
 import { CareerCache } from "$lib/cache/CareerCache.js";
 import { PropertiesCache } from "$lib/cache/PropertiesCache.js";
 import { TraitsCache } from "$lib/cache/TraitsCache.js";
-import type { HeroesPageViewModel } from "$lib/viewmodels/HeroesPageViewModel.svelte.js";
+import type { HeroesPageViewModel } from "$lib/viewmodels/HeroesPageViewModel.js";
 
 export const load = async (event) => {
 	const careers = await CareerCache.getSorted();

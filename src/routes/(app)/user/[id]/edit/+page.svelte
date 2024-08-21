@@ -22,7 +22,7 @@
 	};
 </script>
 
-<div id="page">
+<div class="page-layout">
 	{#if user && data.sessionUser?.id === user.id}
 		<PageButtonContainer>
 			<button class="button-02" onclick={saveUserHandler}>Save</button>
@@ -49,6 +49,10 @@
 </div>
 
 <style>
+	.page-layout {
+		max-width: 1200px;
+		margin: 0 auto;
+	}
 	.user-info-container {
 		color: #8bc34a;
 		font-size: 1.5em;

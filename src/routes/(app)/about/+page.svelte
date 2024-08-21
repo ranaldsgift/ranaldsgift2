@@ -178,7 +178,7 @@
 		font-size: 1.2rem;
 		color: #fff;
 		max-width: 1000px;
-		margin: 20px auto;
+		margin: 0 auto;
 		padding: 2rem;
 		background:
 			linear-gradient(45deg, #000, #0000006e),

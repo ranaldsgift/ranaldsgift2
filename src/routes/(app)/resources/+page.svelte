@@ -227,7 +227,7 @@
 
 <Seo title="Resources" description="A collection of resources for Vermintide 2 players." />
 
-<div id="page">
+<div class="page-layout border-01 top-left-shadow">
 	<div class="flex flex-wrap gap-5 justify-center">
 		{#each resources as { title, links }}
 			<div class="border-13 background-22">
@@ -248,8 +248,13 @@
 </div>
 
 <style>
-	#page {
+	.page-layout {
 		max-width: 1200px;
+		margin: 0 auto;
+		padding: 20px;
+		background:
+			linear-gradient(45deg, #000, #0000006e),
+			url("/images/backgrounds/background40.png") center / cover;
 	}
 
 	a {

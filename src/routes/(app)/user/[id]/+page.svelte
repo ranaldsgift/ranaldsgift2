@@ -9,7 +9,7 @@
 
 <Seo title={`${user.name}'s Profile'`} description={`${user.name}'s Profile. Contains a list of ${user.name}'s authored builds.`} />
 
-<div>
+<div class="page-layout">
 	{#if user}
 		{#if data.sessionUser?.id === user.id}
 			<PageButtonContainer>
@@ -38,6 +38,10 @@
 </div>
 
 <style>
+	.page-layout {
+		max-width: 1200px;
+		margin: 0 auto;
+	}
 	.user-info-container {
 		color: #8bc34a;
 		font-size: 1.5em;

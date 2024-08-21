@@ -78,12 +78,11 @@
 }
 
 html, body {
-    overflow: hidden;
     height: 100%;
 }
 ::-webkit-scrollbar {
     width: 30px;
-    background: url('/images/scrollers/scroll-15.png') repeat-y 2px;
+    background: url('/images/scrollers/scroll-15.png') repeat-y 2px, url('/images/background2.jpg') center right / cover;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -94,6 +93,11 @@ body {
   background: black;
   font-family: caslon-antique;
   color: white;
+  overflow-x: hidden;
+}
+
+a {
+  color: #0096fb;
 }
 
 .header-underline {
