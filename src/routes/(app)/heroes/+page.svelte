@@ -42,7 +42,7 @@
 
 	$effect(() => {
 		if ($page.url.search !== searchParams) {
-			goto(`${searchParams}`, { replaceState: true, keepFocus: true });
+			goto(`${searchParams}`, { replaceState: true, keepFocus: true, noScroll: true });
 		}
 	});
 

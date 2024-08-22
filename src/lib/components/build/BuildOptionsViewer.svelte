@@ -3,12 +3,13 @@
 
 	type Props = {
 		build: ICareerBuild;
+		class?: string;
 	};
 
-	const { build }: Props = $props();
+	const { build, class: CLASS }: Props = $props();
 </script>
 
-<div class="flex mt-4">
+<div class="flex mt-4 {CLASS}">
 	{#if build.difficulty}
 		<span>{build.difficulty.name}</span>
 	{/if}

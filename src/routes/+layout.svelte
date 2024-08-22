@@ -53,19 +53,6 @@
 			document.body.classList.remove('show-video');
 		}
 	});
-
-	afterNavigate((nav) => {
-		menuState.isOpen = nav.to?.url.pathname === "/menu" || nav.to?.url.pathname === "/" ? true : false;
-
-        const page = document.getElementById('page');
-        if (page && nav.type === 'link' && nav.from?.url.pathname !== nav.to?.url.pathname) {
-            page.scrollTop = 0;
-        }
-		previousPage.url = nav.from?.url.pathname ?? '/';
-
-		console.log(nav.to?.url.pathname);
-		console.log("AFTER NAV",menuState.isOpen);
-    });
 </script>
 
 

@@ -12,12 +12,13 @@
 
 	type Props = {
 		build: ICareerBuild;
+		class?: string;
 	};
 
-	const { build }: Props = $props();
+	const { build, class: CLASS }: Props = $props();
 </script>
 
-<div class="build-summary-container">
+<div class="build-summary-container {CLASS}">
 	<div class="build-melee-summary">
 		{@render itemSummary(build.primaryWeapon.weapon.name, build.primaryWeapon)}
 	</div>

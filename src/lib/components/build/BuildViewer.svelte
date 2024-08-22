@@ -26,15 +26,15 @@
 		<BuildOptions hideEmpty={true}></BuildOptions>
 		<BuildGuide description={state.description}></BuildGuide>
 	</div> -->
-	<div class="build-summary-container border-01 p-5">
+	<div class="build-overview-container border-01 pb-5">
 		<BuildHeader {build} {patchNumber}></BuildHeader>
-		<div class="summary-container">
+		<div class="summary-container px-5">
 			<CareerSummaryContainer career={build.career}></CareerSummaryContainer>
 			<BuildTalentSummary {build}></BuildTalentSummary>
 		</div>
 		<div class="divider-03 h-[48px]"></div>
-		<BuildSummary {build}></BuildSummary>
-		<BuildOptionsViewer {build}></BuildOptionsViewer>
+		<BuildSummary class="px-5" {build}></BuildSummary>
+		<BuildOptionsViewer class="px-5" {build}></BuildOptionsViewer>
 	</div>
 	{#if build.description}
 		<div class="build-description-container border-09 py-5 px-8">
@@ -59,7 +59,7 @@
 	.build-viewer {
 		grid-area: buildViewer;
 	}
-	.build-summary-container {
+	.build-overview-container {
 		background: linear-gradient(
 				270deg,
 				rgba(0, 0, 0, 0.8313725490196079),

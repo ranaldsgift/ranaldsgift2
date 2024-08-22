@@ -31,14 +31,16 @@ export async function POST({ locals, params }) {
 	}
 
 	let message = `Added ${buildEntity.name} to your favorites.`;
+	let favorited = true;
 
 	if (userEntity.favoriteBuilds.some((build) => build.id === buildEntity.id)) {
 		userEntity.favoriteBuilds = userEntity.favoriteBuilds.filter((build) => build.id !== buildEntity.id);
 		message = `Removed ${buildEntity.name} from your favorites.`;
+		favorited = false;
 	} else {
 		userEntity.favoriteBuilds.push(buildEntity);
 	}
 	userEntity.save();
 
-	return json({ message });
+	return json({ message, favorited });
 }

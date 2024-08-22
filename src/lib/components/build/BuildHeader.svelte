@@ -50,14 +50,46 @@
 			}
 		}
 	};
+
+	const handleFavorite = async () => {
+		if (userState.user) {
+			const response = await fetch(`/api/build/${build.id}/favorite`, {
+				method: "POST",
+				headers: {
+					"content-type": "application/json",
+				},
+			});
+
+			const json = await response.json();
+
+			if (response.ok) {
+				favoritedByUser = json.favorited;
+				toast(json.message, {
+					position: "bottom-center",
+				});
+			} else {
+				toast(json.error, {
+					position: "bottom-center",
+				});
+			}
+		}
+	};
 </script>
 
 <div class="build-header-details-container">
-	<div class="flex">
+	<div class="header-layout">
 		<span class="build-header heading">{build.name}</span>
+		<button
+			data-favorite={`${favoritedByUser ? "true" : "false"}`}
+			type="submit"
+			class="favorite-icon"
+			title="Favorite"
+			onclick={handleFavorite}
+		></button>
 		<div class="rating flex">
 			<span class="rating-count" title="Number of ratings">{ratingCount}</span>
-			<button data-rated={ratedByUser} class="rating-icon" title="Rating" onclick={handleRating}></button>
+			<button data-rated={ratedByUser ? "true" : "false"} class="rating-icon my-[-4px]" title="Rating" onclick={handleRating}
+			></button>
 		</div>
 	</div>
 	<div class="build-information-container">
@@ -72,6 +104,12 @@
 </div>
 
 <style>
+	.header-layout {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 5px 20px;
+	}
 	.build-header {
 		color: #c15b24;
 		font-size: 2rem;
@@ -89,8 +127,7 @@
 		border-top: 1px solid #f0d9af5e;
 		border-bottom: 1px solid #f0d9af5e;
 		align-items: center;
-		width: calc(100% + 32px);
-		margin-left: -16px;
+		width: calc(100% - 3px);
 		z-index: 0;
 		background: linear-gradient(45deg, #000000, #000000e0), url("/images/backgrounds/background19.png");
 	}
@@ -107,11 +144,18 @@
 		text-decoration: none;
 	}
 	.rating {
-		margin-top: -16px;
 		margin-left: auto;
 	}
 	.rating-count {
 		align-self: center;
 		font-size: 2rem;
+	}
+	.favorite-icon[data-favorite="false"] {
+		filter: grayscale(1);
+	}
+	.favorite-icon {
+		background: url("/images/icons/favorite.png") no-repeat center;
+		width: 22px;
+		height: 51px;
 	}
 </style>
