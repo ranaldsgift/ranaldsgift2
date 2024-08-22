@@ -108,6 +108,7 @@
 		width: 45px;
 		height: 45px;
 	}
+	.background-toggle:checked,
 	.background-toggle:hover {
 		background: url("/images/icons/background-toggle-selected.png") no-repeat;
 	}

@@ -9,9 +9,10 @@
 	import { previousPage } from "$lib/stores/PageStores.svelte";
 	import { setUserState } from "$lib/state/UserState.svelte.js";
 	import { initializeHeroesPageState } from "$lib/state/HeroesPageState.svelte.js";
-	import { ROOT_PAGE_TITLE } from "$lib/data/constants/constants.js";
+	import { META_IMAGE_URL, ROOT_PAGE_DESCRIPTION, ROOT_PAGE_TITLE } from "$lib/data/constants/constants.js";
 	import { Toaster } from "$lib/components/ui/sonner";
 	import { setMenuState } from "$lib/state/MenuState.svelte.js";
+	import Seo from "$lib/components/SEO.svelte";
 
 	let { data, children } = $props();
 
@@ -67,8 +68,11 @@
     });
 </script>
 
+
 <svelte:head>
 	<title>{ROOT_PAGE_TITLE}</title>
+	<meta name="description" content={ROOT_PAGE_DESCRIPTION} />
+	<meta property="image" content={META_IMAGE_URL} />
 </svelte:head>
 
 <Toaster />

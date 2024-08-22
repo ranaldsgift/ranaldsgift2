@@ -94,6 +94,7 @@
 	}
 	.item-name {
 		position: relative;
+		line-height: 1.5rem;
 	}
 	.item-name::before {
 		content: "";
