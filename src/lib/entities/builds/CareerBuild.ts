@@ -141,9 +141,13 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@ManyToMany(() => User, (user) => user.ratedBuilds)
 	userRatings!: User[];
 
+	ratingsCount!: number;
+
 	@Type(() => User)
 	@ManyToMany(() => User, (user) => user.favoriteBuilds)
 	userFavorites!: User[];
+
+	favoritesCount!: number;
 }
 
 export interface ICareerBuild {
@@ -179,6 +183,8 @@ export interface ICareerBuild {
 	gamemode?: GameModeEnum;
 	userRatings?: IUser[];
 	userFavorites?: IUser[];
-	dateModified: Date;
-	dateCreated: Date;
+	ratingsCount?: number;
+	favoritesCount?: number;
+	dateModified?: Date;
+	dateCreated?: Date;
 }

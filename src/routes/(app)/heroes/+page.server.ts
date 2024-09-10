@@ -64,8 +64,8 @@ export const load = async (event) => {
 		},
 		trinket: {
 			trait: trinketTraits[0],
-			property1: trinketProperties[0],
-			property2: trinketProperties[1],
+			property1: trinketProperties[1],
+			property2: trinketProperties[2],
 		},
 	};
 

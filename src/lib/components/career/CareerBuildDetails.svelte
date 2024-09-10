@@ -1,21 +1,23 @@
 <script lang="ts">
+	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 	import type { ICareer } from "$lib/entities/career/Career";
 	import CareerPassive from "./CareerPassive.svelte";
 	import CareerPerks from "./CareerPerks.svelte";
 	import CareerSkill from "./CareerSkill.svelte";
-	import CareerSummaryContainer from "./CareerSummaryContainer.svelte";
-	import CooldownBar from "./CooldownBar.svelte";
-	import HealthBar from "./HealthBar.svelte";
+	import CareerBuildSummaryContainer from "./CareerBuildSummaryContainer.svelte";
 
 	type Props = {
+		build: ICareerBuild;
 		career: ICareer;
+		health?: number;
+		cooldown?: number;
 	};
 
-	let { career }: Props = $props();
+	let { build, career, health, cooldown }: Props = $props();
 </script>
 
 <div class="career-details-container">
-	<CareerSummaryContainer {career}></CareerSummaryContainer>
+	<CareerBuildSummaryContainer {build} career={build.career}></CareerBuildSummaryContainer>
 	<CareerSkill {career}></CareerSkill>
 	<CareerPassive {career}></CareerPassive>
 	<CareerPerks {career}></CareerPerks>
@@ -41,34 +43,7 @@
 		background-repeat: no-repeat;
 	}
 
-	.career-left-container {
-		grid-area: careerLeftContainer;
-		align-self: start;
-	}
-
 	.career-details-container {
 		grid-area: careerDetails;
-	}
-
-	.career-page > * {
-		width: 100%;
-	}
-
-	.career-attributes {
-		display: grid;
-		grid-template-rows: 1fr 1fr;
-		text-align: left;
-		justify-content: left;
-		justify-items: left;
-		grid-template-columns: 1fr;
-		grid-area: careerAttributes;
-		position: relative;
-		grid-row-gap: 10px;
-	}
-
-	.career-summary > p {
-		width: 100%;
-		text-align: left;
-		position: relative;
 	}
 </style>

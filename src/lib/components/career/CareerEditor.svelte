@@ -1,6 +1,6 @@
 <script lang="ts">
 	import BuildSummary from "$lib/components/build/BuildSummary.svelte";
-	import CareerDetails from "$lib/components/career/CareerDetails.svelte";
+	import CareerBuildDetails from "$lib/components/career/CareerBuildDetails.svelte";
 	import CareerInventory from "$lib/components/career/CareerInventory.svelte";
 	import CareerTalents from "$lib/components/career/CareerTalents.svelte";
 	import ContainerTitle from "$lib/components/ContainerTitle.svelte";
@@ -22,7 +22,7 @@
 	<ContainerTitle class="w-full">Career Overview</ContainerTitle>
 	<div class="career-details-container">
 		<div class="border-01 p-5">
-			<CareerDetails career={build.career}></CareerDetails>
+			<CareerBuildDetails {build} career={build.career}></CareerBuildDetails>
 			<div class="divider-03 h-[48px]"></div>
 			<BuildSummary {build}></BuildSummary>
 		</div>

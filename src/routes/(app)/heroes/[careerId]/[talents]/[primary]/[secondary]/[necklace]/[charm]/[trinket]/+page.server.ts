@@ -57,7 +57,6 @@ function getTrait(category: LegacyTraitCategory, id: number, traits: ITrait[]) {
 }
 
 function getProperty(category: LegacyPropertyCategory, id: number, properties: IProperty[]) {
-	console.log(category);
 	let propertyName = LegacyDataHelper.getPropertyName(category, id);
 	let property = properties.find((property) => {
 		return property.name === propertyName;
