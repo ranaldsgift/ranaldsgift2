@@ -1,9 +1,6 @@
 <script lang="ts">
-	import { onMount } from "svelte";
-
-	let editor: HTMLElement;
-
-	export let readOnly = false;
+	import type Quill from "quill";
+	import { afterUpdate, onMount } from "svelte";
 
 	export let toolbarOptions = [
 		[{ header: 1 }, { header: 2 }, "blockquote", "link", "image", "video"],
@@ -13,18 +10,28 @@
 		["clean"],
 	];
 
+	export let readOnly = false;
 	export let content: string;
+
+	let quill: Quill;
+	let editor: HTMLElement;
 
 	onMount(async () => {
 		const { default: Quill } = await import("quill");
+		await import("./CustomBlot");
 
-		let quill = new Quill(editor, {
+		quill = new Quill(editor, {
 			theme: "snow",
 			readOnly,
 			modules: {
 				toolbar: readOnly ? false : toolbarOptions,
 			},
 		});
+	});
+
+	afterUpdate(async () => {
+		const delta = quill.clipboard.convert({ html: content });
+		quill.setContents(delta);
 	});
 </script>
 
