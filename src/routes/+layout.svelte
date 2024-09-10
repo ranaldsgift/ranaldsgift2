@@ -55,7 +55,6 @@
 	});
 </script>
 
-
 <svelte:head>
 	<title>{ROOT_PAGE_TITLE}</title>
 	<meta name="description" content={ROOT_PAGE_DESCRIPTION} />
@@ -63,8 +62,6 @@
 </svelte:head>
 
 <Toaster />
-
-<TopNavigation></TopNavigation>
 
 <div>
 	{@render children()}

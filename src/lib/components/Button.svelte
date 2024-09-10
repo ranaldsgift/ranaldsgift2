@@ -1,3 +1,13 @@
+<script lang="ts">
+	import type { Snippet } from "svelte";
+
+    type Props = {
+        handler?: () => void;
+        children: Snippet;
+    }
+
+    const { handler, children }: Props = $props();
+</script>
 
 <style>
     button {
@@ -53,4 +63,6 @@
     }
 </style>
 
-<button><slot/></button>
+<button onclick={() => { handler ? handler() : null }}>
+    {@render children()}
+</button>

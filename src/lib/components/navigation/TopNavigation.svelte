@@ -1,13 +1,17 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { page } from "$app/stores";
-	import { getMenuState } from "$lib/state/MenuState.svelte";
 	import { getUserState } from "$lib/state/UserState.svelte";
 	import type { SubmitFunction } from "@sveltejs/kit";
 	import { toast } from "svelte-sonner";
 
+	type Props = {
+		showAboutButton?: boolean;
+	};
+
+	const { showAboutButton = true }: Props = $props();
+
 	const userState = getUserState();
-	const menuState = getMenuState();
 
 	const backgroundToggleClickHandler = async (event: Event) => {
 		localStorage.setItem("showVideo", userState.showVideo.value.toString());
@@ -45,7 +49,7 @@
 	</a>
 	<!-- User icon -->
 	<div class="icon-container flex-end ml-auto mr-4 flex gap-4 relative items-center">
-		{#if !menuState.isOpen}
+		{#if showAboutButton}
 			<a href="/about" class="rg-icon mb-[-4px]">&nbsp;</a>
 		{/if}
 		<input
@@ -81,27 +85,6 @@
 		width: calc(100% + 8px);
 		z-index: 10000;
 	}
-	.top-navigation-background {
-		display: grid;
-		justify-content: center;
-		align-content: center;
-		position: absolute;
-		background-position: center;
-		top: 0;
-		height: 0px;
-		width: 100%;
-		overflow: hidden;
-		transition: height 0.3s;
-		font-size: 1.4rem;
-		color: #c15b24;
-		line-height: 66px;
-		text-transform: uppercase;
-		font-family: "caslon-antique-bold";
-	}
-	:global(.top-navigation-background:not(.collapsed)) {
-		height: 58px;
-	}
-
 	.background-toggle {
 		appearance: none;
 		background: url("/images/icons/background-toggle.png") no-repeat;
