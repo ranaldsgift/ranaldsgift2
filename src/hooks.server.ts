@@ -59,9 +59,9 @@ const supabase: Handle = async ({ event, resolve }) => {
 			};
 		}
 
-		const sessionWithUserFromUser = { ...session, user: { ...user } } as Session;
-
-		return { session: sessionWithUserFromUser, user };
+		const newSession: Omit<Session, "user"> & { user?: Session["user"] } = session;
+		delete newSession.user;
+		return { session: Object.assign({}, newSession, { user }), user };
 	};
 
 	const { session, user } = await getSessionAndUser();
