@@ -66,20 +66,25 @@
     background: linear-gradient(110deg, transparent 50%, #141414 50%), linear-gradient(70deg, #141414 50%, transparent 50%);
     border-radius: inherit;
 }
-.rated-icon {
-    background: url('/images/icons/rated-icon.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-.rating-icon {
-    background: url('/images/icons/rating-icon.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    width: 62px;
-    height: 64px;
+
+.talent-lock-icon {
+    width: 76px;
+    height: 76px;
     display: block;
+    position: relative;
 }
-.rating-icon:hover, .rating-icon[data-rated="true"] {    
-    background: url('/images/icons/rated-icon.png');
-    cursor: pointer;
+.talent-lock-icon::after {
+    content: var(--talent-tier-level);
+}
+.talent-lock-icon::after {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    align-content: center;
+    z-index: 99999999999;
+    font-size: 150%;
+    color: #c15b24;
+    margin-top: 6px;
+    text-align: center;
 }

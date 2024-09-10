@@ -1,6 +1,6 @@
-import { CareerCache } from "$lib/cache/CareerCache.js";
 import { PatchCache } from "$lib/cache/PatchCache.js";
-import { CareerBuild, type ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
+import { type ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
+import BuildHelper from "$lib/helpers/BuildHelper.js";
 import type { BuildPageViewModel } from "$lib/viewmodels/BuildPageViewModel.js";
 import { error } from "@sveltejs/kit";
 
@@ -10,7 +10,7 @@ export const load = async (event) => {
 	let careerBuild: ICareerBuild | null = null;
 
 	// If the ID is a UUID, this is the new supabase user ID
-	const response = await event.fetch(`/api/build?id=${id}&favorites=true`, { method: "GET" });
+	const response = await event.fetch(`/api/build?id=${id}`, { method: "GET" });
 
 	if (!response.ok) {
 		error(404, `Failed to fetch build ${id}.`);
@@ -36,9 +36,7 @@ export const load = async (event) => {
 
 	const patches = await PatchCache.getAll();
 
-	const patch = patches
-		.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-		.find((p) => new Date(p.date).getTime() <= new Date(careerBuild.dateModified).getTime());
+	const patch = BuildHelper.getPatch(careerBuild, patches);
 
 	let viewModel: BuildPageViewModel = {
 		build: careerBuild,

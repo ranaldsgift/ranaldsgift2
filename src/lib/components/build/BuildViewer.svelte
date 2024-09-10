@@ -4,10 +4,10 @@
 	import BuildSummary from "./BuildSummary.svelte";
 	import ContainerTitle from "../ContainerTitle.svelte";
 	import BuildHeader from "./BuildHeader.svelte";
-	import CareerSummaryContainer from "../career/CareerSummaryContainer.svelte";
 	import BuildOptionsViewer from "./BuildOptionsViewer.svelte";
 	import BuildTalentSummary from "./BuildTalentSummary.svelte";
-	import TextEditor from "../TextEditor.svelte";
+	import CareerBuildSummaryContainer from "../career/CareerBuildSummaryContainer.svelte";
+	import BuildGuideView from "./BuildGuideView.svelte";
 
 	type Props = {
 		build: ICareerBuild;
@@ -19,17 +19,10 @@
 
 <div class="build-viewer top-left-shadow">
 	<ContainerTitle>Summary</ContainerTitle>
-	<!-- 	<div class="build-main-summary-container">
-		<BuildHeader></BuildHeader>
-		<HeroDetails careerId={state.careerId}></HeroDetails>
-		<BuildSummary></BuildSummary>
-		<BuildOptions hideEmpty={true}></BuildOptions>
-		<BuildGuide description={state.description}></BuildGuide>
-	</div> -->
 	<div class="build-overview-container border-01 pb-5">
 		<BuildHeader {build} {patchNumber}></BuildHeader>
 		<div class="summary-container px-5">
-			<CareerSummaryContainer career={build.career}></CareerSummaryContainer>
+			<CareerBuildSummaryContainer {build} career={build.career}></CareerBuildSummaryContainer>
 			<BuildTalentSummary {build}></BuildTalentSummary>
 		</div>
 		<div class="divider-03 h-[48px]"></div>
@@ -38,7 +31,7 @@
 	</div>
 	{#if build.description}
 		<div class="build-description-container border-09 py-5 px-8">
-			<TextEditor readOnly={true} content={build.description}></TextEditor>
+			<BuildGuideView {build}></BuildGuideView>
 		</div>
 	{/if}
 	<div class="build-talents-container">
@@ -51,6 +44,7 @@
 			talent4={build.talent4}
 			talent5={build.talent5}
 			talent6={build.talent6}
+			readOnly={true}
 		></CareerTalents>
 	</div>
 </div>

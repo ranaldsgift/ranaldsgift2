@@ -1,35 +1,42 @@
 <script lang="ts">
+	import BuildTable from "$lib/components/buildtable/BuildTable.svelte";
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import Seo from "$lib/components/SEO.svelte";
-	import { type IUser } from "$lib/entities/User";
 
 	const { data } = $props();
-	const user = JSON.parse(data.userData) as IUser;
 </script>
 
-<Seo title={`${user.name}'s Profile'`} description={`${user.name}'s Profile. Contains a list of ${user.name}'s authored builds.`} />
+<Seo
+	title={`${data.userData.name}'s Profile`}
+	description={`${data.userData.name}'s Profile. Contains a list of ${data.userData.name}'s authored builds.`}
+/>
 
 <div class="page-layout">
-	{#if user}
-		{#if data.sessionUser?.id === user.id}
+	{#if data.userData}
+		{#if data.sessionUser?.id === data.userData.id}
 			<PageButtonContainer>
-				<a class="button-02" href={`/user/${user.id}/edit`}>Edit</a>
+				<a class="button-02" href={`/user/${data.userData.id}/edit`}>Edit</a>
 			</PageButtonContainer>
 		{/if}
 		<div>
 			<div class="user-info-container background-14 border-08">
 				<span>Username</span>
-				<span>{user.name}</span>
+				<span>{data.userData.name}</span>
 				<span>Steam Friend Code</span>
-				<span>{user.steam}</span>
+				<span>{data.userData.steam}</span>
 				<span>Discord</span>
-				<span>{user.discord}</span>
+				<span>{data.userData.discord}</span>
 				<span>Twitch</span>
-				<a href={`https://twitch.tv/${user.twitch}`}>{user.twitch}</a>
+				<a href={`https://twitch.tv/${data.userData.twitch}`}>{data.userData.twitch}</a>
 				<span>Youtube</span>
-				<a href={`https://youtube.com/${user.youtube}`}>{user.youtube}</a>
+				<a href={`https://youtube.com/${data.userData.youtube}`}>{data.userData.youtube}</a>
 			</div>
 		</div>
+		{#if data.sessionUser?.id === data.userData.id}
+			<BuildTable filter={{ favoriteByUser: data.userData.id, limit: 5 }}></BuildTable>
+			<BuildTable filter={{ rated: true, limit: 5 }}></BuildTable>
+		{/if}
+		<BuildTable filter={{ userId: data.userData.id, limit: 10 }}></BuildTable>
 	{:else}
 		<div>
 			<h1>User not found</h1>

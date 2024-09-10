@@ -9,7 +9,7 @@
 	const { build, class: CLASS }: Props = $props();
 </script>
 
-<div class="flex mt-4 {CLASS}">
+<div class="flex mt-4 gap-2 {CLASS} items-start">
 	{#if build.difficulty}
 		<span>{build.difficulty.name}</span>
 	{/if}
@@ -26,23 +26,14 @@
 		<span>{build.book.name}</span>
 	{/if}
 	{#if build.roles}
-		<ul>
-			{#each build.roles as role}
-				<li>{role.name}</li>
-			{/each}
-		</ul>
+		{#each build.roles as role}
+			<span class="!text-[#c15b24]">{role.name}</span>
+		{/each}
 	{/if}
 </div>
 
-<!-- <TwitchSelect key='twitchMode' selectedValues={selectedTwitchMode}></TwitchSelect>
-          optionsHtml.push(<MissionSelect key='mission' selectedValues={selectedMissions}></MissionSelect>);
-          optionsHtml.push(<PotionSelect key='potion' selectedValues={selectedPotions}></PotionSelect>);
-          optionsHtml.push(<BookSelect key='book' selectedValues={selectedBooks}></BookSelect>);
-          optionsHtml.push(<RoleSelect key='roles' selectedValues={state.roles}></RoleSelect>); -->
-
 <style>
-	span,
-	li {
+	span {
 		border-image: url("/images/borders/border-13.png");
 		border-image-width: auto;
 		border-image-slice: 21;
@@ -52,5 +43,7 @@
 		align-content: center;
 		padding: 10px 20px;
 		background: linear-gradient(180deg, #2b1212 35%, #000);
+		color: #30e158;
+		font-size: 1.3rem;
 	}
 </style>

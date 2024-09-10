@@ -20,6 +20,6 @@ export const load = async (event) => {
 	}
 
 	return {
-		userData: JSON.stringify(user.toObject()),
+		userData: user.toObject(),
 	};
 };

@@ -1,3 +1,4 @@
+import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 import { Career, type ICareer } from "$lib/entities/career/Career";
 import type { IDifficulty } from "$lib/entities/Difficulty";
 import type { Hero } from "$lib/entities/Hero";
@@ -14,3 +15,5 @@ export const PropertiesStore = new AsyncStore<IProperty>("/api/properties", CACH
 export const TraitsStore = new AsyncStore<ITrait>("/api/traits", CACHE_DURATION);
 export const DifficultiesStore = new AsyncStore<IDifficulty>("/api/difficulties", CACHE_DURATION);
 export const PatchesStore = new AsyncStore<IPatch>("/api/patches", CACHE_DURATION);
+
+export const CareerBuildsStore = new AsyncStore<ICareerBuild>("/api/builds");

@@ -1,18 +1,13 @@
 <script lang="ts">
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import { type IUser } from "$lib/entities/User";
+	import * as api from "$lib/api.js";
 
 	const { data } = $props();
-	const user = $state<IUser>(JSON.parse(data.userData) as IUser);
+	const user = $state<IUser>(data.userData);
 
 	const saveUserHandler = async () => {
-		const response = await fetch("/api/user/save", {
-			method: "POST",
-			body: JSON.stringify(user),
-			headers: {
-				"content-type": "application/json",
-			},
-		});
+		const response = await api.post("/api/user/save", user);
 
 		if (response.ok) {
 			alert("User saved");
@@ -68,8 +63,5 @@
 	}
 	.user-info-container > span:nth-child(2n + 1) {
 		color: #808080;
-	}
-	.user-info-container a {
-		color: #0096fb;
 	}
 </style>

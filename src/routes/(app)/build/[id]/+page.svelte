@@ -3,6 +3,7 @@
 	import { error } from "@sveltejs/kit";
 	import BuildViewer from "$lib/components/build/BuildViewer.svelte";
 	import Seo from "$lib/components/SEO.svelte";
+	import BuildTable from "$lib/components/buildtable/BuildTable.svelte";
 
 	let { data } = $props();
 
@@ -32,12 +33,8 @@
 		<BuildViewer {build} patchNumber={data.viewModel.patchNumber}></BuildViewer>
 	</div>
 	<div class="build-side-container">
-		<!--
-		Similar Builds by User
-		<BuildList></BuildList>
-		More builds for career
-		<BuildList></BuildList>
-		-->
+		<BuildTable filter={{ userId: author.id, careerId: build.careerId, limit: 3 }}></BuildTable>
+		<BuildTable filter={{ careerId: build.careerId, limit: 3 }}></BuildTable>
 	</div>
 </div>
 

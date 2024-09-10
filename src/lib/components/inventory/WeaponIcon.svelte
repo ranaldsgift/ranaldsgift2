@@ -4,14 +4,15 @@
 	type Props = {
 		weapon: IWeapon;
 		class?: string;
+		size?: string;
 	};
 
-	let { weapon, class: CLASS = "" }: Props = $props();
+	let { weapon, class: CLASS = "", size = "62px" }: Props = $props();
 </script>
 
 <div
 	class="weapon-icon border-04 {CLASS}"
-	style="background: url('/images/weapons/{weapon.codename}.png') no-repeat center / calc(100% + 8px), 
+	style="--size: {size}; background: url('/images/weapons/{weapon.codename}.png') no-repeat center / calc(100% + 8px), 
                         url('/images/backgrounds/icon-background-2.png') no-repeat center / 100% 100%;"
 >
 	<div class="tooltip border-35">
@@ -24,14 +25,15 @@
 
 <style>
 	.weapon-icon {
-		height: 62px;
-		width: 62px;
+		height: var(--size);
+		width: var(--size);
+		grid-area: itemIcon;
 	}
 	.weapon-icon:before:hover {
 		display: none !important;
 	}
 	.weapon-icon {
-		box-shadow: inset 0 2px 2px white;
+		box-shadow: inset 0 5px 2px white;
 	}
 	.weapon-icon.selected {
 		border-image: url("/images/borders/border-30.png");

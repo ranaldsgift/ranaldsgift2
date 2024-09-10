@@ -1,5 +1,6 @@
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 import type { ICareer } from "$lib/entities/career/Career";
+import type { IPatch } from "$lib/entities/Patch";
 import type { IProperty } from "$lib/entities/Property";
 import type { ITrait } from "$lib/entities/Trait";
 
@@ -214,6 +215,16 @@ class BuildHelper {
 			{ key: "charm", value: `${build.charm.property1?.id}-${build.charm.property2?.id}-${build.charm.trait?.id}` },
 			{ key: "trinket", value: `${build.trinket.property1?.id}-${build.trinket.property2?.id}-${build.trinket.trait?.id}` },
 		];
+	}
+
+	static getPatch(build: ICareerBuild, patches: IPatch[]): IPatch | undefined {
+		if (!build.dateModified) {
+			return undefined;
+		}
+
+		return patches
+			.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+			.find((p) => new Date(p.date).getTime() <= new Date(build.dateModified!).getTime());
 	}
 }
 
