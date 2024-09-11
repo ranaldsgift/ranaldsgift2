@@ -1,25 +1,29 @@
 class StaticDataCache<TModel> {
-    cachedData: Map<number, TModel> = new Map();
+	cachedData: Map<number, TModel> = new Map();
 
-    get(key: number): TModel {
-        return this.cachedData.get(key)!;
-    }
+	get(key: number): TModel {
+		return this.cachedData.get(key)!;
+	}
 
-    getAll(): TModel[] {
-        return Array.from(this.cachedData.values());
-    }
+	getAll(): TModel[] {
+		return Array.from(this.cachedData.values());
+	}
 
-    set(key: number, value: TModel): void {
-        this.cachedData.set(key, value);
-    }
+	set(key: number, value: TModel): void {
+		this.cachedData.set(key, value);
+	}
 
-    delete(key: number): void {
-        this.cachedData.delete(key);
-    }
+	delete(key: number): void {
+		this.cachedData.delete(key);
+	}
 
-    clear(): void {
-        this.cachedData.clear();
-    }
+	clear(): void {
+		this.cachedData.clear();
+	}
+
+	count(): number {
+		return this.cachedData.size;
+	}
 }
 
 export default StaticDataCache;

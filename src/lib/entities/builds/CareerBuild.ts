@@ -14,6 +14,9 @@ import { BuildRole, type IBuildRole } from "../BuildRole";
 import { AuthoredEntity } from "../AuthoredEntity";
 import { PageViewsCareerBuild, type IPageViewsCareerBuild } from "../PageViewCareerBuild";
 import { CareerTalent, type ICareerTalent } from "../career/CareerTalent";
+import { User, type IUser } from "../User";
+import { DifficultyModifier, type IDifficultyModifier } from "../DifficultyModifier";
+import { GameModeEnum } from "$lib/enums/GameModeEnum";
 
 @Entity({})
 export class CareerBuild extends AuthoredEntity<ICareerBuild> {
@@ -29,32 +32,35 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@Column("varchar")
 	description!: string;
 
+	@Column("number", { nullable: true })
+	careerId?: number;
+
 	@Type(() => Career)
 	@ManyToOne(() => Career)
 	career!: Career;
 
 	@Type(() => WeaponBuild)
-	@OneToOne(() => WeaponBuild, { cascade: true })
+	@OneToOne(() => WeaponBuild, { eager: true, cascade: true })
 	@JoinColumn()
 	primaryWeapon!: WeaponBuild;
 
 	@Type(() => WeaponBuild)
-	@OneToOne(() => WeaponBuild, { cascade: true })
+	@OneToOne(() => WeaponBuild, { eager: true, cascade: true })
 	@JoinColumn()
 	secondaryWeapon!: WeaponBuild;
 
 	@Type(() => CharmBuild)
-	@OneToOne(() => CharmBuild, { cascade: true })
+	@OneToOne(() => CharmBuild, { eager: true, cascade: true })
 	@JoinColumn()
 	charm!: CharmBuild;
 
 	@Type(() => NecklaceBuild)
-	@OneToOne(() => NecklaceBuild, { cascade: true })
+	@OneToOne(() => NecklaceBuild, { eager: true, cascade: true })
 	@JoinColumn()
 	necklace!: NecklaceBuild;
 
 	@Type(() => TrinketBuild)
-	@OneToOne(() => TrinketBuild, { cascade: true })
+	@OneToOne(() => TrinketBuild, { eager: true, cascade: true })
 	@JoinColumn()
 	trinket!: TrinketBuild;
 
@@ -89,6 +95,13 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@ManyToOne(() => Difficulty, { eager: true })
 	difficulty!: Difficulty;
 
+	@Type(() => DifficultyModifier)
+	@ManyToOne(() => DifficultyModifier, { eager: true })
+	difficultyModifier!: DifficultyModifier;
+
+	@Column("boolean", { default: false })
+	deathwish!: boolean;
+
 	@Type(() => Mission)
 	@ManyToOne(() => Mission, { eager: true })
 	mission!: Mission;
@@ -113,15 +126,37 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@Column("varchar", { array: true })
 	videos!: string[];
 
+	@Column({
+		type: "enum",
+		enum: GameModeEnum,
+		default: GameModeEnum.Adventure,
+	})
+	gamemode!: GameModeEnum;
+
 	@Type()
 	@OneToOne(() => PageViewsCareerBuild)
 	pageView!: PageViewsCareerBuild;
+
+	@Type(() => User)
+	@ManyToMany(() => User, (user) => user.ratedBuilds)
+	userRatings!: User[];
+
+	ratingsCount!: number;
+
+	@Type(() => User)
+	@ManyToMany(() => User, (user) => user.favoriteBuilds)
+	userFavorites!: User[];
+
+	favoritesCount!: number;
 }
 
 export interface ICareerBuild {
+	id?: number;
+	user?: IUser;
 	firebaseId?: string;
 	name?: string;
 	description?: string;
+	careerId?: number;
 	career: ICareer;
 	primaryWeapon: IWeaponBuild;
 	secondaryWeapon: IWeaponBuild;
@@ -133,6 +168,8 @@ export interface ICareerBuild {
 	talent5?: ICareerTalent;
 	talent6?: ICareerTalent;
 	difficulty?: IDifficulty;
+	difficultyModifier?: IDifficultyModifier;
+	deathwish?: boolean;
 	mission?: IMission;
 	potion?: IPotion;
 	book?: IBookSetting;
@@ -143,4 +180,11 @@ export interface ICareerBuild {
 	necklace: INecklaceBuild;
 	charm: ICharmBuild;
 	trinket: ITrinketBuild;
+	gamemode?: GameModeEnum;
+	userRatings?: IUser[];
+	userFavorites?: IUser[];
+	ratingsCount?: number;
+	favoritesCount?: number;
+	dateModified?: Date;
+	dateCreated?: Date;
 }

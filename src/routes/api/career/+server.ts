@@ -14,5 +14,6 @@ export const GET: RequestHandler = async ({ url }) => {
 	if (!career) {
 		return new Response(null, { status: 404 });
 	}
+
 	return new Response(JSON.stringify(career));
 };

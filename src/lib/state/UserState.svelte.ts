@@ -1,6 +1,7 @@
 import type { IUser } from "$lib/entities/User";
 import { getContext, setContext } from "svelte";
 import { LocalStorageState } from "./LocalStorageState.svelte";
+import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 
 class UserState {
 	user: IUser | null = $state(null);
@@ -21,6 +22,30 @@ class UserState {
 
 	reset() {
 		this.user = null;
+	}
+
+	addFavorite(build: ICareerBuild) {
+		if (this.user) {
+			this.user.favoriteBuilds.push(build);
+		}
+	}
+
+	removeFavorite(build: ICareerBuild) {
+		if (this.user) {
+			this.user.favoriteBuilds = this.user.favoriteBuilds.filter((b) => b.id !== build.id);
+		}
+	}
+
+	addRating(build: ICareerBuild) {
+		if (this.user) {
+			this.user.ratedBuilds.push(build);
+		}
+	}
+
+	removeRating(build: ICareerBuild) {
+		if (this.user) {
+			this.user.ratedBuilds = this.user.ratedBuilds.filter((b) => b.id !== build.id);
+		}
 	}
 }
 

@@ -1,5 +1,6 @@
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 import type { ICareer } from "$lib/entities/career/Career";
+import type { IPatch } from "$lib/entities/Patch";
 import type { IProperty } from "$lib/entities/Property";
 import type { ITrait } from "$lib/entities/Trait";
 
@@ -38,108 +39,138 @@ class BuildHelper {
 					trait: primaryWeaponTrait,
 				};
 			}
+		} else {
+			build.primaryWeapon = {
+				weapon: career.primaryWeapons[0],
+				property1: career.primaryWeapons[0].properties[0],
+				property2: career.primaryWeapons[0].properties[1],
+				trait: career.primaryWeapons[0].traits[0],
+			};
+		}
 
-			const secondaryWeaponParams = searchParams.get("secondary");
-			if (secondaryWeaponParams?.split("-").length === 4) {
-				const secondaryWeaponId = parseInt(secondaryWeaponParams.split("-")[0]);
-				const secondaryWeaponProperty1Id = parseInt(secondaryWeaponParams.split("-")[1]);
-				const secondaryWeaponProperty2Id = parseInt(secondaryWeaponParams.split("-")[2]);
-				const secondaryWeaponTraitId = parseInt(secondaryWeaponParams.split("-")[3]);
+		const secondaryWeaponParams = searchParams.get("secondary");
+		if (secondaryWeaponParams?.split("-").length === 4) {
+			const secondaryWeaponId = parseInt(secondaryWeaponParams.split("-")[0]);
+			const secondaryWeaponProperty1Id = parseInt(secondaryWeaponParams.split("-")[1]);
+			const secondaryWeaponProperty2Id = parseInt(secondaryWeaponParams.split("-")[2]);
+			const secondaryWeaponTraitId = parseInt(secondaryWeaponParams.split("-")[3]);
 
-				const secondaryWeapon = career.secondaryWeapons.find((weapon) => weapon.id === secondaryWeaponId);
+			const secondaryWeapon = career.secondaryWeapons.find((weapon) => weapon.id === secondaryWeaponId);
 
-				if (!secondaryWeapon) {
-					return null;
-				}
-
-				const secondaryWeaponProperty1 = secondaryWeapon.properties.find((property) => property.id === secondaryWeaponProperty1Id);
-				const secondaryWeaponProperty2 = secondaryWeapon.properties.find((property) => property.id === secondaryWeaponProperty2Id);
-				const secondaryWeaponTrait = secondaryWeapon.traits.find((trait) => trait.id === secondaryWeaponTraitId);
-
-				if (secondaryWeaponProperty1 && secondaryWeaponProperty2) {
-					build.secondaryWeapon = {
-						weapon: secondaryWeapon,
-						property1: secondaryWeaponProperty1,
-						property2: secondaryWeaponProperty2,
-						trait: secondaryWeaponTrait,
-					};
-				}
-			}
-
-			const talentsParam = searchParams.get("talents");
-			if (talentsParam?.split("-").length !== 6) {
+			if (!secondaryWeapon) {
 				return null;
 			}
 
-			const talents = talentsParam.split("-").map((talent) => parseInt(talent));
-			build.talent1 = build.career.talents.find((talent) => talent.talentNumber === talents[0]);
-			build.talent2 = build.career.talents.find((talent) => talent.talentNumber === talents[1]);
-			build.talent3 = build.career.talents.find((talent) => talent.talentNumber === talents[2]);
-			build.talent4 = build.career.talents.find((talent) => talent.talentNumber === talents[3]);
-			build.talent5 = build.career.talents.find((talent) => talent.talentNumber === talents[4]);
-			build.talent6 = build.career.talents.find((talent) => talent.talentNumber === talents[5]);
+			const secondaryWeaponProperty1 = secondaryWeapon.properties.find((property) => property.id === secondaryWeaponProperty1Id);
+			const secondaryWeaponProperty2 = secondaryWeapon.properties.find((property) => property.id === secondaryWeaponProperty2Id);
+			const secondaryWeaponTrait = secondaryWeapon.traits.find((trait) => trait.id === secondaryWeaponTraitId);
 
-			const necklaceParams = searchParams.get("necklace");
-			if (necklaceParams?.split("-").length === 3) {
-				const necklaceProperty1Id = parseInt(necklaceParams.split("-")[0]);
-				const necklaceProperty2Id = parseInt(necklaceParams.split("-")[1]);
-				const necklaceTraitId = parseInt(necklaceParams.split("-")[2]);
-
-				const necklaceProperty1 = properties.find((property) => property.id === necklaceProperty1Id);
-				const necklaceProperty2 = properties.find((property) => property.id === necklaceProperty2Id);
-				const necklaceTrait = traits.find((trait) => trait.id === necklaceTraitId);
-
-				if (necklaceTrait && necklaceProperty1 && necklaceProperty2) {
-					build.necklace = {
-						trait: necklaceTrait,
-						property1: necklaceProperty1,
-						property2: necklaceProperty2,
-					};
-				}
+			if (secondaryWeaponProperty1 && secondaryWeaponProperty2) {
+				build.secondaryWeapon = {
+					weapon: secondaryWeapon,
+					property1: secondaryWeaponProperty1,
+					property2: secondaryWeaponProperty2,
+					trait: secondaryWeaponTrait,
+				};
 			}
+		} else {
+			build.secondaryWeapon = {
+				weapon: career.secondaryWeapons[0],
+				property1: career.secondaryWeapons[0].properties[0],
+				property2: career.secondaryWeapons[0].properties[1],
+				trait: career.secondaryWeapons[0].traits[0],
+			};
+		}
 
-			const charmParams = searchParams.get("charm");
-			if (charmParams?.split("-").length === 3) {
-				const charmProperty1Id = parseInt(charmParams.split("-")[0]);
-				const charmProperty2Id = parseInt(charmParams.split("-")[1]);
-				const charmTraitId = parseInt(charmParams.split("-")[2]);
+		const talentsParam = searchParams.get("talents");
 
-				const charmProperty1 = properties.find((property) => property.id === charmProperty1Id);
-				const charmProperty2 = properties.find((property) => property.id === charmProperty2Id);
-				const charmTrait = traits.find((trait) => trait.id === charmTraitId);
+		const talents =
+			talentsParam?.split("-").length === 6 ? talentsParam.split("-").map((talent) => parseInt(talent)) : [0, 0, 0, 0, 0, 0];
+		build.talent1 = build.career.talents.find((talent) => talent.talentNumber === talents[0]);
+		build.talent2 = build.career.talents.find((talent) => talent.talentNumber === talents[1]);
+		build.talent3 = build.career.talents.find((talent) => talent.talentNumber === talents[2]);
+		build.talent4 = build.career.talents.find((talent) => talent.talentNumber === talents[3]);
+		build.talent5 = build.career.talents.find((talent) => talent.talentNumber === talents[4]);
+		build.talent6 = build.career.talents.find((talent) => talent.talentNumber === talents[5]);
 
-				if (charmTrait && charmProperty1 && charmProperty2) {
-					build.charm = {
-						trait: charmTrait,
-						property1: charmProperty1,
-						property2: charmProperty2,
-					};
-				}
+		const necklaceParams = searchParams.get("necklace");
+		if (necklaceParams?.split("-").length === 3) {
+			const necklaceProperty1Id = parseInt(necklaceParams.split("-")[0]);
+			const necklaceProperty2Id = parseInt(necklaceParams.split("-")[1]);
+			const necklaceTraitId = parseInt(necklaceParams.split("-")[2]);
+
+			const necklaceProperty1 = properties.find((property) => property.id === necklaceProperty1Id);
+			const necklaceProperty2 = properties.find((property) => property.id === necklaceProperty2Id);
+			const necklaceTrait = traits.find((trait) => trait.id === necklaceTraitId);
+
+			if (necklaceTrait && necklaceProperty1 && necklaceProperty2) {
+				build.necklace = {
+					trait: necklaceTrait,
+					property1: necklaceProperty1,
+					property2: necklaceProperty2,
+				};
 			}
+		} else {
+			build.necklace = {
+				trait: traits.find((trait) => trait.category === "defence_accessory"),
+				property1: properties.find((property) => property.category === "necklace"),
+				property2: properties.find((property) => property.category === "necklace", { skip: 1 }),
+			};
+		}
 
-			const trinketParams = searchParams.get("trinket");
-			if (trinketParams?.split("-").length === 3) {
-				const trinketProperty1Id = parseInt(trinketParams.split("-")[0]);
-				const trinketProperty2Id = parseInt(trinketParams.split("-")[1]);
-				const trinketTraitId = parseInt(trinketParams.split("-")[2]);
+		const charmParams = searchParams.get("charm");
+		if (charmParams?.split("-").length === 3) {
+			const charmProperty1Id = parseInt(charmParams.split("-")[0]);
+			const charmProperty2Id = parseInt(charmParams.split("-")[1]);
+			const charmTraitId = parseInt(charmParams.split("-")[2]);
 
-				const trinketProperty1 = properties.find((property) => property.id === trinketProperty1Id);
-				const trinketProperty2 = properties.find((property) => property.id === trinketProperty2Id);
-				const trinketTrait = traits.find((trait) => trait.id === trinketTraitId);
+			const charmProperty1 = properties.find((property) => property.id === charmProperty1Id);
+			const charmProperty2 = properties.find((property) => property.id === charmProperty2Id);
+			const charmTrait = traits.find((trait) => trait.id === charmTraitId);
 
-				if (trinketTrait && trinketProperty1 && trinketProperty2) {
-					build.trinket = {
-						trait: trinketTrait,
-						property1: trinketProperty1,
-						property2: trinketProperty2,
-					};
-				}
+			if (charmTrait && charmProperty1 && charmProperty2) {
+				build.charm = {
+					trait: charmTrait,
+					property1: charmProperty1,
+					property2: charmProperty2,
+				};
 			}
+		} else {
+			build.charm = {
+				trait: traits.find((trait) => trait.category === "offence_accessory"),
+				property1: properties.find((property) => property.category === "charm"),
+				property2: properties.find((property) => property.category === "charm", { skip: 1 }),
+			};
+		}
 
-			const powerLevel = searchParams.get("powerLevel");
-			if (powerLevel) {
-				build.powerLevel = parseInt(powerLevel);
+		const trinketParams = searchParams.get("trinket");
+		if (trinketParams?.split("-").length === 3) {
+			const trinketProperty1Id = parseInt(trinketParams.split("-")[0]);
+			const trinketProperty2Id = parseInt(trinketParams.split("-")[1]);
+			const trinketTraitId = parseInt(trinketParams.split("-")[2]);
+
+			const trinketProperty1 = properties.find((property) => property.id === trinketProperty1Id);
+			const trinketProperty2 = properties.find((property) => property.id === trinketProperty2Id);
+			const trinketTrait = traits.find((trait) => trait.id === trinketTraitId);
+
+			if (trinketTrait && trinketProperty1 && trinketProperty2) {
+				build.trinket = {
+					trait: trinketTrait,
+					property1: trinketProperty1,
+					property2: trinketProperty2,
+				};
 			}
+		} else {
+			build.trinket = {
+				trait: traits.find((trait) => trait.category === "utility_accessory"),
+				property1: properties.find((property) => property.category === "trinket"),
+				property2: properties.find((property) => property.category === "trinket", { skip: 1 }),
+			};
+		}
+
+		const powerLevel = searchParams.get("powerLevel");
+		if (powerLevel) {
+			build.powerLevel = parseInt(powerLevel);
 		}
 		return build;
 	}
@@ -184,6 +215,16 @@ class BuildHelper {
 			{ key: "charm", value: `${build.charm.property1?.id}-${build.charm.property2?.id}-${build.charm.trait?.id}` },
 			{ key: "trinket", value: `${build.trinket.property1?.id}-${build.trinket.property2?.id}-${build.trinket.trait?.id}` },
 		];
+	}
+
+	static getPatch(build: ICareerBuild, patches: IPatch[]): IPatch | undefined {
+		if (!build.dateModified) {
+			return undefined;
+		}
+
+		return patches
+			.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+			.find((p) => new Date(p.date).getTime() <= new Date(build.dateModified!).getTime());
 	}
 }
 

@@ -4,7 +4,6 @@ import { FormHelper } from "$lib/helpers/FormHelper";
 import { User } from "$lib/entities/User";
 import type { QueryFailedError } from "typeorm";
 import type { AuthError } from "@supabase/supabase-js";
-import { LogHelper } from "$lib/helpers/LogHelper";
 
 export const actions: Actions = {
 	login: async ({ request, url, locals }) => {
@@ -33,13 +32,11 @@ export const actions: Actions = {
 			error(500, `Internal Server Error - ${authError.message}`);
 		}
 
-		const { user } = await locals.safeGetSession();
-		return { id: user?.id };
+		return { message: "Check your email for the login link." };
 	},
 
 	logout: async ({ request, url, locals }) => {
-		const { user } = await locals.safeGetSession();
-		if (!user || !locals.supabase) {
+		if (!locals.sessionUser || !locals.supabase) {
 			redirect(301, "/");
 		}
 
@@ -54,7 +51,6 @@ export const actions: Actions = {
 	},
 
 	save: async ({ request, locals }) => {
-		const sessionUser = locals.sessionUser;
 		if (!locals.sessionUser || !locals.sessionUserProfile || locals.sessionUser.id !== locals.sessionUserProfile.id) {
 			error(401, "Unauthorized");
 		}

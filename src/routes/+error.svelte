@@ -1,8 +1,11 @@
 <script>
 	import { page } from "$app/stores";
+	import Background from "$lib/components/Background.svelte";
 </script>
 
 <svelte:head><title>Holy Sigmar! - augs.tools</title></svelte:head>
+
+<Background />
 
 <div id="page" class="text-white flex flex-col mx-auto top-10 relative">
 	<span class="title">Ranald's Gift</span>

@@ -1,29 +1,25 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { page } from "$app/stores";
-	import { MenuState } from "$lib/state/MenuState.svelte";
 	import { getUserState } from "$lib/state/UserState.svelte";
 	import type { SubmitFunction } from "@sveltejs/kit";
 	import { toast } from "svelte-sonner";
 
-	const userState = getUserState();
-
-	const menuClickHandler = (event: MouseEvent) => {
-		event.preventDefault();
-		if ($page.url.pathname === "/") return;
-		MenuState.toggle();
+	type Props = {
+		showAboutButton?: boolean;
 	};
 
-	const backgroundToggleClickHandler = async (event: MouseEvent) => {
-		userState.showVideo.value = !userState.showVideo.value;
+	const { showAboutButton = true }: Props = $props();
+
+	const userState = getUserState();
+
+	const backgroundToggleClickHandler = async (event: Event) => {
 		localStorage.setItem("showVideo", userState.showVideo.value.toString());
 
 		if (userState.user) {
-			userState.user.showVideo = userState.showVideo.value;
-
-			const response = await fetch("/api/user/save", {
+			const response = await fetch("/api/user/background", {
 				method: "POST",
-				body: JSON.stringify(userState.user),
+				body: JSON.stringify({ showVideo: userState.showVideo.value }),
 				headers: {
 					"content-type": "application/json",
 				},
@@ -48,18 +44,21 @@
 </script>
 
 <div class="top-navigation">
-	<div class="top-navigation-background background-35 border-11 collapsed">
-		<a href="/">Ranald's Gift</a>
-	</div>
-	<button class="ml-4 menu-icon" onclick={menuClickHandler}>
+	<a href="/menu" class="ml-4 menu-icon">
 		<div class="overlay"></div>
-	</button>
+	</a>
 	<!-- User icon -->
 	<div class="icon-container flex-end ml-auto mr-4 flex gap-4 relative items-center">
-		{#if !MenuState.isOpen}
-			<a href="/about" class="rg-icon main-logo">&nbsp;</a>
+		{#if showAboutButton}
+			<a href="/about" class="rg-icon mb-[-4px]">&nbsp;</a>
 		{/if}
-		<button class="background-toggle" title="Toggle Background Video" onclick={backgroundToggleClickHandler}></button>
+		<input
+			type="checkbox"
+			class="background-toggle"
+			bind:checked={userState.showVideo.value}
+			title="Toggle Background Video"
+			onchange={backgroundToggleClickHandler}
+		/>
 		<a href={userState.user?.id ? `/user/${userState.user.id}` : "/login"} class="user-icon"> </a>
 		{#if userState.user}
 			<form action="/api/user?/logout" method="POST" use:enhance={logoutHandler}>
@@ -71,47 +70,28 @@
 
 <style>
 	.icon-container {
-		height: 50px;
+		height: 40px;
 	}
 	.icon-container > * {
 		cursor: pointer;
 	}
 	.top-navigation {
 		display: flex;
-		height: 50px;
-		position: absolute;
+		height: 40px;
+		position: fixed;
 		left: -4px;
 		top: -4px;
 		padding-top: 4px;
 		width: calc(100% + 8px);
-		z-index: 1;
+		z-index: 10000;
 	}
-	.top-navigation-background {
-		display: grid;
-		justify-content: center;
-		align-content: center;
-		position: absolute;
-		background-position: center;
-		top: 0;
-		height: 0px;
-		width: 100%;
-		overflow: hidden;
-		transition: height 0.3s;
-		font-size: 1.4rem;
-		color: #c15b24;
-		line-height: 66px;
-		text-transform: uppercase;
-		font-family: "caslon-antique-bold";
-	}
-	:global(.top-navigation-background:not(.collapsed)) {
-		height: 58px;
-	}
-
 	.background-toggle {
+		appearance: none;
 		background: url("/images/icons/background-toggle.png") no-repeat;
 		width: 45px;
 		height: 45px;
 	}
+	.background-toggle:checked,
 	.background-toggle:hover {
 		background: url("/images/icons/background-toggle-selected.png") no-repeat;
 	}
@@ -122,6 +102,9 @@
 		height: 41px;
 		align-self: flex-end;
 		justify-self: end;
+	}
+	.rg-icon:hover {
+		background: url("/images/icons/rg-flip.png") center / 41px 41px;
 	}
 	a,
 	button {

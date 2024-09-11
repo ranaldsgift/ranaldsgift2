@@ -2,17 +2,17 @@
 	import "../app.css";
 	import "../lib/styles/Borders.css";
 	import "../lib/styles/Background.css";
+	import "../lib/styles/Dividers.css";
 	import "../lib/styles/Icons.css";
 	import { afterNavigate, invalidateAll } from "$app/navigation";
 	import TopNavigation from "$lib/components/navigation/TopNavigation.svelte";
 	import { previousPage } from "$lib/stores/PageStores.svelte";
 	import { setUserState } from "$lib/state/UserState.svelte.js";
 	import { initializeHeroesPageState } from "$lib/state/HeroesPageState.svelte.js";
-	import { MenuState } from "$lib/state/MenuState.svelte.js";
-	import MainMenu from "$lib/components/navigation/MainMenu.svelte";
-	import { page } from "$app/stores";
-	import { ROOT_PAGE_TITLE } from "$lib/data/constants/constants.js";
+	import { META_IMAGE_URL, ROOT_PAGE_DESCRIPTION, ROOT_PAGE_TITLE } from "$lib/data/constants/constants.js";
 	import { Toaster } from "$lib/components/ui/sonner";
+	import { setMenuState } from "$lib/state/MenuState.svelte.js";
+	import Seo from "$lib/components/SEO.svelte";
 
 	let { data, children } = $props();
 
@@ -20,6 +20,7 @@
 	let session = $derived(data.session);
 	let supabase = $derived(data.supabase);
 	let userState = setUserState(data.sessionUserProfile);
+	let menuState = setMenuState(false);
 	initializeHeroesPageState();
 
 	$effect(() => {
@@ -44,54 +45,34 @@
 		}
 	});
 
-	afterNavigate((nav) => {
-		MenuState.isOpen = nav.to?.url.pathname === "/" ? true : false;
-
-        const page = document.getElementById('page');
-        if (page && nav.type === 'link' && nav.from?.url.pathname !== nav.to?.url.pathname) {
-            page.scrollTop = 0;
-        }
-		previousPage.url = nav.from?.url.pathname ?? '/';
-    });
+	$effect(() => {
+		if (userState.showVideo.value) {
+			document.body.classList.add('show-video');
+		}
+		else {
+			document.body.classList.remove('show-video');
+		}
+	});
 </script>
 
 <svelte:head>
-	<title>{MenuState.isOpen && $page.url.pathname !== '/' ? 'Menu - ranalds.gift' : ROOT_PAGE_TITLE}</title>
+	<title>{ROOT_PAGE_TITLE}</title>
+	<meta name="description" content={ROOT_PAGE_DESCRIPTION} />
+	<meta property="image" content={META_IMAGE_URL} />
 </svelte:head>
 
 <Toaster />
 
-<TopNavigation></TopNavigation>
-
-{#if userState.showVideo.value}
-<video muted playsInline autoPlay={true} loop={true} poster='/images/backgrounds/home-frame.webp' class="fixed">                
-	<source src='/videos/backgrounds/home.mp4' type="video/mp4" />
-</video>
-{:else}
-<img src="/images/backgrounds/home-frame.webp" alt="Home Frame" class="fixed object-cover w-full h-full top-0 left-0 z-[-1]" />
-{/if}
-{#if MenuState.isOpen}
-<div id="page-container" class="top-10">
-	<MainMenu></MainMenu>
-</div>
-{:else if $page.error}
 <div>
 	{@render children()}
 </div>
-{:else}
-<div class="flex-auto w-full h-full flex overflow-hidden pb-5">
-	<a class="page-title label-01" href="/">Ranald's Gift</a>
-	<div class="page-title-background"></div>
-	<div id="root-container" class="border-06 background7 p-10 rounded-[8px]">
-		<div id="page-container">
-			{@render children()}
-		</div>
-	</div>
-</div>
-{/if}
 
 <style>
-	#root-container {
+	.app-background {
+		clip-path: polygon(0% 0%, 0% 100%, 40px 100%, 40px 60px, calc(100% - 40px) 60px, calc(100% - 40px) calc(100% - 40px), 40px calc(100% - 40px), 40px 100%, 100% 100%, 100% 0%);
+		z-index: 9999;
+	}
+	.root-container {
 		position: relative;
 		width: 100%;
 		height: calc(100% - 50px);
@@ -113,7 +94,7 @@
 		position: fixed;
 		background: url('/images/background2.jpg') center / cover;
 	}
-    #page-container {
+    .page-container {
 		position: relative;
         display: grid;
         grid-template-columns: 1fr;
@@ -121,17 +102,21 @@
         justify-items: center;
         align-items: center;
 		min-width: 900px;
-        width: 100%;
 		border-radius: 8px;
 		margin: 0 auto;
 		overflow-y: auto;
 		overflow-x: hidden;
+		min-height: 100%;
     }
+	.page {
+    	margin: 70px 40px 0px;
+		padding-bottom: 40px;
+	}
 	.page-title {
 		text-align: center;
 		width: 662px;
 		position: absolute;
-		z-index: 2;
+		z-index: 10001;
 		top: 13px;
 		left: 50%;
 		translate: -50% 0%;
@@ -140,6 +125,7 @@
 		line-height: 66px;
 		text-transform: uppercase;
 		font-family: "caslon-antique-bold";
+		pointer-events: all;
 	}
 	.page-title-background {
 		content: '';
@@ -151,5 +137,11 @@
 		left: 50%;
 		translate: -50% 0%;
 		background: linear-gradient(180deg, #2b1212 35%, #000);
+	}
+	.frame-container {
+		position: fixed;
+		top: 0;
+		z-index: 10001;
+		pointer-events: none;
 	}
 </style>

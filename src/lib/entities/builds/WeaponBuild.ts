@@ -6,6 +6,7 @@ import { ItemRarityEnum } from "$lib/enums/ItemRarityEnum";
 import { WeaponSkin, type IWeaponSkin } from "../WeaponSkin";
 import { AuthoredEntity } from "../AuthoredEntity";
 import { Weapon, type IWeapon } from "../Weapon";
+import type { IUser } from "../User";
 
 @Entity()
 export class WeaponBuild extends AuthoredEntity<IWeaponBuild> {
@@ -20,28 +21,28 @@ export class WeaponBuild extends AuthoredEntity<IWeaponBuild> {
 	rarity!: ItemRarityEnum;
 
 	@Type(() => Weapon)
-	@ManyToOne(() => Weapon)
+	@ManyToOne(() => Weapon, { eager: true })
 	weapon!: Weapon;
 
 	@Column("smallint", { default: 300 })
 	powerLevel!: number;
 
 	@Type(() => Property)
-	@ManyToOne(() => Property, { nullable: true })
+	@ManyToOne(() => Property, { eager: true, nullable: true })
 	property1!: Property;
 
 	@Column("double precision", { nullable: true })
 	property1Value!: number;
 
 	@Type(() => Property)
-	@ManyToOne(() => Property, { nullable: true })
+	@ManyToOne(() => Property, { eager: true, nullable: true })
 	property2!: Property;
 
 	@Column("double precision", { nullable: true })
 	property2Value!: number;
 
 	@Type(() => Trait)
-	@ManyToOne(() => Trait, { nullable: true })
+	@ManyToOne(() => Trait, { eager: true, nullable: true })
 	trait!: Trait;
 
 	@Type(() => WeaponSkin)
@@ -50,6 +51,8 @@ export class WeaponBuild extends AuthoredEntity<IWeaponBuild> {
 }
 
 export interface IWeaponBuild {
+	id?: number;
+	user?: IUser;
 	rarity?: ItemRarityEnum;
 	weapon: IWeapon;
 	powerLevel?: number;

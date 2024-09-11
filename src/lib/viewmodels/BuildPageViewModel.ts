@@ -1,11 +1,17 @@
-import type { CareerBuild } from "$lib/entities/builds/CareerBuild";
+import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
+import type { PageViewModel } from "./PageViewModel";
 
-export class BuildPageViewModel {
-    public build: CareerBuild | null = null;
-    public ratings: number = 0;
-    public favorites: number = 0;
-    public similarBuilds: CareerBuild[] = [];
-    public similarBuildsFromAuthor: CareerBuild[] = [];
-    public ratedByUser: boolean = false;
-    public favoritedByUser: boolean = false;
+export interface EditBuildPageViewModel extends PageViewModel {
+	build: ICareerBuild;
+}
+
+export interface BuildPageViewModel extends PageViewModel {
+	build: ICareerBuild;
+	ratings?: number;
+	favorites?: number;
+	similarBuilds?: ICareerBuild[];
+	similarBuildsFromAuthor?: ICareerBuild[];
+	ratedByUser?: boolean;
+	favoritedByUser?: boolean;
+	patchNumber?: string;
 }

@@ -12,12 +12,13 @@
 
 	type Props = {
 		build: ICareerBuild;
+		class?: string;
 	};
 
-	const { build }: Props = $props();
+	const { build, class: CLASS }: Props = $props();
 </script>
 
-<div class="build-summary-container">
+<div class="build-summary-container {CLASS}">
 	<div class="build-melee-summary">
 		{@render itemSummary(build.primaryWeapon.weapon.name, build.primaryWeapon)}
 	</div>
@@ -84,6 +85,9 @@
 		align-content: start;
 		display: grid;
 	}
+	.property-container li {
+		list-style: none;
+	}
 	.item-summary-header {
 		grid-area: itemSummaryHeader;
 		font-size: 1.4em;
@@ -91,6 +95,7 @@
 	}
 	.item-name {
 		position: relative;
+		line-height: 1.5rem;
 	}
 	.item-name::before {
 		content: "";

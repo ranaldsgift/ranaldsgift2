@@ -4,14 +4,15 @@
 	type Props = {
 		trait: ITrait;
 		class?: string;
+		size?: string;
 	};
 
-	let { trait, class: CLASS = "" }: Props = $props();
+	let { trait, class: CLASS = "", size = "60px" }: Props = $props();
 </script>
 
 <span
 	class={`item-trait-icon trait-icon border-04`}
-	style="background: url('/images/traits/{trait.name.toLowerCase().replaceAll(' ', '-')}.png'), black"
+	style="--size: {size}; background: url('/images/traits/{trait.name.toLowerCase().replaceAll(' ', '-')}.png'), black"
 ></span>
 
 <style>
@@ -19,9 +20,12 @@
 		grid-area: traitIcon;
 		background-repeat: no-repeat !important;
 		background-position: center !important;
-		height: 60px;
+		height: var(--size);
+		width: var(--size);
 		background-size: auto !important;
 		box-sizing: border-box;
+		display: inline-block;
+		box-shadow: inset 0 5px 2px white;
 	}
 	.item-trait-icon::after {
 		background-color: #0000 !important;

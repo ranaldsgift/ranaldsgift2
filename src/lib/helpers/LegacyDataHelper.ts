@@ -206,6 +206,11 @@ export class LegacyDataHelper {
 		}
 	};
 
+	static getDaysSinceDate = (date: Date) => {
+		var millisecondsPerDay = 24 * 60 * 60 * 1000;
+		return Math.floor((Date.parse(new Date().toString()) - Date.parse(date.toString())) / millisecondsPerDay);
+	};
+
 	/*     static getCorrectedTalent = (careerId, tierNumber, talentNumber) => {
       return correctedTalentsData.find((talent) => {return talent.careerId === parseInt(careerId) && talent.tier === parseInt(tierNumber) && talent.talent === parseInt(talentNumber)});
     }
@@ -251,11 +256,6 @@ export class LegacyDataHelper {
       });
 
       return filteredPatchList[filteredPatchList.length - 1];
-    }
-
-    static getDaysSinceDate = (date) => {
-      var millisecondsPerDay = 24 * 60 * 60 * 1000;
-      return Math.floor((Date.parse(new Date()) - Date.parse(date)) / millisecondsPerDay);
     }
     
     static getPatchFromDateForType = (date, updateType) => {

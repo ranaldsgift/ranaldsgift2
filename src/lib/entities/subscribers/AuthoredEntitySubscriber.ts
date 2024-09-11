@@ -15,11 +15,11 @@ export class AuthoredEntitySubscriber implements EntitySubscriberInterface<Autho
 
 	afterLoad(entity: AuthoredEntity<any>, event?: LoadEvent<AuthoredEntity<any>> | undefined): void | Promise<any> {
 		// Check if the entity is valid.
-		if (!entity) {
+		/* 		if (!entity) {
 			return;
 		}
 
-		entity.serializedSavedEntity = DataHelper.serialize(entity);
+		entity.serializedSavedEntity = DataHelper.serialize(entity); */
 	}
 
 	/**

@@ -1,3 +1,18 @@
+img.border-02::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 15px solid transparent;
+    border-image: url('/images/borders/border-02.png');
+    border-image-slice: 15;
+    border-image-width: 15px;
+    border-style: solid;
+    border-image-repeat: repeat;
+}
+
 .border-01 {
     border-image: url('/images/borders/border-01.png'); 
     border-image-slice: 15;
