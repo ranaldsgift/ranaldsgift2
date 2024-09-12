@@ -1,6 +1,8 @@
 import { CareerBuild } from "$lib/entities/builds/CareerBuild";
 import { error } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
+import { CareerCache } from "$lib/cache/CareerCache";
+import { WeaponCache } from "$lib/cache/WeaponCache";
 
 export const GET: RequestHandler = async ({ url, params }) => {
 	const id = url.searchParams.get("id");
@@ -12,8 +14,7 @@ export const GET: RequestHandler = async ({ url, params }) => {
 	let careerBuild: CareerBuild | null = null;
 
 	let query = CareerBuild.createQueryBuilder("build")
-		.leftJoin("build.user", "user")
-		.leftJoinAndSelect("build.career", "career")
+		.leftJoinAndSelect("build.user", "user")
 		.leftJoinAndSelect("build.difficulty", "difficulty")
 		.leftJoinAndSelect("build.difficultyModifier", "difficultyModifier")
 		.leftJoinAndSelect("build.mission", "mission")
@@ -21,18 +22,10 @@ export const GET: RequestHandler = async ({ url, params }) => {
 		.leftJoinAndSelect("build.book", "book")
 		.leftJoinAndSelect("build.twitch", "twitch")
 		.leftJoinAndSelect("build.roles", "roles")
-		.leftJoinAndSelect("career.hero", "hero")
-		.leftJoinAndSelect("career.skill", "careerSkill")
-		.leftJoinAndSelect("career.passive", "careerPassive")
-		.leftJoinAndSelect("career.perks", "careerPerks")
-		.leftJoinAndSelect("career.talents", "careerTalents")
-		.orderBy("careerTalents.id", "ASC")
 		.leftJoinAndSelect("build.primaryWeapon", "primaryWeaponBuild")
 		.leftJoin("primaryWeaponBuild.weapon", "primaryWeapon")
-		.leftJoinAndSelect("primaryWeapon.tooltips", "primaryWeaponTooltips")
 		.leftJoinAndSelect("build.secondaryWeapon", "secondaryWeaponBuild")
 		.leftJoin("secondaryWeaponBuild.weapon", "secondaryWeapon")
-		.leftJoinAndSelect("secondaryWeapon.tooltips", "secondaryWeaponTooltips")
 		.leftJoinAndSelect("build.necklace", "necklace")
 		.leftJoinAndSelect("build.charm", "charm")
 		.leftJoinAndSelect("build.trinket", "trinket")
@@ -57,40 +50,24 @@ export const GET: RequestHandler = async ({ url, params }) => {
 		.leftJoinAndSelect("build.talent4", "talent4")
 		.leftJoinAndSelect("build.talent5", "talent5")
 		.leftJoinAndSelect("build.talent6", "talent6")
-		.loadRelationCountAndMap("build.favoritesCount", "build.userFavorites")
-		.loadRelationCountAndMap("build.ratingsCount", "build.userRatings")
-		.andWhere(`build.isDeleted = :isDeleted`, { isDeleted: false });
-
-	query.addSelect("primaryWeapon.id");
-	query.addSelect("primaryWeapon.name");
-	query.addSelect("primaryWeapon.codename");
-
-	query.addSelect("secondaryWeapon.id");
-	query.addSelect("secondaryWeapon.name");
-	query.addSelect("secondaryWeapon.codename");
-
-	query.addSelect("user.id");
-	query.addSelect("user.name");
-
-	if (Number.isInteger(parseInt(id))) {
-		query.andWhere(`build.id = :id`, { id: parseInt(id) });
-	}
-	// Otherwise, it's the old firebase user ID
-	else {
-		query.andWhere(`build.firebaseId = :id`, { id });
-	}
+		.loadRelationCountAndMap("build.userRatingsCount", "build.userRatings")
+		.loadRelationCountAndMap("build.userFavoritesCount", "build.userFavorites")
+		.where("build.id = :id", { id });
 
 	careerBuild = await query.getOne();
 
-	if (!careerBuild) {
+	if (!careerBuild || !careerBuild.careerId || !careerBuild.primaryWeapon.weaponId || !careerBuild.secondaryWeapon.weaponId) {
 		return new Response(null, { status: 404 });
 	}
+
+	let buildPojo = careerBuild.toObject({ exposeUnsetFields: false });
+	buildPojo.career = await CareerCache.get(careerBuild.careerId);
+	buildPojo.primaryWeapon.weapon = await WeaponCache.get(careerBuild.primaryWeapon.weaponId);
+	buildPojo.secondaryWeapon.weapon = await WeaponCache.get(careerBuild.secondaryWeapon.weaponId);
 
 	if (!careerBuild.careerId) {
 		error(404, `Build ${id} does not have a career.`);
 	}
-
-	let buildPojo = careerBuild.toObject({ exposeUnsetFields: false });
 
 	return new Response(JSON.stringify(buildPojo));
 };
