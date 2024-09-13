@@ -1,4 +1,6 @@
-import { CareerBuild } from "$lib/entities/builds/CareerBuild";
+import { CareerCache } from "$lib/cache/CareerCache";
+import { WeaponCache } from "$lib/cache/WeaponCache";
+import { CareerBuild, type ICareerBuild } from "$lib/entities/builds/CareerBuild";
 import { DataHelper } from "$lib/helpers/DataHelper";
 import { error, type RequestHandler } from "@sveltejs/kit";
 import { Brackets } from "typeorm";
@@ -29,56 +31,45 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 	try {
 		let query = CareerBuild.createQueryBuilder("build")
 			.leftJoin("build.user", "user")
-			.leftJoinAndSelect("build.career", "career")
+			.addSelect(["user.id", "user.name"])
+			.leftJoinAndSelect("build.difficulty", "difficulty")
+			.leftJoinAndSelect("build.difficultyModifier", "difficultyModifier")
+			.leftJoinAndSelect("build.mission", "mission")
+			.leftJoinAndSelect("build.potion", "potion")
+			.leftJoinAndSelect("build.book", "book")
+			.leftJoinAndSelect("build.twitch", "twitch")
 			.leftJoinAndSelect("build.roles", "roles")
+			.leftJoinAndSelect("build.career", "career")
 			.leftJoinAndSelect("build.primaryWeapon", "primaryWeaponBuild")
 			.leftJoin("primaryWeaponBuild.weapon", "primaryWeapon")
-			.leftJoinAndSelect("primaryWeapon.tooltips", "primaryWeaponTooltips")
 			.leftJoinAndSelect("build.secondaryWeapon", "secondaryWeaponBuild")
 			.leftJoin("secondaryWeaponBuild.weapon", "secondaryWeapon")
-			.leftJoinAndSelect("secondaryWeapon.tooltips", "secondaryWeaponTooltips")
 			.leftJoinAndSelect("build.necklace", "necklace")
 			.leftJoinAndSelect("build.charm", "charm")
 			.leftJoinAndSelect("build.trinket", "trinket")
-			.leftJoinAndSelect("primaryWeaponBuild.trait", "pwb.trait")
-			.leftJoinAndSelect("secondaryWeaponBuild.trait", "swb.trait")
-			.leftJoinAndSelect("necklace.trait", "necklaceBuild.trait")
-			.leftJoinAndSelect("charm.trait", "charmBuild.trait")
-			.leftJoinAndSelect("trinket.trait", "trinketBuild.trait")
-			/* 			.leftJoinAndSelect("primaryWeaponBuild.property1", "pwb.property1")
+			.leftJoinAndSelect("primaryWeaponBuild.property1", "pwb.property1")
 			.leftJoinAndSelect("primaryWeaponBuild.property2", "pwb.property2")
+			.leftJoinAndSelect("primaryWeaponBuild.trait", "pwb.trait")
 			.leftJoinAndSelect("secondaryWeaponBuild.property1", "swb.property1")
 			.leftJoinAndSelect("secondaryWeaponBuild.property2", "swb.property2")
+			.leftJoinAndSelect("secondaryWeaponBuild.trait", "swb.trait")
 			.leftJoinAndSelect("necklace.property1", "necklaceBuild.property1")
 			.leftJoinAndSelect("necklace.property2", "necklaceBuild.property2")
+			.leftJoinAndSelect("necklace.trait", "necklaceBuild.trait")
 			.leftJoinAndSelect("charm.property1", "charmBuild.property1")
 			.leftJoinAndSelect("charm.property2", "charmBuild.property2")
+			.leftJoinAndSelect("charm.trait", "charmBuild.trait")
 			.leftJoinAndSelect("trinket.property1", "trinketBuild.property1")
-			.leftJoinAndSelect("trinket.property2", "trinketBuild.property2") */
+			.leftJoinAndSelect("trinket.property2", "trinketBuild.property2")
+			.leftJoinAndSelect("trinket.trait", "trinketBuild.trait")
 			.leftJoinAndSelect("build.talent1", "talent1")
 			.leftJoinAndSelect("build.talent2", "talent2")
 			.leftJoinAndSelect("build.talent3", "talent3")
 			.leftJoinAndSelect("build.talent4", "talent4")
 			.leftJoinAndSelect("build.talent5", "talent5")
 			.leftJoinAndSelect("build.talent6", "talent6")
-			.leftJoin("build.userFavorites", "userFavorites")
-			.leftJoin("build.userRatings", "userRatings")
-			.loadRelationCountAndMap("build.favoritesCount", "build.userFavorites")
-			.loadRelationCountAndMap("build.ratingsCount", "build.userRatings")
-			.where(`build.isDeleted = :isDeleted`, { isDeleted: isDeleted });
-
-		query.addSelect("userFavorites.id");
-		query.addSelect("userRatings.id");
-		query.addSelect("user.id");
-		query.addSelect("user.name");
-
-		query.addSelect("primaryWeapon.id");
-		query.addSelect("primaryWeapon.codename");
-		query.addSelect("primaryWeapon.name");
-
-		query.addSelect("secondaryWeapon.id");
-		query.addSelect("secondaryWeapon.name");
-		query.addSelect("secondaryWeapon.codename");
+			.loadRelationCountAndMap("build.userRatingsCount", "build.userRatings")
+			.loadRelationCountAndMap("build.userFavoritesCount", "build.userFavorites");
 
 		if (userId) {
 			query = query.andWhere(`user.id = :userId`, { userId: userId });
@@ -99,7 +90,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 
 		if (careerId) {
 			if (Number(careerId)) {
-				query = query.andWhere(`career.id = :careerId`, { careerId: careerId });
+				query = query.andWhere(`build."careerId" = :careerId`, { careerId: careerId });
 			}
 		}
 
@@ -165,6 +156,10 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			query = query.andWhere(`userRatings.id = :userId`, { userId: ratedByUserId });
 		}
 
+		if (isDeleted) {
+			query = query.andWhere(`build.isDeleted = :isDeleted`, { isDeleted: isDeleted });
+		}
+
 		data = await query
 			.skip(offset * limit)
 			.take(limit)
@@ -176,9 +171,15 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 		error(500, "Internal Server Error");
 	}
 
-	const response = DataHelper.serialize({
-		items: data,
-		count: dataCount,
-	});
-	return new Response(response);
+	let builds: ICareerBuild[] = [];
+
+	for (let build of data) {
+		let buildPojo = build.toObject({ exposeUnsetFields: false });
+		buildPojo.career = await CareerCache.get(build.careerId!);
+		buildPojo.primaryWeapon.weapon = await WeaponCache.get(build.primaryWeapon.weaponId!);
+		buildPojo.secondaryWeapon.weapon = await WeaponCache.get(build.secondaryWeapon.weaponId!);
+		builds.push(buildPojo);
+	}
+
+	return new Response(JSON.stringify({ items: builds, count: dataCount }), { status: 200 });
 };

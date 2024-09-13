@@ -20,8 +20,11 @@ export class WeaponBuild extends AuthoredEntity<IWeaponBuild> {
 	})
 	rarity!: ItemRarityEnum;
 
+	@Column("number", { nullable: true })
+	weaponId?: number;
+
 	@Type(() => Weapon)
-	@ManyToOne(() => Weapon, { eager: true })
+	@ManyToOne(() => Weapon)
 	weapon!: Weapon;
 
 	@Column("smallint", { default: 300 })
@@ -54,6 +57,7 @@ export interface IWeaponBuild {
 	id?: number;
 	user?: IUser;
 	rarity?: ItemRarityEnum;
+	weaponId?: number;
 	weapon: IWeapon;
 	powerLevel?: number;
 	property1?: IProperty;

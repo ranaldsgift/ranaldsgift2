@@ -43,7 +43,6 @@
 	};
 
 	const getApiQuery = () => {
-		console.log(filter);
 		let apiQuery = `limit=${filter.limit ?? 10}&offset=${filter.offset ?? 0}`;
 
 		if (filter.careerId) {
