@@ -30,7 +30,8 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 	let dataCount = null;
 	try {
 		let query = CareerBuild.createQueryBuilder("build")
-			.leftJoinAndSelect("build.user", "user")
+			.leftJoin("build.user", "user")
+			.addSelect(["user.id", "user.name"])
 			.leftJoinAndSelect("build.difficulty", "difficulty")
 			.leftJoinAndSelect("build.difficultyModifier", "difficultyModifier")
 			.leftJoinAndSelect("build.mission", "mission")
@@ -89,7 +90,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 
 		if (careerId) {
 			if (Number(careerId)) {
-				query = query.andWhere(`career.id = :careerId`, { careerId: careerId });
+				query = query.andWhere(`build."careerId" = :careerId`, { careerId: careerId });
 			}
 		}
 

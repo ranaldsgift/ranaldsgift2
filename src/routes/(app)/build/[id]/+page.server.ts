@@ -9,7 +9,6 @@ export const load = async (event) => {
 
 	let careerBuild: ICareerBuild | null = null;
 
-	// If the ID is a UUID, this is the new supabase user ID
 	const response = await event.fetch(`/api/build?id=${id}`, { method: "GET" });
 
 	if (!response.ok) {

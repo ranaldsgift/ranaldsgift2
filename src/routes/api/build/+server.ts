@@ -14,7 +14,8 @@ export const GET: RequestHandler = async ({ url, params }) => {
 	let careerBuild: CareerBuild | null = null;
 
 	let query = CareerBuild.createQueryBuilder("build")
-		.leftJoinAndSelect("build.user", "user")
+		.leftJoin("build.user", "user")
+		.addSelect(["user.id", "user.name"])
 		.leftJoinAndSelect("build.difficulty", "difficulty")
 		.leftJoinAndSelect("build.difficultyModifier", "difficultyModifier")
 		.leftJoinAndSelect("build.mission", "mission")
@@ -51,8 +52,13 @@ export const GET: RequestHandler = async ({ url, params }) => {
 		.leftJoinAndSelect("build.talent5", "talent5")
 		.leftJoinAndSelect("build.talent6", "talent6")
 		.loadRelationCountAndMap("build.userRatingsCount", "build.userRatings")
-		.loadRelationCountAndMap("build.userFavoritesCount", "build.userFavorites")
-		.where("build.id = :id", { id });
+		.loadRelationCountAndMap("build.userFavoritesCount", "build.userFavorites");
+
+	if (Number(id)) {
+		query = query.where("build.id = :id", { id });
+	} else {
+		query = query.where("build.firebaseId = :id", { id });
+	}
 
 	careerBuild = await query.getOne();
 
