@@ -187,4 +187,5 @@ export interface ICareerBuild {
 	favoritesCount?: number;
 	dateModified?: Date;
 	dateCreated?: Date;
+	patchNumber?: string;
 }

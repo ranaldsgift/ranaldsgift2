@@ -4,12 +4,13 @@ import StaticDataCache from "./StaticDataCache";
 
 export class CareerCache {
 	private static instance: StaticDataCache<ICareer> | null = null;
+	private static redisKey: string = "careers";
 
 	private static async getInstance(): Promise<StaticDataCache<ICareer>> {
 		if (!CareerCache.instance) {
 			CareerCache.instance = new StaticDataCache<ICareer>();
 
-			let careers = await redis.get<ICareer[]>("careers");
+			let careers = await redis.get<ICareer[]>(CareerCache.redisKey);
 
 			if (!careers) {
 				const careersData = await Career.find({
