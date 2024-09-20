@@ -12,8 +12,16 @@ import { Difficulty } from "$lib/entities/Difficulty";
 
 class RedisCache<TEntity extends ObjectLiteral, TInterface extends IEntity> {
 	private instance: StaticDataCache<TInterface> | null = null;
+	private repository: Repository<TEntity> | null = null;
 
-	constructor(private repository: Repository<TEntity>, private redisKey: string, private findOptions?: FindOneOptions<TEntity>) {}
+	constructor(private entityClass: new () => TEntity, private redisKey: string, private findOptions?: FindOneOptions<TEntity>) {}
+
+	private async getRepository(): Promise<Repository<TEntity>> {
+		if (!this.repository) {
+			this.repository = (this.entityClass as any).getRepository();
+		}
+		return this.repository as Repository<TEntity>;
+	}
 
 	private async getInstance(): Promise<StaticDataCache<TInterface>> {
 		if (!this.instance) {
@@ -22,7 +30,8 @@ class RedisCache<TEntity extends ObjectLiteral, TInterface extends IEntity> {
 			let redisData = await redis.get<TInterface[]>(this.redisKey);
 
 			if (!redisData) {
-				const data = await this.repository.find(this.findOptions);
+				const repository = await this.getRepository();
+				const data = await repository.find(this.findOptions);
 				redisData = data.map((item) => item.toObject());
 			}
 			for (const item of redisData) {
@@ -58,10 +67,10 @@ class RedisCache<TEntity extends ObjectLiteral, TInterface extends IEntity> {
 	}
 }
 
-export const MissionCache = new RedisCache(Mission.getRepository(), "missions");
-export const DifficultyCache = new RedisCache(Difficulty.getRepository(), "difficulties");
-export const DifficultyModifierCache = new RedisCache(DifficultyModifier.getRepository(), "difficulty-modifiers");
-export const PotionCache = new RedisCache(Potion.getRepository(), "potions");
-export const BookSettingCache = new RedisCache(BookSetting.getRepository(), "book-settings");
-export const TwitchSettingCache = new RedisCache(TwitchSetting.getRepository(), "twitch-settings");
-export const BuildRoleCache = new RedisCache(BuildRole.getRepository(), "build-roles");
+export const MissionCache = new RedisCache(Mission, "missions");
+export const DifficultyCache = new RedisCache(Difficulty, "difficulties");
+export const DifficultyModifierCache = new RedisCache(DifficultyModifier, "difficulty-modifiers");
+export const PotionCache = new RedisCache(Potion, "potions");
+export const BookSettingCache = new RedisCache(BookSetting, "book-settings");
+export const TwitchSettingCache = new RedisCache(TwitchSetting, "twitch-settings");
+export const BuildRoleCache = new RedisCache(BuildRole, "build-roles");
