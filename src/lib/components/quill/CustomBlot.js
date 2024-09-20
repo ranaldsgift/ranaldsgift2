@@ -1,4 +1,5 @@
 //@ts-nocheck
+import QuillResizeModule from "@botom/quill-resize-module";
 import Quill from "quill";
 
 // Allow img to have all attributes passed originally
@@ -116,3 +117,4 @@ export class CustomSpanBlot extends SpanBlot {
 Quill.register(CustomBlot);
 Quill.register(CustomDivBlot);
 Quill.register(CustomSpanBlot);
+Quill.register("modules/resize", QuillResizeModule);
