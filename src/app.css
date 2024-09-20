@@ -102,6 +102,7 @@ body {
 }
 
 a {
+  text-decoration: none;
   color: #0096fb;
 }
 
@@ -241,6 +242,12 @@ background-image: linear-gradient(90deg,#808080b3 10%, #80808000);
 }
 .divider-20 {
   background: url('/images/dividers/divider-20.png') no-repeat center;
+}
+.divider-21 {
+  background: url('/images/dividers/divider-21.png') no-repeat center;
+}
+.divider-22 {
+  background: url('/images/dividers/divider-22.png') no-repeat center;
 }
 
 .chain-decoration {

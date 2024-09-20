@@ -1,3 +1,4 @@
+import type { IEvent } from "$lib/entities/Event";
 import type { IUser } from "$lib/entities/User";
 import type { Session, SupabaseClient, User } from "@supabase/supabase-js";
 // See https://kit.svelte.dev/docs/types#app
@@ -19,6 +20,7 @@ declare global {
 		}
 		interface LayoutData {
 			sessionUserProfile: string | null;
+			events: IEvent[];
 		}
 		// interface PageState {}
 		// interface Platform {}

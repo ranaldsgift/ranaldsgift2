@@ -2,20 +2,20 @@
 	import Background from '$lib/components/Background.svelte';
 	import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 
-	const { children } = $props();
+	const { data, children } = $props();
 </script>
 
-<TopNavigation></TopNavigation>
+<TopNavigation events={data.events}></TopNavigation>
 
 <Background clipPath={true}></Background>
 
 <div class="frame-container flex-auto w-full h-full flex overflow-hidden pb-5">
-	<a class="page-title label-01" href="/">Ranald's Gift</a>
+	<a class="page-title" href="/">Ranald's Gift</a>
 	<div class="page-title-background"></div>
 	<div class="root-container border-06 p-10 rounded-[8px]">
 	</div>
 </div>
-<div class="page-container background7">
+<div class="page-container desktop:min-w-[900px] background7">
 	<div class="page">
 		{@render children()}
 	</div>
@@ -42,7 +42,6 @@
         grid-template-rows: 1fr;
         justify-items: center;
         align-items: start;
-		min-width: 900px;
 		border-radius: 8px;
 		margin: 0 auto;
 		overflow-y: auto;
@@ -55,6 +54,11 @@
 		width: 100%;
 	}
 	.page-title {
+		display: none;
+	}
+	@media (min-width: 1600px) {
+	.page-title {
+		display: block;
 		text-align: center;
 		width: 662px;
 		position: absolute;
@@ -68,6 +72,7 @@
 		text-transform: uppercase;
 		font-family: "caslon-antique-bold";
 		pointer-events: all;
+		background: url('/images/labels/label-01.png');
 	}
 	.page-title-background {
 		content: '';
@@ -80,6 +85,7 @@
 		translate: -50% 0%;
 		background: linear-gradient(180deg, #2b1212 35%, #000);
 	}
+}
 	.frame-container {
 		position: fixed;
 		top: 0;

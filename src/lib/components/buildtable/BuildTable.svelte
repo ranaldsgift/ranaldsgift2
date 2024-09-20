@@ -14,8 +14,6 @@
 
 	let { filter = $bindable() }: Props = $props();
 
-	//let buildTableState = setBuildTableState(filter);
-
 	let builds: ICareerBuild[] = [];
 
 	const loadData = async () => {

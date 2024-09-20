@@ -4,15 +4,12 @@
 	import "../lib/styles/Background.css";
 	import "../lib/styles/Dividers.css";
 	import "../lib/styles/Icons.css";
-	import { afterNavigate, invalidateAll } from "$app/navigation";
-	import TopNavigation from "$lib/components/navigation/TopNavigation.svelte";
-	import { previousPage } from "$lib/stores/PageStores.svelte";
+	import { invalidateAll } from "$app/navigation";
 	import { setUserState } from "$lib/state/UserState.svelte.js";
 	import { initializeHeroesPageState } from "$lib/state/HeroesPageState.svelte.js";
 	import { META_IMAGE_URL, ROOT_PAGE_DESCRIPTION, ROOT_PAGE_TITLE } from "$lib/data/constants/constants.js";
 	import { Toaster } from "$lib/components/ui/sonner";
-	import { setMenuState } from "$lib/state/MenuState.svelte.js";
-	import Seo from "$lib/components/SEO.svelte";
+	import EventBanner from "$lib/components/EventBanner.svelte";
 
 	let { data, children } = $props();
 
@@ -20,7 +17,6 @@
 	let session = $derived(data.session);
 	let supabase = $derived(data.supabase);
 	let userState = setUserState(data.sessionUserProfile);
-	let menuState = setMenuState(false);
 	initializeHeroesPageState();
 
 	$effect(() => {
@@ -66,6 +62,8 @@
 <div>
 	{@render children()}
 </div>
+
+<EventBanner events={data.events} />
 
 <style>
 	.app-background {
