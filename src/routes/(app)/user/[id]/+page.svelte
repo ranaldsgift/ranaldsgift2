@@ -33,8 +33,8 @@
 			</div>
 		</div>
 		{#if data.sessionUser?.id === data.userData.id}
-			<BuildTable filter={{ favoriteByUser: data.userData.id, limit: 5 }}></BuildTable>
-			<BuildTable filter={{ rated: true, limit: 5 }}></BuildTable>
+			<BuildTable filter={{ favoriteByUserId: data.userData.id, limit: 3 }}></BuildTable>
+			<BuildTable filter={{ ratedByUserId: data.userData.id, limit: 3 }}></BuildTable>
 		{/if}
 		<BuildTable filter={{ userId: data.userData.id, limit: 10 }}></BuildTable>
 	{:else}

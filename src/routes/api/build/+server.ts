@@ -51,8 +51,8 @@ export const GET: RequestHandler = async ({ url, params }) => {
 		.leftJoinAndSelect("build.talent4", "talent4")
 		.leftJoinAndSelect("build.talent5", "talent5")
 		.leftJoinAndSelect("build.talent6", "talent6")
-		.loadRelationCountAndMap("build.userRatingsCount", "build.userRatings")
-		.loadRelationCountAndMap("build.userFavoritesCount", "build.userFavorites");
+		.loadRelationCountAndMap("build.ratingsCount", "build.userRatings")
+		.loadRelationCountAndMap("build.favoritesCount", "build.userFavorites");
 
 	if (Number(id)) {
 		query = query.where("build.id = :id", { id });

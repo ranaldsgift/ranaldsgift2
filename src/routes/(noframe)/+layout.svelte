@@ -2,11 +2,8 @@
 	import Background from '$lib/components/Background.svelte';
 import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 	import { META_IMAGE_URL, ROOT_PAGE_DESCRIPTION, ROOT_PAGE_TITLE } from '$lib/data/constants/constants';
-	import { getUserState } from '$lib/state/UserState.svelte';
 
 	const { children } = $props();
-
-	const userState = getUserState();
 </script>
 
 <svelte:head>
@@ -19,7 +16,7 @@ import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 
 <Background></Background>
 
-<div class="page-container">
+<div class="page-container desktop:min-w-[900px]">
 	<div class="menu-title-divider divider-12 mb-4"></div>
 	<div class="page">
 		{@render children()}
@@ -34,7 +31,6 @@ import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
         grid-template-rows: 1fr;
         justify-items: center;
         align-items: center;
-		min-width: 900px;
 		border-radius: 8px;
 		margin: 0 auto;
 		overflow-y: auto;

@@ -1,7 +1,8 @@
 import { CareerCache } from "$lib/cache/CareerCache";
+import { PatchCache } from "$lib/cache/PatchCache";
 import { WeaponCache } from "$lib/cache/WeaponCache";
 import { CareerBuild, type ICareerBuild } from "$lib/entities/builds/CareerBuild";
-import { DataHelper } from "$lib/helpers/DataHelper";
+import BuildHelper from "$lib/helpers/BuildHelper";
 import { error, type RequestHandler } from "@sveltejs/kit";
 import { Brackets } from "typeorm";
 
@@ -20,10 +21,8 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 	let search = url.searchParams.get("search");
 	let sort = url.searchParams.get("sort");
 	let asc = url.searchParams.get("asc") === "true";
-	let favorite = url.searchParams.get("favorite") === "true";
-	let rated = url.searchParams.get("rated") === "true";
-	let favoriteByUserId = url.searchParams.get("favoriteByUser");
-	let ratedByUserId = url.searchParams.get("ratedByUser");
+	let favoriteByUserId = url.searchParams.get("favoriteByUserId");
+	let ratedByUserId = url.searchParams.get("ratedByUserId");
 	let isDeleted = url.searchParams.get("isDeleted") === "true";
 
 	let data = null;
@@ -32,6 +31,8 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 		let query = CareerBuild.createQueryBuilder("build")
 			.leftJoin("build.user", "user")
 			.addSelect(["user.id", "user.name"])
+			.leftJoin("build.userFavorites", "userFavorites")
+			.leftJoin("build.userRatings", "userRatings")
 			.leftJoinAndSelect("build.difficulty", "difficulty")
 			.leftJoinAndSelect("build.difficultyModifier", "difficultyModifier")
 			.leftJoinAndSelect("build.mission", "mission")
@@ -68,8 +69,8 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			.leftJoinAndSelect("build.talent4", "talent4")
 			.leftJoinAndSelect("build.talent5", "talent5")
 			.leftJoinAndSelect("build.talent6", "talent6")
-			.loadRelationCountAndMap("build.userRatingsCount", "build.userRatings")
-			.loadRelationCountAndMap("build.userFavoritesCount", "build.userFavorites");
+			.loadRelationCountAndMap("build.ratingsCount", "build.userRatings")
+			.loadRelationCountAndMap("build.favoritesCount", "build.userFavorites");
 
 		if (userId) {
 			query = query.andWhere(`user.id = :userId`, { userId: userId });
@@ -140,20 +141,12 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			query = query.orderBy(`build.${sort}`, asc ? "ASC" : "DESC");
 		}
 
-		if (favorite) {
-			query = query.andWhere(`userFavorites.id = :userId`, { userId: locals.sessionUser?.id });
-		}
-
-		if (rated) {
-			query = query.andWhere(`userRatings.id = :userId`, { userId: locals.sessionUser?.id });
+		if (ratedByUserId) {
+			query = query.andWhere(`userRatings.id = :userId`, { userId: ratedByUserId });
 		}
 
 		if (favoriteByUserId) {
 			query = query.andWhere(`userFavorites.id = :userId`, { userId: favoriteByUserId });
-		}
-
-		if (ratedByUserId) {
-			query = query.andWhere(`userRatings.id = :userId`, { userId: ratedByUserId });
 		}
 
 		if (isDeleted) {
@@ -172,12 +165,14 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 	}
 
 	let builds: ICareerBuild[] = [];
+	let patches = await PatchCache.getAll();
 
 	for (let build of data) {
 		let buildPojo = build.toObject({ exposeUnsetFields: false });
 		buildPojo.career = await CareerCache.get(build.careerId!);
 		buildPojo.primaryWeapon.weapon = await WeaponCache.get(build.primaryWeapon.weaponId!);
 		buildPojo.secondaryWeapon.weapon = await WeaponCache.get(build.secondaryWeapon.weaponId!);
+		buildPojo.patchNumber = BuildHelper.getPatch(buildPojo, patches)?.number;
 		builds.push(buildPojo);
 	}
 

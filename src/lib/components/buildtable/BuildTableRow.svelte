@@ -5,21 +5,16 @@
 	import BuildRating from "../build/BuildRating.svelte";
 	import WeaponIcon from "../inventory/WeaponIcon.svelte";
 	import TraitIcon from "../inventory/TraitIcon.svelte";
-	import BuildHelper from "$lib/helpers/BuildHelper";
-	import type { IPatch } from "$lib/entities/Patch";
-
+	
 	type Props = {
 		build: ICareerBuild;
-		patches: IPatch[];
 	};
 
-	const { build, patches }: Props = $props();
+	const { build }: Props = $props();
 
 	if (!build.careerId) {
 		error(404, "Career Data for the build failed to load.");
 	}
-
-	let patch = $state(BuildHelper.getPatch(build, patches));
 </script>
 
 <div class="build-list-item-container">
@@ -57,7 +52,7 @@
 		</div>
 		<div class="build-footer pt-[5px]">
 			<p class="roles">{build.roles?.map((role) => { return role.name; }).join(' / ')}</p>
-			<p class="patch-number">{`Update ${patch?.number}`}</p>
+			<p class="patch-number">{`Update ${build.patchNumber}`}</p>
 		</div>
 	</div>
 </div>

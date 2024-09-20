@@ -5,7 +5,13 @@ import { error } from "@sveltejs/kit";
 export const GET: RequestHandler = async ({ url }) => {
 	let data = null;
 	try {
-		data = await CareerCache.getSorted();
+		data = await CareerCache.getAll();
+		data = data.sort((a, b) => {
+			if (a.hero.id - b.hero.id === 0) {
+				return a.id - b.id;
+			}
+			return a.hero.id - b.hero.id;
+		});
 	} catch (err) {
 		console.error(err);
 		error(500, "Internal Server Error");

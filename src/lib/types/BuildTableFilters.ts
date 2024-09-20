@@ -15,8 +15,8 @@ export type BuildTableFilter = {
 	ascending?: boolean;
 	favorite?: boolean;
 	rated?: boolean;
-	favoriteByUser?: string | null;
-	ratedByUser?: string | null;
+	favoriteByUserId?: string | null;
+	ratedByUserId?: string | null;
 	offset?: number | null;
 	limit?: number | null;
 };

@@ -1,37 +1,22 @@
 <script lang="ts">
-	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
-	import { CareerBuildsStore, CareersStore, PatchesStore } from "$lib/stores/DataStores";
+	import { CareerBuildsStore } from "$lib/stores/DataStores";
 	import { DataHandler } from "@vincjo/datatables";
-	import type { IPatch } from "$lib/entities/Patch";
 	import ContainerTitle from "../ContainerTitle.svelte";
 	import Skeleton from "../ui/skeleton/skeleton.svelte";
-	import type { ICareer } from "$lib/entities/career/Career";
 	import Button from "../Button.svelte";
-	import type { IWeapon } from "$lib/entities/Weapon";
 	import BuildTableRow from "./BuildTableRow.svelte";
 	import type { BuildTableFilter } from "$lib/types/BuildTableFilters";
+	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 
 	type Props = {
 		filter: BuildTableFilter;
 	};
 
-	const { filter = $bindable() }: Props = $props();
+	let { filter = $bindable() }: Props = $props();
+
+	//let buildTableState = setBuildTableState(filter);
 
 	let builds: ICareerBuild[] = [];
-	let patches = $state<IPatch[]>([]);
-	let careers = $state<ICareer[]>([]);
-	let selectedCareer = $derived<ICareer | undefined>(careers.find((career) => career.id === filter.careerId));
-
-	let weapons = $derived.by<IWeapon[]>(() => {
-		if (selectedCareer) {
-			let careerWeapons = selectedCareer.primaryWeapons.concat(selectedCareer.secondaryWeapons);
-			if (!careerWeapons.find((weapon) => weapon.id === filter.weaponId)) {
-				filter.weaponId = null;
-			}
-			return careerWeapons;
-		}
-		return careers.map((career) => career.primaryWeapons.concat(career.secondaryWeapons)).flat();
-	});
 
 	const loadData = async () => {
 		loadingData = true;
@@ -57,24 +42,20 @@
 			apiQuery += `&userId=${filter.userId}`;
 		}
 
+		if (filter.heroId) {
+			apiQuery += `&heroId=${filter.heroId}`;
+		}
+
 		if (filter.sort) {
 			apiQuery += `&sort=${filter.sort}`;
 		}
 
-		if (filter.favorite) {
-			apiQuery += `&favorite=${filter.favorite}`;
+		if (filter.favoriteByUserId) {
+			apiQuery += `&favoriteByUserId=${filter.favoriteByUserId}`;
 		}
 
-		if (filter.favoriteByUser) {
-			apiQuery += `&favoriteByUser=${filter.favoriteByUser}`;
-		}
-
-		if (filter.rated) {
-			apiQuery += `&rated=${filter.rated}`;
-		}
-
-		if (filter.ratedByUser) {
-			apiQuery += `&ratedByUser=${filter.ratedByUser}`;
+		if (filter.ratedByUserId) {
+			apiQuery += `&ratedByUserId=${filter.ratedByUserId}`;
 		}
 
 		return apiQuery;
@@ -91,41 +72,8 @@
 		filter.offset++;
 		loadData();
 	};
-
-	const loadFiltersData = async () => {
-		if (careers.length === 0) {
-			const { items: careersData } = await CareersStore.loadData();
-			careers = careersData;
-		}
-
-		if (patches.length === 0) {
-			const { items } = await PatchesStore.loadData();
-			patches = items;
-		}
-	};
-
-	$effect(() => {
-		loadFiltersData();
-	});
 </script>
 
-<div class="build-table-filters border-01 top-left-shadow mb-5">
-	<ContainerTitle>Filters</ContainerTitle>
-	<div class="p-5 gap-5 flex background-36 border-01">
-		<select bind:value={filter.careerId}>
-			<option value={null}>All Careers</option>
-			{#each careers as career}
-				<option value={career.id}>{career.name}</option>
-			{/each}
-		</select>
-		<select bind:value={filter.weaponId}>
-			<option value={null}>All Weapons</option>
-			{#each weapons as weapon}
-				<option value={weapon.id}>{weapon.name}</option>
-			{/each}
-		</select>
-	</div>
-</div>
 <div class="top-left-shadow">
 	<ContainerTitle>Builds</ContainerTitle>
 	<div class="p-5 border-01 background-20 gap-5 grid">
@@ -135,25 +83,9 @@
 			{/each}
 		{:then}
 			{#each $rows as row}
-				<BuildTableRow build={row} {patches}></BuildTableRow>
+				<BuildTableRow build={row}></BuildTableRow>
 			{/each}
 		{/await}
 		<Button handler={loadMoreHandler}>Load More</Button>
 	</div>
 </div>
-
-<style>
-	select {
-		border-image: url("/images/borders/border-13.png");
-		border-image-width: auto;
-		border-image-slice: 21;
-		border-style: solid;
-		border-image-repeat: repeat;
-		min-height: 60px;
-		align-content: center;
-		padding: 10px 20px;
-		background: linear-gradient(180deg, #2b1212 35%, #000);
-		color: #30e158;
-		font-size: 1.3rem;
-	}
-</style>
