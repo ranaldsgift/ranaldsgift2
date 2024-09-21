@@ -1,5 +1,4 @@
 import { Event } from "$lib/entities/Event";
-import { LessThan } from "typeorm";
 
 export const load = async () => {
 	const events = await Event.find();

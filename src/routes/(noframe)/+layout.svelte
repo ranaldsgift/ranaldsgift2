@@ -16,9 +16,10 @@ import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 
 <Background></Background>
 
+
 <div class="page-container desktop:min-w-[900px]">
-	<div class="menu-title-divider divider-12 mb-4"></div>
-	<div class="page">
+	<div class="page flex flex-col items-center">
+		<div class="page-title-label">Ranald's Gift</div>
 		{@render children()}
 	</div>
 </div>
@@ -40,5 +41,14 @@ import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 	.page {
     	margin: 60px 40px 0px;
 		padding: 20px 20px 60px;
+	}
+	.page-title-label {
+		text-transform: uppercase;
+		position: relative;
+		top: 0;
+		color: #c15b24;
+		font-size: 3em;
+		letter-spacing: 5px;
+		text-shadow: 1px 1px #000;
 	}
 </style>

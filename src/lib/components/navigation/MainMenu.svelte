@@ -6,7 +6,6 @@
 </script>
 
 <nav>
-	<div class="menu-title-label">Ranald's Gift</div>
 	<div class="menu-title-divider divider-12 mb-4"></div>
 	<ul>
 		<div class="chain-decoration left scroll-10"></div>
@@ -59,15 +58,6 @@
 		height: 50px;
 		z-index: 2;
 		position: relative;
-	}
-	.menu-title-label {
-		text-transform: uppercase;
-		position: relative;
-		top: 0;
-		color: #c15b24;
-		font-size: 3em;
-		letter-spacing: 5px;
-		text-shadow: 1px 1px #000;
 	}
 	nav {
 		width: fit-content;

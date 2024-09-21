@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ButtonLink from "$lib/components/ButtonLink.svelte";
+	import ContentContainer from "$lib/components/ContentContainer.svelte";
 	import Seo from "$lib/components/SEO.svelte";
 	import TextHeader from "$lib/components/TextHeader.svelte";
 </script>
@@ -15,26 +16,28 @@
 	<div class="page-content p-5 text-[1.2rem] relative z-1">
 		<TextHeader>Onslaught Series</TextHeader>
 		<div class="divider-21 w-full h-[20px] mb-2"></div>
-		<p class="mx-auto !mb-8">
-			Onslaught Series is a platform that aims to introduce players to modded difficulties as well as being the stomping grounds for
-			events, both fun and serious. All skill levels are welcome. All events are open to the public, which means anyone can register
-			to participate without meeting any prior qualifications.
-			<br />
-			<br />
-			Onslaught Series events are typically streamed on the
-			<a href="https://www.twitch.tv/fightthetide" target="_blank">FightTheTide Twitch channel</a> and shoutcasted live by members of
-			the community. You can also find an archive of past events on the
-			<a href="https://www.youtube.com/channel/UCqdpLLAFvlFEuNLoQC2Kqsw" target="_blank">FightTheTide YouTube channel</a>.
-			<br />
-			<br />
-			For more information about the Onslaught Series, and to register for any of the events, visit the
-			<a href="https://discord.gg/4mm6sCAS4a" target="_blank">Onslaught Series Discord</a>.
-		</p>
+		<ContentContainer class="m-auto !mb-8 w-fit">
+			<p class="mx-auto">
+				Onslaught Series is a platform that aims to introduce players to modded difficulties as well as being the stomping grounds
+				for events, both fun and serious. All skill levels are welcome. All events are open to the public, which means anyone can
+				register to participate without meeting any prior qualifications.
+				<br />
+				<br />
+				Onslaught Series events are typically streamed on the
+				<a href="https://www.twitch.tv/fightthetide" target="_blank">FightTheTide Twitch channel</a> and shoutcasted live by members
+				of the community. You can also find an archive of past events on the
+				<a href="https://www.youtube.com/channel/UCqdpLLAFvlFEuNLoQC2Kqsw" target="_blank">FightTheTide YouTube channel</a>.
+				<br />
+				<br />
+				For more information about the Onslaught Series, and to register for any of the events, visit the
+				<a href="https://discord.gg/4mm6sCAS4a" target="_blank">Onslaught Series Discord</a>.
+			</p>
+		</ContentContainer>
 		<div>
 			<TextHeader>Current Series</TextHeader>
 			<div class="divider-21 w-full h-[20px] mb-2"></div>
 			<div class="grid min-[1440px]:grid-cols-3 gap-4">
-				<div class="border-01 p-5 background-14">
+				<ContentContainer>
 					<img src="/images/onslaught-series/tournament-series.png" alt="Tournament Series" />
 					<div class="divider-03 w-full h-[20px] my-2"></div>
 					<TextHeader>Tournament Series</TextHeader>
@@ -58,8 +61,8 @@
 						Series is to reward skilled play and encourage teams to challenge themselves when they feel ready to take the next step.
 						The higher the tier, the higher the prize incentive.
 					</p>
-				</div>
-				<div class="border-01 p-5 background-14">
+				</ContentContainer>
+				<ContentContainer>
 					<img src="/images/onslaught-series/captain-series.png" alt="Captain Series" />
 					<div class="divider-03 w-full h-[20px] my-2"></div>
 					<TextHeader>Captain Series</TextHeader>
@@ -76,8 +79,8 @@
 						We also want to help people feel comfortable in our community, and to provide a way for people to dip their toes into
 						the waters of modded difficulties to see if it's something they're interested in.
 					</p>
-				</div>
-				<div class="border-01 p-5 background-14">
+				</ContentContainer>
+				<ContentContainer>
 					<div class="background-40 max-w-[320px] mx-auto">
 						<img src="/images/onslaught-series/fun-runs.png" alt="Fun Runs" />
 					</div>
@@ -91,7 +94,7 @@
 						Fun Runs, to change things up a little, will always follow a unique theme that may involve specific game modifiers or
 						challenges.
 					</p>
-				</div>
+				</ContentContainer>
 			</div>
 		</div>
 		<div class="mt-8">
@@ -185,5 +188,23 @@
 	p {
 		max-width: 672px;
 		margin: 0 auto;
+	}
+	.content-container {
+		position: relative;
+	}
+	.content-container > * {
+		position: relative;
+	}
+	.content-container::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: linear-gradient(270deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8));
+		/* backdrop-filter: blur(2px);
+		-webkit-backdrop-filter: blur(2px); */
+		pointer-events: none;
 	}
 </style>

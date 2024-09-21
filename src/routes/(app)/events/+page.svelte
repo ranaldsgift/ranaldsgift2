@@ -1,5 +1,55 @@
 <script lang="ts">
-	import type { PageData } from "./$types";
+	import ContentContainer from "$lib/components/ContentContainer.svelte";
+	import TextHeader from "$lib/components/TextHeader.svelte";
 
-	export let data: PageData;
+	let { data } = $props();
 </script>
+
+<div class="grid gap-8">
+	{#if data.activeEvents.length > 0}
+		<section>
+			<TextHeader>Active Events</TextHeader>
+			<div class="divider-21 w-full h-[20px] mb-2"></div>
+			<div class="flex flex-wrap gap-4 justify-center">
+				{#each data.activeEvents as event}
+					<ContentContainer>
+						<h3 class="text-xl font-semibold"><a href="/event/{event.id}">{event.name}</a></h3>
+						<p>Start: {new Date(event.startDate).toDateString()}</p>
+						<p>End: {new Date(event.endDate).toDateString()}</p>
+					</ContentContainer>
+				{/each}
+			</div>
+		</section>
+	{/if}
+
+	{#if data.upcomingEvents.length > 0}
+		<section>
+			<TextHeader>Upcoming Events</TextHeader>
+			<div class="divider-21 w-full h-[20px] mb-2"></div>
+			<div class="flex flex-wrap gap-4 justify-center">
+				{#each data.upcomingEvents as event}
+					<ContentContainer>
+						<h3 class="text-xl font-semibold"><a href="/event/{event.id}">{event.name}</a></h3>
+						<p>Start: {new Date(event.startDate).toDateString()}</p>
+						<p>End: {new Date(event.endDate).toDateString()}</p>
+					</ContentContainer>
+				{/each}
+			</div>
+		</section>
+	{/if}
+
+	{#if data.pastEvents.length > 0}
+		<section>
+			<h2 class="text-2xl font-bold mb-4">Past Events</h2>
+			<ul class="space-y-4">
+				{#each data.pastEvents as event}
+					<li class="p-4 rounded-lg">
+						<h3 class="text-xl font-semibold"><a href="/event/{event.id}">{event.name}</a></h3>
+						<p>Start: {new Date(event.startDate).toLocaleString()}</p>
+						<p>End: {new Date(event.endDate).toLocaleString()}</p>
+					</li>
+				{/each}
+			</ul>
+		</section>
+	{/if}
+</div>
