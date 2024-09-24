@@ -16,7 +16,6 @@ import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 
 <Background></Background>
 
-
 <div class="page-container desktop:min-w-[900px]">
 	<div class="page flex flex-col items-center">
 		<div class="page-title-label">Ranald's Gift</div>

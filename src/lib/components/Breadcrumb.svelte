@@ -1,0 +1,23 @@
+<script lang="ts">
+	import type { Snippet } from "svelte";
+
+	type Props = {
+		links: {
+			href: string;
+			text: string;
+		}[];
+		children: Snippet;
+	};
+
+	const { links, children }: Props = $props();
+</script>
+
+<div class="fixed flex top-0 left-[120px] z-[100000000] desktop:max-w-[calc(50%-460px)] whitespace-nowrap overflow-hidden">
+	{#each links as link}
+		<a href={link.href} class="text-[#fae031]">{link.text}</a>
+		<span class="px-2">/</span>
+	{/each}
+	<span class="text-ellipsis">
+		{@render children()}
+	</span>
+</div>

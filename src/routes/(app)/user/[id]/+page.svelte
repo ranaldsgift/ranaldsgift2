@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import BuildTable from "$lib/components/buildtable/BuildTable.svelte";
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import Seo from "$lib/components/SEO.svelte";
@@ -10,6 +11,8 @@
 	title={`${data.userData.name}'s Profile`}
 	description={`${data.userData.name}'s Profile. Contains a list of ${data.userData.name}'s authored builds.`}
 />
+
+<Breadcrumb links={[{ href: "/", text: "Home" }]}>{data.userData.name}'s Profile</Breadcrumb>
 
 <div class="page-layout">
 	{#if data.userData}

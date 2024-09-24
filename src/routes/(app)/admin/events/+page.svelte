@@ -1,11 +1,22 @@
 <script lang="ts">
 	import type { IEvent } from "$lib/entities/Event.ts";
 	import { goto } from "$app/navigation";
+	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
+	import Seo from "$lib/components/SEO.svelte";
 
 	let { data } = $props();
 
 	let events: IEvent[] = $derived(data.events);
 </script>
+
+<Seo title="Events" description="This page can be used by moderators and admins to manage the website events." />
+
+<Breadcrumb
+	links={[
+		{ href: "/", text: "Home" },
+		{ href: "/admin", text: "Admin" },
+	]}>Events</Breadcrumb
+>
 
 <div class="page-layout border-01 background-39 m-auto max-w-7xl top-left-shadow relative">
 	<div class="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80 pointer-events-none z-0"></div>

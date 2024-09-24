@@ -100,4 +100,7 @@
 		color: #30e158;
 		font-size: 1.3rem;
 	}
+	option {
+		background-color: #080404;
+	}
 </style>

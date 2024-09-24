@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { goto } from "$app/navigation";
+	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import TextEditor from "$lib/components/quill/TextEditor.svelte";
+	import Seo from "$lib/components/SEO.svelte";
 	import type { IEvent } from "$lib/entities/Event";
 
 	let event: Partial<IEvent> = $state({
@@ -34,6 +36,12 @@
 		}
 	}
 </script>
+
+<Seo
+	title="Create New Event"
+/>
+
+<Breadcrumb links={[{ href: "/", text: "Home" }, { href: "/events", text: "Events" }]}>Create New Event</Breadcrumb>
 
 <div class="max-w-6xl mx-auto mt-8 p-6 background-28 border-04 rounded shadow">
 	<h1 class="text-2xl font-bold mb-6">Create New Event</h1>

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import ButtonLink from "$lib/components/ButtonLink.svelte";
+	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
+	import ContentButton from "$lib/components/buttons/ContentButton.svelte";
 	import ContentContainer from "$lib/components/ContentContainer.svelte";
 	import Seo from "$lib/components/SEO.svelte";
 	import TextHeader from "$lib/components/TextHeader.svelte";
@@ -10,6 +11,8 @@
 	description="Onslaught Series is a platform that aims to introduce players to modded difficulties as well as being the stomping grounds for events, both fun and serious. All skill levels are welcome. All events are open to the public, which means anyone can register to participate without meeting any prior qualifications."
 	image="/images/onslaught-series/tournament-series.png"
 />
+
+<Breadcrumb links={[{ href: "/", text: "Home" }]}>Onslaught Series</Breadcrumb>
 
 <div class="page-layout border-01 background-39 m-auto max-w-7xl top-left-shadow relative">
 	<div class="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80 pointer-events-none z-0"></div>
@@ -24,13 +27,23 @@
 				<br />
 				<br />
 				Onslaught Series events are typically streamed on the
-				<a href="https://www.twitch.tv/fightthetide" target="_blank">FightTheTide Twitch channel</a> and shoutcasted live by members
-				of the community. You can also find an archive of past events on the
+				<a href="https://www.twitch.tv/fightthetide" target="_blank">FightTheTide Twitch channel</a> and shoutcasted live by
+				<a href="https://www.twitch.tv/ishkatv" target="_blank">Ishka</a>
+				and other community members. You can also find an archive of past events on the
 				<a href="https://www.youtube.com/channel/UCqdpLLAFvlFEuNLoQC2Kqsw" target="_blank">FightTheTide YouTube channel</a>.
 				<br />
 				<br />
-				For more information about the Onslaught Series, and to register for any of the events, visit the
-				<a href="https://discord.gg/4mm6sCAS4a" target="_blank">Onslaught Series Discord</a>.
+				<ContentButton url="https://discord.gg/4mm6sCAS4a" class="max-w-[400px] m-auto">
+					For more information about the Onslaught Series, and to register for any of the events, visit the
+					<a href="https://discord.gg/4mm6sCAS4a" target="_blank">
+						Onslaught Series Discord.
+						<img
+							src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg"
+							alt="Onslaught Series Discord"
+							class="inline-block w-6 h-6 invert"
+						/>
+					</a>
+				</ContentButton>
 			</p>
 		</ContentContainer>
 		<div>
@@ -99,18 +112,18 @@
 		</div>
 		<div class="mt-8">
 			<ul class="flex gap-5 justify-center">
-				<li class="p-4 border-10 background-30">
+				<ContentButton url="https://www.instagram.com/midiankai/">
 					<p>Tournament + Captain Series Logo Art by:</p>
 					<p class="flex gap-4">
-						<a href="https://www.instagram.com/midiankai/" target="_blank">
-							Midiankai&nbsp;&nbsp;
+						<a href="https://www.instagram.com/midiankai/" target="_blank" class="text-[#30e158] z-20">
+							Midiankai
 							<img
 								src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg"
 								alt="Instagram"
-								class="inline-block w-6 h-6 invert"
+								class="inline-block w-6 h-6 invert !ml-2"
 							/>
 						</a>
-						<a href="https://x.com/midiankai" target="_blank">
+						<a href="https://x.com/midiankai" target="_blank" class="z-20">
 							<img
 								src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg"
 								alt="X (formerly Twitter)"
@@ -118,26 +131,26 @@
 							/>
 						</a>
 					</p>
-				</li>
-				<li class="p-4 border-10 background-30">
+				</ContentButton>
+				<ContentButton url="https://www.instagram.com/azeelio_art/">
 					<p>Fun Runs Logo Art by:</p>
 					<p class="flex gap-4">
-						<a href="https://www.instagram.com/azeelio_art/" target="_blank">
-							azeelio_art&nbsp;&nbsp;
+						<a href="https://www.instagram.com/azeelio_art/" target="_blank" class="text-[#30e158]">
+							azeelio_art
 							<img
 								src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg"
 								alt="Instagram"
-								class="inline-block w-6 h-6 invert"
+								class="inline-block w-6 h-6 invert !ml-2"
 							/>
 						</a>
-						<a href="https://x.com/azeelio_art" target="_blank">
+						<a href="https://x.com/azeelio_art" target="_blank" class="z-20">
 							<img
 								src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/x.svg"
 								alt="X (formerly Twitter)"
 								class="inline-block w-6 h-6 invert"
 							/>
 						</a>
-						<a href="https://www.reddit.com/user/azeelio/" target="_blank">
+						<a href="https://www.reddit.com/user/azeelio/" target="_blank" class="z-20">
 							<img
 								src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/reddit.svg"
 								alt="Reddit"
@@ -145,7 +158,7 @@
 							/>
 						</a>
 					</p>
-				</li>
+				</ContentButton>
 			</ul>
 		</div>
 		<div class="mt-8">
@@ -161,19 +174,19 @@
 			></iframe>
 			<div class="mt-8">
 				<ul class="flex gap-5 justify-center">
-					<li class="p-4 border-10 background-30">
+					<ContentButton class="relative" url="https://www.youtube.com/@TrixMelee">
 						<p>How Does Competitive Vermintide Work? by:</p>
 						<p class="flex gap-4">
-							<a href="https://www.youtube.com/@TrixMelee" target="_blank">
-								Trix&nbsp;&nbsp;
+							<a href="https://www.youtube.com/@TrixMelee" target="_blank" class="text-[#30e158]">
+								Trix
 								<img
 									src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/youtube.svg"
 									alt="Youtube"
-									class="inline-block w-6 h-6 invert"
+									class="inline-block w-6 h-6 invert !ml-2"
 								/>
 							</a>
 						</p>
-					</li>
+					</ContentButton>
 				</ul>
 			</div>
 		</div>
@@ -188,23 +201,5 @@
 	p {
 		max-width: 672px;
 		margin: 0 auto;
-	}
-	.content-container {
-		position: relative;
-	}
-	.content-container > * {
-		position: relative;
-	}
-	.content-container::before {
-		content: "";
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background: linear-gradient(270deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8));
-		/* backdrop-filter: blur(2px);
-		-webkit-backdrop-filter: blur(2px); */
-		pointer-events: none;
 	}
 </style>

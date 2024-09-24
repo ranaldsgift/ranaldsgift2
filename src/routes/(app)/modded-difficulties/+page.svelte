@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
+	import ContentButton from "$lib/components/buttons/ContentButton.svelte";
 	import ContentContainer from "$lib/components/ContentContainer.svelte";
 	import Seo from "$lib/components/SEO.svelte";
 	import TextHeader from "$lib/components/TextHeader.svelte";
@@ -9,6 +11,8 @@
 	description="Modded difficulties are intended to make the game more challenging and fun. They are not intended to be easy or forgiving, but rather to be a challenge for players seeking a more difficult experience."
 	image="/images/modded-difficulties/modded-difficulties.png"
 />
+
+<Breadcrumb links={[{ href: "/", text: "Home" }]}>Modded Difficulties</Breadcrumb>
 
 <div class="page-layout border-01 background-39 m-auto max-w-7xl top-left-shadow relative">
 	<div class="absolute inset-0 bg-gradient-to-b from-black/60 to-black/80 pointer-events-none z-0"></div>
@@ -36,19 +40,20 @@
 			</p>
 			<div class="mt-4">
 				<div class="flex gap-5 justify-center">
-					<div class="p-4 border-10 background-30 !bg-cover !bg-no-repeat">
-						<a
-							class="text-[#30e158] uppercase"
-							href="https://steamcommunity.com/sharedfiles/filedetails/?id=2810038063"
-							target="_blank"
-							>Onslaught Series approved mods&nbsp;&nbsp;
+					<a
+						class="text-[#30e158] uppercase"
+						href="https://steamcommunity.com/sharedfiles/filedetails/?id=2810038063"
+						target="_blank"
+					>
+						<ContentButton>
+							<span>Onslaught Series approved mods</span>
 							<img
 								src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/steam.svg"
 								alt="Youtube"
-								class="inline-block w-6 h-6 invert"
+								class="inline-block w-6 h-6 invert ml-2"
 							/>
-						</a>
-					</div>
+						</ContentButton>
+					</a>
 				</div>
 			</div>
 		</ContentContainer>

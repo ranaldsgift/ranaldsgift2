@@ -1,6 +1,8 @@
 <script lang="ts">
-	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
+	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
+import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import TextEditor from "$lib/components/quill/TextEditor.svelte";
+	import Seo from "$lib/components/SEO.svelte";
 	import { getUserState } from "$lib/state/UserState.svelte.js";
 	import { error } from "@sveltejs/kit";
 
@@ -27,22 +29,29 @@
 </script>
 
 {#if data.event}
-	<div class="page-layout max-w-6xl mx-auto p-6 background-14 border-04 rounded shadow">
-		{#if userState.isPrivileged}
-			<PageButtonContainer>
-				<a class="button-02" href={`/event/${data.event.id}/edit`}>Edit</a>
-			</PageButtonContainer>
-		{/if}
-		<h1 class="text-2xl font-bold mb-6">{data.event.name}</h1>
+<Seo
+	title={data.event.name}
+	description={data.event.description}
+/>
 
-		<div class="space-y-4">
-			<div>
-				<p><strong>Start Date:</strong> {formattedStartDate}</p>
-				<p><strong>End Date:</strong> {formattedEndDate}</p>
-			</div>
-			<div>
-				<TextEditor readOnly={true} content={data.event.description!}></TextEditor>
-			</div>
+<Breadcrumb links={[{ href: "/", text: "Home" }, { href: "/events", text: "Events" }]}>{data.event.name}</Breadcrumb>
+
+<div class="page-layout max-w-6xl mx-auto p-6 background-14 border-04 rounded shadow">
+	{#if userState.isPrivileged}
+		<PageButtonContainer>
+			<a class="button-02" href={`/event/${data.event.id}/edit`}>Edit</a>
+		</PageButtonContainer>
+	{/if}
+	<h1 class="text-2xl font-bold mb-6">{data.event.name}</h1>
+
+	<div class="space-y-4">
+		<div>
+			<p><strong>Start Date:</strong> {formattedStartDate}</p>
+			<p><strong>End Date:</strong> {formattedEndDate}</p>
+		</div>
+		<div>
+			<TextEditor readOnly={true} content={data.event.description!}></TextEditor>
 		</div>
 	</div>
+</div>
 {/if}

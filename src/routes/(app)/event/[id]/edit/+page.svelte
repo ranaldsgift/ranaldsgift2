@@ -1,6 +1,8 @@
 <script lang="ts">
+	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import TextEditor from "$lib/components/quill/TextEditor.svelte";
+	import Seo from "$lib/components/SEO.svelte";
 	import { error } from "@sveltejs/kit";
 	import { toast } from "svelte-sonner";
 
@@ -41,6 +43,13 @@
 </script>
 
 {#if data.event}
+<Seo
+	title="Edit Event"
+	description={data.event.description}
+/>
+
+<Breadcrumb links={[{ href: "/", text: "Home" }, { href: "/events", text: "Events" }, { href: `/event/${data.event.id}`, text: data.event.name }]}>Edit</Breadcrumb>
+
 <div class="max-w-6xl mx-auto p-6 background-14 border-04 rounded shadow">
 	<h1 class="text-2xl font-bold mb-6">Edit Event</h1>
 
@@ -77,8 +86,8 @@
 				<span>Is Active</span>
 			</label>
 		</div>
-		</form>
-	</div>
+	</form>
+</div>
 {/if}
 
 <style>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import ButtonLink from "$lib/components/ButtonLink.svelte";
 	import Seo from "$lib/components/SEO.svelte";
 </script>
@@ -7,6 +8,8 @@
 	title="About"
 	description={`Ranald's Gift is a project developed by myself, B-Fir3, and other community contributors such as Craven and Esawo.`}
 />
+
+<Breadcrumb links={[{ href: "/", text: "Home" }]}>About</Breadcrumb>
 
 <div class="about-page border-01 top-left-shadow">
 	<div class="about-container">

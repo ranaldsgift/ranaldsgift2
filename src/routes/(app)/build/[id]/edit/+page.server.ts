@@ -1,4 +1,5 @@
-import { CareerBuild } from "$lib/entities/builds/CareerBuild.js";
+import { CareerBuild, type ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
+import type { ICareer } from "$lib/entities/career/Career.js";
 import { UserRoleEnum } from "$lib/enums/UserRoleEnum.js";
 import { DataHelper } from "$lib/helpers/DataHelper.js";
 import type { EditBuildPageViewModel } from "$lib/viewmodels/BuildPageViewModel.js";
@@ -11,19 +12,20 @@ export const load = async (event) => {
 		error(404, `Build ID parameter not found.`);
 	}
 
-	let careerBuild: CareerBuild | null = null;
+	const response = await event.fetch(`/api/build?id=${id}`, { method: "GET" });
 
-	// If the ID is a UUID, this is the new supabase user ID
-	if (Number.isInteger(id)) {
-		careerBuild = await CareerBuild.findOne({ where: { id: parseInt(id) } });
+	if (!response.ok) {
+		error(404, `Failed to fetch build ${id}.`);
 	}
-	// Otherwise, it's the old firebase user ID
-	else {
-		careerBuild = await CareerBuild.findOne({ where: { firebaseId: id } });
-	}
+
+	let careerBuild: ICareerBuild = await response.json();
 
 	if (!careerBuild) {
 		error(404, `Build ${id} not found.`);
+	}
+
+	if (!careerBuild.user) {
+		error(404, `Failed to pull user data for build ${id}.`);
 	}
 
 	if (!event.locals.sessionUser || event.locals.sessionUserProfile?.id !== event.locals.sessionUser.id) {
@@ -39,7 +41,7 @@ export const load = async (event) => {
 	}
 
 	let viewModel: EditBuildPageViewModel = {
-		build: careerBuild.toObject(),
+		build: careerBuild,
 		title: `Edit ${careerBuild.name} by ${careerBuild.user.name}`,
 	};
 

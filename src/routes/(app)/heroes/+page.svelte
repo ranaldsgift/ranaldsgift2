@@ -11,6 +11,7 @@
 	import { goto, replaceState } from "$app/navigation";
 	import { page } from "$app/stores";
 	import Seo from "$lib/components/SEO.svelte";
+	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 
 	const { data } = $props();
 	const { viewModel } = data;
@@ -76,6 +77,8 @@
 
 {#if pageState.build}
 	<Seo title={pageTitle} description={pageDescription} image={`/images/careers/${pageState.build.career.id}/portrait.png`} />
+
+	<Breadcrumb links={[{ href: "/", text: "Home" }]}>Heroes</Breadcrumb>
 
 	<div class="page-layout">
 		<PageButtonContainer>

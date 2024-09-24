@@ -2,15 +2,15 @@
 	import Background from '$lib/components/Background.svelte';
 	import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 
-	const { data, children } = $props();
+	const { children } = $props();
 </script>
 
-<TopNavigation events={data.events}></TopNavigation>
+<TopNavigation></TopNavigation>
 
 <Background clipPath={true}></Background>
 
 <div class="frame-container flex-auto w-full h-full flex overflow-hidden pb-5">
-	<a class="page-title" href="/">Ranald's Gift</a>
+	<a class="page-title hover:!no-underline" href="/">Ranald's Gift</a>
 	<div class="page-title-background"></div>
 	<div class="root-container border-06 p-10 rounded-[8px]">
 	</div>
