@@ -11,7 +11,5 @@ export const load = async () => {
 		})
 		.map((event) => event.toObject());
 
-	console.log(pastEvents);
-
 	return { activeEvents, upcomingEvents, pastEvents };
 };

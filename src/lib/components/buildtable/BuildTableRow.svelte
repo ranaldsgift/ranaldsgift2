@@ -19,14 +19,14 @@
 
 <div class="build-list-item-container">
 	<a class="link-overlay" href={`/build/${build.id}`} data-sveltekit-preload-data="tap">&nbsp;</a>
-	<div class="build-list-item" data-career={build.careerId} data-build={build.id}>
+	<div class="build-list-item desktop:h-full" data-career={build.careerId} data-build={build.id}>
 		<div class="career-portrait border-04" style="background-image: url('/images/careers/{build.careerId}/portrait.png')"></div>
 		<div class="build-description-container">
 			<p class="build-name header-underline">{build.name}</p>
 			<p class="build-hero">{build.career.name}</p>
 			<BuildCreationInfo {build}></BuildCreationInfo>
 		</div>
-		<div class="pointer-events-none z-[1] mr-2 mt-2">
+		<div class="pointer-events-none z-[1] build-rating pr-[10px]">
 			<BuildRating {build}></BuildRating>
 		</div>
 		<div class="weapons">
@@ -50,7 +50,7 @@
 			<TraitIcon trait={build.trinket.trait!} size="45px"></TraitIcon>
 		</div>
 		</div>
-		<div class="build-footer pt-[5px]">
+		<div class="build-footer pt-[5px] !z-0 pr-[10px] mr-[2px]">
 			<p class="roles">{build.roles?.map((role) => { return role.name; }).join(' / ')}</p>
 			<p class="patch-number">{`Update ${build.patchNumber}`}</p>
 		</div>
@@ -82,7 +82,7 @@
 		grid-row-gap: 5px;
 		grid-template-areas:
 			"heroIcon buildDescription buildDescription buildDescription buildRating"
-			"heroIcon buildWeapons buildTraits empty2 empty2"
+			"heroIcon buildWeapons buildTraits buildTraits empty2"
 			"heroIcon buildFooter buildFooter buildFooter buildFooter";
 		text-transform: uppercase;
 		cursor: pointer;
@@ -166,17 +166,13 @@
 	.build-footer {
 		grid-area: buildFooter;
 		background: linear-gradient(to right, #0000, #ffffff14);
-		padding-right: 10px;
-		justify-self: right;
 		display: grid;
 		grid-template-columns: auto auto;
 		grid-column-gap: 10px;
 		align-content: center;
 		font-size: 0.8em;
-		width: calc(100% - 10px);
 		justify-content: right;
 		padding-bottom: 5px;
-		margin: 0 4px 2px 0;
 	}
 	.build-hero {
 		font-size: 0.8em;
@@ -425,15 +421,13 @@
 		/* background-image: radial-gradient(closest-corner, #0000007a, #000000ba), linear-gradient(to bottom, #1d1d1d78, #00000017), url('/images/backgrounds/background39.png'); */
 		filter: saturate(285%) contrast(120%);
 	}
+	.build-rating {
+		grid-area: buildRating;
+		padding-top: 10px;
+	}
 	.build-list-item .rating-icon {
 		height: 50px;
 		width: 50px;
-	}
-	.rating {
-		grid-area: buildRating;
-		display: grid;
-		grid-auto-flow: column;
-		align-content: start;
 	}
 	.build-list-item .rating {
 		margin: 10px 10px 0 0;

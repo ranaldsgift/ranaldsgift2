@@ -10,6 +10,7 @@
 	import { META_IMAGE_URL, ROOT_PAGE_DESCRIPTION, ROOT_PAGE_TITLE } from "$lib/data/constants/constants.js";
 	import { Toaster } from "$lib/components/ui/sonner";
 	import EventBanner from "$lib/components/EventBanner.svelte";
+	import { initializeBuildsPageState } from "$lib/state/BuildsPageState.svelte.js";
 
 	let { data, children } = $props();
 
@@ -18,6 +19,7 @@
 	let supabase = $derived(data.supabase);
 	let userState = setUserState(data.sessionUserProfile);
 	initializeHeroesPageState();
+	initializeBuildsPageState();
 
 	$effect(() => {
 		const { data: supabaseData } = supabase.auth.onAuthStateChange((_, newSession) => {

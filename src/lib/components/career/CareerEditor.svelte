@@ -18,7 +18,7 @@
 
 <!-- TODO - Add Floating Copy URL Button -->
 
-<div class="career-container top-shadow">
+<div class="career-container top-left-shadow">
 	<ContainerTitle class="w-full">Career Overview</ContainerTitle>
 	<div class="career-details-container">
 		<div class="border-01 p-5">

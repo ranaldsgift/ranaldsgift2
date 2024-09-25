@@ -7,8 +7,13 @@
 	import BuildTableFilters from "$lib/components/buildtable/BuildTableFilters.svelte";
 	import Seo from "$lib/components/SEO.svelte";
 	import type { BuildTableFilter } from "$lib/types/BuildTableFilters";
+	import { getBuildsPageState } from "$lib/state/BuildsPageState.svelte.ts";
 
-	let filter: BuildTableFilter = getBuildStateFromUrl();
+	let buildsPageState = getBuildsPageState();
+
+	if ($page.url.search) {
+		buildsPageState.filter = getBuildStateFromUrl();
+	}
 
 	function getBuildStateFromUrl() {
 		const params = new URLSearchParams($page.url.search);
@@ -39,22 +44,20 @@
 			trinketTraitId: trinketTraitId !== null ? parseInt(trinketTraitId) : null,
 			search: search,
 			sort: (sort as keyof ICareerBuild) || "dateModified",
-			ascending: ascending !== null ? ascending === "true" : true,
+			asc: ascending !== null ? ascending === "true" : false,
 			offset: offset !== null ? parseInt(offset) : 0,
-			limit: limit !== null ? parseInt(limit) : 25,
+			limit: limit !== null ? parseInt(limit) : 10,
 		};
 		return filter;
 	}
 
-	let buildTableState = $state({ filter });
-
 	let searchParams = $derived.by(() => {
-		if (!buildTableState.filter) {
+		if (!buildsPageState.filter) {
 			return "";
 		}
 		const params = new URLSearchParams();
-		for (const key in buildTableState.filter) {
-			const value = buildTableState.filter[key as keyof BuildTableFilter];
+		for (const key in buildsPageState.filter) {
+			const value = buildsPageState.filter[key as keyof BuildTableFilter];
 			if (value !== null && value !== undefined) {
 				params.append(key, String(value));
 			}
@@ -74,8 +77,8 @@
 <Breadcrumb links={[{ href: `/`, text: "Home" }]}>Builds</Breadcrumb>
 
 <div class="page">
-	<BuildTableFilters bind:filter={buildTableState.filter}></BuildTableFilters>
-	<BuildTable bind:filter={buildTableState.filter}></BuildTable>
+	<BuildTableFilters bind:filter={buildsPageState.filter} bind:showFilters={buildsPageState.showFilters.value}></BuildTableFilters>
+	<BuildTable bind:filter={buildsPageState.filter}></BuildTable>
 </div>
 
 <style>
