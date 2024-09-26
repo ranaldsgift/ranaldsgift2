@@ -27,7 +27,7 @@
         text-transform: uppercase;
         font-size: 120%;
         box-shadow: inset 0 0 75px black, inset 0 -8px 1px #3b3b3b, inset 0 8px 1px #979797 !important;
-        text-decoration: none;
+        text-decoration: none !important;
         outline: none;
         cursor: pointer;
         letter-spacing: 2px;
@@ -38,9 +38,10 @@
         border-image-width: 15px;
         border-style: solid;
         border-image-repeat: repeat;
+        transition: box-shadow 0.1s ease-in-out;
     }
     a:hover {
-        box-shadow: inset 0 0 75px #000,inset 0 -17px 30px #b30000,inset 0 -8px 1px #3b3b3b,inset 0 8px 1px #979797!important;
+        box-shadow: inset 0 0 75px #000,inset 0 -8px 1px #3b3b3b,inset 0 8px 1px #979797,inset 0 -17px 30px #b30000 !important;
         cursor: pointer;
     }
     a::before {

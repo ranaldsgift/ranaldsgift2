@@ -1,5 +1,14 @@
 <script lang="ts">
+	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
+	import Seo from "$lib/components/SEO.svelte";
 </script>
+
+<Seo
+	title="Privacy Policy"
+	description="This page is used to inform website visitors regarding our policies with the collection, use, and disclosure of Personal Information if anyone decided to use our Service, the ranalds.gift website."
+/>
+
+<Breadcrumb links={[{ href: "/", text: "Home" }]}>Privacy Policy</Breadcrumb>
 
 <div class="privacy-policy-page border-01 background-18 top-left-shadow">
 	<div class="privacy-policy-container">

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import Seo from "$lib/components/SEO.svelte";
 
 	type ResourceList = {
@@ -226,6 +227,8 @@
 </script>
 
 <Seo title="Resources" description="A collection of resources for Vermintide 2 players." />
+
+<Breadcrumb links={[{ href: "/", text: "Home" }]}>Resources</Breadcrumb>
 
 <div class="page-layout border-01 top-left-shadow">
 	<div class="flex flex-wrap gap-5 justify-center">

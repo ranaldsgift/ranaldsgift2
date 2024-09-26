@@ -1,11 +1,14 @@
 import { CareerCache } from "$lib/cache/CareerCache";
+import { PatchCache } from "$lib/cache/PatchCache";
 import { WeaponCache } from "$lib/cache/WeaponCache";
 import { CareerBuild, type ICareerBuild } from "$lib/entities/builds/CareerBuild";
-import { DataHelper } from "$lib/helpers/DataHelper";
+import BuildHelper from "$lib/helpers/BuildHelper";
 import { error, type RequestHandler } from "@sveltejs/kit";
 import { Brackets } from "typeorm";
 
 export const GET: RequestHandler = async ({ url, locals }) => {
+	console.log(url.searchParams);
+
 	let offset = Number(url.searchParams.get("offset"));
 	let limit = Number(url.searchParams.get("limit"));
 	let userId = url.searchParams.get("userId");
@@ -17,14 +20,25 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 	let charmTraitId = url.searchParams.get("charmTraitId");
 	let necklaceTraitId = url.searchParams.get("necklaceTraitId");
 	let trinketTraitId = url.searchParams.get("trinketTraitId");
+	let missionId = url.searchParams.get("missionId");
+	let difficultyId = url.searchParams.get("difficultyId");
+	let difficultyModifierId = url.searchParams.get("difficultyModifierId");
+	let potionId = url.searchParams.get("potionId");
+	let bookSettingId = url.searchParams.get("bookSettingId");
+	let twitchSettingId = url.searchParams.get("twitchSettingId");
+	let buildRoleId = url.searchParams.get("buildRoleId");
+	let patchId = url.searchParams.get("patchId");
 	let search = url.searchParams.get("search");
 	let sort = url.searchParams.get("sort");
 	let asc = url.searchParams.get("asc") === "true";
-	let favorite = url.searchParams.get("favorite") === "true";
-	let rated = url.searchParams.get("rated") === "true";
-	let favoriteByUserId = url.searchParams.get("favoriteByUser");
-	let ratedByUserId = url.searchParams.get("ratedByUser");
-	let isDeleted = url.searchParams.get("isDeleted") === "true";
+	let favoriteByUserId = url.searchParams.get("favoriteByUserId");
+	let ratedByUserId = url.searchParams.get("ratedByUserId");
+
+	let isDeleted = false;
+
+	if (locals.sessionUserProfile && (locals.sessionUserProfile.role === "Admin" || locals.sessionUserProfile.role === "Moderator")) {
+		isDeleted = url.searchParams.get("isDeleted") === "true";
+	}
 
 	let data = null;
 	let dataCount = null;
@@ -32,6 +46,8 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 		let query = CareerBuild.createQueryBuilder("build")
 			.leftJoin("build.user", "user")
 			.addSelect(["user.id", "user.name"])
+			.leftJoin("build.userFavorites", "userFavorites")
+			.leftJoin("build.userRatings", "userRatings")
 			.leftJoinAndSelect("build.difficulty", "difficulty")
 			.leftJoinAndSelect("build.difficultyModifier", "difficultyModifier")
 			.leftJoinAndSelect("build.mission", "mission")
@@ -40,10 +56,13 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			.leftJoinAndSelect("build.twitch", "twitch")
 			.leftJoinAndSelect("build.roles", "roles")
 			.leftJoinAndSelect("build.career", "career")
+			.leftJoinAndSelect("career.hero", "hero")
 			.leftJoinAndSelect("build.primaryWeapon", "primaryWeaponBuild")
 			.leftJoin("primaryWeaponBuild.weapon", "primaryWeapon")
+			.addSelect(["primaryWeapon.id", "primaryWeapon.name"])
 			.leftJoinAndSelect("build.secondaryWeapon", "secondaryWeaponBuild")
 			.leftJoin("secondaryWeaponBuild.weapon", "secondaryWeapon")
+			.addSelect(["secondaryWeapon.id", "secondaryWeapon.name"])
 			.leftJoinAndSelect("build.necklace", "necklace")
 			.leftJoinAndSelect("build.charm", "charm")
 			.leftJoinAndSelect("build.trinket", "trinket")
@@ -68,8 +87,18 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			.leftJoinAndSelect("build.talent4", "talent4")
 			.leftJoinAndSelect("build.talent5", "talent5")
 			.leftJoinAndSelect("build.talent6", "talent6")
-			.loadRelationCountAndMap("build.userRatingsCount", "build.userRatings")
-			.loadRelationCountAndMap("build.userFavoritesCount", "build.userFavorites");
+			.addSelect((subQuery) => {
+				return subQuery
+					.select("COUNT(ratings.userId)", "ratingsCount")
+					.from("user_rated_builds_career_build", "ratings")
+					.where("ratings.careerBuildId = build.id");
+			}, "build_ratingscount")
+			.addSelect((subQuery) => {
+				return subQuery
+					.select("COUNT(favorites.userId)", "favoritesCount")
+					.from("user_favorite_builds_career_build", "favorites")
+					.where("favorites.careerBuildId = build.id");
+			}, "build_favoritescount");
 
 		if (userId) {
 			query = query.andWhere(`user.id = :userId`, { userId: userId });
@@ -77,7 +106,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 
 		if (search) {
 			query = query.andWhere(
-				`CONCAT_WS(' ', build.name, build.description, user.name, career.name, hero.name, primaryWeapon.weapon.name, secondaryWeapon.weapon.name) ILIKE :search`,
+				`CONCAT_WS(' ', build.name, build.description, user.name, career.name, hero.name, primaryWeapon.name, secondaryWeapon.name) ILIKE :search`,
 				{ search: `%${search}%` }
 			);
 		}
@@ -136,35 +165,95 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			}
 		}
 
+		if (difficultyId) {
+			if (Number(difficultyId)) {
+				query = query.andWhere(`build.difficulty.id = :difficultyId`, { difficultyId: difficultyId });
+			}
+		}
+
+		if (difficultyModifierId) {
+			if (Number(difficultyModifierId)) {
+				query = query.andWhere(`build.difficultyModifier.id = :difficultyModifierId`, {
+					difficultyModifierId: difficultyModifierId,
+				});
+			}
+		}
+
+		if (potionId) {
+			if (Number(potionId)) {
+				query = query.andWhere(`build.potion.id = :potionId`, { potionId: potionId });
+			}
+		}
+
+		if (bookSettingId) {
+			if (Number(bookSettingId)) {
+				query = query.andWhere(`build.book.id = :bookSettingId`, { bookSettingId: bookSettingId });
+			}
+		}
+
+		if (twitchSettingId) {
+			if (Number(twitchSettingId)) {
+				query = query.andWhere(`build.twitch.id = :twitchSettingId`, { twitchSettingId: twitchSettingId });
+			}
+		}
+
+		if (buildRoleId) {
+			if (Number(buildRoleId)) {
+				query = query
+					.andWhere((qb) => {
+						const subQuery = qb
+							.subQuery()
+							.select("1")
+							.from("career_build_roles_build_role", "cbr")
+							.where("cbr.careerBuildId = build.id")
+							.andWhere("cbr.buildRoleId = :buildRoleId")
+							.getQuery();
+						return "EXISTS " + subQuery;
+					})
+					.setParameter("buildRoleId", buildRoleId);
+			}
+		}
+
+		if (missionId) {
+			if (Number(missionId)) {
+				query = query.andWhere(`build.mission.id = :missionId`, { missionId: missionId });
+			}
+		}
+
+		if (patchId) {
+			if (Number(patchId)) {
+				query = query.andWhere(`build.patch.id = :patchId`, { patchId: patchId });
+			}
+		}
+
 		if (sort) {
-			query = query.orderBy(`build.${sort}`, asc ? "ASC" : "DESC");
-		}
-
-		if (favorite) {
-			query = query.andWhere(`userFavorites.id = :userId`, { userId: locals.sessionUser?.id });
-		}
-
-		if (rated) {
-			query = query.andWhere(`userRatings.id = :userId`, { userId: locals.sessionUser?.id });
-		}
-
-		if (favoriteByUserId) {
-			query = query.andWhere(`userFavorites.id = :userId`, { userId: favoriteByUserId });
+			if (sort === "ratingsCount") {
+				query = query.orderBy("build_ratingscount", asc ? "ASC" : "DESC");
+			} else if (sort === "favoritesCount") {
+				query = query.orderBy("build_favoritescount", asc ? "ASC" : "DESC");
+			} else {
+				query = query.orderBy(`build.${sort}`, asc ? "ASC" : "DESC");
+			}
 		}
 
 		if (ratedByUserId) {
 			query = query.andWhere(`userRatings.id = :userId`, { userId: ratedByUserId });
 		}
 
+		if (favoriteByUserId) {
+			query = query.andWhere(`userFavorites.id = :userId`, { userId: favoriteByUserId });
+		}
+
 		if (isDeleted) {
 			query = query.andWhere(`build.isDeleted = :isDeleted`, { isDeleted: isDeleted });
 		}
 
-		data = await query
+		const { raw, entities } = await query
 			.skip(offset * limit)
 			.take(limit)
-			.getMany();
+			.getRawAndEntities();
 
+		data = { raw, entities };
 		dataCount = await query.getCount();
 	} catch (err) {
 		console.error(err);
@@ -172,12 +261,16 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 	}
 
 	let builds: ICareerBuild[] = [];
+	let patches = await PatchCache.getAll();
 
-	for (let build of data) {
+	for (let build of data.entities) {
 		let buildPojo = build.toObject({ exposeUnsetFields: false });
 		buildPojo.career = await CareerCache.get(build.careerId!);
 		buildPojo.primaryWeapon.weapon = await WeaponCache.get(build.primaryWeapon.weaponId!);
 		buildPojo.secondaryWeapon.weapon = await WeaponCache.get(build.secondaryWeapon.weaponId!);
+		buildPojo.patchNumber = BuildHelper.getPatch(buildPojo, patches)?.number;
+		buildPojo.ratingsCount = parseInt(data.raw.find((r) => r.build_id === build.id)?.build_ratingscount || "0");
+		buildPojo.favoritesCount = parseInt(data.raw.find((r) => r.build_id === build.id)?.build_favoritescount || "0");
 		builds.push(buildPojo);
 	}
 

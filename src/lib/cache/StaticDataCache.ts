@@ -1,5 +1,5 @@
 class StaticDataCache<TModel> {
-	cachedData: Map<number, TModel> = new Map();
+	cachedData: Map<number | string, TModel> = new Map();
 
 	get(key: number): TModel {
 		return this.cachedData.get(key)!;
@@ -9,7 +9,7 @@ class StaticDataCache<TModel> {
 		return Array.from(this.cachedData.values());
 	}
 
-	set(key: number, value: TModel): void {
+	set(key: number | string, value: TModel): void {
 		this.cachedData.set(key, value);
 	}
 

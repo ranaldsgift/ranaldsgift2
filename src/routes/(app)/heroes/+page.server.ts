@@ -6,7 +6,13 @@ import { TraitsCache } from "$lib/cache/TraitsCache.js";
 import type { HeroesPageViewModel } from "$lib/viewmodels/HeroesPageViewModel.js";
 
 export const load = async (event) => {
-	const careers = await CareerCache.getSorted();
+	let careers = await CareerCache.getAll();
+	careers = careers.sort((a, b) => {
+		if (a.hero.id - b.hero.id === 0) {
+			return a.id - b.id;
+		}
+		return a.hero.id - b.hero.id;
+	});
 	let viewModel: HeroesPageViewModel = {
 		title: `${careers[0].name} - ${careers[0].hero.name}`,
 		careers: careers,

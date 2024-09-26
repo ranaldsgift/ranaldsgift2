@@ -25,13 +25,31 @@
 			readOnly,
 			modules: {
 				toolbar: readOnly ? false : toolbarOptions,
+				resize: {
+					locale: {
+						// change them depending on your language
+						altTip: "Hold down the alt key to zoom",
+						floatLeft: "Left",
+						floatRight: "Right",
+						center: "Center",
+						restore: "Restore",
+					},
+				},
 			},
+		});
+
+		quill.on("text-change", (delta, oldDelta, source) => {
+			if (source == "user") {
+				content = quill.getSemanticHTML();
+			}
 		});
 	});
 
 	afterUpdate(async () => {
-		const delta = quill.clipboard.convert({ html: content });
-		quill.setContents(delta);
+		if (quill) {
+			const delta = quill.clipboard.convert({ html: content });
+			quill.setContents(delta);
+		}
 	});
 </script>
 

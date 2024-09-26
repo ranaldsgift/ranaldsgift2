@@ -2,6 +2,8 @@
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import { type IUser } from "$lib/entities/User";
 	import * as api from "$lib/api.js";
+	import Seo from "$lib/components/SEO.svelte";
+	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 
 	const { data } = $props();
 	const user = $state<IUser>(data.userData);
@@ -16,6 +18,15 @@
 		}
 	};
 </script>
+
+<Seo title="Edit Profile" description="Edit your profile." />
+
+<Breadcrumb
+	links={[
+		{ href: "/", text: "Home" },
+		{ href: `/user/${user.id}`, text: user.name },
+	]}>Edit Profile</Breadcrumb
+>
 
 <div class="page-layout">
 	{#if user && data.sessionUser?.id === user.id}

@@ -9,7 +9,7 @@
 	const { build, class: CLASS }: Props = $props();
 </script>
 
-<div class="flex mt-4 gap-2 {CLASS} items-start">
+<div class="flex mt-4 gap-2 {CLASS} items-start flex-wrap">
 	{#if build.difficulty}
 		<span>{build.difficulty.name}</span>
 	{/if}

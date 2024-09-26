@@ -4,15 +4,13 @@
 	import "../lib/styles/Background.css";
 	import "../lib/styles/Dividers.css";
 	import "../lib/styles/Icons.css";
-	import { afterNavigate, invalidateAll } from "$app/navigation";
-	import TopNavigation from "$lib/components/navigation/TopNavigation.svelte";
-	import { previousPage } from "$lib/stores/PageStores.svelte";
+	import { invalidateAll } from "$app/navigation";
 	import { setUserState } from "$lib/state/UserState.svelte.js";
 	import { initializeHeroesPageState } from "$lib/state/HeroesPageState.svelte.js";
 	import { META_IMAGE_URL, ROOT_PAGE_DESCRIPTION, ROOT_PAGE_TITLE } from "$lib/data/constants/constants.js";
 	import { Toaster } from "$lib/components/ui/sonner";
-	import { setMenuState } from "$lib/state/MenuState.svelte.js";
-	import Seo from "$lib/components/SEO.svelte";
+	import EventBanner from "$lib/components/EventBanner.svelte";
+	import { initializeBuildsPageState } from "$lib/state/BuildsPageState.svelte.js";
 
 	let { data, children } = $props();
 
@@ -20,8 +18,8 @@
 	let session = $derived(data.session);
 	let supabase = $derived(data.supabase);
 	let userState = setUserState(data.sessionUserProfile);
-	let menuState = setMenuState(false);
 	initializeHeroesPageState();
+	initializeBuildsPageState();
 
 	$effect(() => {
 		const { data: supabaseData } = supabase.auth.onAuthStateChange((_, newSession) => {
@@ -67,81 +65,4 @@
 	{@render children()}
 </div>
 
-<style>
-	.app-background {
-		clip-path: polygon(0% 0%, 0% 100%, 40px 100%, 40px 60px, calc(100% - 40px) 60px, calc(100% - 40px) calc(100% - 40px), 40px calc(100% - 40px), 40px 100%, 100% 100%, 100% 0%);
-		z-index: 9999;
-	}
-	.root-container {
-		position: relative;
-		width: 100%;
-		height: calc(100% - 50px);
-		object-fit: cover;
-		top: 50px;
-		left: 0;
-		margin: 0 20px 0px 20px;
-		padding: 20px;
-		display: grid;
-		grid-template-rows: auto 1fr;
-		overflow: hidden;
-	}
-	video {
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100vh;
-		object-fit: cover;
-		position: fixed;
-		background: url('/images/background2.jpg') center / cover;
-	}
-    .page-container {
-		position: relative;
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr;
-        justify-items: center;
-        align-items: center;
-		min-width: 900px;
-		border-radius: 8px;
-		margin: 0 auto;
-		overflow-y: auto;
-		overflow-x: hidden;
-		min-height: 100%;
-    }
-	.page {
-    	margin: 70px 40px 0px;
-		padding-bottom: 40px;
-	}
-	.page-title {
-		text-align: center;
-		width: 662px;
-		position: absolute;
-		z-index: 10001;
-		top: 13px;
-		left: 50%;
-		translate: -50% 0%;
-		font-size: 1.4rem;
-		color: #c15b24;
-		line-height: 66px;
-		text-transform: uppercase;
-		font-family: "caslon-antique-bold";
-		pointer-events: all;
-	}
-	.page-title-background {
-		content: '';
-		width: 417px;
-		height: 42px;
-		position: absolute;
-		top: 23px;
-		z-index: 1;
-		left: 50%;
-		translate: -50% 0%;
-		background: linear-gradient(180deg, #2b1212 35%, #000);
-	}
-	.frame-container {
-		position: fixed;
-		top: 0;
-		z-index: 10001;
-		pointer-events: none;
-	}
-</style>
+<EventBanner events={data.events} />

@@ -13,6 +13,8 @@
 
 	const userState = getUserState();
 
+	let isMenuOpen = $derived($page.url.pathname === "/menu" || $page.url.pathname === "/");
+
 	const backgroundToggleClickHandler = async (event: Event) => {
 		localStorage.setItem("showVideo", userState.showVideo.value.toString());
 
@@ -44,13 +46,13 @@
 </script>
 
 <div class="top-navigation">
-	<a href="/menu" class="ml-4 menu-icon">
+	<a href="/menu" class="ml-4 menu-icon {isMenuOpen ? 'active' : ''}">
 		<div class="overlay"></div>
 	</a>
 	<!-- User icon -->
 	<div class="icon-container flex-end ml-auto mr-4 flex gap-4 relative items-center">
 		{#if showAboutButton}
-			<a href="/about" class="rg-icon mb-[-4px]">&nbsp;</a>
+			<a href="/about" class="rg-icon mb-[-4px] hover:!no-underline">&nbsp;</a>
 		{/if}
 		<input
 			type="checkbox"
@@ -90,6 +92,7 @@
 		background: url("/images/icons/background-toggle.png") no-repeat;
 		width: 45px;
 		height: 45px;
+		transition: background 0.3s ease;
 	}
 	.background-toggle:checked,
 	.background-toggle:hover {
@@ -120,19 +123,31 @@
 		background: url("/images/icons/menu.png") no-repeat;
 		background-size: contain;
 	}
-	.menu-icon:hover .overlay {
-		cursor: pointer;
-		background: url("/images/icons/menu_active.png") no-repeat;
-		background-size: contain;
-		height: 100%;
-		width: 100%;
+	.menu-icon {
+		position: relative;
+	}
+	.menu-icon::after,
+	.menu-icon.active::after {
+		content: "";
 		position: absolute;
 		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: url("/images/icons/menu_active.png") no-repeat;
+		background-size: contain;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+	.menu-icon.active::after,
+	.menu-icon:hover::after {
+		opacity: 1;
 	}
 	a.user-icon {
 		width: 25px;
 		height: 25px;
 		background-image: url("/images/icons/user-icon.png");
+		transition: background-image 0.3s ease;
 	}
 	a.user-icon:hover {
 		background-image: url("/images/icons/user-icon-hover.png");

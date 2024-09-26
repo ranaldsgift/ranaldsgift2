@@ -1,6 +1,6 @@
-import { DifficultyCache } from "$lib/cache/DifficultyCache";
 import { error } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
+import { DifficultyCache } from "$lib/cache/RedisCache";
 
 export const GET: RequestHandler = async () => {
 	let data = null;

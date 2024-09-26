@@ -4,6 +4,7 @@
 	import BuildViewer from "$lib/components/build/BuildViewer.svelte";
 	import Seo from "$lib/components/SEO.svelte";
 	import BuildTable from "$lib/components/buildtable/BuildTable.svelte";
+	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 
 	let { data } = $props();
 
@@ -21,6 +22,10 @@
 </script>
 
 <Seo title={data.viewModel.title} description={data.viewModel.description} image={`/images/careers/${build.career.id}/portrait.png`}></Seo>
+
+<Breadcrumb links={[{ href: `/builds`, text: "Builds" }]}>
+	{build.name}
+</Breadcrumb>
 
 <PageButtonContainer>
 	{#if data.sessionUser?.id === author.id}

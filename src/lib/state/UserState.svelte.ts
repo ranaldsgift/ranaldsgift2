@@ -6,6 +6,7 @@ import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 class UserState {
 	user: IUser | null = $state(null);
 	showVideo: LocalStorageState<boolean> = new LocalStorageState("showVideo", false);
+	isPrivileged: boolean = $derived(this.user?.role === "Admin" || this.user?.role === "Moderator");
 
 	constructor(user: IUser | null) {
 		if (user) {

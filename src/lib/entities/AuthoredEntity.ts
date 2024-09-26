@@ -5,8 +5,9 @@ import { TimestampedEntity } from "./TimestampedEntity";
 import { User } from "./User";
 import type { Session } from "@supabase/supabase-js";
 import type { SaveOptions } from "typeorm/browser";
+import type { IEntity } from "./BaseEntity";
 
-export abstract class AuthoredEntity<TModel> extends TimestampedEntity<TModel> {
+export abstract class AuthoredEntity<TModel extends IEntity> extends TimestampedEntity<TModel> {
 	@Type(() => User)
 	@ManyToOne((type) => User, { nullable: false })
 	user!: User;

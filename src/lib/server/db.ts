@@ -31,6 +31,7 @@ import { LogHelper } from "$lib/helpers/LogHelper";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { DataSource } from "typeorm";
 import { DifficultyModifier } from "$lib/entities/DifficultyModifier";
+import { Event } from "$lib/entities/Event";
 
 let PRIVATE_SUPABASE_HOST = env.PRIVATE_SUPABASE_HOST;
 let PRIVATE_SUPABASE_PASSWORD = env.PRIVATE_SUPABASE_PASSWORD;
@@ -89,6 +90,7 @@ class TypeOrm {
 					NecklaceBuild,
 					TrinketBuild,
 					PageViewsCareerBuild,
+					Event,
 				],
 				migrations: [],
 				subscribers: [EntitySubscriber, AuthoredEntitySubscriber],
