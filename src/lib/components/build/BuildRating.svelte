@@ -9,15 +9,22 @@
 		build: ICareerBuild;
 	};
 
-	const { build }: Props = $props();
+	const { build = $bindable() }: Props = $props();
 
 	const userState = getUserState();
 
 	let ratedByUser = $derived(userState.user?.ratedBuilds?.map((ratedBuild) => ratedBuild.id).includes(build.id) ?? false);
-	let ratingCount = $state(build.ratingsCount ?? 0);
+	let ratingCount = $derived(build.ratingsCount ?? 0);
 
 	const handleRating = async () => {
 		if (userState.user) {
+			if (userState.user.id === build.user?.id) {
+				toast("You can't rate your own build, silly!", {
+					position: "bottom-center",
+				});
+				return;
+			}
+
 			const response = await fetch(`/api/build/${build.id}/rate`, {
 				method: "POST",
 				headers: {
@@ -30,10 +37,10 @@
 			if (response.ok) {
 				if (json.rated) {
 					userState.addRating(build);
-					ratingCount++;
+					build.ratingsCount = (build.ratingsCount ?? 0) + 1;
 				} else {
 					userState.removeRating(build);
-					ratingCount--;
+					build.ratingsCount = (build.ratingsCount ?? 1) - 1;
 				}
 				toast(json.message, {
 					position: "bottom-center",
@@ -55,9 +62,6 @@
 </div>
 
 <style>
-	.rating {
-		margin-left: auto;
-	}
 	.rating-count {
 		align-self: center;
 		font-size: 2rem;

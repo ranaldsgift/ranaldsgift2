@@ -68,11 +68,9 @@
 		backdrop-filter: blur(10px);
 	}
 	.summary-container {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		grid-template-rows: auto;
-		grid-template-areas: "careerSummary buildTalentSummary";
-		grid-gap: 20px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 20px;
 		margin-top: 20px;
 	}
 </style>

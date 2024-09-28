@@ -19,8 +19,8 @@
 	<div class="page-content p-5 text-[1.2rem] relative z-1">
 		<TextHeader>Onslaught Series</TextHeader>
 		<div class="divider-21 w-full h-[20px] mb-2"></div>
-		<ContentContainer class="m-auto !mb-8 w-fit">
-			<p class="mx-auto">
+		<ContentContainer class="m-auto !mb-8 w-fit max-w-[672px]">
+			<div class="mx-auto">
 				Onslaught Series is a platform that aims to introduce players to modded difficulties as well as being the stomping grounds
 				for events, both fun and serious. All skill levels are welcome. All events are open to the public, which means anyone can
 				register to participate without meeting any prior qualifications.
@@ -33,18 +33,16 @@
 				<a href="https://www.youtube.com/channel/UCqdpLLAFvlFEuNLoQC2Kqsw" target="_blank">FightTheTide YouTube channel</a>.
 				<br />
 				<br />
-				<ContentButton url="https://discord.gg/4mm6sCAS4a" class="max-w-[400px] m-auto">
+				<ContentButton url="https://discord.gg/4mm6sCA4a" class="max-w-[400px] m-auto">
 					For more information about the Onslaught Series, and to register for any of the events, visit the
-					<a href="https://discord.gg/4mm6sCAS4a" target="_blank">
-						Onslaught Series Discord.
-						<img
-							src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg"
-							alt="Onslaught Series Discord"
-							class="inline-block w-6 h-6 invert"
-						/>
-					</a>
+					<a href="https://discord.gg/4mm6sCAS4a" target="_blank" class="z-10 relative"> Onslaught Series Discord </a>
+					<img
+						src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg"
+						alt="Onslaught Series Discord"
+						class="inline-block w-6 h-6 invert"
+					/>
 				</ContentButton>
-			</p>
+			</div>
 		</ContentContainer>
 		<div>
 			<TextHeader>Current Series</TextHeader>

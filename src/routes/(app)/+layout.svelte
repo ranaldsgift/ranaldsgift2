@@ -9,13 +9,13 @@
 
 <Background clipPath={true}></Background>
 
-<div class="frame-container flex-auto w-full h-full flex overflow-hidden pb-5">
+<div class="frame-container flex-auto w-full h-full hidden tablet:flex overflow-hidden pb-5">
 	<a class="page-title hover:!no-underline" href="/">Ranald's Gift</a>
 	<div class="page-title-background"></div>
 	<div class="root-container border-06 p-10 rounded-[8px]">
 	</div>
 </div>
-<div class="page-container desktop:min-w-[900px] background7">
+<div class="page-container desktop:min-w-[900px]">
 	<div class="page">
 		{@render children()}
 	</div>
@@ -35,6 +35,14 @@
 		grid-template-rows: auto 1fr;
 		overflow: hidden;
 	}
+	.page {
+    	margin: 47px 0px;
+		padding: 0;
+		width: 100%;
+		height: calc(100vh - 47px);
+		overflow-y: auto;
+		padding-bottom: 20px;
+	}
     .page-container {
 		position: relative;
         display: grid;
@@ -44,14 +52,22 @@
         align-items: start;
 		border-radius: 8px;
 		margin: 0 auto;
-		overflow-y: auto;
-		overflow-x: hidden;
-		min-height: 100vh;
+		height: 100vh;
+		width: 100vw;
     }
-	.page {
-    	margin: 60px 40px 0px;
-		padding: 20px 60px 60px;
-		width: 100%;
+	@media (min-width: 768px) {
+		.page {
+			padding: 20px !important;
+			background: linear-gradient(45deg, #200000bd, #2000009e), url('/images/backgrounds/background7.webp');
+			height: calc(100vh - 100px);
+			width: calc(100vw - 80px);
+			margin: 60px 40px 50px;
+			overflow-y: auto;
+			overflow-x: hidden;
+			-moz-backface-visibility: hidden; 
+			-webkit-backface-visibility: hidden; 
+			backface-visibility: hidden;
+		}
 	}
 	.page-title {
 		display: none;

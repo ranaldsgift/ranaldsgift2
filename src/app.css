@@ -79,14 +79,11 @@
 
 html, body {
     height: 100%;
+    overflow: hidden;
 }
-body::-webkit-scrollbar {
-  width: 30px;
-  background: url('/images/scrollers/scroll-15.png') repeat-y 2px, url('/images/backgrounds/home-frame.webp') center right / cover;
-}
-body.show-video::-webkit-scrollbar {
-    width: 30px;
-    background: url('/images/scrollers/scroll-15.png') repeat-y 2px, url('/images/background2.jpg') center right / cover;
+::-webkit-scrollbar {
+  width: 25px;
+  background: url('/images/scrollers/scroll-15.png') repeat-y 2px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -240,6 +237,12 @@ background-image: linear-gradient(90deg,#808080b3 10%, #80808000);
 }
 .divider-18 {
   background: url('/images/dividers/divider-18.png') no-repeat center;
+}
+.divider-18-horizontal {
+  background: url('/images/dividers/divider-18-horizontal.png') repeat-x center / 20%;
+}
+.divider-18-straight {
+  background: url('/images/dividers/divider-18-horizontal-straight.png') repeat-x center / auto;
 }
 .divider-19 {
   background: url('/images/dividers/divider-19.png') no-repeat center;

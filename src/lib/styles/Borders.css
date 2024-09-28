@@ -93,8 +93,8 @@ img.border-02::after {
   }
   .border-12 {
     border-image: url('/images/borders/border-12.png');
-    border-image-slice: 15;
-    border-image-width: 15px;
+    border-image-slice: 30;
+    border-image-width: 30px;
     border-style: solid;
     border-image-repeat: repeat;
   }

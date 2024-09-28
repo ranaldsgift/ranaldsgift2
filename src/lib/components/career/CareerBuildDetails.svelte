@@ -46,4 +46,12 @@
 	.career-details-container {
 		grid-area: careerDetails;
 	}
+
+	@media (max-width: 768px) {
+		.career-details-container {
+			grid-template-columns: 1fr !important;
+			grid-row-gap: 20px !important;
+			grid-template-areas: "careerSummary" "careerPassive" "careerSkill" "careerPerks" !important;
+		}
+	}
 </style>

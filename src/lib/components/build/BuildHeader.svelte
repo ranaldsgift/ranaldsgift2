@@ -9,14 +9,16 @@
 		patchNumber?: string;
 	};
 
-	const { build, patchNumber }: Props = $props();
+	let { build, patchNumber }: Props = $props();
 </script>
 
 <div class="build-header-details-container">
 	<div class="header-layout">
 		<span class="build-header heading">{build.name}</span>
 		<BuildFavorite {build}></BuildFavorite>
-		<BuildRating {build}></BuildRating>
+		<div class="ml-auto">
+			<BuildRating bind:build></BuildRating>
+		</div>
 	</div>
 	<div class="build-information-container">
 		<BuildCreationInfo {build}></BuildCreationInfo>
@@ -28,6 +30,7 @@
 <style>
 	.header-layout {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		gap: 10px;
 		padding: 5px 20px;

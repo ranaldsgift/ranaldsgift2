@@ -75,7 +75,7 @@
 		<TextHeader>Data Management</TextHeader>
 		<div class="divider-21 w-full h-[20px] mb-2"></div>
 		<ContentContainer class="max-w-6xl text-xl mx-auto p-6">
-			<ul class="grid grid-cols-3 gap-5">
+			<ul class="grid tablet:grid-cols-3 mobile:grid-cols-2 grid-cols-1 gap-5">
 				{#each adminPages as page}
 					<li class="w-full flex justify-center"><ButtonLink url={page.url}>{page.name}</ButtonLink></li>
 				{/each}

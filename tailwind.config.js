@@ -7,8 +7,9 @@ const config = {
 	safelist: ["dark"],
 	theme: {
 		screens: {
-		  'tablet': '1024px',
-		  'desktop': '1800px',
+			mobile: "480px",
+			tablet: "768px",
+			desktop: "1200px"
 		},
 		container: {
 			center: true,

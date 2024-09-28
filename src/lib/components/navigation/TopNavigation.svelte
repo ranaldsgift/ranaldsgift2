@@ -45,14 +45,14 @@
 	};
 </script>
 
-<div class="top-navigation">
+<div class="top-navigation tablet:!bg-none tablet:!h-[45px]">
 	<a href="/menu" class="ml-4 menu-icon {isMenuOpen ? 'active' : ''}">
 		<div class="overlay"></div>
 	</a>
 	<!-- User icon -->
-	<div class="icon-container flex-end ml-auto mr-4 flex gap-4 relative items-center">
+	<div class="icon-container flex-end ml-auto mr-8 flex gap-4 relative items-center">
 		{#if showAboutButton}
-			<a href="/about" class="rg-icon mb-[-4px] hover:!no-underline">&nbsp;</a>
+			<a href="/about" class="hidden tablet:block rg-icon mb-[-4px] hover:!no-underline">&nbsp;</a>
 		{/if}
 		<input
 			type="checkbox"
@@ -79,14 +79,27 @@
 	}
 	.top-navigation {
 		display: flex;
-		height: 40px;
 		position: fixed;
 		left: -4px;
 		top: -4px;
 		padding-top: 4px;
 		width: calc(100% + 8px);
 		z-index: 10000;
+		height: 50px;
+		background:
+			linear-gradient(45deg, #222222bd, #1616169e),
+			url("/images/backgrounds/background30.png") center / cover;
+		box-shadow:
+			inset 0 -4px 6px -1px rgba(255, 255, 255, 0.1),
+			inset 0 -2px 4px -1px rgba(255, 255, 255, 0.06);
 	}
+
+	@media (min-width: 768px) {
+		.top-navigation {
+			box-shadow: none;
+		}
+	}
+
 	.background-toggle {
 		appearance: none;
 		background: url("/images/icons/background-toggle.png") no-repeat;
@@ -112,11 +125,10 @@
 	a,
 	button {
 		position: relative;
-		display: block;
 		cursor: pointer;
 	}
 	.menu-icon {
-		height: 50px;
+		height: 40px;
 		width: 90px;
 	}
 	.menu-icon {

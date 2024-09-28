@@ -10,6 +10,8 @@
 	import type { IPotion } from "$lib/entities/Potion";
 	import type { ITwitchSetting } from "$lib/entities/TwitchSetting";
 	import type { IWeapon } from "$lib/entities/Weapon";
+	import type { BuildTableFilter } from "$lib/types/BuildTableFilters";
+	import { slide } from "svelte/transition";
 	import {
 		BookSettingsStore,
 		BuildRolesStore,
@@ -21,10 +23,6 @@
 		PotionsStore,
 		TwitchSettingsStore,
 	} from "$lib/stores/DataStores";
-	import type { BuildTableFilter } from "$lib/types/BuildTableFilters";
-
-	import ContainerTitle from "../ContainerTitle.svelte";
-	import { slide } from "svelte/transition";
 
 	type Props = {
 		filter: BuildTableFilter;
@@ -41,7 +39,6 @@
 	let buildRoles = $state<IBuildRole[]>([]);
 	let twitchSettings = $state<ITwitchSetting[]>([]);
 	let bookSettings = $state<IBookSetting[]>([]);
-	//let showFilters = $state(showFiltersProp);
 
 	let careersData = $state<ICareer[]>([]);
 	let heroesData = $state<IHero[]>([]);
@@ -163,125 +160,174 @@
 		}
 	}
 
+	let hasActiveFilters = $derived.by(() => {
+		return (
+			filter.userId !== null ||
+			filter.heroId !== null ||
+			filter.careerId !== null ||
+			filter.weaponId !== null ||
+			filter.primaryWeaponId !== null ||
+			filter.secondaryWeaponId !== null ||
+			filter.charmTraitId !== null ||
+			filter.necklaceTraitId !== null ||
+			filter.trinketTraitId !== null ||
+			filter.difficultyId !== null ||
+			filter.difficultyModifierId !== null ||
+			filter.potionId !== null ||
+			(filter.search !== null && filter.search !== "") ||
+			filter.sort !== "dateModified" ||
+			filter.asc !== false
+		);
+	});
+
+	function clearAllFilters() {
+		filter = {
+			...filter,
+			userId: null,
+			heroId: null,
+			careerId: null,
+			weaponId: null,
+			primaryWeaponId: null,
+			secondaryWeaponId: null,
+			charmTraitId: null,
+			necklaceTraitId: null,
+			trinketTraitId: null,
+			search: null,
+			sort: "dateModified",
+			asc: false,
+			difficultyId: null,
+			difficultyModifierId: null,
+			potionId: null,
+		};
+	}
+
 	$effect(() => {
 		loadFiltersData();
 	});
 </script>
 
-<div class="build-table-filters border-01 top-left-shadow mb-5">
-	<ContainerTitle>Filters</ContainerTitle>
-	<div class="p-5 gap-5 flex background-36 border-01 flex-wrap">
-		<div class="search-bar relative w-full flex">
-			<img class="z-10" width="60" src="/images/icons/search.png" alt="Search" />
-			<input
-				bind:this={searchInput}
-				class="w-full border-02 background-33 my-2 ml-[-30px] z-0 pl-[35px] pr-[40px] text-[1.3rem]"
-				type="text"
-				value={filter.search}
-				onkeyup={(event) => {
-					if (event.target instanceof HTMLInputElement) {
-						handleSearch(event.target.value);
-					}
-				}}
-				placeholder="Search"
-			/>
+<div class="gap-2 flex flex-wrap px-5">
+	<div class="search-bar relative w-full flex">
+		<img class="z-10" width="60" src="/images/icons/search.png" alt="Search" />
+		<input
+			bind:this={searchInput}
+			class="w-full border-02 background-33 h-[40px] self-center ml-[-30px] z-0 pl-[35px] pr-[40px] text-[1.3rem]"
+			type="text"
+			value={filter.search}
+			onkeyup={(event) => {
+				if (event.target instanceof HTMLInputElement) {
+					handleSearch(event.target.value);
+				}
+			}}
+			placeholder="Search"
+		/>
+		{#if filter.search !== null && filter.search !== ""}
 			<button class="clear-search absolute right-2 top-1/2 transform -translate-y-1/2 z-10" onclick={clearSearch}>
 				<img width="20" src="/images/icons/x.png" alt="Clear search" />
 			</button>
-		</div>
-		<button
-			class="show-filters-button flex justify-center items-center w-full mt-[-25px] mb-[-15px] gap-2"
-			onclick={() => (showFilters = !showFilters)}
-		>
+		{/if}
+	</div>
+	<div class="flex flex-wrap gap-2 w-full justify-center mt-[-10px]">
+		<button class="show-filters-button flex justify-center items-center gap-2 h-[35px]" onclick={() => (showFilters = !showFilters)}>
 			<span>More Filter Options</span>
 			<span class="show-filters-button-icon {showFilters ? 'rotate-[-90deg]' : 'rotate-90'}"></span>
 		</button>
-		{#if showFilters}
-			<div class="build-filters-container flex flex-wrap gap-2" transition:slide={{ duration: 300 }}>
-				<div class="select-wrapper relative flex-1 min-w-[200px] pr-[30px]">
-					<select bind:value={filter.sort} class="w-[calc(100%+40px)] ml-[-20px] px-[20px]" placeholder="Sort">
-						<option value="dateModified">Updated Recently</option>
-						<option value="dateCreated">Date Created</option>
-						<option value="name">Name</option>
-						<option value="ratingsCount">Rating</option>
-					</select>
-					<button class="sort-toggle absolute top-[18px] right-[20px]" onclick={() => (filter.asc = !filter.asc)}>
-						<div
-							class={`arrow-icon ${filter.asc ? "rotate-[-90deg]" : "rotate-90"}`}
-							role="img"
-							aria-label={filter.asc ? "Sort ascending" : "Sort descending"}
-						></div>
-					</button>
-				</div>
-				<select bind:value={filter.careerId} class="flex-1 min-w-[200px]">
-					<option value={null}>All Careers</option>
-					{#each careers as career}
-						<option value={career.id}>{career.name}</option>
-					{/each}
+		{#if hasActiveFilters}
+			<button
+				class="clear-filters-button flex justify-center items-center gap-2 border-12 background-33 py-1 px-4
+				text-[1.1rem]"
+				onclick={() => clearAllFilters()}
+			>
+				<img width="20" src="/images/icons/x.png" alt="Clear filters" />
+				<span>Clear Filters</span>
+			</button>
+		{/if}
+	</div>
+	{#if showFilters}
+		<div class="build-filters-container flex flex-wrap gap-2" transition:slide={{ duration: 300 }}>
+			<div class="select-wrapper relative flex-1 min-w-[200px] pr-[30px]">
+				<select bind:value={filter.sort} class="w-[calc(100%+40px)] ml-[-20px] px-[20px]" placeholder="Sort">
+					<option value="dateModified">Updated Recently</option>
+					<option value="dateCreated">Date Created</option>
+					<option value="name">Name</option>
+					<option value="ratingsCount">Rating</option>
 				</select>
-				<select bind:value={filter.weaponId} class="flex-1 min-w-[200px]">
-					<option value={null}>All Weapons</option>
-					{#each weapons as weapon}
-						<option value={weapon.id}>{weapon.name}</option>
-					{/each}
-				</select>
-				<select bind:value={filter.heroId} class="flex-1 min-w-[200px]">
-					<option value={null}>All Heroes</option>
-					{#each heroes as hero}
-						<option value={hero.id}>{hero.name}</option>
-					{/each}
-				</select>
-				<select bind:value={filter.difficultyId} class="flex-1 min-w-[200px]">
-					<option value={null}>All Difficulties</option>
-					{#each difficulties as difficulty}
-						<option value={difficulty.id}>{difficulty.name}</option>
-					{/each}
-				</select>
-				<select bind:value={filter.difficultyModifierId} class="flex-1 min-w-[200px]">
-					<option value={null}>All Difficulty Modifiers</option>
-					{#each difficultyModifiers as difficultyModifier}
-						<option value={difficultyModifier.id}>{difficultyModifier.name}</option>
-					{/each}
-				</select>
-				<select bind:value={filter.potionId} class="flex-1 min-w-[200px]">
-					<option value={null}>All Potions</option>
-					{#each potions as potion}
-						<option value={potion.id}>{potion.name}</option>
-					{/each}
-				</select>
-				<select bind:value={filter.bookSettingId} class="flex-1 min-w-[200px]">
-					<option value={null}>All Book Settings</option>
-					{#each bookSettings as bookSetting}
-						<option value={bookSetting.id}>{bookSetting.name}</option>
-					{/each}
-				</select>
-				<select bind:value={filter.twitchSettingId} class="flex-1 min-w-[200px]">
-					<option value={null}>All Twitch Settings</option>
-					{#each twitchSettings as twitchSetting}
-						<option value={twitchSetting.id}>{twitchSetting.name}</option>
-					{/each}
-				</select>
-				<select bind:value={filter.buildRoleId} class="flex-1 min-w-[200px]">
-					<option value={null}>All Build Roles</option>
-					{#each buildRoles as buildRole}
-						<option value={buildRole.id}>{buildRole.name}</option>
-					{/each}
-				</select>
-				<select bind:value={filter.missionId} class="flex-1 min-w-[200px]">
-					<option value={null}>All Missions</option>
-					{#each missions as mission}
-						<option value={mission.id}>{mission.name}</option>
-					{/each}
-				</select>
-				<!-- <select bind:value={filter.patchId}>
+				<button class="sort-toggle absolute top-[18px] right-[20px]" onclick={() => (filter.asc = !filter.asc)}>
+					<div
+						class={`arrow-icon ${filter.asc ? "rotate-[-90deg]" : "rotate-90"}`}
+						role="img"
+						aria-label={filter.asc ? "Sort ascending" : "Sort descending"}
+					></div>
+				</button>
+			</div>
+			<select bind:value={filter.careerId} class="flex-1 min-w-[200px]">
+				<option value={null}>All Careers</option>
+				{#each careers as career}
+					<option value={career.id}>{career.name}</option>
+				{/each}
+			</select>
+			<select bind:value={filter.weaponId} class="flex-1 min-w-[200px]">
+				<option value={null}>All Weapons</option>
+				{#each weapons as weapon}
+					<option value={weapon.id}>{weapon.name}</option>
+				{/each}
+			</select>
+			<select bind:value={filter.heroId} class="flex-1 min-w-[200px]">
+				<option value={null}>All Heroes</option>
+				{#each heroes as hero}
+					<option value={hero.id}>{hero.name}</option>
+				{/each}
+			</select>
+			<select bind:value={filter.difficultyId} class="flex-1 min-w-[200px]">
+				<option value={null}>All Difficulties</option>
+				{#each difficulties as difficulty}
+					<option value={difficulty.id}>{difficulty.name}</option>
+				{/each}
+			</select>
+			<select bind:value={filter.difficultyModifierId} class="flex-1 min-w-[200px]">
+				<option value={null}>All Difficulty Modifiers</option>
+				{#each difficultyModifiers as difficultyModifier}
+					<option value={difficultyModifier.id}>{difficultyModifier.name}</option>
+				{/each}
+			</select>
+			<select bind:value={filter.potionId} class="flex-1 min-w-[200px]">
+				<option value={null}>All Potions</option>
+				{#each potions as potion}
+					<option value={potion.id}>{potion.name}</option>
+				{/each}
+			</select>
+			<select bind:value={filter.bookSettingId} class="flex-1 min-w-[200px]">
+				<option value={null}>All Book Settings</option>
+				{#each bookSettings as bookSetting}
+					<option value={bookSetting.id}>{bookSetting.name}</option>
+				{/each}
+			</select>
+			<select bind:value={filter.twitchSettingId} class="flex-1 min-w-[200px]">
+				<option value={null}>All Twitch Settings</option>
+				{#each twitchSettings as twitchSetting}
+					<option value={twitchSetting.id}>{twitchSetting.name}</option>
+				{/each}
+			</select>
+			<select bind:value={filter.buildRoleId} class="flex-1 min-w-[200px]">
+				<option value={null}>All Build Roles</option>
+				{#each buildRoles as buildRole}
+					<option value={buildRole.id}>{buildRole.name}</option>
+				{/each}
+			</select>
+			<select bind:value={filter.missionId} class="flex-1 min-w-[200px]">
+				<option value={null}>All Missions</option>
+				{#each missions as mission}
+					<option value={mission.id}>{mission.name}</option>
+				{/each}
+			</select>
+			<!-- <select bind:value={filter.patchId}>
 				<option value={null}>All Patches</option>
 				{#each patches as patch}
 					<option value={patch.id}>{patch.name}</option>
 				{/each}
 			</select> -->
-			</div>
-		{/if}
-	</div>
+		</div>
+	{/if}
 </div>
 
 <style>

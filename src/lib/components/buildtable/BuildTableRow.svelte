@@ -5,12 +5,30 @@
 	import BuildRating from "../build/BuildRating.svelte";
 	import WeaponIcon from "../inventory/WeaponIcon.svelte";
 	import TraitIcon from "../inventory/TraitIcon.svelte";
+import { browser } from '$app/environment';
 	
 	type Props = {
 		build: ICareerBuild;
 	};
 
 	const { build }: Props = $props();
+
+	let windowWidth = $state(browser ? window.innerWidth : 0);
+	let isMobile = $derived(windowWidth < 768);
+
+	if (browser) {
+		$effect(() => {
+			const handleResize = () => {
+				windowWidth = window.innerWidth;
+			};
+
+			window.addEventListener('resize', handleResize);
+
+			return () => {
+				window.removeEventListener('resize', handleResize);
+			};
+		});
+	}
 
 	if (!build.careerId) {
 		error(404, "Career Data for the build failed to load.");
@@ -20,7 +38,7 @@
 <div class="build-list-item-container">
 	<a class="link-overlay" href={`/build/${build.id}`} data-sveltekit-preload-data="tap">&nbsp;</a>
 	<div class="build-list-item desktop:h-full" data-career={build.careerId} data-build={build.id}>
-		<div class="career-portrait border-04" style="background-image: url('/images/careers/{build.careerId}/portrait.png')"></div>
+		<div class="career-portrait border-04 mobile:w-[100px] mobile:h-[120px]" style="background: {isMobile ? `url('/images/careers/${build.careerId}/portrait-wide.png') no-repeat right / contain, url('/images/backgrounds/background29.png')` : `url('/images/careers/${build.careerId}/portrait.png')`}"></div>
 		<div class="build-description-container">
 			<p class="build-name header-underline">{build.name}</p>
 			<p class="build-hero">{build.career.name}</p>
@@ -29,7 +47,7 @@
 		<div class="pointer-events-none z-[1] build-rating pr-[10px]">
 			<BuildRating {build}></BuildRating>
 		</div>
-		<div class="weapons">
+		<div class="weapons grid">
 			<div class="weapon-container">
 				<WeaponIcon weapon={build.primaryWeapon.weapon} size="45px"></WeaponIcon>
 				<TraitIcon trait={build.primaryWeapon.trait!} size="45px"></TraitIcon>
@@ -39,7 +57,7 @@
 				<TraitIcon trait={build.secondaryWeapon.trait!} size="45px"></TraitIcon>
 			</div>
 		</div>
-		<div class="traits">
+		<div class="traits grid">
 			<div>
 			<TraitIcon trait={build.necklace.trait!} size="45px"></TraitIcon>
 		</div>
@@ -153,13 +171,12 @@
 	}
 	.weapons {
 		grid-area: buildWeapons;
-		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-auto-flow: column;
+		grid-auto-columns: min-content;
 		grid-column-gap: 5px;
 	}
 	.traits {
 		grid-area: buildTraits;
-		display: grid;
 		grid-template-columns: repeat(3, 45px);
 		grid-column-gap: 5px;
 	}
@@ -391,6 +408,9 @@
 			radial-gradient(closest-corner, #0000007a, #000000ba), linear-gradient(to bottom, #1d1d1d78, #00000017),
 			url("/images/backgrounds/background39.png");
 	}
+	.build-list-item:before {
+		transition: box-shadow 0.1s ease-in-out;
+	}
 	.build-list-item-container:hover .build-list-item:before {
 		box-shadow: 0 0 10px 2px #ffd700;
 		/* background: radial-gradient(closest-corner, #00000090, #000000dc), linear-gradient(to bottom, #1d1d1d78, #00000017), url('/images/backgrounds/background39.png'); */
@@ -445,4 +465,51 @@
 		height: 45px;
 		box-sizing: border-box;
 	}
+
+	@media (max-width: 768px) {
+    .build-list-item {
+        grid-template-areas:
+            "heroIcon heroIcon"
+            "buildDescription buildRating"
+            "buildWeapons buildWeapons"
+            "buildTraits buildTraits"
+            "buildFooter buildFooter" !important;
+        grid-template-columns: 1fr auto !important;
+        grid-template-rows: auto auto auto auto 40px !important;
+        padding: 15px 0 0 15px;
+    }
+    .build-list-item .build-creation-info {
+        grid-template-columns: min-content auto;
+        grid-template-rows: auto auto;
+        grid-auto-flow: row !important;
+    }    
+    .date-updated {
+        grid-column: 1 / 3;
+    }
+    .rating {
+        padding-right: 0px;
+    }
+    .build-hero-icon {
+        height: 65px !important;
+        width: calc(100% - 15px) !important;
+        margin: 0;
+        box-sizing: border-box;
+        margin-left: 0 !important;
+        margin-right: 15px !important;
+    }
+    .build-description-container, .build-list-item .rating {
+        margin-top: 0px !important;
+    }
+    .hero-icon-container {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+    }
+	.career-portrait {
+        height: 65px !important;
+        width: calc(100% - 15px) !important;
+        margin: 0;
+        box-sizing: border-box;
+        margin-left: 0 !important;
+        margin-right: 15px !important;
+    }
+}
 </style>
