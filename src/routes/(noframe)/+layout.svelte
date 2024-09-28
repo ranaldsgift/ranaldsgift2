@@ -26,27 +26,26 @@ import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 <style>
     .page-container {
 		position: relative;
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr;
-        justify-items: center;
-        align-items: center;
+        display: flex;
+        justify-content: center;
+        align-items: start;
 		border-radius: 8px;
 		margin: 0 auto;
 		background: none;
 		height: 100vh;
 		width: 100vw;
+		overflow-y: auto;
+		overflow-x: hidden;
     }
 	.page {
-		padding: 0;
+		padding-top: 47px;
 	}
 	@media (min-width: 768px) {
 		.page {
-			padding: 40px 20px !important;
+			padding: 40px 20px;
 			height: 100vh;
 			width: 100vw;
-			overflow-y: auto;
-			overflow-x: hidden;
+			margin-top: 0px;
 			-moz-backface-visibility: hidden; 
 			-webkit-backface-visibility: hidden; 
 			backface-visibility: hidden;
