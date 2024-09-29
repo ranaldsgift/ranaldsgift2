@@ -63,13 +63,28 @@
 
 <style>
 	.build-summary-container {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)) !important;
+		display: flex;
+		flex-wrap: wrap;
 		grid-area: buildSummary;
 		color: #f0f0f0;
 		text-align: left;
 		grid-gap: 15px;
 	}
+	
+	.build-summary-container > div {
+		flex: 1 1 172px;
+	} 
+
+	@media (min-width: 1800px) {
+		.build-summary-container {
+			display: flex;
+			flex-wrap: wrap;
+		}
+		.build-summary-container > div {
+			min-width: 172px;
+		}
+	}
+
 	.build-melee-summary,
 	.build-range-summary,
 	.build-jewelry-summary {

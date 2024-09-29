@@ -50,14 +50,13 @@
 
 <Breadcrumb links={[{ href: "/", text: "Home" }, { href: "/events", text: "Events" }, { href: `/event/${data.event.id}`, text: data.event.name }]}>Edit</Breadcrumb>
 
+<PageButtonContainer>
+	<button class="button-02" onclick={saveEvent}>Save</button>
+	<a class="button-02" href={`/event/${data.event.id}`}>Cancel</a>
+</PageButtonContainer>
+
 <div class="max-w-6xl mx-auto p-6 background-14 border-04 rounded shadow">
 	<h1 class="text-2xl font-bold mb-6">Edit Event</h1>
-
-	<PageButtonContainer>
-		<button class="button-02" onclick={saveEvent}>Save</button>
-		<a class="button-02" href={`/event/${data.event.id}`}>Cancel</a>
-	</PageButtonContainer>
-
 	<form class="space-y-4">
 		<div>
 			<label for="name" class="block mb-1">Event Name:</label>

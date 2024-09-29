@@ -5,6 +5,9 @@
 	import Seo from "$lib/components/SEO.svelte";
 
 	const { data } = $props();
+
+	let favoriteFilter = $state({ favoriteByUserId: data.userData.id, limit: 3, offset: 0 });
+	let ratedFilter = $state({ ratedByUserId: data.userData.id, limit: 3, offset: 0 });
 </script>
 
 <Seo
@@ -14,13 +17,14 @@
 
 <Breadcrumb links={[{ href: "/", text: "Home" }]}>{data.userData.name}'s Profile</Breadcrumb>
 
-<div class="page-layout">
+{#if data.sessionUser?.id === data.userData.id}
+	<PageButtonContainer>
+		<a class="button-02" href={`/user/${data.userData.id}/edit`}>Edit</a>
+	</PageButtonContainer>
+{/if}
+
+<div class="page-layout px-4 mobile:px-0">
 	{#if data.userData}
-		{#if data.sessionUser?.id === data.userData.id}
-			<PageButtonContainer>
-				<a class="button-02" href={`/user/${data.userData.id}/edit`}>Edit</a>
-			</PageButtonContainer>
-		{/if}
 		<div>
 			<div class="user-info-container background-14 border-08">
 				<span>Username</span>
@@ -36,10 +40,10 @@
 			</div>
 		</div>
 		{#if data.sessionUser?.id === data.userData.id}
-			<BuildTable filter={{ favoriteByUserId: data.userData.id, limit: 3 }}></BuildTable>
-			<BuildTable filter={{ ratedByUserId: data.userData.id, limit: 3 }}></BuildTable>
+			<BuildTable title="My Favorite Builds" filter={favoriteFilter}></BuildTable>
+			<BuildTable title="My Rated Builds" filter={ratedFilter}></BuildTable>
 		{/if}
-		<BuildTable filter={{ userId: data.userData.id, limit: 10 }}></BuildTable>
+		<BuildTable title={data.userData.name + "'s Builds"} filter={{ userId: data.userData.id, limit: 10 }}></BuildTable>
 	{:else}
 		<div>
 			<h1>User not found</h1>
@@ -51,20 +55,36 @@
 	.page-layout {
 		max-width: 1200px;
 		margin: 0 auto;
+		display: grid;
+		gap: 10px;
 	}
 	.user-info-container {
 		color: #8bc34a;
 		font-size: 1.5em;
 		display: grid;
-		grid-template-columns: max-content 1fr;
+		grid-template-columns: 1fr;
 		justify-items: left;
 		text-align: left;
 		grid-column-gap: 15px;
 		grid-row-gap: 5px;
 		padding: 20px;
 		position: relative;
-		grid-row-gap: 10px;
 	}
+
+	.user-info-container > *:nth-child(2n) {
+		margin-bottom: 10px;
+	}
+
+	@media (min-width: 768px) {
+		.user-info-container {
+			grid-template-columns: max-content 1fr;
+			grid-row-gap: 10px;
+		}
+		.user-info-container > *:nth-child(2n) {
+			margin-bottom: 0px;
+		}
+	}
+
 	.user-info-container > span:nth-child(2n + 1) {
 		color: #808080;
 	}

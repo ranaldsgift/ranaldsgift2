@@ -26,31 +26,19 @@
 {/if}
 
 <style>
-	.app-background.clipped {
-		clip-path: polygon(
-			0% 0%,
-			0% 100%,
-			40px 100%,
-			40px 60px,
-			calc(100% - 40px) 60px,
-			calc(100% - 40px) calc(100% - 40px),
-			40px calc(100% - 40px),
-			40px 100%,
-			100% 100%,
-			100% 0%
-		);
-		z-index: 9999;
-	}
 	.app-background.image {
-		background: url(/images/backgrounds/home-frame.webp) no-repeat center left / calc(100% + 32px) 100%;
+		background: url(/images/backgrounds/home-frame.webp) no-repeat top left / cover;
+		left: -25px;
+		width: calc(100% + 50px);
 	}
 	video {
 		top: 0;
-		left: 0;
-		width: 100%;
+		left: -25px;
+		position: fixed;
+		background: url("/images/background2.jpg") top left / cover;
+		width: calc(100% + 50px);
 		height: 100vh;
 		object-fit: cover;
-		position: fixed;
-		background: url("/images/background2.jpg") center / cover;
+		max-width: none;
 	}
 </style>

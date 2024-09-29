@@ -1,4 +1,5 @@
 <script lang="ts">
+	import BuildTableRowSkeleton from "./BuildTableRowSkeleton.svelte";
 	import { CareerBuildsStore } from "$lib/stores/DataStores";
 	import { DataHandler } from "@vincjo/datatables";
 	import ContainerTitle from "../ContainerTitle.svelte";
@@ -9,9 +10,11 @@
 
 	type Props = {
 		filter: BuildTableFilter;
+		class?: string;
+		title?: string;
 	};
 
-	let { filter = $bindable() }: Props = $props();
+	let { filter = $bindable(), class: className, title }: Props = $props();
 
 	let builds: ICareerBuild[] = [];
 
@@ -43,84 +46,14 @@
 
 	const handler = new DataHandler(builds);
 	const rows = handler.getRows();
-
-	const loadMoreHandler = () => {
-		if (loadingData) return;
-		if (!filter.offset) filter.offset = 0;
-		filter.offset++;
-		loadData();
-	};
 </script>
 
 <div class="top-left-shadow">
-	<ContainerTitle>Builds</ContainerTitle>
-	<div class="p-5 border-01 background-20 gap-5 grid desktop:grid-cols-2 desktop:grid-rows-5">
+	<ContainerTitle>{title ?? "Builds"}</ContainerTitle>
+	<div class="p-5 border-01 background-20 gap-5 grid desktop:grid-cols-2 desktop:grid-flow-row {className}">
 		{#await loadData()}
 			{#each { length: filter.limit ?? 5 } as _}
-				<div class="build-list-item-container">
-					<div class="build-list-item-skeleton h-[177px] w-full border-31">
-						<div class="career-portrait h-[120px] w-[100px] border-04">
-							<Skeleton class="h-full w-full"></Skeleton>
-						</div>
-						<div class="build-description-container">
-							<div class="build-name header-underline w-full h-[27px] pb-[5px]">
-								<Skeleton class="h-full max-w-[250px]"></Skeleton>
-							</div>
-							<div class="build-hero max-w-[100px] h-[15px] w-full">
-								<Skeleton class="h-full w-full"></Skeleton>
-							</div>
-							<div class="build-creation-info max-w-[150px] h-[15px] w-full">
-								<Skeleton class="h-full w-full"></Skeleton>
-							</div>
-						</div>
-						<div class="pointer-events-none z-[1] mr-2 mt-2">
-							<div class="build-rating rating-icon"></div>
-						</div>
-						<div class="weapons flex gap-2">
-							<div class="weapon-container">
-								<div class="weapon-icon w-[45px] h-[45px] border-04">
-									<Skeleton class="h-full w-full"></Skeleton>
-								</div>
-								<div class="trait-icon w-[45px] h-[45px] border-04">
-									<Skeleton class="h-full w-full"></Skeleton>
-								</div>
-							</div>
-							<div class="weapon-container">
-								<div class="weapon-icon w-[45px] h-[45px] border-04">
-									<Skeleton class="h-full w-full"></Skeleton>
-								</div>
-								<div class="trait-icon w-[45px] h-[45px] border-04">
-									<Skeleton class="h-full w-full"></Skeleton>
-								</div>
-							</div>
-						</div>
-						<div class="traits">
-							<div>
-								<div class="trait-icon w-[45px] h-[45px] border-04">
-									<Skeleton class="h-full w-full"></Skeleton>
-								</div>
-							</div>
-							<div>
-								<div class="trait-icon w-[45px] h-[45px] border-04">
-									<Skeleton class="h-full w-full"></Skeleton>
-								</div>
-							</div>
-							<div>
-								<div class="trait-icon w-[45px] h-[45px] border-04">
-									<Skeleton class="h-full w-full"></Skeleton>
-								</div>
-							</div>
-						</div>
-						<div class="build-footer pt-[5px]">
-							<div class="roles w-[150px] h-[15px]">
-								<Skeleton class="h-full w-full"></Skeleton>
-							</div>
-							<div class="patch-number">
-								<Skeleton class="w-[75px] h-[15px]"></Skeleton>
-							</div>
-						</div>
-					</div>
-				</div>
+				<BuildTableRowSkeleton></BuildTableRowSkeleton>
 			{/each}
 		{:then}
 			{#each $rows as row}
@@ -133,7 +66,7 @@
 			<button
 				class="pagination-button flex-1"
 				onclick={() => {
-					if (filter.limit != null && filter.limit !== undefined && filter.offset != null && filter.offset !== undefined) {
+					if (filter.limit != null && filter.offset != null) {
 						filter.offset = Math.max(0, --filter.offset);
 					}
 				}}
@@ -141,16 +74,18 @@
 				<ContainerTitle>Previous</ContainerTitle>
 			</button>
 		{/if}
-		<button
-			class="pagination-button flex-1"
-			onclick={() => {
-				if (filter.limit != null && filter.limit !== undefined && filter.offset != null && filter.offset !== undefined) {
-					filter.offset++;
-				}
-			}}
-		>
-			<ContainerTitle>Next</ContainerTitle>
-		</button>
+		{#if filter.offset != null && filter.limit != null && recordCount >= filter.limit * (filter.offset + 1)}
+			<button
+				class="pagination-button flex-1"
+				onclick={() => {
+					if (filter.limit != null && filter.limit !== undefined && filter.offset != null && filter.offset !== undefined) {
+						filter.offset++;
+					}
+				}}
+			>
+				<ContainerTitle>Next</ContainerTitle>
+			</button>
+		{/if}
 	</div>
 </div>
 

@@ -29,11 +29,6 @@
 		pageState.build = viewModel.build;
 	}
 
-	// For debugging to track changes to the build
-	$inspect(pageState.build).with((type, value) => {
-		type === "update" ? console.trace(value) : null;
-	});
-
 	let searchParams = $derived.by(() => {
 		if (!pageState.build) {
 			return "";
@@ -80,20 +75,22 @@
 
 	<Breadcrumb links={[{ href: "/", text: "Home" }]}>Heroes</Breadcrumb>
 
+	<PageButtonContainer>
+		<button class="button-02" onclick={copyButtonHandler}
+			>Copy
+			<svg class="mt-[-2px]" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
+				><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"
+					><path
+						d="M10.046 14c-1.506-1.512-1.37-4.1.303-5.779l4.848-4.866c1.673-1.68 4.25-1.816 5.757-.305c1.506 1.512 1.37 4.1-.303 5.78l-2.424 2.433"
+					/><path
+						d="M13.954 10c1.506 1.512 1.37 4.1-.303 5.779l-2.424 2.433l-2.424 2.433c-1.673 1.68-4.25 1.816-5.757.305c-1.506-1.512-1.37-4.1.303-5.78l2.424-2.433"
+					/></g
+				></svg
+			></button
+		>
+	</PageButtonContainer>
+
 	<div class="page-layout">
-		<PageButtonContainer>
-			<button class="button-02" onclick={copyButtonHandler}
-				>Copy<svg class="mt-[-2px]" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
-					><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"
-						><path
-							d="M10.046 14c-1.506-1.512-1.37-4.1.303-5.779l4.848-4.866c1.673-1.68 4.25-1.816 5.757-.305c1.506 1.512 1.37 4.1-.303 5.78l-2.424 2.433"
-						/><path
-							d="M13.954 10c1.506 1.512 1.37 4.1-.303 5.779l-2.424 2.433l-2.424 2.433c-1.673 1.68-4.25 1.816-5.757.305c-1.506-1.512-1.37-4.1.303-5.78l2.424-2.433"
-						/></g
-					></svg
-				></button
-			>
-		</PageButtonContainer>
 		<CareerSelection bind:selectedCareer={pageState.selectedCareer} careers={viewModel.careers} handler={careerSelectionHandler}
 		></CareerSelection>
 		<CareerEditor bind:build={pageState.build} bind:inventoryTab={pageState.inventoryTab.value}></CareerEditor>
@@ -110,24 +107,15 @@
 	.page-layout {
 		display: grid;
 		align-self: start;
-		width: 100%;
-		grid-template-columns: 1fr 980px 1fr !important;
-		gap: 18px;
-		grid-template-areas: "careerSelection careerContainer careerInventory" !important;
+		gap: 20px;
+		grid-template-columns: 100% !important;
+		grid-template-areas: "careerSelection" "careerContainer" "careerInventory" !important;
 	}
 
-	@media (min-width: 1820px) {
+	@media (min-width: 1800px) {
 		.page-layout {
 			grid-template-columns: 1fr 980px 1fr !important;
 			grid-template-areas: "careerSelection careerContainer careerInventory" !important;
-		}
-	}
-
-	@media (max-width: 1000px) {
-		.page-layout {
-			width: auto !important;
-			grid-template-columns: 100% !important;
-			grid-template-areas: "careerSelection" "careerContainer" "careerInventory" !important;
 		}
 	}
 

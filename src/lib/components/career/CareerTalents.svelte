@@ -93,13 +93,13 @@
 					{#each talents as talent}
 						{#if (talent.talentNumber - 1) % 3 === 0}
 							<span
-								class="talent-lock-icon"
+								class="talent-lock-icon justify-self-center"
 								style="background: url('/images/icons/talent-lock-icon.png') no-repeat center;
                                 --talent-tier-level: '{Math.ceil(talent!.talentNumber / 3) * 5}';"
 							></span>
 						{/if}
 						<div
-							class="talent-container {[talent1, talent2, talent3, talent4, talent5, talent6].filter(
+							class="talent-container overflow-hidden {[talent1, talent2, talent3, talent4, talent5, talent6].filter(
 								(t) => t?.talentNumber === talent.talentNumber
 							).length > 0
 								? 'selected'
@@ -117,7 +117,7 @@
 								<CareerTalentIcon size="84px" {careerId} talentNumber={talent.talentNumber} class="z-[-1]"
 								></CareerTalentIcon>
 								<p class="talent-name">{talent.name}</p>
-								<p class="talent-description">{talent.description}</p>
+								<p class="talent-description max-mobile:!visible">{talent.description}</p>
 							</button>
 						</div>
 					{/each}
@@ -165,10 +165,11 @@
 		position: relative;
 		height: auto;
 	}
+	@media (min-width: 1000px) {
 	.hero-talents-grid {
-		display: grid;
-		grid-auto-rows: auto;
-		grid-template-columns: 85px 1fr 1fr 1fr;
+		grid-auto-rows: auto !important;
+		grid-template-rows: unset !important;
+		grid-template-columns: 85px 1fr 1fr 1fr !important;
 		grid-template-areas:
 			"heroTalentsHeader heroTalentsHeader heroTalentsHeader heroTalentsHeader"
 			"heroTalentLevel5 heroTalent1 heroTalent2 heroTalent3"
@@ -176,7 +177,7 @@
 			"heroTalentLevel15 heroTalent7 heroTalent8 heroTalent9"
 			"heroTalentLevel20 heroTalent10 heroTalent11 heroTalent12"
 			"heroTalentLevel25 heroTalent13 heroTalent14 heroTalent15"
-			"heroTalentLevel30 heroTalent16 heroTalent17 heroTalent18";
+			"heroTalentLevel30 heroTalent16 heroTalent17 heroTalent18" !important;
 		grid-row-gap: 5px;
 		position: relative;
 		width: calc(100% - 20px);
@@ -184,6 +185,40 @@
 		padding: 10px;
 		color: #c15b24;
 	}
+}
+	.hero-talents-grid {
+        position: relative !important;
+		display: grid;
+        grid-template-rows: 40px repeat(24, 88px);
+        grid-template-columns: 1fr;
+        grid-template-areas: "heroTalentsHeader" 
+                            "heroTalentLevel5" 
+                            "heroTalent1" 
+                            "heroTalent2"
+                            "heroTalent3"
+                            "heroTalentLevel10"
+                            "heroTalent4"
+                            "heroTalent5"
+                            "heroTalent6"
+                            "heroTalentLevel15"
+                            "heroTalent7"
+                            "heroTalent8"
+                            "heroTalent9"
+                            "heroTalentLevel20"
+                            "heroTalent10"
+                            "heroTalent11"
+                            "heroTalent12"
+                            "heroTalentLevel25"
+                            "heroTalent13"
+                            "heroTalent14"
+                            "heroTalent15"
+                            "heroTalentLevel30"
+                            "heroTalent16"
+                            "heroTalent17"
+                            "heroTalent18";
+    
+	}
+	
 	.hero-talents-grid > * {
 		z-index: 1;
 	}

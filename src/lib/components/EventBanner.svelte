@@ -4,7 +4,11 @@
 	import { fade } from "svelte/transition";
 	import { goto } from "$app/navigation";
 
-	let { events = [] } = $props<{ events: IEvent[] }>();
+	type Props = {
+		events: IEvent[];
+	};
+
+	let { events = [] }: Props = $props();
 	let dismissedEvents = $state<number[]>([]);
 	let currentEventIndex = $state(0);
 	let isMouseOver = $state(false);
@@ -88,7 +92,9 @@
 							in:fade={{ duration: 300 }}
 							out:fade={{ duration: 300 }}
 						>
-							<span class="text-white">Upcoming Event:</span>
+							<span class="text-white"
+								>{events[currentEventIndex].startDate.getTime() > Date.now() ? "Ongoing" : "Upcoming"} Event:</span
+							>
 							<span>{events[currentEventIndex].name}</span>
 							<span class="event-dates">
 								{`-- ${formattedEventDate}`}

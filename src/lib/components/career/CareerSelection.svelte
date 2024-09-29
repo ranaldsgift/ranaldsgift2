@@ -2,64 +2,104 @@
 	import { type ICareer } from "$lib/entities/career/Career";
 	import CareerIcon from "./CareerIcon.svelte";
 	import ContainerTitle from "../ContainerTitle.svelte";
-	import AspectRatio from "../ui/aspect-ratio/aspect-ratio.svelte";
-	import { CareersStore } from "$lib/stores/DataStores";
+	import type { IHero } from "$lib/entities/Hero";
+	import { browser } from "$app/environment";
 
 	type Props = {
 		selectedCareer: ICareer | null;
 		careers?: ICareer[];
-		iconStyle?: "portrait-wide" | "portrait";
 		handler?: (career: ICareer) => void;
 	};
 
-	let { selectedCareer = $bindable(), iconStyle = "portrait", careers, handler }: Props = $props();
+	let windowWidth = $state(browser ? window.innerWidth : 0);
+	let isMobile = $derived(windowWidth < 1800);
 
-	let careersState = $state<ICareer[] | undefined>(careers);
-	let iconStyleState = $derived<"portrait-wide" | "portrait">(iconStyle);
+	if (browser) {
+		$effect(() => {
+			const handleResize = () => {
+				windowWidth = window.innerWidth;
+			};
 
-	const loadCareers = async () => {
-		const { items } = await CareersStore.loadData();
-		careersState = items;
-	};
+			window.addEventListener("resize", handleResize);
 
-	$effect(() => {
-		if (!careersState || careersState.length === 0) {
-			loadCareers();
+			return () => {
+				window.removeEventListener("resize", handleResize);
+			};
+		});
+	}
+
+	let { selectedCareer = $bindable(), careers, handler }: Props = $props();
+	let selectedHero = $state<IHero | null>(selectedCareer?.hero ?? null);
+	let heroes = $derived<IHero[]>([...new Map(careers?.map((c) => [c.hero.id, c.hero]) ?? []).values()]);
+
+	let careersState = $derived.by<ICareer[]>(() => {
+		if (!selectedHero || !isMobile) {
+			return careers ?? [];
 		}
+
+		return careers?.filter((c) => c.hero.id === selectedHero?.id) ?? [];
 	});
+
+	let iconStyleState = $derived<"portrait-wide" | "portrait" | "icon">(isMobile ? "portrait-wide" : "portrait");
+
+	const handleHeroSelection = (hero: IHero) => {
+		if (selectedHero?.id === hero.id) {
+			selectedHero = null;
+		} else {
+			selectedHero = hero;
+		}
+	};
 </script>
 
-{#if careersState && careersState.length === 20}
-	<div class="career-selection-container top-left-shadow self-start">
-		<ContainerTitle class="w-full">Career Selection</ContainerTitle>
-		<div class="grid grid-rows-5 grid-cols-4 gap-2 background-12 border-01 p-5 max-w-[400px]">
-			{#each careersState as career}
-				<div class="icon-wrapper">
-					<AspectRatio ratio={57 / 67}>
-						<button
-							class={career.id === selectedCareer?.id ? "selected" : ""}
-							onclick={() => {
-								selectedCareer = career;
-								if (handler) {
-									handler(career);
-								}
-							}}
-						>
-							<CareerIcon careerId={career.id} style={iconStyleState}></CareerIcon>
-						</button>
-					</AspectRatio>
-				</div>
-			{/each}
+<div class="career-selection-container top-left-shadow self-start">
+	<ContainerTitle class="w-full">Career Selection</ContainerTitle>
+	<div class="relative background-33 grid pt-2 min-[1800px]:hidden">
+		<div class="border-01 absolute top-0 left-0 right-0 bottom-0 z-20 pointer-events-none"></div>
+		<div class="max-w-[650px] w-full m-auto block z-10 relative">
+			<div class="flex gap-2 justify-between mx-[5%] mobile:mx-[7%] mb-[-20px]">
+				{#each heroes as hero}
+					<button onclick={() => handleHeroSelection(hero)}>
+						<img
+							class=" brightness-75 hover:brightness-100 {hero.id === selectedHero?.id ? 'brightness-125' : 'grayscale'}"
+							src={`/images/careers/hero-0${hero.id}.png`}
+							alt={hero.name}
+						/>
+					</button>
+				{/each}
+			</div>
+			<div class="divider-18-horizontal w-full h-[50px] mb-2 block !bg-bottom z-10"></div>
 		</div>
+		<div class="divider-18-straight w-[calc(100%-650px)] h-[55px] absolute left-[0px] bottom-[3px]"></div>
+		<div class="divider-18-straight w-[calc(100%-650px)] h-[55px] absolute right-[0px] bottom-[3px]"></div>
 	</div>
-{/if}
+	<div class="careers-icon-container grid auto-rows-[85px] grid-cols-2 tablet:grid-cols-4 gap-2 background-12 border-01 p-5">
+		{#each careersState as career}
+			<div class="icon-wrapper">
+				<button
+					class={career.id === selectedCareer?.id ? "selected" : ""}
+					onclick={() => {
+						selectedCareer = career;
+						if (handler) {
+							handler(career);
+						}
+					}}
+				>
+					<CareerIcon careerId={career.id} style={iconStyleState}></CareerIcon>
+				</button>
+			</div>
+		{/each}
+	</div>
+</div>
 
 <style>
+	.careers-icon-container {
+		grid-auto-columns: 1fr;
+	}
 	.career-selection-container {
 		grid-area: careerSelection;
 	}
 
-	button {
+	.icon-wrapper button {
 		display: block;
 		width: 100%;
 		height: 100%;

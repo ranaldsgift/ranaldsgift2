@@ -21,7 +21,7 @@
 		<div class="grid gap-8">
 			{#if data.activeEvents.length > 0}
 				<section>
-					<TextHeader>Active Events</TextHeader>
+					<TextHeader>Ongoing Events</TextHeader>
 					<div class="divider-21 w-full h-[20px] mb-2"></div>
 					<div class="flex flex-wrap gap-4 justify-center">
 						{#each data.activeEvents as event}

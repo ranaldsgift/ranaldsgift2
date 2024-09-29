@@ -4,6 +4,7 @@
     type Props = {
         handler?: () => void;
         children: Snippet;
+
     }
 
     const { handler, children }: Props = $props();
@@ -22,7 +23,9 @@
         background: url('/images/labels/label-06.png') no-repeat center;
         background-size: cover;
         align-content: center;
-        display: grid;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-transform: uppercase;
         font-size: 120%;
         box-shadow: inset 0 0 75px black, inset 0 -8px 1px #3b3b3b, inset 0 8px 1px #979797 !important;

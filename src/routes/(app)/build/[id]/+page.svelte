@@ -33,23 +33,37 @@
 	{/if}
 </PageButtonContainer>
 
-<div class="view-build-page build-page" data-readonly={true}>
+<div class="view-build-page build-page grid grid-cols-1 desktop:grid-cols-[2fr_1fr]" data-readonly={true}>
 	<div class="build-main-container">
 		<BuildViewer {build} patchNumber={data.viewModel.patchNumber}></BuildViewer>
 	</div>
 	<div class="build-side-container">
-		<BuildTable filter={{ userId: author.id, careerId: build.careerId, limit: 3 }}></BuildTable>
-		<BuildTable filter={{ careerId: build.careerId, limit: 3 }}></BuildTable>
+		<BuildTable
+			filter={{ userId: author.id, careerId: build.careerId, limit: 3 }}
+			title={`Similar Builds by ${build.user?.name}`}
+			class="!grid-cols-1"
+		></BuildTable>
+		<BuildTable filter={{ careerId: build.careerId, limit: 3 }} title={`More ${build.career.name} Builds`} class="!grid-cols-1"
+		></BuildTable>
 	</div>
 </div>
 
 <style>
 	.build-main-container {
-		display: grid;
-		grid-template-columns: 2fr 1fr;
-		grid-template-areas: "buildViewer buildSideContainer";
+		grid-area: buildMainContainer;
 	}
 	.build-side-container {
 		grid-area: buildSideContainer;
+	}
+	.view-build-page {
+		display: grid;
+		gap: 20px;
+		grid-template-areas: "buildMainContainer" "buildSideContainer";
+	}
+	@media (min-width: 1800px) {
+		.view-build-page {
+			grid-template-columns: 2fr 1fr;
+			grid-template-areas: "buildMainContainer buildSideContainer";
+		}
 	}
 </style>

@@ -1,7 +1,7 @@
 import { Event } from "$lib/entities/Event";
 
 export const load = async () => {
-	const events = await Event.find();
+	const events = await Event.find({ where: { isActive: true } });
 	const upcomingEvents = events.filter((event) => event.startDate > new Date()).map((event) => event.toObject());
 	const pastEvents = events.filter((event) => event.endDate < new Date()).map((event) => event.toObject());
 	const activeEvents = events
