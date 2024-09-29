@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import ContentContainer from "$lib/components/ContentContainer.svelte";
-  import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
+  	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import TextEditor from "$lib/components/quill/TextEditor.svelte";
 	import Seo from "$lib/components/SEO.svelte";
 	import TextHeader from "$lib/components/TextHeader.svelte";

@@ -5,6 +5,7 @@
 	import Seo from "$lib/components/SEO.svelte";
 	import BuildTable from "$lib/components/buildtable/BuildTable.svelte";
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
+	import type { BuildTableFilter } from "$lib/types/BuildTableFilters.js";
 
 	let { data } = $props();
 
@@ -19,6 +20,20 @@
 	}
 
 	let author = $derived(data.viewModel.build.user);
+
+	let similarBuildsFilter: BuildTableFilter = $derived({
+		userId: author.id,
+		careerId: build.careerId,
+		limit: 3,
+		excludeBuildIds: [build.id],
+	});
+
+	let moreBuildsFilter: BuildTableFilter = $derived({
+		careerId: build.careerId,
+		limit: 3,
+		excludeBuildIds: [build.id],
+		excludeAuthorIds: [author.id],
+	});
 </script>
 
 <Seo title={data.viewModel.title} description={data.viewModel.description} image={`/images/careers/${build.career.id}/portrait.png`}></Seo>
@@ -38,13 +53,8 @@
 		<BuildViewer {build} patchNumber={data.viewModel.patchNumber}></BuildViewer>
 	</div>
 	<div class="build-side-container">
-		<BuildTable
-			filter={{ userId: author.id, careerId: build.careerId, limit: 3 }}
-			title={`Similar Builds by ${build.user?.name}`}
-			class="!grid-cols-1"
-		></BuildTable>
-		<BuildTable filter={{ careerId: build.careerId, limit: 3 }} title={`More ${build.career.name} Builds`} class="!grid-cols-1"
-		></BuildTable>
+		<BuildTable filter={similarBuildsFilter} title={`Similar Builds by ${build.user?.name}`} class="!grid-cols-1"></BuildTable>
+		<BuildTable filter={moreBuildsFilter} title={`More ${build.career.name} Builds`} class="!grid-cols-1"></BuildTable>
 	</div>
 </div>
 

@@ -29,7 +29,7 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@Column("varchar")
 	name!: string;
 
-	@Column("varchar")
+	@Column("varchar", { nullable: true })
 	description!: string;
 
 	@Column("number", { nullable: true })
@@ -123,7 +123,7 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@JoinTable()
 	roles!: BuildRole[];
 
-	@Column("varchar", { array: true })
+	@Column("varchar", { array: true, nullable: true })
 	videos!: string[];
 
 	@Column({
@@ -167,14 +167,14 @@ export interface ICareerBuild {
 	talent4?: ICareerTalent;
 	talent5?: ICareerTalent;
 	talent6?: ICareerTalent;
-	difficulty?: IDifficulty;
-	difficultyModifier?: IDifficultyModifier;
+	difficulty?: IDifficulty | null;
+	difficultyModifier?: IDifficultyModifier | null;
 	deathwish?: boolean;
-	mission?: IMission;
-	potion?: IPotion;
-	book?: IBookSetting;
-	twitch?: ITwitchSetting;
-	roles?: IBuildRole[];
+	mission?: IMission | null;
+	potion?: IPotion | null;
+	book?: IBookSetting | null;
+	twitch?: ITwitchSetting | null;
+	roles?: IBuildRole[] | null;
 	videos?: string[];
 	pageView?: IPageViewsCareerBuild;
 	necklace: INecklaceBuild;

@@ -15,6 +15,8 @@
 	};
 
 	const { build, patchNumber }: Props = $props();
+
+	let hasBuildDescription = $derived.by(() => build.description && build.description.trim().length > 0);
 </script>
 
 <div class="build-viewer top-left-shadow">
@@ -29,10 +31,8 @@
 		<BuildSummary class="px-5" {build}></BuildSummary>
 		<BuildOptionsViewer class="px-5" {build}></BuildOptionsViewer>
 	</div>
-	{#if build.description}
-		<div class="build-description-container border-09 py-5 px-8">
-			<BuildGuideView {build}></BuildGuideView>
-		</div>
+	{#if hasBuildDescription}
+		<BuildGuideView {build}></BuildGuideView>
 	{/if}
 	<div class="build-talents-container">
 		<CareerTalents
@@ -61,11 +61,6 @@
 				rgba(42, 42, 42, 0.10980392156862745)
 			),
 			url("/images/backgrounds/background14.webp");
-	}
-	.build-description-container {
-		background: linear-gradient(180deg, rgba(43, 18, 18, 0.2784313725490196) 35%, rgba(0, 0, 0, 0.30196078431372547));
-		-webkit-backdrop-filter: blur(10px);
-		backdrop-filter: blur(10px);
 	}
 	.summary-container {
 		display: flex;

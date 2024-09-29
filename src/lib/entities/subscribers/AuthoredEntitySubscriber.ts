@@ -47,13 +47,6 @@ export class AuthoredEntitySubscriber implements EntitySubscriberInterface<Autho
 		if (!session || !session.user) {
 			throw new Error(`You must be authenticated to save items!`);
 		}
-
-		const authUserId = session.user.id;
-
-		// Check if the authenticated user is the same as the user who created the entity.
-		if (!authUserId || authUserId !== event.entity.user.id) {
-			throw new Error(`The authenticated user does not match the author of the build being saved.`);
-		}
 	}
 
 	/**

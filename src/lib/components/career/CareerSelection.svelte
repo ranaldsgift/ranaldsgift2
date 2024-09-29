@@ -4,12 +4,17 @@
 	import ContainerTitle from "../ContainerTitle.svelte";
 	import type { IHero } from "$lib/entities/Hero";
 	import { browser } from "$app/environment";
+	import { CareersStore } from "$lib/stores/DataStores";
 
 	type Props = {
 		selectedCareer: ICareer | null;
 		careers?: ICareer[];
 		handler?: (career: ICareer) => void;
 	};
+
+	let { selectedCareer = $bindable(), careers, handler }: Props = $props();
+
+	let careersData = $state<ICareer[]>(careers ?? []);
 
 	let windowWidth = $state(browser ? window.innerWidth : 0);
 	let isMobile = $derived(windowWidth < 1800);
@@ -28,16 +33,15 @@
 		});
 	}
 
-	let { selectedCareer = $bindable(), careers, handler }: Props = $props();
 	let selectedHero = $state<IHero | null>(selectedCareer?.hero ?? null);
-	let heroes = $derived<IHero[]>([...new Map(careers?.map((c) => [c.hero.id, c.hero]) ?? []).values()]);
+	let heroes = $derived<IHero[]>([...new Map(careersData?.map((c) => [c.hero.id, c.hero]) ?? []).values()]);
 
 	let careersState = $derived.by<ICareer[]>(() => {
 		if (!selectedHero || !isMobile) {
-			return careers ?? [];
+			return careersData ?? [];
 		}
 
-		return careers?.filter((c) => c.hero.id === selectedHero?.id) ?? [];
+		return careersData?.filter((c) => c.hero.id === selectedHero?.id) ?? [];
 	});
 
 	let iconStyleState = $derived<"portrait-wide" | "portrait" | "icon">(isMobile ? "portrait-wide" : "portrait");
@@ -49,6 +53,17 @@
 			selectedHero = hero;
 		}
 	};
+
+	const loadCareers = async () => {
+		if (!careersData || careersData.length === 0) {
+			let { items } = await CareersStore.loadData();
+			careersData = items;
+		}
+	};
+
+	$effect(() => {
+		loadCareers();
+	});
 </script>
 
 <div class="career-selection-container top-left-shadow self-start">

@@ -206,9 +206,23 @@ export class LegacyDataHelper {
 		}
 	};
 
-	static getDaysSinceDate = (date: Date) => {
-		var millisecondsPerDay = 24 * 60 * 60 * 1000;
-		return Math.floor((Date.parse(new Date().toString()) - Date.parse(date.toString())) / millisecondsPerDay);
+	static getTimeSinceText = (date: Date) => {
+		const now = new Date();
+		const diff = now.getTime() - new Date(date).getTime();
+		const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+		if (days > 0) {
+			return `${days} day${days > 1 ? "s ago" : " ago"}`;
+		}
+		const hours = Math.floor(diff / (1000 * 60 * 60));
+		if (hours > 0) {
+			return `${hours} hour${hours > 1 ? "s ago" : " ago"}`;
+		}
+		const minutes = Math.floor(diff / (1000 * 60));
+		if (minutes > 0) {
+			return `${minutes} minute${minutes > 1 ? "s ago" : " ago"}`;
+		}
+		const seconds = Math.floor(diff / 1000);
+		return seconds > 0 ? `${seconds} second${seconds > 1 ? "s ago" : " ago"}` : "just now";
 	};
 
 	/*     static getCorrectedTalent = (careerId, tierNumber, talentNumber) => {

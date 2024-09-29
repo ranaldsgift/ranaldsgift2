@@ -48,46 +48,58 @@
 	const rows = handler.getRows();
 </script>
 
-<div class="top-left-shadow">
-	<ContainerTitle>{title ?? "Builds"}</ContainerTitle>
-	<div class="p-5 border-01 background-20 gap-5 grid desktop:grid-cols-2 desktop:grid-flow-row {className}">
-		{#await loadData()}
+{#await loadData()}
+	<div class="top-left-shadow">
+		<ContainerTitle>{title ?? "Builds"}</ContainerTitle>
+		<div class="p-5 border-01 background-20 gap-5 grid desktop:grid-cols-2 desktop:grid-flow-row {className}">
 			{#each { length: filter.limit ?? 5 } as _}
 				<BuildTableRowSkeleton></BuildTableRowSkeleton>
 			{/each}
-		{:then}
-			{#each $rows as row}
-				<BuildTableRow build={row}></BuildTableRow>
-			{/each}
-		{/await}
+		</div>
 	</div>
-	<div class="flex justify-between">
-		{#if filter.offset != null && filter.offset !== undefined && filter.offset > 0}
-			<button
-				class="pagination-button flex-1"
-				onclick={() => {
-					if (filter.limit != null && filter.offset != null) {
-						filter.offset = Math.max(0, --filter.offset);
-					}
-				}}
-			>
-				<ContainerTitle>Previous</ContainerTitle>
-			</button>
-		{/if}
-		{#if filter.offset != null && filter.limit != null && recordCount >= filter.limit * (filter.offset + 1)}
-			<button
-				class="pagination-button flex-1"
-				onclick={() => {
-					if (filter.limit != null && filter.limit !== undefined && filter.offset != null && filter.offset !== undefined) {
-						filter.offset++;
-					}
-				}}
-			>
-				<ContainerTitle>Next</ContainerTitle>
-			</button>
-		{/if}
-	</div>
-</div>
+{:then}
+	{#if $rows.length > 0}
+		<div class="top-left-shadow">
+			<ContainerTitle>{title ?? "Builds"}</ContainerTitle>
+			<div class="p-5 border-01 background-20 gap-5 grid desktop:grid-cols-2 desktop:grid-flow-row {className}">
+				{#each $rows as row}
+					<BuildTableRow build={row}></BuildTableRow>
+				{/each}
+			</div>
+			<div class="flex justify-between">
+				{#if filter.offset != null && filter.offset !== undefined && filter.offset > 0}
+					<button
+						class="pagination-button flex-1"
+						onclick={() => {
+							if (filter.limit != null && filter.offset != null) {
+								filter.offset = Math.max(0, --filter.offset);
+							}
+						}}
+					>
+						<ContainerTitle>Previous</ContainerTitle>
+					</button>
+				{/if}
+				{#if filter.offset != null && filter.limit != null && recordCount >= filter.limit * (filter.offset + 1)}
+					<button
+						class="pagination-button flex-1"
+						onclick={() => {
+							if (
+								filter.limit != null &&
+								filter.limit !== undefined &&
+								filter.offset != null &&
+								filter.offset !== undefined
+							) {
+								filter.offset++;
+							}
+						}}
+					>
+						<ContainerTitle>Next</ContainerTitle>
+					</button>
+				{/if}
+			</div>
+		</div>
+	{/if}
+{/await}
 
 <style>
 	.build-list-item-skeleton {
