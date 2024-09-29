@@ -83,26 +83,24 @@
 		onmouseleave={() => (isMouseOver = false)}
 	>
 		<div class="event-content">
-			<div class="event-name-container">
-				{#if !dismissedEvents.includes(events[currentEventIndex].id)}
-					{#key currentEventIndex}
-						<button
-							class="event-button"
-							onclick={() => handleEventClick(events[currentEventIndex].id)}
-							in:fade={{ duration: 300 }}
-							out:fade={{ duration: 300 }}
+			{#if !dismissedEvents.includes(events[currentEventIndex].id)}
+				{#key currentEventIndex}
+					<button
+						class="event-button"
+						onclick={() => handleEventClick(events[currentEventIndex].id)}
+						in:fade={{ duration: 300 }}
+						out:fade={{ duration: 300 }}
+					>
+						<span class="text-white"
+							>{events[currentEventIndex].startDate.getTime() > Date.now() ? "Ongoing" : "Upcoming"} Event:</span
 						>
-							<span class="text-white"
-								>{events[currentEventIndex].startDate.getTime() > Date.now() ? "Ongoing" : "Upcoming"} Event:</span
-							>
-							<span>{events[currentEventIndex].name}</span>
-							<span class="event-dates">
-								{`-- ${formattedEventDate}`}
-							</span>
-						</button>
-					{/key}
-				{/if}
-			</div>
+						<span>{events[currentEventIndex].name}</span>
+						<span class="event-dates">
+							{`-- ${formattedEventDate}`}
+						</span>
+					</button>
+				{/key}
+			{/if}
 			<div class="action-buttons">
 				<button class="dismiss-button" onclick={() => dismissEvent(events[currentEventIndex].id)} aria-label="Dismiss event">
 					✕
@@ -115,13 +113,14 @@
 <style>
 	.event-banner {
 		position: fixed;
-		bottom: -4px;
-		left: 50px;
-		right: 50px;
+		bottom: -5px;
 		margin: 0 auto;
-		padding: 10px;
+		padding: 10px 20px;
 		z-index: 1000000;
-		height: 60px;
+		font-size: 1.2rem;
+		color: #30e158;
+		left: 50%;
+		transform: translateX(-50%);
 	}
 
 	.event-content {
@@ -137,24 +136,17 @@
 		justify-content: flex-start;
 		overflow: hidden;
 		justify-content: center;
-		font-size: 1.2rem;
-		color: #928962;
-		color: #30e158;
 	}
 
 	.event-button {
-		white-space: nowrap;
-		position: absolute;
-		text-align: center;
-		margin: 0 auto;
-		top: 50%;
-		transform: translateY(-50%);
+		text-align: left;
 		background: none;
 		border: none;
 		cursor: pointer;
 		font-size: inherit;
 		color: inherit;
-		padding: 0;
+		padding: 0 40px 0 0;
+		margin: 0 auto;
 	}
 
 	.event-dates {
