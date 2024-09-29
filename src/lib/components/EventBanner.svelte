@@ -130,6 +130,10 @@
 		margin: 0 auto;
 	}
 
+	.event-content button:nth-child(n + 2) {
+		display: none;
+	}
+
 	.event-name-container {
 		flex: 1;
 		display: flex;
