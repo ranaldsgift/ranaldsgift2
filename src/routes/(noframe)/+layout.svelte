@@ -24,11 +24,11 @@ import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 </div>
 
 <style>
-    .page-container {
+  .page-container {
 		position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: start;
+    display: flex;
+    justify-content: center;
+    align-items: start;
 		border-radius: 8px;
 		margin: 0 auto;
 		background: none;
@@ -59,6 +59,15 @@ import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 		position: relative;
 		top: 0;
 		color: #c15b24;
+		letter-spacing: 5px;
+		text-shadow: 1px 1px #000;
+	}
+	.page-title-label {
+		text-transform: uppercase;
+		position: relative;
+		top: 0;
+		color: #c15b24;
+		font-size: 3em;
 		letter-spacing: 5px;
 		text-shadow: 1px 1px #000;
 	}

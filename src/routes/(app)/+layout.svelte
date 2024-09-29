@@ -15,6 +15,7 @@
 	<div class="root-container border-06 p-10 rounded-[8px]">
 	</div>
 </div>
+
 <div class="page-container desktop:min-w-[900px]">
 	<div class="page">
 		{@render children()}

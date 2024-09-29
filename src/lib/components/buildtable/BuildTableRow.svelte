@@ -5,7 +5,7 @@
 	import BuildRating from "../build/BuildRating.svelte";
 	import WeaponIcon from "../inventory/WeaponIcon.svelte";
 	import TraitIcon from "../inventory/TraitIcon.svelte";
-import { browser } from '$app/environment';
+  import { browser } from '$app/environment';
 	
 	type Props = {
 		build: ICareerBuild;

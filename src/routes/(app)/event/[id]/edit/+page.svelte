@@ -57,7 +57,6 @@
 
 <div class="max-w-6xl mx-auto p-6 background-14 border-04 rounded shadow">
 	<h1 class="text-2xl font-bold mb-6">Edit Event</h1>
-
 	<form class="space-y-4">
 		<div>
 			<label for="name" class="block mb-1">Event Name:</label>
