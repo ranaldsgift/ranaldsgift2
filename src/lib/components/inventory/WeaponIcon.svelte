@@ -18,7 +18,7 @@
 	<div class="tooltip border-35">
 		<span class="name header-underline">{weapon.name}</span>
 		<span class="description">
-			{weapon.tooltips.map((tooltip) => tooltip.name).join(", ")}
+			{weapon && weapon.tooltips ? weapon.tooltips.map((tooltip) => tooltip.name).join(", ") : ""}
 		</span>
 	</div>
 </div>

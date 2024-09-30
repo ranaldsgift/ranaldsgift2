@@ -47,7 +47,24 @@ img.border-02::after {
     border-image-width: 15px;
     border-style: solid;
     border-image-repeat: repeat;
+    position: relative;
   }
+  .border-05::after {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    border-image: url('/images/borders/border-12.png');
+    border-image-slice: 30;
+    border-image-width: 30px;
+    border-style: solid;
+    border-image-repeat: repeat;
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
   .border-06 {
     border-image: url('/images/borders/border-06.png');
     border-image-slice: 120;

@@ -1,30 +1,32 @@
 <script lang="ts">
-	import Seo from "$lib/components/SEO.svelte";
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import BuildEditor from "$lib/components/build/BuildEditor.svelte";
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
+	import Seo from "$lib/components/SEO.svelte";
+	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
+	import type { ICareer } from "$lib/entities/career/Career.js";
+	import BuildHelper from "$lib/helpers/BuildHelper.js";
+	import CareerHelper from "$lib/helpers/CareerHelper.js";
+	import { getBuildCreatorPageState } from "$lib/state/BuildCreatorPageState.svelte.js";
+	import { getBuildEditorPageState } from "$lib/state/BuildEditorPageState.svelte.js";
 	import { error } from "@sveltejs/kit";
 	import { toast } from "svelte-sonner";
-	import { getBuildEditorPageState } from "$lib/state/BuildEditorPageState.svelte.js";
-	import BuildHelper from "$lib/helpers/BuildHelper.js";
-	const { data } = $props();
 
-	const pageState = getBuildEditorPageState();
+	let { data } = $props();
 
-	if (!data.viewModel || !data.viewModel.build) {
-		error(404, "Heroes Page - Invalid ViewModel");
-	}
-
-	if (!pageState.selectedCareer) {
-		pageState.selectedCareer = data.viewModel.build.career;
-	}
+	let pageState = getBuildCreatorPageState();
 
 	if (!pageState.build) {
-		if (!data.viewModel.build) {
-			error(500, "Build not found");
-		}
-		pageState.build = data.viewModel.build;
+		pageState.build = data.build as ICareerBuild;
 	}
+
+	const careerSelectionHandler = (career: ICareer) => {
+		if (pageState.build?.career !== career) {
+			const build = CareerHelper.getNewCareerBuildForCareer(career);
+			const mergedBuildState = Object.assign({}, pageState.build, build);
+			pageState.build = mergedBuildState;
+		}
+	};
 
 	const saveBuild = async () => {
 		if (!pageState.build) {
@@ -34,7 +36,7 @@
 		let missingFields = BuildHelper.getMissingFields(pageState.build);
 
 		if (missingFields.length > 0) {
-			toast(`Build is missing the following fields: ${missingFields.join(", ")}. Please check your build and try again.`, {
+			toast(`Build is missing the following fields: ${missingFields.join(", ")}.`, {
 				position: "bottom-center",
 			});
 			return;
@@ -60,25 +62,18 @@
 			toast("Failed to save build. Please try again.", { position: "bottom-center" });
 		}
 	};
-
-	$inspect(pageState.build);
 </script>
 
+<Seo title="Build Creator" />
+
+<Breadcrumb links={[{ href: `/builds`, text: "Builds" }]}>Create</Breadcrumb>
+
+<PageButtonContainer>
+	<button class="button-02" onclick={saveBuild}>Save</button>
+	<a class="button-02" href={`/builds`}>Cancel</a>
+</PageButtonContainer>
+
 {#if pageState.build}
-	<Seo title={pageState.build.name} />
-
-	<Breadcrumb
-		links={[
-			{ href: `/builds`, text: "Builds" },
-			{ href: `/build/${pageState.build.id}`, text: pageState.build.name ?? "Your Build" },
-		]}>Edit</Breadcrumb
-	>
-
-	<PageButtonContainer>
-		<button class="button-02" onclick={saveBuild}>Save</button>
-		<a class="button-02" href={`/build/${pageState.build.id}`}>Cancel</a>
-	</PageButtonContainer>
-
 	<div class="edit-build-page">
 		<BuildEditor bind:build={pageState.build} bind:inventoryTab={pageState.inventoryTab.value} />
 	</div>

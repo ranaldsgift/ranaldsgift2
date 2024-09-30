@@ -3,16 +3,22 @@
 	import { onMount } from "svelte";
 	import { fade } from "svelte/transition";
 	import { goto } from "$app/navigation";
+	import { EventsStore } from "$lib/stores/DataStores";
 
-	type Props = {
-		events: IEvent[];
-	};
-
-	let { events = [] }: Props = $props();
 	let dismissedEvents = $state<number[]>([]);
 	let currentEventIndex = $state(0);
 	let isMouseOver = $state(false);
 	let isMounted = $state(false);
+
+	let events = $state<IEvent[]>([]);
+
+	$effect(() => {
+		const endAfterTime = new Date().toISOString().split("T")[0];
+
+		EventsStore.loadData(`isActive=true&endAfter=${endAfterTime}`).then((data) => {
+			events = data.items;
+		});
+	});
 
 	function cycleEvent(forced = false) {
 		if (!isMouseOver || forced) {
@@ -44,10 +50,14 @@
 
 		const currentEvent = events[currentEventIndex];
 		const { startDate, endDate } = currentEvent;
-		if (startDate.getTime() === endDate.getTime()) {
-			return `${formatDate(startDate)}`;
+
+		let start = new Date(startDate);
+		let end = new Date(endDate);
+
+		if (start.getTime() === end.getTime()) {
+			return `${formatDate(start)}`;
 		} else {
-			return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+			return `${formatDate(start)} - ${formatDate(end)}`;
 		}
 	});
 
@@ -92,7 +102,7 @@
 						out:fade={{ duration: 300 }}
 					>
 						<span class="text-white"
-							>{events[currentEventIndex].startDate.getTime() > Date.now() ? "Ongoing" : "Upcoming"} Event:</span
+							>{new Date(events[currentEventIndex].startDate).getTime() > Date.now() ? "Ongoing" : "Upcoming"} Event:</span
 						>
 						<span>{events[currentEventIndex].name}</span>
 						<span class="event-dates">

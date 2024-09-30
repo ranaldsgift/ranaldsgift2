@@ -4,6 +4,8 @@
 	import ContainerTitle from "../ContainerTitle.svelte";
 	import type { IHero } from "$lib/entities/Hero";
 	import { browser } from "$app/environment";
+	import { CareersStore } from "$lib/stores/DataStores";
+	import { getWindowState } from "$lib/state/WindowState.svelte";
 
 	type Props = {
 		selectedCareer: ICareer | null;
@@ -11,36 +13,24 @@
 		handler?: (career: ICareer) => void;
 	};
 
-	let windowWidth = $state(browser ? window.innerWidth : 0);
-	let isMobile = $derived(windowWidth < 1800);
-
-	if (browser) {
-		$effect(() => {
-			const handleResize = () => {
-				windowWidth = window.innerWidth;
-			};
-
-			window.addEventListener("resize", handleResize);
-
-			return () => {
-				window.removeEventListener("resize", handleResize);
-			};
-		});
-	}
-
 	let { selectedCareer = $bindable(), careers, handler }: Props = $props();
+
+	let careersData = $state<ICareer[]>(careers ?? []);
+
+	const windowState = getWindowState();
+
 	let selectedHero = $state<IHero | null>(selectedCareer?.hero ?? null);
-	let heroes = $derived<IHero[]>([...new Map(careers?.map((c) => [c.hero.id, c.hero]) ?? []).values()]);
+	let heroes = $derived<IHero[]>([...new Map(careersData?.map((c) => [c.hero.id, c.hero]) ?? []).values()]);
 
 	let careersState = $derived.by<ICareer[]>(() => {
-		if (!selectedHero || !isMobile) {
-			return careers ?? [];
+		if (!selectedHero || !windowState.isMobile) {
+			return careersData ?? [];
 		}
 
-		return careers?.filter((c) => c.hero.id === selectedHero?.id) ?? [];
+		return careersData?.filter((c) => c.hero.id === selectedHero?.id) ?? [];
 	});
 
-	let iconStyleState = $derived<"portrait-wide" | "portrait" | "icon">(isMobile ? "portrait-wide" : "portrait");
+	let iconStyleState = $derived<"portrait-wide" | "portrait" | "icon">(windowState.isMobile ? "portrait-wide" : "portrait");
 
 	const handleHeroSelection = (hero: IHero) => {
 		if (selectedHero?.id === hero.id) {
@@ -49,6 +39,17 @@
 			selectedHero = hero;
 		}
 	};
+
+	const loadCareers = async () => {
+		if (!careersData || careersData.length === 0) {
+			let { items } = await CareersStore.loadData();
+			careersData = items;
+		}
+	};
+
+	$effect(() => {
+		loadCareers();
+	});
 </script>
 
 <div class="career-selection-container top-left-shadow self-start">

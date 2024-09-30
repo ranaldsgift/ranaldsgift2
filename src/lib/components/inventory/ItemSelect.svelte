@@ -30,9 +30,9 @@
 	<div class="divider-06"></div>
 	<div class="px-5 pb-5 flex flex-wrap justify-center gap-2">
 		{#each items as item, index}
-			<span class="inventory-item" onclick={() => selectHandler(item)} role="button" tabindex={index} onkeydown={keydownHandler}>
+			<button class="inventory-item" onclick={() => selectHandler(item)} tabindex={index} onkeydown={keydownHandler}>
 				<WeaponIcon weapon={item} class={selectedItem.id === item.id ? "selected" : ""}></WeaponIcon>
-			</span>
+			</button>
 		{/each}
 	</div>
 </div>

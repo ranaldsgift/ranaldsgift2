@@ -1,25 +1,102 @@
 <script lang="ts">
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
+	import { type InventoryTab } from "$lib/state/BuildEditorPageState.svelte";
+	import { error } from "@sveltejs/kit";
+	import CareerBuildSummaryContainer from "../career/CareerBuildSummaryContainer.svelte";
+	import CareerInventory from "../career/CareerInventory.svelte";
+	import CareerSelection from "../career/CareerSelection.svelte";
 	import CareerTalents from "../career/CareerTalents.svelte";
+	import ContainerTitle from "../ContainerTitle.svelte";
+	import BuildGuideEditor from "./BuildGuideEditor.svelte";
 	import BuildSummary from "./BuildSummary.svelte";
+	import BuildTalentSummary from "./BuildTalentSummary.svelte";
+	import BuildOptionsEditor from "./BuildOptionsEditor.svelte";
 
 	type Props = {
 		build: ICareerBuild;
+		inventoryTab: InventoryTab;
 	};
 
-	const { build }: Props = $props();
+	let { build = $bindable(), inventoryTab = $bindable() }: Props = $props();
+
+	if (!build) {
+		error(404, "Build not found");
+	}
 </script>
 
-<h1>{build.name}</h1>
-<p>{build.description}</p>
-<BuildSummary {build}></BuildSummary>
-<CareerTalents
-	careerId={build.career.id}
-	talents={build.career.talents}
-	talent1={build.talent1}
-	talent2={build.talent2}
-	talent3={build.talent3}
-	talent4={build.talent4}
-	talent5={build.talent5}
-	talent6={build.talent6}
-></CareerTalents>
+<div class="build-editor grid grid-cols-2 gap-5">
+	<CareerSelection bind:selectedCareer={build!.career}></CareerSelection>
+	<div class="career-container top-left-shadow">
+		<ContainerTitle>Summary</ContainerTitle>
+		<div class="build-overview-container border-01 pb-5">
+			<input type="text" bind:value={build.name} placeholder="Build Name" />
+			<input class="!text-[1.3rem] !text-[#f0d9af]" type="text" bind:value={build.summary} placeholder="A brief summary for your build" maxlength="120" />
+			<div class="summary-container px-5">
+				<CareerBuildSummaryContainer {build} career={build.career}></CareerBuildSummaryContainer>
+				<BuildTalentSummary {build}></BuildTalentSummary>
+			</div>
+			<div class="divider-03 h-[48px]"></div>
+			<BuildSummary class="px-5" {build}></BuildSummary>
+			<BuildOptionsEditor bind:build></BuildOptionsEditor>
+		</div>
+		<BuildGuideEditor bind:guide={build.description}></BuildGuideEditor>
+		<div class="build-talents-container">
+			<CareerTalents
+				careerId={build.career.id}
+				talents={build.career.talents}
+				bind:talent1={build.talent1}
+				bind:talent2={build.talent2}
+				bind:talent3={build.talent3}
+				bind:talent4={build.talent4}
+				bind:talent5={build.talent5}
+				bind:talent6={build.talent6}
+			></CareerTalents>
+		</div>
+	</div>
+	<div class="inventory-container top-left-shadow">
+		<CareerInventory bind:build bind:inventoryTab={inventoryTab}></CareerInventory>
+	</div>
+</div>
+
+<style>
+	.career-container {
+		background: linear-gradient(
+				270deg,
+				rgba(0, 0, 0, 0.8313725490196079),
+				rgba(0, 0, 0, 0.788235294117647) 20%,
+				rgba(42, 42, 42, 0.10980392156862745)
+			),
+			url("/images/backgrounds/background14.webp");
+	}
+	.summary-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 20px;
+		padding-top: 20px;
+	}
+
+	input {
+		border-bottom: 1px solid #f0d9af5e;
+		background: transparent;
+		width: 100%;
+		outline: none;
+		color: #c15b24;
+		font-size: 2rem;
+		padding: 0 10px;
+	}
+
+	.build-editor {
+		display: grid;
+		align-self: start;
+		gap: 20px;
+		grid-template-columns: 100% !important;
+		grid-template-areas: "careerSelection" "careerContainer" "careerInventory" !important;
+	}
+	@media (min-width: 1800px) {
+		.build-editor {
+			display: grid;
+			grid-template-columns: 1fr 980px 1fr !important;
+			grid-template-areas: "careerSelection careerContainer careerInventory" !important;
+		}
+	}
+</style>

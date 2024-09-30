@@ -12,7 +12,7 @@
 		if (!build.dateModified) {
 			return "";
 		}
-		return `${LegacyDataHelper.getDaysSinceDate(build.dateModified)} days ago`;
+		return `${LegacyDataHelper.getTimeSinceText(build.dateModified)}`;
 	});
 </script>
 

@@ -42,6 +42,7 @@
 		width: 100%;
 		height: calc(100vh - 47px);
 		overflow-y: auto;
+		overflow-x: hidden;
 		padding-bottom: 20px;
 	}
     .page-container {

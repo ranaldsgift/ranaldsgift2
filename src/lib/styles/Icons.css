@@ -68,23 +68,22 @@
 }
 
 .talent-lock-icon {
-    width: 76px;
-    height: 76px;
+    width: var(--size);
+    height: var(--size);
     display: block;
     position: relative;
+    background: url('/images/icons/talent-lock-icon.png');
+    background-size: contain;
+    font-size: var(--fontSize);
 }
 .talent-lock-icon::after {
     content: var(--talent-tier-level);
-}
-.talent-lock-icon::after {
     position: absolute;
-    height: 100%;
     width: 100%;
-    display: grid;
-    align-content: center;
     z-index: 99999999999;
     font-size: 150%;
     color: #c15b24;
-    margin-top: 6px;
     text-align: center;
+    top: calc(var(--size) / 2);
+    transform: translateY(-30%);
 }

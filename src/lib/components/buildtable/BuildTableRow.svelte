@@ -6,6 +6,7 @@
 	import WeaponIcon from "../inventory/WeaponIcon.svelte";
 	import TraitIcon from "../inventory/TraitIcon.svelte";
   import { browser } from '$app/environment';
+	import { getWindowState } from "$lib/state/WindowState.svelte";
 	
 	type Props = {
 		build: ICareerBuild;
@@ -13,22 +14,7 @@
 
 	const { build }: Props = $props();
 
-	let windowWidth = $state(browser ? window.innerWidth : 0);
-	let isMobile = $derived(windowWidth < 768);
-
-	if (browser) {
-		$effect(() => {
-			const handleResize = () => {
-				windowWidth = window.innerWidth;
-			};
-
-			window.addEventListener('resize', handleResize);
-
-			return () => {
-				window.removeEventListener('resize', handleResize);
-			};
-		});
-	}
+	const windowState = getWindowState();
 
 	if (!build.careerId) {
 		error(404, "Career Data for the build failed to load.");
@@ -38,7 +24,7 @@
 <div class="build-list-item-container">
 	<a class="link-overlay" href={`/build/${build.id}`} data-sveltekit-preload-data="tap">&nbsp;</a>
 	<div class="build-list-item desktop:h-full" data-career={build.careerId} data-build={build.id}>
-		<div class="career-portrait border-04 mobile:w-[100px] mobile:h-[120px]" style="background: {isMobile ? `url('/images/careers/${build.careerId}/portrait-wide.png') no-repeat right / contain, url('/images/backgrounds/background29.png')` : `url('/images/careers/${build.careerId}/portrait.png')`}"></div>
+		<div class="career-portrait border-04 mobile:w-[100px] mobile:h-[120px]" style="background: {windowState.isMobile ? `url('/images/careers/${build.careerId}/portrait-wide.png') no-repeat right / contain, url('/images/backgrounds/background29.png')` : `url('/images/careers/${build.careerId}/portrait.png')`}"></div>
 		<div class="build-description-container">
 			<p class="build-name header-underline">{build.name}</p>
 			<p class="build-hero">{build.career.name}</p>

@@ -5,6 +5,80 @@ import type { IProperty } from "$lib/entities/Property";
 import type { ITrait } from "$lib/entities/Trait";
 
 class BuildHelper {
+	static isValid(build: ICareerBuild): boolean {
+		if (!build.career || !build.primaryWeapon || !build.secondaryWeapon || !build.necklace || !build.charm || !build.trinket) {
+			return false;
+		}
+
+		if (!build.talent1 || !build.talent2 || !build.talent3 || !build.talent4 || !build.talent5 || !build.talent6) {
+			return false;
+		}
+
+		if (!build.name) {
+			return false;
+		}
+
+		return true;
+	}
+
+	static getMissingFields(build: ICareerBuild): string[] {
+		const missingFields: string[] = [];
+
+		if (!build.career) {
+			missingFields.push("career");
+		}
+
+		if (!build.primaryWeapon) {
+			missingFields.push("primaryWeapon");
+		}
+
+		if (!build.secondaryWeapon) {
+			missingFields.push("secondaryWeapon");
+		}
+
+		if (!build.necklace) {
+			missingFields.push("necklace");
+		}
+
+		if (!build.charm) {
+			missingFields.push("charm");
+		}
+
+		if (!build.trinket) {
+			missingFields.push("trinket");
+		}
+
+		if (!build.talent1) {
+			missingFields.push("talent1");
+		}
+
+		if (!build.talent2) {
+			missingFields.push("talent2");
+		}
+
+		if (!build.talent3) {
+			missingFields.push("talent3");
+		}
+
+		if (!build.talent4) {
+			missingFields.push("talent4");
+		}
+
+		if (!build.talent5) {
+			missingFields.push("talent5");
+		}
+
+		if (!build.talent6) {
+			missingFields.push("talent6");
+		}
+
+		if (!build.name) {
+			missingFields.push("name");
+		}
+
+		return missingFields;
+	}
+
 	static getBuildFromSearchParams(
 		searchParams: URLSearchParams,
 		career: ICareer,

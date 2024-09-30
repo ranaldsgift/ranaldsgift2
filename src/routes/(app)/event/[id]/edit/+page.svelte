@@ -12,8 +12,11 @@
 		error(404, "Event not found");
 	}
 
-	let startDate = $state((new Date(data.event.startDate.getTime() - data.event.startDate.getTimezoneOffset() * 60000).toISOString()).slice(0, -1));
-	let endDate = $state((new Date(data.event.endDate.getTime() - data.event.endDate.getTimezoneOffset() * 60000).toISOString()).slice(0, -1));
+	const startDateTime = new Date(data.event.startDate);
+	const endDateTime = new Date(data.event.endDate);
+
+	let startDate = $state(new Date(startDateTime.getTime() - startDateTime.getTimezoneOffset() * 60000).toISOString().slice(0, -1));
+	let endDate = $state(new Date(endDateTime.getTime() - endDateTime.getTimezoneOffset() * 60000).toISOString().slice(0, -1));
 
 	async function saveEvent() {
 		if (!data.event) {
@@ -33,11 +36,12 @@
 			if (response.ok) {
 				toast("Event saved successfully!", { position: "bottom-center" });
 			} else {
-				throw new Error("Failed to save event");
+				const json = await response.json();
+				toast(json.error, { position: "bottom-center" });
 			}
 		} catch (error) {
 			console.error("Error saving event:", error);
-			alert("Failed to save event. Please try again.");
+			toast("Failed to save event. Please try again.", { position: "bottom-center" });
 		}
 	}
 </script>

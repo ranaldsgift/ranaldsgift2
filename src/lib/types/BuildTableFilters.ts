@@ -19,10 +19,14 @@ export type BuildTableFilter = {
 	patchId?: number | null;
 	missionId?: number | null;
 	search?: string | null;
-	sort?: keyof ICareerBuild | null;
+	sort?: keyof ICareerBuild | "random" | null;
 	asc?: boolean;
 	favoriteByUserId?: string | null;
 	ratedByUserId?: string | null;
 	offset?: number | null;
 	limit?: number | null;
+	excludeBuildIds?: number[] | null;
+	excludeAuthorIds?: string[] | null;
 };
+
+export type BuildTableFilters = keyof BuildTableFilter | "random";

@@ -1,9 +1,10 @@
 import type { IBookSetting } from "$lib/entities/BookSetting";
 import type { IBuildRole } from "$lib/entities/BuildRole";
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
-import { Career, type ICareer } from "$lib/entities/career/Career";
+import { type ICareer } from "$lib/entities/career/Career";
 import type { IDifficulty } from "$lib/entities/Difficulty";
 import type { IDifficultyModifier } from "$lib/entities/DifficultyModifier";
+import type { IEvent } from "$lib/entities/Event";
 import type { Hero } from "$lib/entities/Hero";
 import type { IMission } from "$lib/entities/Mission";
 import type { IPatch } from "$lib/entities/Patch";
@@ -29,3 +30,4 @@ export const PotionsStore = new AsyncStore<IPotion>("/api/potions", CACHE_DURATI
 export const BuildRolesStore = new AsyncStore<IBuildRole>("/api/buildroles", CACHE_DURATION);
 
 export const CareerBuildsStore = new AsyncStore<ICareerBuild>("/api/builds");
+export const EventsStore = new AsyncStore<IEvent>(`/api/events`, CACHE_DURATION);

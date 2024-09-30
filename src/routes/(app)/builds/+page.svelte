@@ -8,8 +8,11 @@
 	import Seo from "$lib/components/SEO.svelte";
 	import type { BuildTableFilter } from "$lib/types/BuildTableFilters";
 	import { getBuildsPageState } from "$lib/state/BuildsPageState.svelte.ts";
+	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
+	import { getUserState } from "$lib/state/UserState.svelte.ts";
 
 	let buildsPageState = getBuildsPageState();
+	let userState = getUserState();
 
 	if ($page.url.search) {
 		buildsPageState.filter = getBuildStateFromUrl();
@@ -75,6 +78,12 @@
 <Seo title="Builds Page" description="View builds created by the community."></Seo>
 
 <Breadcrumb links={[{ href: `/`, text: "Home" }]}>Builds</Breadcrumb>
+
+{#if userState.user}
+	<PageButtonContainer>
+		<a href="/build/create" class="button-02">Create</a>
+	</PageButtonContainer>
+{/if}
 
 <div class="page flex flex-col gap-2">
 	<BuildTableFilters bind:filter={buildsPageState.filter} bind:showFilters={buildsPageState.showFilters.value}></BuildTableFilters>

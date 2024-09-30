@@ -13,6 +13,9 @@
 	{#if build.difficulty}
 		<span>{build.difficulty.name}</span>
 	{/if}
+	{#if build.difficultyModifier}
+		<span>{build.difficultyModifier.name}</span>
+	{/if}
 	{#if build.twitch}
 		<span>{build.twitch.name}</span>
 	{/if}

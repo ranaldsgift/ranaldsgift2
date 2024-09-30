@@ -7,8 +7,6 @@ import { error, type RequestHandler } from "@sveltejs/kit";
 import { Brackets } from "typeorm";
 
 export const GET: RequestHandler = async ({ url, locals }) => {
-	console.log(url.searchParams);
-
 	let offset = Number(url.searchParams.get("offset"));
 	let limit = Number(url.searchParams.get("limit"));
 	let userId = url.searchParams.get("userId");
@@ -33,10 +31,17 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 	let asc = url.searchParams.get("asc") === "true";
 	let favoriteByUserId = url.searchParams.get("favoriteByUserId");
 	let ratedByUserId = url.searchParams.get("ratedByUserId");
-
+	let excludeBuildIds = url.searchParams.get("excludeBuildIds");
+	let excludeAuthorIds = url.searchParams.get("excludeAuthorIds");
 	let isDeleted = false;
 
-	if (locals.sessionUserProfile && (locals.sessionUserProfile.role === "Admin" || locals.sessionUserProfile.role === "Moderator")) {
+	// Allow users to see deleted builds if they are an admin or moderator or if they are the author of the build
+	if (
+		locals.sessionUserProfile &&
+		(locals.sessionUserProfile.role === "Admin" ||
+			locals.sessionUserProfile.role === "Moderator" ||
+			locals.sessionUserProfile.id === userId)
+	) {
 		isDeleted = url.searchParams.get("isDeleted") === "true";
 	}
 
@@ -227,10 +232,17 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 		}
 
 		if (sort) {
+			if (sort === "random") {
+				let randomSortKeys = ["dateModified", "dateCreated", "name", "description", "ratingsCount", "favoritesCount"];
+				sort = randomSortKeys[Math.floor(Math.random() * randomSortKeys.length)];
+			}
+
 			if (sort === "ratingsCount") {
 				query = query.orderBy("build_ratingscount", asc ? "ASC" : "DESC");
 			} else if (sort === "favoritesCount") {
 				query = query.orderBy("build_favoritescount", asc ? "ASC" : "DESC");
+			} else if (sort === "random") {
+				query = query.orderBy("RANDOM()");
 			} else {
 				query = query.orderBy(`build.${sort}`, asc ? "ASC" : "DESC");
 			}
@@ -242,6 +254,14 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 
 		if (favoriteByUserId) {
 			query = query.andWhere(`userFavorites.id = :userId`, { userId: favoriteByUserId });
+		}
+
+		if (excludeBuildIds) {
+			query = query.andWhere(`build.id NOT IN (:...excludeBuildIds)`, { excludeBuildIds: excludeBuildIds.split(",") });
+		}
+
+		if (excludeAuthorIds) {
+			query = query.andWhere(`build.user.id NOT IN (:...excludeAuthorIds)`, { excludeAuthorIds: excludeAuthorIds.split(",") });
 		}
 
 		if (isDeleted) {
@@ -264,6 +284,10 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 	let patches = await PatchCache.getAll();
 
 	for (let build of data.entities) {
+		if (!build.careerId) {
+			continue;
+		}
+
 		let buildPojo = build.toObject({ exposeUnsetFields: false });
 		buildPojo.career = await CareerCache.get(build.careerId!);
 		buildPojo.primaryWeapon.weapon = await WeaponCache.get(build.primaryWeapon.weaponId!);

@@ -14,9 +14,9 @@
 
 <div class="build-header-details-container">
 	<div class="header-layout">
-		<span class="build-header heading">{build.name}</span>
+		<span class="build-header heading mobile:text-[1.5rem] tablet:text-[2rem] text-[1.2rem]">{build.name}</span>
 		<BuildFavorite {build}></BuildFavorite>
-		<div class="ml-auto">
+		<div>
 			<BuildRating bind:build></BuildRating>
 		</div>
 	</div>
@@ -25,19 +25,22 @@
 		<span class="text-divider-02"></span>
 		<div><span>Patch&nbsp;&nbsp;</span><span class="patch-number">{patchNumber}</span></div>
 	</div>
+	{#if build.summary}
+		<div class="mobile:text-[1.5rem] text-[1.2rem] text-[#f0d9af] px-4 py-2 mobile:pb-0">{build.summary}</div>
+		<div class="divider-03 h-[28px] hidden mobile:block"></div>
+	{/if}
 </div>
 
 <style>
 	.header-layout {
-		display: flex;
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-columns: auto 1fr auto;
 		align-items: center;
 		gap: 10px;
 		padding: 5px 20px;
 	}
 	.build-header {
 		color: #c15b24;
-		font-size: 2rem;
 		text-transform: uppercase;
 		text-shadow: 1px 1px #000;
 	}

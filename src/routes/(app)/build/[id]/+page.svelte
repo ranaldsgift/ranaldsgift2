@@ -5,10 +5,11 @@
 	import Seo from "$lib/components/SEO.svelte";
 	import BuildTable from "$lib/components/buildtable/BuildTable.svelte";
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
+	import type { BuildTableFilter } from "$lib/types/BuildTableFilters.js";
 
 	let { data } = $props();
 
-	if (!data.viewModel || !data.viewModel.build) {
+	if (!data.viewModel || !data.viewModel.build || !data.viewModel.build.id) {
 		error(404, "Build Page - No Build Found");
 	}
 
@@ -19,6 +20,22 @@
 	}
 
 	let author = $derived(data.viewModel.build.user);
+
+	let similarBuildsFilter: BuildTableFilter = $derived({
+		userId: author.id,
+		careerId: build.careerId,
+		limit: 3,
+		excludeBuildIds: [data.viewModel.build.id],
+	});
+
+	let moreBuildsFilter: BuildTableFilter = $derived({
+		careerId: build.careerId,
+		limit: 3,
+		excludeBuildIds: [data.viewModel.build.id],
+		excludeAuthorIds: [author.id],
+	});
+
+	$effect(() => {});
 </script>
 
 <Seo title={data.viewModel.title} description={data.viewModel.description} image={`/images/careers/${build.career.id}/portrait.png`}></Seo>
@@ -33,18 +50,13 @@
 	{/if}
 </PageButtonContainer>
 
-<div class="view-build-page build-page grid grid-cols-1 desktop:grid-cols-[2fr_1fr]" data-readonly={true}>
+<div class="view-build-page build-page grid grid-cols-1" data-readonly={true}>
 	<div class="build-main-container">
 		<BuildViewer {build} patchNumber={data.viewModel.patchNumber}></BuildViewer>
 	</div>
 	<div class="build-side-container">
-		<BuildTable
-			filter={{ userId: author.id, careerId: build.careerId, limit: 3 }}
-			title={`Similar Builds by ${build.user?.name}`}
-			class="!grid-cols-1"
-		></BuildTable>
-		<BuildTable filter={{ careerId: build.careerId, limit: 3 }} title={`More ${build.career.name} Builds`} class="!grid-cols-1"
-		></BuildTable>
+		<BuildTable filter={similarBuildsFilter} title={`Similar Builds by ${build.user?.name}`} class="!grid-cols-1"></BuildTable>
+		<BuildTable filter={moreBuildsFilter} title={`More ${build.career.name} Builds`} class="!grid-cols-1"></BuildTable>
 	</div>
 </div>
 
