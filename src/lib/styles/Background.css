@@ -110,6 +110,11 @@
 .background-39 {
   background: url('/images/backgrounds/background39.png')
 }
+.glass {
+  background: linear-gradient(315deg, #ffffff1c, transparent);
+  -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
 
 .label-01 {
   background: url('/images/labels/label-01.png');
@@ -255,6 +260,9 @@
   }
   .background-42 {
     background: url('/images/backgrounds/background-42.png')
+  }
+  .background-43 {
+    background: url('/images/backgrounds/background-43.png')
   }
   .ranalds-finger {
     background: url('/images/icons/ranaldsfinger.png');

@@ -1,13 +1,33 @@
 <script lang="ts">
+	import { enhance } from "$app/forms";
+	import { page } from "$app/stores";
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import BuildTable from "$lib/components/buildtable/BuildTable.svelte";
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import Seo from "$lib/components/SEO.svelte";
+	import { getUserState } from "$lib/state/UserState.svelte.js";
+	import type { SubmitFunction } from "@sveltejs/kit";
+	import { toast } from "svelte-sonner";
 
 	const { data } = $props();
 
+	let userState = getUserState();
+
 	let favoriteFilter = $state({ favoriteByUserId: data.userData.id, limit: 3, offset: 0 });
 	let ratedFilter = $state({ ratedByUserId: data.userData.id, limit: 3, offset: 0 });
+
+	const logoutHandler: SubmitFunction = async () => {
+		return async ({ result, update }) => {
+			const { error } = await $page.data.supabase.auth.signOut();
+
+			if (!error) {
+				userState.reset();
+				toast("You have been logged out.", {
+					position: "bottom-center",
+				});
+			}
+		};
+	};
 </script>
 
 <Seo
@@ -20,6 +40,9 @@
 {#if data.sessionUser?.id === data.userData.id}
 	<PageButtonContainer>
 		<a class="button-02" href={`/user/${data.userData.id}/edit`}>Edit</a>
+		<form action="/api/user?/logout" method="POST" use:enhance={logoutHandler}>
+			<button type="submit" class="button-02">Logout</button>
+		</form>
 	</PageButtonContainer>
 {/if}
 

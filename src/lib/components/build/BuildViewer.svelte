@@ -23,7 +23,7 @@
 	<ContainerTitle>Summary</ContainerTitle>
 	<div class="build-overview-container border-01 pb-5">
 		<BuildHeader {build} {patchNumber}></BuildHeader>
-		<div class="summary-container px-5">
+		<div class="summary-container px-5 mt-0 mobile:mt-[20px] flex-col desktop:flex-row">
 			<CareerBuildSummaryContainer {build} career={build.career}></CareerBuildSummaryContainer>
 			<BuildTalentSummary {build}></BuildTalentSummary>
 		</div>
@@ -66,6 +66,5 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 20px;
-		margin-top: 20px;
 	}
 </style>

@@ -30,6 +30,7 @@
 		<ContainerTitle>Summary</ContainerTitle>
 		<div class="build-overview-container border-01 pb-5">
 			<input type="text" bind:value={build.name} placeholder="Build Name" />
+			<input class="!text-[1.3rem] !text-[#f0d9af]" type="text" bind:value={build.summary} placeholder="A brief summary for your build" maxlength="120" />
 			<div class="summary-container px-5">
 				<CareerBuildSummaryContainer {build} career={build.career}></CareerBuildSummaryContainer>
 				<BuildTalentSummary {build}></BuildTalentSummary>

@@ -30,6 +30,9 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	name!: string;
 
 	@Column("varchar", { nullable: true })
+	summary!: string;
+
+	@Column("varchar", { nullable: true })
 	description!: string;
 
 	@Column("number", { nullable: true })
@@ -155,6 +158,7 @@ export interface ICareerBuild {
 	user?: IUser;
 	firebaseId?: string;
 	name?: string;
+	summary?: string;
 	description?: string;
 	careerId?: number;
 	career: ICareer;

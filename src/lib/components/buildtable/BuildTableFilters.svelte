@@ -161,23 +161,23 @@
 	}
 
 	let hasActiveFilters = $derived.by(() => {
-		return (
-			filter.userId !== null ||
-			filter.heroId !== null ||
-			filter.careerId !== null ||
-			filter.weaponId !== null ||
-			filter.primaryWeaponId !== null ||
-			filter.secondaryWeaponId !== null ||
-			filter.charmTraitId !== null ||
-			filter.necklaceTraitId !== null ||
-			filter.trinketTraitId !== null ||
-			filter.difficultyId !== null ||
-			filter.difficultyModifierId !== null ||
-			filter.potionId !== null ||
-			(filter.search !== null && filter.search !== "") ||
-			filter.sort !== "dateModified" ||
-			filter.asc !== false
-		);
+		let active =
+			filter.userId != null ||
+			filter.heroId != null ||
+			filter.careerId != null ||
+			filter.weaponId != null ||
+			filter.primaryWeaponId != null ||
+			filter.secondaryWeaponId != null ||
+			filter.charmTraitId != null ||
+			filter.necklaceTraitId != null ||
+			filter.trinketTraitId != null ||
+			filter.difficultyId != null ||
+			filter.difficultyModifierId != null ||
+			filter.potionId != null ||
+			(filter.search != null && filter.search.length > 0) ||
+			filter.sort != "dateModified" ||
+			filter.asc != false;
+		return active;
 	});
 
 	function clearAllFilters() {

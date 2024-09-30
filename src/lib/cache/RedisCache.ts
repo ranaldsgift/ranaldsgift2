@@ -2,13 +2,14 @@ import type { IEntity } from "$lib/entities/BaseEntity";
 import type { FindOneOptions, ObjectLiteral, Repository } from "typeorm";
 import StaticDataCache from "./StaticDataCache";
 import redis from "$lib/server/redis";
-import { Mission } from "$lib/entities/Mission";
-import { DifficultyModifier } from "$lib/entities/DifficultyModifier";
-import { BuildRole } from "$lib/entities/BuildRole";
-import { TwitchSetting } from "$lib/entities/TwitchSetting";
-import { BookSetting } from "$lib/entities/BookSetting";
-import { Potion } from "$lib/entities/Potion";
-import { Difficulty } from "$lib/entities/Difficulty";
+import { Mission, type IMission } from "$lib/entities/Mission";
+import { DifficultyModifier, type IDifficultyModifier } from "$lib/entities/DifficultyModifier";
+import { BuildRole, type IBuildRole } from "$lib/entities/BuildRole";
+import { TwitchSetting, type ITwitchSetting } from "$lib/entities/TwitchSetting";
+import { BookSetting, type IBookSetting } from "$lib/entities/BookSetting";
+import { Potion, type IPotion } from "$lib/entities/Potion";
+import { Difficulty, type IDifficulty } from "$lib/entities/Difficulty";
+import { Event, type IEvent } from "$lib/entities/Event";
 
 class RedisCache<TEntity extends ObjectLiteral, TInterface extends IEntity> {
 	private instance: StaticDataCache<TInterface> | null = null;
@@ -67,10 +68,11 @@ class RedisCache<TEntity extends ObjectLiteral, TInterface extends IEntity> {
 	}
 }
 
-export const MissionCache = new RedisCache(Mission, "missions");
-export const DifficultyCache = new RedisCache(Difficulty, "difficulties");
-export const DifficultyModifierCache = new RedisCache(DifficultyModifier, "difficulty-modifiers");
-export const PotionCache = new RedisCache(Potion, "potions");
-export const BookSettingCache = new RedisCache(BookSetting, "book-settings");
-export const TwitchSettingCache = new RedisCache(TwitchSetting, "twitch-settings");
-export const BuildRoleCache = new RedisCache(BuildRole, "build-roles");
+export const MissionCache = new RedisCache<Mission, IMission>(Mission, "missions");
+export const DifficultyCache = new RedisCache<Difficulty, IDifficulty>(Difficulty, "difficulties");
+export const DifficultyModifierCache = new RedisCache<DifficultyModifier, IDifficultyModifier>(DifficultyModifier, "difficulty-modifiers");
+export const PotionCache = new RedisCache<Potion, IPotion>(Potion, "potions");
+export const BookSettingCache = new RedisCache<BookSetting, IBookSetting>(BookSetting, "book-settings");
+export const TwitchSettingCache = new RedisCache<TwitchSetting, ITwitchSetting>(TwitchSetting, "twitch-settings");
+export const BuildRoleCache = new RedisCache<BuildRole, IBuildRole>(BuildRole, "build-roles");
+export const EventCache = new RedisCache<Event, IEvent>(Event, "events");

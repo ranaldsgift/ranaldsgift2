@@ -17,17 +17,19 @@ export class AsyncStore<TModel> {
 	 * @param cacheDuration In milliseconds. Default is 60 seconds.
 	 * @returns
 	 */
-	loadData(queryString?: string, cacheDuration?: number): Promise<{ items: TModel[]; count: number }> {
+	loadData(queryString?: string, cacheDuration?: number, useLocalStorage: boolean = true): Promise<{ items: TModel[]; count: number }> {
 		const apiQueryString = `${this.apiUrl}?${queryString}`;
 		let duration = cacheDuration ?? this.cacheDuration;
 
 		// Check localStorage first
 		const localStorageKey = `asyncStore_${apiQueryString}`;
 		const localStorageData = localStorage.getItem(localStorageKey);
-		if (localStorageData) {
-			const { expires, data } = JSON.parse(localStorageData);
-			if (expires > Date.now()) {
-				return Promise.resolve(data);
+		if (useLocalStorage) {
+			if (localStorageData) {
+				const { expires, data } = JSON.parse(localStorageData);
+				if (expires > Date.now()) {
+					return Promise.resolve(data);
+				}
 			}
 		}
 
@@ -40,16 +42,18 @@ export class AsyncStore<TModel> {
 			data = this.getData(apiQueryString);
 			this.cache.set(apiQueryString, { expires: Date.now() + duration, data });
 
-			// Store in localStorage
-			data.then((result) => {
-				localStorage.setItem(
-					localStorageKey,
-					JSON.stringify({
-						expires: Date.now() + duration,
-						data: result,
-					})
-				);
-			});
+			if (useLocalStorage) {
+				// Store in localStorage
+				data.then((result) => {
+					localStorage.setItem(
+						localStorageKey,
+						JSON.stringify({
+							expires: Date.now() + duration,
+							data: result,
+						})
+					);
+				});
+			}
 		}
 
 		if (!data) return Promise.resolve({ items: [], count: 0 });

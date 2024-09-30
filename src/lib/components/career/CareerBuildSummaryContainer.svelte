@@ -1,17 +1,18 @@
 <script lang="ts">
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 	import type { ICareer } from "$lib/entities/career/Career";
+	import { getWindowState } from "$lib/state/WindowState.svelte";
 	import CooldownBar from "./CooldownBar.svelte";
 	import HealthBar from "./HealthBar.svelte";
 
 	type Props = {
 		build: ICareerBuild;
 		career: ICareer;
-		health?: number;
-		cooldown?: number;
 	};
 
-	const { build, career, health: healthProp, cooldown: cooldownProp }: Props = $props();
+	const { build, career }: Props = $props();
+
+	const windowState = getWindowState();
 
 	let health = $derived.by(() => {
 		if (!build.necklace || (build.necklace.property1?.name !== "Health" && build.necklace.property2?.name !== "Health")) {
@@ -66,12 +67,15 @@
 </script>
 
 <div class="career-summary-container">
-	<div class="career-name-container">
+	<div class="career-name-container mobile:block hidden">
 		<p class="career-name-header header-gradient-underline">{career.name}</p>
 		<p class="career-name">{career.hero.name}</p>
 	</div>
-	<div class="career-portrait" style="background-image: url('/images/careers/{career.id}/portrait-alt.png')"></div>
-	<div class="career-attributes max-w-[400px]">
+	<div
+		class="career-portrait border-02"
+		style="--background: url('/images/careers/{career.id}/portrait-{windowState.isMobile ? 'wide' : 'alt'}.png')"
+	></div>
+	<div class="career-attributes max-w-[400px] mobile:block hidden">
 		<div class="health-container">
 			<p>Health</p>
 			<HealthBar {health}></HealthBar>
@@ -89,23 +93,17 @@
 		font-size: 1.5rem;
 	}
 	.career-summary-container {
-		grid-area: careerSummary;
-		display: grid;
-		grid-template-rows: auto 1fr;
-		grid-template-columns: 145px 1fr;
-		grid-row-gap: 10px;
-		grid-column-gap: 20px;
-		grid-template-areas: "careerPortrait careerName" "careerPortrait careerAttributes";
-		align-items: start;
-	}
-	.career-summary-container .career-portrait {
-		height: 175px;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
 	}
 	.career-portrait {
-		background-repeat: no-repeat;
-		background-position: center;
+		height: 74px;
+		background:
+			var(--background) center right / contain no-repeat,
+			url("/images/backgrounds/background29.png") top center / cover no-repeat;
+		width: 100%;
 		grid-area: careerPortrait;
-		background-size: contain;
 	}
 
 	.career-name-container {
@@ -120,5 +118,26 @@
 		text-align: left;
 		color: #c8c8c8;
 		font-size: 110%;
+	}
+	@media (min-width: 480px) {
+		.career-summary-container {
+			width: auto;
+			display: grid;
+			align-items: start;
+			grid-area: careerSummary;
+			grid-row-gap: 10px;
+			grid-column-gap: 20px;
+			grid-template-columns: 1fr;
+			grid-template-rows: 1fr;
+			grid-template-columns: 145px minmax(225px, 1fr);
+			grid-template-rows: auto 1fr;
+			grid-template-areas: "careerPortrait careerName" "careerPortrait careerAttributes";
+		}
+		.career-portrait {
+			height: 175px;
+			background-size: contain;
+			border: none;
+			background: var(--background) center right / contain no-repeat;
+		}
 	}
 </style>

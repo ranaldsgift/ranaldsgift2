@@ -13,6 +13,7 @@
 	import { initializeBuildsPageState } from "$lib/state/BuildsPageState.svelte.js";
 	import { initializeBuildEditorPageState } from "$lib/state/BuildEditorPageState.svelte.js";
 	import { initializeBuildCreatorPageState } from "$lib/state/BuildCreatorPageState.svelte.js";
+	import { initializeWindowState } from "$lib/state/WindowState.svelte.js";
 
 	let { data, children } = $props();
 
@@ -24,6 +25,7 @@
 	initializeBuildsPageState();
 	initializeBuildEditorPageState();
 	initializeBuildCreatorPageState();
+	initializeWindowState();
 
 	$effect(() => {
 		const { data: supabaseData } = supabase.auth.onAuthStateChange((_, newSession) => {
@@ -69,4 +71,4 @@
 	{@render children()}
 </div>
 
-<EventBanner events={data.events} />
+	<EventBanner />

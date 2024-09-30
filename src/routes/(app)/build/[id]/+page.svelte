@@ -9,7 +9,7 @@
 
 	let { data } = $props();
 
-	if (!data.viewModel || !data.viewModel.build) {
+	if (!data.viewModel || !data.viewModel.build || !data.viewModel.build.id) {
 		error(404, "Build Page - No Build Found");
 	}
 
@@ -25,15 +25,17 @@
 		userId: author.id,
 		careerId: build.careerId,
 		limit: 3,
-		excludeBuildIds: [build.id],
+		excludeBuildIds: [data.viewModel.build.id],
 	});
 
 	let moreBuildsFilter: BuildTableFilter = $derived({
 		careerId: build.careerId,
 		limit: 3,
-		excludeBuildIds: [build.id],
+		excludeBuildIds: [data.viewModel.build.id],
 		excludeAuthorIds: [author.id],
 	});
+
+	$effect(() => {});
 </script>
 
 <Seo title={data.viewModel.title} description={data.viewModel.description} image={`/images/careers/${build.career.id}/portrait.png`}></Seo>
@@ -48,7 +50,7 @@
 	{/if}
 </PageButtonContainer>
 
-<div class="view-build-page build-page grid grid-cols-1 desktop:grid-cols-[2fr_1fr]" data-readonly={true}>
+<div class="view-build-page build-page grid grid-cols-1" data-readonly={true}>
 	<div class="build-main-container">
 		<BuildViewer {build} patchNumber={data.viewModel.patchNumber}></BuildViewer>
 	</div>
