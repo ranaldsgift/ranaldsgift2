@@ -5,25 +5,136 @@
 
 <svelte:head><title>Holy Sigmar! - augs.tools</title></svelte:head>
 
-<Background />
-
-<div id="page" class="text-white flex flex-col mx-auto top-10 relative">
-	<span class="title">Ranald's Gift</span>
-	<span class="divider-20 h-[59px]"></span>
+<div id="page" class="text-white flex flex-col relative w-[100vw] h-[100vh] items-center bg-black z-[-1]">
+	<!-- 	<span class="divider-20 h-[59px]"></span>
 	<div class="error">
 		<h2 class="text-2xl mt-4">Holy Sigmar!</h2>
 		<p class="mb-4">{$page.status} - {$page.error?.message}</p>
 	</div>
-	<span class="divider-20 h-[59px] rotate-180"></span>
+	<span class="divider-20 h-[59px] rotate-180"></span> -->
+
+	<div class="relative w-[500px] max-w-[calc(100vw-40px)] mt-[140px] mobile:mt-[190px]">
+		<img src="/images/backgrounds/blood1.png" alt="Defeated" class="blood-1 absolute top-[-35%] left-[-22%] max-w-[160%] z-[-1]" />
+		<img src="/images/backgrounds/blood2.png" alt="Defeated" class="blood-2 absolute top-[20%] left-[20%] max-w-[40%] z-[-1]" />
+		<img src="/images/backgrounds/defeated.png" alt="Defeated" class="defeated-image" />
+		<span class="defeated-text absolute top-[-80px]" style="--fontSize: 4.5rem">Defeated</span>
+		<p class="error-message absolute" style="--fontSize: 2rem">{$page.status} - {$page.error?.message}</p>
+	</div>
+	<div class="blood-splatter-1"></div>
+	<div class="blood-splatter-2"></div>
 </div>
 
 <style>
-	#page {
-		min-width: 522px;
-		width: fit-content;
-		max-width: 1200px;
-		margin: 0 auto;
-		z-index: 1;
+	.defeated-text {
+		font-size: 4.5rem;
+		color: red;
+		text-transform: uppercase;
+		text-shadow: 1px 1px #000;
+		left: 50%;
+		transform: translateX(-50%);
+		animation-name: zoomOutAndFadeInText;
+		animation-duration: 1.8s;
+	}
+	.error-message {
+		font-size: 2rem;
+		bottom: -70px;
+		left: 50%;
+		transform: translateX(-50%);
+		animation-name: errorFade;
+		animation-duration: 1.3s;
+	}
+	.blood-1 {
+		animation-name: reveal;
+		animation-duration: 1s;
+	}
+	.blood-2 {
+		animation-name: revealTopToBottom;
+		animation-duration: 3s;
+	}
+	.defeated-image {
+		animation-name: zoomOutAndFadeIn;
+		animation-duration: 1.3s;
+	}
+	@keyframes errorFade {
+		0% {
+			opacity: 0;
+		}
+		50% {
+			opacity: 0;
+			font-size: calc(var(--fontSize) + 5px);
+		}
+		80% {
+		}
+		95% {
+			font-size: var(--fontSize);
+			opacity: 1;
+		}
+		100% {
+			font-size: var(--fontSize);
+			opacity: 1;
+		}
+	}
+
+	@keyframes zoomOutAndFadeInText {
+		0% {
+			opacity: 0;
+		}
+		80% {
+			font-size: calc(var(--fontSize) + 10px);
+			opacity: 0;
+		}
+		95% {
+			font-size: var(--fontSize);
+			opacity: 1;
+		}
+		100% {
+			font-size: var(--fontSize);
+			opacity: 1;
+		}
+	}
+
+	@keyframes zoomOutAndFadeIn {
+		0% {
+			transform: scale(4);
+			opacity: 0;
+		}
+		50% {
+			transform: scale(4);
+			opacity: 0;
+		}
+		95% {
+			transform: scale(0.99);
+			opacity: 1;
+		}
+		100% {
+			transform: scale(1);
+			opacity: 1;
+		}
+	}
+
+	@keyframes revealTopToBottom {
+		0% {
+			opacity: 0;
+			clip-path: inset(0 0 100% 0); /* Fully clipped */
+		}
+		20% {
+			opacity: 1;
+			clip-path: inset(0 0 100% 0); /* Fully clipped */
+		}
+		100% {
+			opacity: 1;
+			clip-path: inset(0); /* Fully revealed */
+		}
+	}
+
+	@keyframes reveal {
+		0% {
+			opacity: 1;
+			clip-path: inset(0 100% 100% 0); /* Fully clipped */
+		}
+		100% {
+			clip-path: inset(0); /* Fully revealed */
+		}
 	}
 	.error {
 		margin: 0 auto;

@@ -1,13 +1,10 @@
 <script lang="ts">
+	import { page } from "$app/stores";
 	import { getUserState } from "$lib/state/UserState.svelte";
 
-	type Props = {
-		clipPath?: boolean;
-	};
-
-	const { clipPath = false }: Props = $props();
-
 	const userState = getUserState();
+
+	let clipPathState = $derived($page.route.id?.includes("(app)"));
 </script>
 
 {#if userState.showVideo.value}
@@ -17,12 +14,12 @@
 		autoPlay={true}
 		loop={true}
 		poster="/images/backgrounds/home-frame.webp"
-		class="app-background fixed {clipPath ? 'clipped' : ''}"
+		class="app-background fixed {clipPathState ? 'clipped' : ''}"
 	>
 		<source src="/videos/backgrounds/home.mp4" type="video/mp4" />
 	</video>
 {:else}
-	<div class="app-background image fixed object-cover w-full h-full top-0 left-0 z-[-1] {clipPath ? 'clipped' : ''}"></div>
+	<div class="app-background image fixed object-cover w-full h-full top-0 left-0 z-[-1] {clipPathState ? 'clipped' : ''}"></div>
 {/if}
 
 <style>

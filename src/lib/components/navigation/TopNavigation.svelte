@@ -1,15 +1,6 @@
 <script lang="ts">
-	import { enhance } from "$app/forms";
 	import { page } from "$app/stores";
 	import { getUserState } from "$lib/state/UserState.svelte";
-	import type { SubmitFunction } from "@sveltejs/kit";
-	import { toast } from "svelte-sonner";
-
-	type Props = {
-		showAboutButton?: boolean;
-	};
-
-	const { showAboutButton = true }: Props = $props();
 
 	const userState = getUserState();
 
@@ -30,6 +21,8 @@
 			await response.json();
 		}
 	};
+
+	let isAppPath = $derived($page.route.id?.includes("(app)"));
 </script>
 
 <div class="top-navigation tablet:!bg-none tablet:!h-[45px]">
@@ -38,7 +31,7 @@
 	</a>
 	<!-- User icon -->
 	<div class="icon-container flex-end ml-auto mr-8 flex gap-4 relative items-center">
-		{#if showAboutButton}
+		{#if isAppPath}
 			<a href="/about" class="hidden tablet:block rg-icon mb-[-4px] hover:!no-underline">&nbsp;</a>
 		{/if}
 		<input

@@ -5,10 +5,6 @@
 	const { children } = $props();
 </script>
 
-<TopNavigation></TopNavigation>
-
-<Background clipPath={true}></Background>
-
 <div class="frame-container flex-auto w-full h-full hidden tablet:flex overflow-hidden pb-5">
 	<a class="page-title hover:!no-underline" href="/">Ranald's Gift</a>
 	<div class="page-title-background"></div>

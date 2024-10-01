@@ -12,10 +12,6 @@ import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 	<meta property="image" content={META_IMAGE_URL} />
 </svelte:head>
 
-<TopNavigation showAboutButton={false}></TopNavigation>
-
-<Background></Background>
-
 <div class="page-container desktop:min-w-[900px]">
 	<div class="page flex flex-col items-center">
 		<div class="page-title-label text-[2rem] tablet:text-[3rem]">Ranald's Gift</div>

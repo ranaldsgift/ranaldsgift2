@@ -14,6 +14,8 @@
 	import { initializeBuildEditorPageState } from "$lib/state/BuildEditorPageState.svelte.js";
 	import { initializeBuildCreatorPageState } from "$lib/state/BuildCreatorPageState.svelte.js";
 	import { initializeWindowState } from "$lib/state/WindowState.svelte.js";
+	import Background from "$lib/components/Background.svelte";
+	import TopNavigation from "$lib/components/navigation/TopNavigation.svelte";
 
 	let { data, children } = $props();
 
@@ -66,6 +68,10 @@
 </svelte:head>
 
 <Toaster />
+
+<TopNavigation></TopNavigation>
+
+<Background></Background>
 
 <div>
 	{@render children()}
