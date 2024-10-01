@@ -4,6 +4,7 @@
 	import ContentContainer from "$lib/components/ContentContainer.svelte";
 	import Seo from "$lib/components/SEO.svelte";
 	import TextHeader from "$lib/components/TextHeader.svelte";
+	import { ONSLAUGHT_SERIES_DISCORD } from "$lib/data/constants/constants";
 </script>
 
 <Seo
@@ -33,9 +34,9 @@
 				<a href="https://www.youtube.com/channel/UCqdpLLAFvlFEuNLoQC2Kqsw" target="_blank">FightTheTide YouTube channel</a>.
 				<br />
 				<br />
-				<ContentButton url="https://discord.gg/4mm6sCA4a" class="max-w-[400px] m-auto">
+				<ContentButton url={ONSLAUGHT_SERIES_DISCORD} class="max-w-[400px] m-auto">
 					For more information about the Onslaught Series, and to register for any of the events, visit the
-					<a href="https://discord.gg/4mm6sCAS4a" target="_blank" class="z-10 relative"> Onslaught Series Discord </a>
+					<a href={ONSLAUGHT_SERIES_DISCORD} target="_blank" class="z-10 relative">Onslaught Series Discord </a>
 					<img
 						src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg"
 						alt="Onslaught Series Discord"
@@ -57,20 +58,19 @@
 						complete a series of maps in an allotted time against other teams in the game's Adventure Mode.
 						<br />
 						<br />
-						While we do not place game experience limits on who can join, it is recommended that players have some level of Onslaught
+						There are no game experience limits on who can join, but it is recommended that players have some level of Onslaught
 						experience before participating. Pre-made teams are highly encouraged to register together.
 						<br />
 						<br />
-						We recognise that not all players are ready to compete on the highest difficulties that the modded realm has to offer.
-						As such, the tournaments are broken into four skill tiers and we encourage teams to self-sort themselves into their desired
-						skill level. At the end of the allotted time, the teams will be scored based on their performance following a scoring
-						system. For complete details about the Tournament Series, see the
-						<a href="https://docs.google.com/document/d/1_NtL67wkaRKmMkEezCxorH8Az54roAYBXb9WQFMUczc/edit">rules</a>.
+						Not all players are ready to compete on the highest difficulties that the modded realm has to offer. As such, the tournaments
+						are broken into four skill tiers, and teams are encouraged to self-sort into their desired skill level. At the end of
+						the allotted time, the teams will be scored based on their performance following a scoring system. For complete details
+						about the Tournament Series, see the rules.
 						<br />
 						<br />
-						Tournaments usually have prize pools that are typically awarded to the top team in each skill tier. The goal of the Tournament
-						Series is to reward skilled play and encourage teams to challenge themselves when they feel ready to take the next step.
-						The higher the tier, the higher the prize incentive.
+						Tournaments typically have prize pools that are awarded to the top team in each skill tier. The goal of the Tournament
+						Series is to reward skilled play and encourage teams to challenge themselves when ready to take the next step. The higher
+						the tier, the higher the prize incentive.
 					</p>
 				</ContentContainer>
 				<ContentContainer>
@@ -79,16 +79,17 @@
 					<TextHeader>Captain Series</TextHeader>
 					<p class="p-2">
 						The Onslaught Captain Series is a recurring learning event designed to provide players with an environment focused
-						on learning and helping people have a good introductory experience with modded difficulties.
+						on learning and offering a good introductory experience with modded difficulties.
 						<br />
 						<br />
-						Our goal is to help ease players who are new to the Deathwish and Onslaught mods into the modded community, and to help
-						provide a path for players of all experiences to progress to higher difficulties commonly played inside our portion of
-						the modded community.
+						The aim is to ease players who are new to the Deathwish and Onslaught mods into the modded community and provide a path
+						for players of all experience levels to progress to higher difficulties commonly played within this part of the modded
+						community.
 						<br />
 						<br />
-						We also want to help people feel comfortable in our community, and to provide a way for people to dip their toes into
-						the waters of modded difficulties to see if it's something they're interested in.
+						The series also seeks to create a welcoming environment, allowing participants to explore modded difficulties and determine
+						if it's something they are interested in. The Onslaught Captain Series is a recurring learning event designed to provide
+						players with an environment focused on learning and helping people have a good introductory experience with modded difficulties.
 					</p>
 				</ContentContainer>
 				<ContentContainer>
@@ -98,8 +99,8 @@
 					<div class="divider-03 w-full h-[20px] my-2"></div>
 					<TextHeader>Fun Runs</TextHeader>
 					<p class="p-2">
-						Fun Runs are a recurring event where the idea is to have players come together, meet others, form some teams, and
-						play modded Vermintide together in a fun and relaxed setting. It is not meant to be overly competitive.
+						Fun Runs are a recurring event where the idea is to have players come together, meet others, form teams, and play
+						modded Vermintide in a fun and relaxed setting. It is not meant to be overly competitive.
 						<br />
 						<br />
 						Fun Runs, to change things up a little, will always follow a unique theme that may involve specific game modifiers or

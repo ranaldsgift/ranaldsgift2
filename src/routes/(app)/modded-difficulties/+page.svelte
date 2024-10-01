@@ -40,20 +40,14 @@
 			</p>
 			<div class="mt-4">
 				<div class="flex gap-5 justify-center">
-					<a
-						class="text-[#30e158] uppercase"
-						href="https://steamcommunity.com/sharedfiles/filedetails/?id=2810038063"
-						target="_blank"
-					>
-						<ContentButton>
-							<span>Onslaught Series approved mods</span>
-							<img
-								src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/steam.svg"
-								alt="Youtube"
-								class="inline-block w-6 h-6 invert ml-2"
-							/>
-						</ContentButton>
-					</a>
+					<ContentButton url="https://steamcommunity.com/sharedfiles/filedetails/?id=2810038063">
+						<span>Onslaught Series approved mods</span>
+						<img
+							src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/steam.svg"
+							alt="Youtube"
+							class="inline-block w-6 h-6 invert ml-2"
+						/>
+					</ContentButton>
 				</div>
 			</div>
 		</ContentContainer>
@@ -85,8 +79,8 @@
 			<ContentContainer class="max-w-[672px] flex flex-col gap-5">
 				<p class="text-[#0096fb]">Cataclysm 3 (C3):</p>
 				<p>
-					The differences from regular Cataclysm is that the special cap has been increased and made consistent amongst all the
-					factions, additionally enemies have increased health with slightly more mass.
+					The differences from regular Cataclysm is that the maximum amount of specials has been increased (from 5) and made
+					consistent amongst all the factions, additionally enemies have increased health with slightly more mass.
 				</p>
 			</ContentContainer>
 			<div class="divider-10 h-[26px] !bg-contain my-2 desktop:hidden"></div>

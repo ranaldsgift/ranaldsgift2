@@ -5,6 +5,7 @@
 	import TextEditor from "$lib/components/quill/TextEditor.svelte";
 	import Seo from "$lib/components/SEO.svelte";
 	import TextHeader from "$lib/components/TextHeader.svelte";
+	import { DateHelper } from "$lib/helpers/DateHelper.js";
 	import { getUserState } from "$lib/state/UserState.svelte.js";
 	import { error } from "@sveltejs/kit";
 
@@ -49,8 +50,8 @@
 	<div class="divider-21 w-full h-[20px] mb-2"></div>
 	<div class="space-y-4">
 		<div class="grid justify-center">
-			<p><strong>Starts:</strong> {formattedStartDate}</p>
-			<p><strong>Ends:</strong> {formattedEndDate}</p>
+			<p><strong>Starts:</strong> {DateHelper.formatDateWithTimeZone(data.event.startDate)}</p>
+			<p><strong>Ends:</strong> {DateHelper.formatDateWithTimeZone(data.event.endDate)}</p>
 		</div>
 		<div>
 			<TextEditor readOnly={true} content={data.event.description!}></TextEditor>

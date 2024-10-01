@@ -45,10 +45,6 @@
 					url: "https://vermintide2.gamepedia.com/Vermintide_2_Wiki",
 				},
 				{
-					title: "Delete Your Console Logs. Save Space!",
-					url: "https://www.reddit.com/r/Vermintide/comments/ifoizm/reminder_vermintide_1_and_vermintide_2_never/",
-				},
-				{
 					title: "Breakpoint Calculator",
 					url: "https://www.reddit.com/r/Vermintide/comments/11dm2rg/revised_damage_and_breakpoint_spreadsheet_v1402/",
 				},
