@@ -6,3 +6,5 @@ export const SORT_ORDER_CAREER_IDS = [1, 2, 3, 16, 4, 5, 6, 17, 7, 8, 9, 18, 10,
 export const ROOT_PAGE_TITLE = "ranalds.gift | Holy Sigmar, bless this ravaged website";
 export const ROOT_PAGE_DESCRIPTION = "Your Resource for Vermintide 2 Builds, Mechanics and Gameplay Information";
 export const META_IMAGE_URL = "/meta_image.png";
+export const TALENT_LEVELS = [5, 10, 15, 20, 25, 30];
+export const ONSLAUGHT_SERIES_DISCORD = "https://discord.gg/MS4vWSQrEh";
