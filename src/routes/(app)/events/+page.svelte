@@ -74,6 +74,10 @@
 <style>
 .event-button {
 	text-decoration: none;
+	transition: box-shadow 0.1s ease-in-out;
+}
+.event-button:hover {	
+	box-shadow: 0 0 10px 2px #ffd700;
 }
 .event-button:hover h3 {
 	text-decoration: underline;
