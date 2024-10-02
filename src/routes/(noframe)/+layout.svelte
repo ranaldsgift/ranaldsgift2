@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Background from '$lib/components/Background.svelte';
-import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
+	import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 	import { META_IMAGE_URL, ROOT_PAGE_DESCRIPTION, ROOT_PAGE_TITLE } from '$lib/data/constants/constants';
 
 	const { children } = $props();
@@ -14,7 +14,7 @@ import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 
 <div class="page-container desktop:min-w-[900px]">
 	<div class="page flex flex-col items-center">
-		<div class="page-title-label text-[2rem] tablet:text-[3rem]">Ranald's Gift</div>
+		<a href="/" class="page-title-label text-[2rem] tablet:text-[3rem] hover:no-underline hover:glow">Ranald's Gift</a>
 		{@render children()}
 	</div>
 </div>
@@ -57,14 +57,9 @@ import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 		color: #c15b24;
 		letter-spacing: 5px;
 		text-shadow: 1px 1px #000;
+		transition: text-shadow 0.3s ease; /* Add transition for smooth effect */
 	}
-	.page-title-label {
-		text-transform: uppercase;
-		position: relative;
-		top: 0;
-		color: #c15b24;
-		font-size: 3em;
-		letter-spacing: 5px;
-		text-shadow: 1px 1px #000;
+	.page-title-label.hover\:glow:hover {
+		text-shadow: 0 0 10px #c15b24, 0 0 20px #c15b24; /* Glowing effect */
 	}
 </style>
