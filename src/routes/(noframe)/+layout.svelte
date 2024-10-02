@@ -22,20 +22,18 @@ import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 <style>
   .page-container {
 		position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: start;
+		display: flex;
+		justify-content: center;
+		align-items: start;
 		border-radius: 8px;
 		margin: 0 auto;
 		background: none;
-		height: 100vh;
+		height: calc(100vh - 45px);
 		width: 100vw;
 		overflow-y: auto;
 		overflow-x: hidden;
+		margin-top: 45px;
     }
-	.page {
-		padding-top: 47px;
-	}
 	@media (min-width: 768px) {
 		.page {
 			padding: 40px 20px;
@@ -48,6 +46,8 @@ import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
 		}
 		.page-container {
 			background: none;
+			margin-top: 0px;
+			height: 100vh;
 		}
 	}
 	.page-title-label {

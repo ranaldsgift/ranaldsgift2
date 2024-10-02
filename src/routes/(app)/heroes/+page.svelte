@@ -90,13 +90,13 @@
 		>
 	</PageButtonContainer>
 
-	<div class="page-layout">
+	<div class="page-layout gap-0 tablet:gap-5">
 		<CareerSelection bind:selectedCareer={pageState.selectedCareer} careers={viewModel.careers} handler={careerSelectionHandler}
 		></CareerSelection>
 		<CareerEditor bind:build={pageState.build} bind:inventoryTab={pageState.inventoryTab.value}></CareerEditor>
 	</div>
 {:else}
-	<div class="page-layout">
+	<div class="page-layout gap-0 tablet:gap-5">
 		<CareerSelection bind:selectedCareer={pageState.selectedCareer} careers={viewModel.careers} handler={careerSelectionHandler}
 		></CareerSelection>
 		<span>Initializing...</span>
@@ -107,7 +107,6 @@
 	.page-layout {
 		display: grid;
 		align-self: start;
-		gap: 20px;
 		grid-template-columns: 100% !important;
 		grid-template-areas: "careerSelection" "careerContainer" "careerInventory" !important;
 	}

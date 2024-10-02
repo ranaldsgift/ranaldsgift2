@@ -85,9 +85,11 @@
 	</PageButtonContainer>
 {/if}
 
-<div class="page flex flex-col gap-2">
-	<BuildTableFilters bind:filter={buildsPageState.filter} bind:showFilters={buildsPageState.showFilters.value}></BuildTableFilters>
-	<BuildTable bind:filter={buildsPageState.filter}></BuildTable>
+<div class="page flex flex-col gap-0">
+	<div class="top-left-shadow">
+		<BuildTableFilters bind:filter={buildsPageState.filter} bind:showFilters={buildsPageState.showFilters.value}></BuildTableFilters>
+		<BuildTable bind:filter={buildsPageState.filter}></BuildTable>
+	</div>
 </div>
 
 <style>

@@ -12,7 +12,7 @@
 	const { links, children }: Props = $props();
 </script>
 
-<div class="hidden tablet:flex fixed top-0 left-[120px] z-[100001] desktop:max-w-[calc(50%-460px)] whitespace-nowrap overflow-hidden">
+<div class="hidden tablet:flex fixed top-0 left-[70px] z-[100001] desktop:max-w-[calc(50%-460px)] whitespace-nowrap overflow-hidden">
 	{#each links as link}
 		<a href={link.href} class="text-[#fae031]">{link.text}</a>
 		<span class="px-2">/</span>

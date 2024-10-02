@@ -4,7 +4,7 @@
 	import "../lib/styles/Background.css";
 	import "../lib/styles/Dividers.css";
 	import "../lib/styles/Icons.css";
-	import { invalidateAll } from "$app/navigation";
+	import { afterNavigate, invalidateAll } from "$app/navigation";
 	import { setUserState } from "$lib/state/UserState.svelte.js";
 	import { initializeHeroesPageState } from "$lib/state/HeroesPageState.svelte.js";
 	import { META_IMAGE_URL, ROOT_PAGE_DESCRIPTION, ROOT_PAGE_TITLE } from "$lib/data/constants/constants.js";
@@ -16,6 +16,7 @@
 	import { initializeWindowState } from "$lib/state/WindowState.svelte.js";
 	import Background from "$lib/components/Background.svelte";
 	import TopNavigation from "$lib/components/navigation/TopNavigation.svelte";
+	import { previousPage } from "$lib/stores/PageStores.svelte.js";
 
 	let { data, children } = $props();
 
@@ -59,6 +60,10 @@
 			document.body.classList.remove('show-video');
 		}
 	});
+
+	afterNavigate(({from}) => {
+		previousPage.url = from?.url.pathname || previousPage.url;
+	}) 
 </script>
 
 <svelte:head>

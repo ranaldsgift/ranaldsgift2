@@ -13,7 +13,7 @@
 </div>
 
 <div class="page-container desktop:min-w-[900px]">
-	<div class="page">
+	<div class="page pb-0 mobile:pb-[20px]">
 		{@render children()}
 	</div>
 </div>
@@ -39,7 +39,6 @@
 		height: calc(100vh - 47px);
 		overflow-y: auto;
 		overflow-x: hidden;
-		padding-bottom: 20px;
 	}
     .page-container {
 		position: relative;

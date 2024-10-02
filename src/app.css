@@ -81,13 +81,30 @@ html, body {
     height: 100%;
     overflow: hidden;
 }
+
+::-webkit-scrollbar {
+  width: 3px;
+  background: black;
+}
+::-webkit-scrollbar-thumb {
+  background: #c15b24;
+}
+@media (min-width: 480px) {
 ::-webkit-scrollbar {
   width: 25px;
   background: url('/images/scrollers/scroll-15.png') repeat-y 2px;
 }
-
 ::-webkit-scrollbar-thumb {
     background: url('/images/scrollers/scroll-07.png') no-repeat top left, url('/images/scrollers/scroll-02.png') no-repeat bottom left, url('/images/scrollers/scroll-12.png') no-repeat center left / 25px calc(100% - 20px);
+}
+}
+
+select::-webkit-scrollbar {
+  width: 5px;
+  background-color: #5c5c5c;
+ }
+select::-webkit-scrollbar-thumb {
+    background: #30e158;
 }
 
 body {
