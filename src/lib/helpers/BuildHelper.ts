@@ -1,5 +1,6 @@
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 import type { ICareer } from "$lib/entities/career/Career";
+import type { ICareerTalent } from "$lib/entities/career/CareerTalent";
 import type { IPatch } from "$lib/entities/Patch";
 import type { IProperty } from "$lib/entities/Property";
 import type { ITrait } from "$lib/entities/Trait";
@@ -77,6 +78,17 @@ class BuildHelper {
 		}
 
 		return missingFields;
+	}
+
+	static getTalents(build: ICareerBuild): (ICareerTalent | null | undefined)[] {
+		return [build.talent1, build.talent2, build.talent3, build.talent4, build.talent5, build.talent6];
+	}
+
+	static isTalentSelected(talent: ICareerTalent | null | undefined, build: ICareerBuild): boolean {
+		if (!talent) {
+			return false;
+		}
+		return this.getTalents(build).filter((t) => t?.talentNumber === talent.talentNumber).length > 0;
 	}
 
 	static getBuildFromSearchParams(

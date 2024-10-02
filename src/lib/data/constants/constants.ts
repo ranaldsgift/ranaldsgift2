@@ -21,3 +21,6 @@ const TwitchBlessings = ["Enable Blessings", "Disables Item Blessings", "Disable
 export type TwitchBlessingType = (typeof TwitchBlessings)[number];
 export const TWITCH_WEEKLY_EVENT_DURATION = [100, 150, 200];
 export type TwitchWeeklyEventDurationType = (typeof TWITCH_WEEKLY_EVENT_DURATION)[number];
+
+export const TALENT_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+export type TalentNumberType = (typeof TALENT_NUMBERS)[number];

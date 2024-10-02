@@ -6,6 +6,7 @@ class WindowState {
 	isMobile = $derived(this.windowWidth <= 480);
 	isTablet = $derived(this.windowWidth > 480 && this.windowWidth <= 768);
 	isDesktop = $derived(this.windowWidth >= 768);
+	isWideScreen = $derived(this.windowWidth >= 1800);
 
 	constructor() {
 		if (browser) {

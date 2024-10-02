@@ -23,14 +23,14 @@
 	let heroes = $derived<IHero[]>([...new Map(careersData?.map((c) => [c.hero.id, c.hero]) ?? []).values()]);
 
 	let careersState = $derived.by<ICareer[]>(() => {
-		if (!selectedHero || !windowState.isMobile) {
+		if (!selectedHero || windowState.isWideScreen) {
 			return careersData ?? [];
 		}
 
 		return careersData?.filter((c) => c.hero.id === selectedHero?.id) ?? [];
 	});
 
-	let iconStyleState = $derived<"portrait-wide" | "portrait" | "icon">(windowState.isMobile ? "portrait-wide" : "portrait");
+	let iconStyleState = $derived<"portrait-wide" | "portrait" | "icon">(windowState.isWideScreen ? "portrait" : "portrait-wide");
 
 	const handleHeroSelection = (hero: IHero) => {
 		if (selectedHero?.id === hero.id) {

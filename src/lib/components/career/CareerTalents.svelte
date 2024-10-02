@@ -1,56 +1,42 @@
 <script lang="ts">
+	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 	import type { ICareerTalent } from "$lib/entities/career/CareerTalent";
+	import BuildHelper from "$lib/helpers/BuildHelper";
 	import CareerTalentIcon from "./CareerTalentIcon.svelte";
 
 	type Props = {
 		talents: ICareerTalent[];
-		careerId: number;
-		talent1?: ICareerTalent;
-		talent2?: ICareerTalent;
-		talent3?: ICareerTalent;
-		talent4?: ICareerTalent;
-		talent5?: ICareerTalent;
-		talent6?: ICareerTalent;
+		build: ICareerBuild;
 		readOnly?: boolean;
 	};
 
-	let {
-		talents,
-		careerId,
-		talent1 = $bindable(),
-		talent2 = $bindable(),
-		talent3 = $bindable(),
-		talent4 = $bindable(),
-		talent5 = $bindable(),
-		talent6 = $bindable(),
-		readOnly = false,
-	}: Props = $props();
+	let { talents, build = $bindable(), readOnly = false }: Props = $props();
 
+	let careerId = $derived(build.career.id);
 	let showDescriptions = $state(false);
 
 	let talentButtonHandler = (talent: ICareerTalent) => {
 		let tier = Math.ceil(talent.talentNumber / 3);
-		let talents = [talent1, talent2, talent3, talent4, talent5, talent6];
 
-		if (talents[tier - 1]?.talentNumber === talent.talentNumber) {
+		if (BuildHelper.isTalentSelected(talent, build)) {
 			switch (tier) {
 				case 1:
-					talent1 = undefined;
+					build.talent1 = undefined;
 					break;
 				case 2:
-					talent2 = undefined;
+					build.talent2 = undefined;
 					break;
 				case 3:
-					talent3 = undefined;
+					build.talent3 = undefined;
 					break;
 				case 4:
-					talent4 = undefined;
+					build.talent4 = undefined;
 					break;
 				case 5:
-					talent5 = undefined;
+					build.talent5 = undefined;
 					break;
 				case 6:
-					talent6 = undefined;
+					build.talent6 = undefined;
 					break;
 			}
 			return;
@@ -58,22 +44,22 @@
 
 		switch (tier) {
 			case 1:
-				talent1 = talent;
+				build.talent1 = talent;
 				break;
 			case 2:
-				talent2 = talent;
+				build.talent2 = talent;
 				break;
 			case 3:
-				talent3 = talent;
+				build.talent3 = talent;
 				break;
 			case 4:
-				talent4 = talent;
+				build.talent4 = talent;
 				break;
 			case 5:
-				talent5 = talent;
+				build.talent5 = talent;
 				break;
 			case 6:
-				talent6 = talent;
+				build.talent6 = talent;
 				break;
 		}
 	};
@@ -90,7 +76,7 @@
 					<button class="show-talent-descriptions" onclick={() => (showDescriptions = !showDescriptions)}>
 						{showDescriptions ? "Hide" : "Show"} Descriptions
 					</button>
-					{#each talents as talent}
+					{#each build.career.talents as talent}
 						{#if (talent.talentNumber - 1) % 3 === 0}
 							<span
 								class="talent-lock-icon justify-self-center"
@@ -98,16 +84,7 @@
                                 --talent-tier-level: '{Math.ceil(talent.talentNumber / 3) * 5}';"
 							></span>
 						{/if}
-						<div
-							class="talent-container {[talent1, talent2, talent3, talent4, talent5, talent6].filter(
-								(t) => t?.talentNumber === talent.talentNumber
-							).length > 0
-								? 'selected'
-								: [talent1, talent2, talent3, talent4, talent5, talent6][Math.ceil(talent.talentNumber / 3) - 1]
-											?.talentNumber === 0
-									? 'unselected'
-									: ''}"
-						>
+						<div class="talent-container {BuildHelper.isTalentSelected(talent, build) ? 'selected' : ''}">
 							<button
 								class="talent-button-wrapper"
 								onclick={() => {
