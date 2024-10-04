@@ -1,9 +1,9 @@
 <script lang="ts">
 	import "../app.css";
-	import "../lib/styles/Borders.css";
-	import "../lib/styles/Background.css";
-	import "../lib/styles/Dividers.css";
-	import "../lib/styles/Icons.css";
+	import "$lib/styles/Borders.css";
+	import "$lib/styles/Background.css";
+	import "$lib/styles/Dividers.css";
+	import "$lib/styles/Icons.css";
 	import { afterNavigate, invalidateAll } from "$app/navigation";
 	import { setUserState } from "$lib/state/UserState.svelte.js";
 	import { initializeHeroesPageState } from "$lib/state/HeroesPageState.svelte.js";
@@ -72,14 +72,4 @@
 	<meta property="image" content={META_IMAGE_URL} />
 </svelte:head>
 
-<Toaster />
-
-<TopNavigation></TopNavigation>
-
-<Background></Background>
-
-<div>
-	{@render children()}
-</div>
-
-	<EventBanner />
+{@render children()}

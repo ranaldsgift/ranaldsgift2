@@ -13,6 +13,7 @@
 		<!-- <li><ButtonLink url='/'>Home</ButtonLink></li> -->
 		<li><ButtonLink url="/builds">Builds</ButtonLink></li>
 		<li><ButtonLink url="/heroes">Heroes</ButtonLink></li>
+		<li><ButtonLink url="/careers">Careers</ButtonLink></li>
 		<!--<li><ButtonLink url="/weapons">Weapons</ButtonLink></li>
         <li><ButtonLink url="/missions">Missions</ButtonLink></li>
         <li><ButtonLink url="/enemies">Enemies</ButtonLink></li>

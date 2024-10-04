@@ -1,9 +1,13 @@
 <script>
 	import { page } from "$app/stores";
 	import Background from "$lib/components/Background.svelte";
+	import TopNavigation from "$lib/components/navigation/TopNavigation.svelte";
+	import { Toaster } from "svelte-sonner";
 </script>
 
 <svelte:head><title>Holy Sigmar! - augs.tools</title></svelte:head>
+
+<TopNavigation></TopNavigation>
 
 <div id="page" class="text-white flex flex-col relative w-[100vw] h-[100vh] items-center bg-black z-[-1]">
 	<!-- 	<span class="divider-20 h-[59px]"></span>

@@ -72,9 +72,6 @@
   * {
     @apply border-border;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
 }
 
 html, body {
@@ -108,7 +105,7 @@ select::-webkit-scrollbar-thumb {
 }
 
 body {
-  background: black;
+  background: transparent;
   font-family: caslon-antique;
   color: white;
   overflow-x: hidden;
