@@ -64,6 +64,7 @@
 		box-shadow: inset 0 0 10px 5px #000000;
 		translate: calc(-100% + 82px) calc(-100% - 10px);
 		width: max-content;
+		text-align: left;
 	}
 	.weapon-icon:hover > .tooltip {
 		display: grid;
