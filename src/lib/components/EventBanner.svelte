@@ -85,18 +85,18 @@
 
 {#if events.length > 0 && !allEventsDismissed && isMounted}
 	<div
-		class="event-banner border-11 background-22"
+		class="event-banner border-11 background-22 left-0 tablet:left-[50%] translate-x-0 tablet:translate-x-[-50%] w-full tablet:w-auto"
 		transition:fade={{ duration: 300 }}
 		role="banner"
 		aria-live="polite"
 		onmouseenter={() => (isMouseOver = true)}
 		onmouseleave={() => (isMouseOver = false)}
 	>
-		<div class="event-content">
+		<div class="event-content tablet:min-w-[500px]">
 			{#if !dismissedEvents.includes(events[currentEventIndex].id)}
 				{#key currentEventIndex}
 					<button
-						class="event-button"
+						class="event-button flex flex-col"
 						onclick={() => handleEventClick(events[currentEventIndex].id)}
 						in:fade={{ duration: 300 }}
 						out:fade={{ duration: 300 }}
@@ -104,10 +104,7 @@
 						<span class="text-white"
 							>{new Date(events[currentEventIndex].startDate).getTime() > Date.now() ? "Ongoing" : "Upcoming"} Event:</span
 						>
-						<span>{events[currentEventIndex].name}</span>
-						<span class="event-dates">
-							{`-- ${formattedEventDate}`}
-						</span>
+						<span>{`${events[currentEventIndex].name} -- ${formattedEventDate}`}</span>
 					</button>
 				{/key}
 			{/if}
@@ -129,10 +126,7 @@
 		z-index: 1000000;
 		font-size: 1.2rem;
 		color: #30e158;
-		left: 50%;
-		transform: translateX(-50%);
 	}
-
 	.event-content {
 		display: flex;
 		justify-content: space-between;
@@ -144,14 +138,6 @@
 		display: none;
 	}
 
-	.event-name-container {
-		flex: 1;
-		display: flex;
-		justify-content: flex-start;
-		overflow: hidden;
-		justify-content: center;
-	}
-
 	.event-button {
 		text-align: left;
 		background: none;
@@ -161,10 +147,6 @@
 		color: inherit;
 		padding: 0 40px 0 0;
 		margin: 0 auto;
-	}
-
-	.event-dates {
-		font-weight: normal;
 	}
 
 	.action-buttons {
