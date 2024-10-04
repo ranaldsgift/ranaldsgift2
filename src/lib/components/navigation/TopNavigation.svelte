@@ -24,7 +24,7 @@
 		}
 	};
 
-	let isAppPath = $derived($page.route.id?.includes("(app)"));
+	let isFramePath = $derived($page.route.id?.includes("(frame)"));
 
 	const handleMenuClick = () => {
 		if (isMenuOpen) {
@@ -43,7 +43,7 @@
 	</button>
 	<!-- User icon -->
 	<div class="icon-container flex-end ml-auto mr-8 flex gap-4 relative items-center">
-		{#if isAppPath}
+		{#if isFramePath}
 			<a href="/about" class="hidden tablet:block rg-icon mb-[-4px] hover:!no-underline">&nbsp;</a>
 		{/if}
 		<input
