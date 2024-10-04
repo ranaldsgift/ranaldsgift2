@@ -45,31 +45,30 @@
 	</div>
 {/if}
 
-{#snippet talentsHtml(build: ICareerBuild)}
-<div class="talents-container">
-	{@render talentContainer(build)}
-</div>
-{/snippet}
-
 {#snippet talentContainer(build: ICareerBuild)}
-<div class="talent-container {talentContainerClass}">
-{#if compact}
-	{#each talents as talent}
-		<div class="grid {vertical ? 'grid-flow-col grid-cols-[40px_40px]' : 'grid-flow-row'}">
-			<div class="border-01">
-				<CareerTalentIcon talentNumber={talent!.talentNumber} careerId={build.career.id} size="40px" class="relative z-[-1]"/>
+<div>
+	{#if !compact}
+		{@render talentsHeader(build)}
+	{/if}
+	<div class="{talentContainerClass}">
+	{#if compact}
+		{#each talents as talent}
+			<div class="grid {vertical ? 'grid-flow-col grid-cols-[40px_40px]' : 'grid-flow-row'}">
+				<div class="border-01">
+					<CareerTalentIcon talentNumber={talent!.talentNumber} careerId={build.career.id} size="40px" class="relative z-[-1]"/>
+				</div>
+				<div class="border-01 flex items-center justify-center background-13 text-[#f0d9af] text-[1.3rem]">
+					{talent!.talentNumber % 3 === 0 ? 3 : talent!.talentNumber % 3}
+				</div>
 			</div>
-			<div class="border-01 flex items-center justify-center background-13 text-[#f0d9af] text-[1.3rem]">
-				{talent!.talentNumber % 3 === 0 ? 3 : talent!.talentNumber % 3}
-			</div>
-		</div>
-	{/each}
-{:else}
-	{#each talents as talent}
-		<CareerTalentLevelIcon level={Math.ceil(talent!.talentNumber / 3) * 5}/>
-		<CareerTalent {talent} careerId={build.career.id}/>
-	{/each}
-{/if}
+		{/each}
+	{:else}
+		{#each talents as talent}
+			<CareerTalentLevelIcon level={Math.ceil(talent!.talentNumber / 3) * 5}/>
+			<CareerTalent {talent} careerId={build.career.id}/>
+		{/each}
+	{/if}
+	</div>
 </div>
 {/snippet}
 
@@ -83,12 +82,12 @@
 {/snippet}
 
 {#snippet gearContainer(build: ICareerBuild)}
-{#if vertical}
+{#if vertical && compact}
 <div class="gear-container flex flex-row w-[104px] flex-wrap content-between gap-y-[2px]">
 	{@render gear(build)}
 </div>
 {:else}
-<div class="gear-container flex flex-col h-[104px] flex-wrap content-between gap-[2px]">
+<div class="gear-container flex flex-col h-[104px] flex-wrap content-center gap-[2px]">
 	{@render gear(build)}
 </div>
 {/if}
