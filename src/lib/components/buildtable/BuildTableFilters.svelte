@@ -205,6 +205,13 @@
 	$effect(() => {
 		loadFiltersData();
 	});
+
+	const sortOptions = [
+		{ value: "dateModified", label: "Updated Recently" },
+		{ value: "dateCreated", label: "Date Created" },
+		{ value: "name", label: "Name" },
+		{ value: "ratingsCount", label: "Rating" },
+	];
 </script>
 
 <div class="gap-2 flex flex-wrap border-01 background-15">
@@ -259,10 +266,9 @@
 					<span>{filter.asc ? "↑" : "↓"}</span>
 				</button>
 				<select bind:value={filter.sort} class="flex-1 min-w-[200px]" placeholder="Sort">
-					<option value="dateModified">Updated Recently</option>
-					<option value="dateCreated">Date Created</option>
-					<option value="name">Name</option>
-					<option value="ratingsCount">Rating</option>
+					{#each sortOptions as option}
+						<option value={option.value}>{option.label}</option>
+					{/each}
 				</select>
 				<select bind:value={filter.careerId} class="flex-1 min-w-[200px]">
 					<option value={null}>All Careers</option>

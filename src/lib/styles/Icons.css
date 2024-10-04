@@ -87,3 +87,8 @@
     top: calc(var(--size) / 2);
     transform: translateY(-30%);
 }
+.jewelry-icon {
+    box-shadow: inset 0 4px 2px white;
+    width: var(--size);
+    height: var(--size);
+}
