@@ -8,7 +8,6 @@
 	type layoutType = "app" | "noframe" | "emporium" | "root";
 
 	let layoutState: layoutType = $derived.by(() => {
-		console.log($page.route.id);
 		if ($page.route.id?.includes("(app)")) return "app";
 
 		if ($page.route.id?.includes("(noframe)")) return "noframe";
