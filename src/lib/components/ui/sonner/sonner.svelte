@@ -18,8 +18,8 @@
 />
 
 <style>
-	:global(.toaster > li) {
-		padding: 0;
+	:global(li[data-sonner-toast]) {
+		padding: 15px;
 		background-color: #000000 !important;
 		border-image: url("/images/borders/border-03.png");
 		border-image-slice: 15;
@@ -27,14 +27,19 @@
 		border-style: solid;
 		border-image-repeat: repeat;
 		text-align: center;
+		justify-content: center;
+		align-items: center;
 	}
-	:global(.toaster > li > div) {
-		width: 100%;
-		padding: 15px;
+	:global(li[data-sonner-toast] > div[data-content]) {
 		text-align: center;
 		color: #928962 !important;
 		text-transform: uppercase;
 		font-family: "caslon-antique-bold";
 		font-size: 1rem;
+	}
+	:global(:where([data-sonner-toast]) :where([data-icon])) {
+		width: auto !important;
+		padding-left: 10px !important;
+		color: white !important;
 	}
 </style>

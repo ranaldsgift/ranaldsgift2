@@ -42,14 +42,7 @@
 		<BuildGuideEditor bind:guide={build.description}></BuildGuideEditor>
 		<div class="build-talents-container">
 			<CareerTalents
-				careerId={build.career.id}
-				talents={build.career.talents}
-				bind:talent1={build.talent1}
-				bind:talent2={build.talent2}
-				bind:talent3={build.talent3}
-				bind:talent4={build.talent4}
-				bind:talent5={build.talent5}
-				bind:talent6={build.talent6}
+				bind:build={build}
 			></CareerTalents>
 		</div>
 	</div>

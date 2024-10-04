@@ -22,10 +22,10 @@
 		background-position: center !important;
 		height: var(--size);
 		width: var(--size);
-		background-size: auto !important;
+		background-size: 65% !important;
 		box-sizing: border-box;
 		display: inline-block;
-		box-shadow: inset 0 5px 2px white;
+		box-shadow: inset 0 4px 2px white;
 	}
 	.item-trait-icon::after {
 		background-color: #0000 !important;

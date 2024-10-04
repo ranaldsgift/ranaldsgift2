@@ -1,19 +1,12 @@
 <script lang="ts">
-	import { enhance } from "$app/forms";
+	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import { getUserState } from "$lib/state/UserState.svelte";
-	import type { SubmitFunction } from "@sveltejs/kit";
-	import { toast } from "svelte-sonner";
-
-	type Props = {
-		showAboutButton?: boolean;
-	};
-
-	const { showAboutButton = true }: Props = $props();
+	import { previousPage } from "$lib/stores/PageStores.svelte";
 
 	const userState = getUserState();
 
-	let isMenuOpen = $derived($page.url.pathname === "/menu" || $page.url.pathname === "/");
+	let isMenuOpen = $derived($page.url.pathname === "/menu");
 
 	const backgroundToggleClickHandler = async (event: Event) => {
 		localStorage.setItem("showVideo", userState.showVideo.value.toString());
@@ -30,15 +23,27 @@
 			await response.json();
 		}
 	};
+
+	let isFramePath = $derived($page.route.id?.includes("(frame)"));
+
+	const handleMenuClick = () => {
+		if (isMenuOpen) {
+			goto(previousPage.url);
+		} else {
+			goto("/menu");
+		}
+	};
 </script>
 
 <div class="top-navigation tablet:!bg-none tablet:!h-[45px]">
-	<a href="/menu" class="ml-4 menu-icon {isMenuOpen ? 'active' : ''}">
-		<div class="overlay"></div>
-	</a>
+	<button class="hamburger-menu-icon {isMenuOpen ? 'active' : ''}" onclick={() => handleMenuClick()}>
+		<span class="hamburger-line"></span>
+		<span class="hamburger-line"></span>
+		<span class="hamburger-line"></span>
+	</button>
 	<!-- User icon -->
 	<div class="icon-container flex-end ml-auto mr-8 flex gap-4 relative items-center">
-		{#if showAboutButton}
+		{#if isFramePath}
 			<a href="/about" class="hidden tablet:block rg-icon mb-[-4px] hover:!no-underline">&nbsp;</a>
 		{/if}
 		<input
@@ -60,6 +65,7 @@
 		cursor: pointer;
 	}
 	.top-navigation {
+		pointer-events: none;
 		display: flex;
 		position: fixed;
 		left: -4px;
@@ -74,6 +80,9 @@
 		box-shadow:
 			inset 0 -4px 6px -1px rgba(255, 255, 255, 0.1),
 			inset 0 -2px 4px -1px rgba(255, 255, 255, 0.06);
+	}
+	.top-navigation > * {
+		pointer-events: all;
 	}
 
 	@media (min-width: 768px) {
@@ -145,5 +154,30 @@
 	}
 	a.user-icon:hover {
 		background-image: url("/images/icons/user-icon-hover.png");
+	}
+
+	.hamburger-menu-icon {
+		width: 25px;
+		height: 20px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		cursor: pointer;
+		background: transparent;
+		border: none;
+		left: 30px;
+		top: 10px;
+	}
+
+	.hamburger-line {
+		width: 100%;
+		height: 4px;
+		background-color: #fff;
+		transition: background-color 0.3s ease;
+	}
+
+	.hamburger-menu-icon.active .hamburger-line,
+	.hamburger-menu-icon:hover .hamburger-line {
+		background-color: #ff3e00;
 	}
 </style>

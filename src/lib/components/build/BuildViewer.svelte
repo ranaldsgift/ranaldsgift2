@@ -14,7 +14,7 @@
 		patchNumber?: string;
 	};
 
-	const { build, patchNumber }: Props = $props();
+	let { build, patchNumber }: Props = $props();
 
 	let hasBuildDescription = $derived.by(() => build.description && build.description.trim().length > 0);
 </script>
@@ -35,17 +35,7 @@
 		<BuildGuideView {build}></BuildGuideView>
 	{/if}
 	<div class="build-talents-container">
-		<CareerTalents
-			careerId={build.career.id}
-			talents={build.career.talents}
-			talent1={build.talent1}
-			talent2={build.talent2}
-			talent3={build.talent3}
-			talent4={build.talent4}
-			talent5={build.talent5}
-			talent6={build.talent6}
-			readOnly={true}
-		></CareerTalents>
+		<CareerTalents careerId={build.career.id} {build} readOnly={true}></CareerTalents>
 	</div>
 </div>
 

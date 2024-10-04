@@ -21,7 +21,6 @@ export const GET: RequestHandler = async ({ url, params }) => {
 		.leftJoinAndSelect("build.mission", "mission")
 		.leftJoinAndSelect("build.potion", "potion")
 		.leftJoinAndSelect("build.book", "book")
-		.leftJoinAndSelect("build.twitch", "twitch")
 		.leftJoinAndSelect("build.roles", "roles")
 		.leftJoinAndSelect("build.primaryWeapon", "primaryWeaponBuild")
 		.leftJoin("primaryWeaponBuild.weapon", "primaryWeapon")

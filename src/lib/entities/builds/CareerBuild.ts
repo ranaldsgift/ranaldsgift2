@@ -9,14 +9,13 @@ import { Difficulty, type IDifficulty } from "../Difficulty";
 import { Mission, type IMission } from "../Mission";
 import { Potion, type IPotion } from "../Potion";
 import { BookSetting, type IBookSetting } from "../BookSetting";
-import { TwitchSetting, type ITwitchSetting } from "../TwitchSetting";
 import { BuildRole, type IBuildRole } from "../BuildRole";
 import { AuthoredEntity } from "../AuthoredEntity";
-import { PageViewsCareerBuild, type IPageViewsCareerBuild } from "../PageViewCareerBuild";
 import { CareerTalent, type ICareerTalent } from "../career/CareerTalent";
 import { User, type IUser } from "../User";
 import { DifficultyModifier, type IDifficultyModifier } from "../DifficultyModifier";
 import { GameModeEnum } from "$lib/enums/GameModeEnum";
+import type { TwitchVoteCooldownType, TwitchVoteTimeType, TwitchWeeklyEventDurationType } from "$lib/data/constants/constants";
 
 @Entity({})
 export class CareerBuild extends AuthoredEntity<ICareerBuild> {
@@ -67,7 +66,7 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@JoinColumn()
 	trinket!: TrinketBuild;
 
-	@Column("smallint", { default: 300 })
+	@Column("smallint", { default: 350 })
 	powerLevel!: number;
 
 	@Type(() => CareerTalent)
@@ -94,6 +93,9 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@ManyToOne(() => CareerTalent, { eager: true })
 	talent6!: CareerTalent;
 
+	@Column("boolean", { default: false })
+	isBot!: boolean;
+
 	@Type(() => Difficulty)
 	@ManyToOne(() => Difficulty, { eager: true })
 	difficulty!: Difficulty;
@@ -103,7 +105,7 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	difficultyModifier!: DifficultyModifier;
 
 	@Column("boolean", { default: false })
-	deathwish!: boolean;
+	isDeathwish!: boolean;
 
 	@Type(() => Mission)
 	@ManyToOne(() => Mission, { eager: true })
@@ -117,9 +119,23 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@ManyToOne(() => BookSetting, { eager: true })
 	book!: BookSetting;
 
-	@Type(() => TwitchSetting)
-	@ManyToOne(() => TwitchSetting, { eager: true })
-	twitch!: TwitchSetting;
+	@Column("boolean", { default: false })
+	isTwitch!: boolean;
+
+	@Column("smallint", { nullable: true })
+	twitchSpawnSize!: number;
+
+	@Column("smallint", { nullable: true })
+	voteTimer!: TwitchVoteTimeType;
+
+	@Column("smallint", { nullable: true })
+	voteCooldown!: TwitchVoteCooldownType;
+
+	@Column("boolean", { nullable: true })
+	isTwitchWeeklyEvent!: boolean;
+
+	@Column("smallint", { nullable: true })
+	twitchWeeklyEventDuration!: TwitchWeeklyEventDurationType;
 
 	@Type(() => BuildRole)
 	@ManyToMany(() => BuildRole)
@@ -136,9 +152,9 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	})
 	gamemode!: GameModeEnum;
 
-	@Type()
+	/* 	@Type()
 	@OneToOne(() => PageViewsCareerBuild)
-	pageView!: PageViewsCareerBuild;
+	pageView!: PageViewsCareerBuild; */
 
 	@Type(() => User)
 	@ManyToMany(() => User, (user) => user.ratedBuilds)
@@ -165,22 +181,28 @@ export interface ICareerBuild {
 	primaryWeapon: IWeaponBuild;
 	secondaryWeapon: IWeaponBuild;
 	powerLevel?: number;
-	talent1?: ICareerTalent;
-	talent2?: ICareerTalent;
-	talent3?: ICareerTalent;
-	talent4?: ICareerTalent;
-	talent5?: ICareerTalent;
-	talent6?: ICareerTalent;
+	talent1?: ICareerTalent | null;
+	talent2?: ICareerTalent | null;
+	talent3?: ICareerTalent | null;
+	talent4?: ICareerTalent | null;
+	talent5?: ICareerTalent | null;
+	talent6?: ICareerTalent | null;
+	isBot?: boolean;
 	difficulty?: IDifficulty | null;
 	difficultyModifier?: IDifficultyModifier | null;
-	deathwish?: boolean;
+	isDeathwish?: boolean;
 	mission?: IMission | null;
 	potion?: IPotion | null;
 	book?: IBookSetting | null;
-	twitch?: ITwitchSetting | null;
+	isTwitch?: boolean;
+	twitchSpawnSize?: number;
+	voteTimer?: TwitchVoteTimeType;
+	voteCooldown?: TwitchVoteCooldownType;
+	isTwitchWeeklyEvent?: boolean;
+	twitchWeeklyEventDuration?: TwitchWeeklyEventDurationType;
 	roles?: IBuildRole[] | null;
 	videos?: string[];
-	pageView?: IPageViewsCareerBuild;
+	//pageView?: IPageViewsCareerBuild;
 	necklace: INecklaceBuild;
 	charm: ICharmBuild;
 	trinket: ITrinketBuild;

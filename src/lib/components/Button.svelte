@@ -4,13 +4,17 @@
     type Props = {
         handler?: () => void;
         children: Snippet;
-
+        class?: string;
     }
 
-    const { handler, children }: Props = $props();
+    const { handler, children, class: className = '' }: Props = $props();
 </script>
 
 <style>
+    button.disabled {
+        filter: grayscale(1);
+        pointer-events: none;
+    }
     button {
         text-align: center;
         position: relative;
@@ -66,6 +70,6 @@
     }
 </style>
 
-<button onclick={() => { handler ? handler() : null }}>
+<button class={className} onclick={() => { handler ? handler() : null }}>
     {@render children()}
 </button>

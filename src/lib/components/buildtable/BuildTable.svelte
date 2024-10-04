@@ -3,7 +3,6 @@
 	import { CareerBuildsStore } from "$lib/stores/DataStores";
 	import { DataHandler } from "@vincjo/datatables";
 	import ContainerTitle from "../ContainerTitle.svelte";
-	import Skeleton from "../ui/skeleton/skeleton.svelte";
 	import BuildTableRow from "./BuildTableRow.svelte";
 	import type { BuildTableFilter } from "$lib/types/BuildTableFilters";
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
@@ -49,9 +48,9 @@
 </script>
 
 {#await loadData()}
-	<div class="top-left-shadow">
+	<div class={className}>
 		<ContainerTitle>{title ?? "Builds"}</ContainerTitle>
-		<div class="p-5 border-01 background-20 gap-5 grid desktop:grid-cols-2 desktop:grid-flow-row {className}">
+		<div class="p-5 border-01 background-20 gap-5 grid desktop:grid-cols-2 desktop:grid-flow-row">
 			{#each { length: filter.limit ?? 5 } as _}
 				<BuildTableRowSkeleton></BuildTableRowSkeleton>
 			{/each}
@@ -59,7 +58,7 @@
 	</div>
 {:then}
 	{#if $rows.length > 0}
-		<div class="top-left-shadow">
+		<div class={className}>
 			<ContainerTitle>{title ?? "Builds"}</ContainerTitle>
 			<div class="p-5 border-01 background-20 gap-5 grid desktop:grid-cols-2 desktop:grid-flow-row {className}">
 				{#each $rows as row}

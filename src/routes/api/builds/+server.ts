@@ -58,7 +58,6 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			.leftJoinAndSelect("build.mission", "mission")
 			.leftJoinAndSelect("build.potion", "potion")
 			.leftJoinAndSelect("build.book", "book")
-			.leftJoinAndSelect("build.twitch", "twitch")
 			.leftJoinAndSelect("build.roles", "roles")
 			.leftJoinAndSelect("build.career", "career")
 			.leftJoinAndSelect("career.hero", "hero")
@@ -196,11 +195,11 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			}
 		}
 
-		if (twitchSettingId) {
+		/* 		if (twitchSettingId) {
 			if (Number(twitchSettingId)) {
 				query = query.andWhere(`build.twitch.id = :twitchSettingId`, { twitchSettingId: twitchSettingId });
 			}
-		}
+		} */
 
 		if (buildRoleId) {
 			if (Number(buildRoleId)) {
