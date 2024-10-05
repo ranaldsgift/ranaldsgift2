@@ -12,12 +12,14 @@ import type { IPotion } from "$lib/entities/Potion";
 import type { IProperty } from "$lib/entities/Property";
 import type { ITrait } from "$lib/entities/Trait";
 import type { ITwitchSetting } from "$lib/entities/TwitchSetting";
+import type { IWeapon } from "$lib/entities/Weapon";
 import { AsyncStore } from "./AsyncStore";
 
 const CACHE_DURATION = 60 * 60 * 1000 * 24; // 24 hours
 
 export const HeroesStore = new AsyncStore<Hero>("/api/heroes");
 export const CareersStore = new AsyncStore<ICareer>("/api/careers", CACHE_DURATION);
+export const WeaponsStore = new AsyncStore<IWeapon>("/api/weapons", CACHE_DURATION);
 export const PropertiesStore = new AsyncStore<IProperty>("/api/properties", CACHE_DURATION);
 export const TraitsStore = new AsyncStore<ITrait>("/api/traits", CACHE_DURATION);
 export const DifficultiesStore = new AsyncStore<IDifficulty>("/api/difficulties", CACHE_DURATION);

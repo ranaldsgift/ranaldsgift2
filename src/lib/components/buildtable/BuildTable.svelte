@@ -1,11 +1,15 @@
 <script lang="ts">
 	import BuildTableRowSkeleton from "./BuildTableRowSkeleton.svelte";
-	import { CareerBuildsStore } from "$lib/stores/DataStores";
+	import { CareerBuildsStore, CareersStore, PropertiesStore, TraitsStore, WeaponsStore } from "$lib/stores/DataStores";
 	import { DataHandler } from "@vincjo/datatables";
 	import ContainerTitle from "../ContainerTitle.svelte";
 	import BuildTableRow from "./BuildTableRow.svelte";
 	import type { BuildTableFilter } from "$lib/types/BuildTableFilters";
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
+	import type { IWeapon } from "$lib/entities/Weapon";
+	import type { ICareer } from "$lib/entities/career/Career";
+	import type { ITrait } from "$lib/entities/Trait";
+	import type { IProperty } from "$lib/entities/Property";
 
 	type Props = {
 		filter: BuildTableFilter;
@@ -16,13 +20,66 @@
 	let { filter = $bindable(), class: className, title }: Props = $props();
 
 	let builds: ICareerBuild[] = [];
-
 	let recordCount = $state(0);
+	let weapons: IWeapon[] = $state([]);
+	let careers: ICareer[] = $state([]);
+	let properties: IProperty[] = $state([]);
+	let traits: ITrait[] = $state([]);
 
 	const loadData = async () => {
 		loadingData = true;
+
 		let { items, count } = await CareerBuildsStore.loadData(getApiQuery());
 		recordCount = count;
+
+		if (count > 0) {
+			if (weapons.length === 0) {
+				console.log("Loading weapons");
+				let { items: weaponData } = await WeaponsStore.loadData();
+				weapons = weaponData;
+			}
+			if (careers.length === 0) {
+				let { items: careerData } = await CareersStore.loadData();
+				careers = careerData;
+			}
+			if (properties.length === 0) {
+				let { items: propertyData } = await PropertiesStore.loadData();
+				properties = propertyData;
+			}
+			if (traits.length === 0) {
+				let { items: traitData } = await TraitsStore.loadData();
+				traits = traitData;
+			}
+
+			for (const build of items) {
+				build.primaryWeapon.weapon = weapons.find((w) => w.id === build.primaryWeapon.weaponId);
+				build.secondaryWeapon.weapon = weapons.find((w) => w.id === build.secondaryWeapon.weaponId);
+				let career = careers.find((c) => c.id === build.careerId);
+				if (career) {
+					build.career = career;
+				}
+
+				build.primaryWeapon.property1 = properties.find((p) => p.id === build.primaryWeapon.property1?.id);
+				build.primaryWeapon.property2 = properties.find((p) => p.id === build.primaryWeapon.property2?.id);
+				build.primaryWeapon.trait = traits.find((t) => t.id === build.primaryWeapon.trait?.id);
+
+				build.secondaryWeapon.property1 = properties.find((p) => p.id === build.secondaryWeapon.property1?.id);
+				build.secondaryWeapon.property2 = properties.find((p) => p.id === build.secondaryWeapon.property2?.id);
+				build.secondaryWeapon.trait = traits.find((t) => t.id === build.secondaryWeapon.trait?.id);
+
+				build.necklace.property1 = properties.find((p) => p.id === build.necklace.property1?.id);
+				build.necklace.property2 = properties.find((p) => p.id === build.necklace.property2?.id);
+				build.necklace.trait = traits.find((t) => t.id === build.necklace.trait?.id);
+
+				build.charm.property1 = properties.find((p) => p.id === build.charm.property1?.id);
+				build.charm.property2 = properties.find((p) => p.id === build.charm.property2?.id);
+				build.charm.trait = traits.find((t) => t.id === build.charm.trait?.id);
+
+				build.trinket.property1 = properties.find((p) => p.id === build.trinket.property1?.id);
+				build.trinket.property2 = properties.find((p) => p.id === build.trinket.property2?.id);
+				build.trinket.trait = traits.find((t) => t.id === build.trinket.trait?.id);
+			}
+		}
 
 		builds = [...items];
 		handler.setRows(builds);

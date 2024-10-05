@@ -58,7 +58,7 @@ export interface IWeaponBuild {
 	user?: IUser;
 	rarity?: ItemRarityEnum;
 	weaponId?: number;
-	weapon: IWeapon;
+	weapon?: IWeapon;
 	powerLevel?: number;
 	property1?: IProperty;
 	property1Value?: number;

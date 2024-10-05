@@ -46,7 +46,9 @@
 					position: "bottom-center",
 				});
 				invalidateAll();
-				CareerBuildsStore.invalidateAll();
+				if (build.id) {
+					CareerBuildsStore.invalidateById(build.id);
+				}
 			} else {
 				toast(json.error, {
 					position: "bottom-center",

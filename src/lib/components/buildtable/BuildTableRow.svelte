@@ -5,7 +5,6 @@
 	import BuildRating from "../build/BuildRating.svelte";
 	import WeaponIcon from "../inventory/WeaponIcon.svelte";
 	import TraitIcon from "../inventory/TraitIcon.svelte";
-  import { browser } from '$app/environment';
 	import { getWindowState } from "$lib/state/WindowState.svelte";
 	
 	type Props = {
@@ -34,14 +33,18 @@
 			<BuildRating {build}></BuildRating>
 		</div>
 		<div class="weapons grid">
+			{#if build.primaryWeapon.weapon}
 			<div class="weapon-container">
 				<WeaponIcon weapon={build.primaryWeapon.weapon} size="45px"></WeaponIcon>
 				<TraitIcon trait={build.primaryWeapon.trait!} size="45px"></TraitIcon>
-				</div>
+			</div>
+			{/if}
+			{#if build.secondaryWeapon.weapon}
 			<div class="weapon-container">
 				<WeaponIcon weapon={build.secondaryWeapon.weapon} size="45px"></WeaponIcon>            
 				<TraitIcon trait={build.secondaryWeapon.trait!} size="45px"></TraitIcon>
 			</div>
+			{/if}
 		</div>
 		<div class="traits grid">
 			<div>

@@ -1,4 +1,6 @@
-export class AsyncStore<TModel> {
+import type { IEntity } from "$lib/entities/BaseEntity";
+
+export class AsyncStore<TModel extends IEntity> {
 	constructor(rootApiUrl: string, cacheDuration?: number) {
 		this.apiUrl = rootApiUrl;
 		if (cacheDuration) {
@@ -74,16 +76,33 @@ export class AsyncStore<TModel> {
 	}
 	invalidate(queryString: string) {
 		this.cache.delete(queryString);
+		const localStorageKey = `asyncStore_${queryString}`;
+		localStorage.removeItem(localStorageKey);
 	}
 	invalidateAll(queryMatch?: string) {
 		if (queryMatch) {
 			for (const [key, value] of this.cache) {
 				if (key.includes(queryMatch)) {
 					this.cache.delete(key);
+					const localStorageKey = `asyncStore_${key}`;
+					localStorage.removeItem(localStorageKey);
 				}
 			}
 		} else {
 			this.cache.clear();
+			localStorage.clear();
+		}
+	}
+	async invalidateById(id: string | number) {
+		for (const [key, { data }] of this.cache) {
+			console.log("awaiting promise");
+			const { items } = await data;
+			console.log("promise resolved");
+			if (items.some((item) => item.id === id)) {
+				this.cache.delete(key);
+				const localStorageKey = `asyncStore_${key}`;
+				localStorage.removeItem(localStorageKey);
+			}
 		}
 	}
 }
