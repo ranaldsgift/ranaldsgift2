@@ -60,6 +60,6 @@
 		transition: text-shadow 0.3s ease; /* Add transition for smooth effect */
 	}
 	.page-title-label.hover\:glow:hover {
-		text-shadow: 0 0 10px #c15b24, 0 0 20px #c15b24; /* Glowing effect */
+		text-shadow: 0 0 10px #c15b24; /* Glowing effect */
 	}
 </style>

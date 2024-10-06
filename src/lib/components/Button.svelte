@@ -5,16 +5,13 @@
         handler?: () => void;
         children: Snippet;
         class?: string;
+		disabled?: boolean;
     }
 
-    const { handler, children, class: className = '' }: Props = $props();
+    const { handler, children, class: className = '', disabled = false }: Props = $props();
 </script>
 
 <style>
-    button.disabled {
-        filter: grayscale(1);
-        pointer-events: none;
-    }
     button {
         text-align: center;
         position: relative;
@@ -70,6 +67,6 @@
     }
 </style>
 
-<button class={className} onclick={() => { handler ? handler() : null }}>
+<button class={className} disabled={disabled} onclick={() => { handler ? handler() : null }}>
     {@render children()}
 </button>

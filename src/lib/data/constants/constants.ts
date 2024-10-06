@@ -17,10 +17,10 @@ export const TWITCH_VOTE_TIME_TIMER = [15, 30, 45, 60, 75, 90];
 export type TwitchVoteTimeType = (typeof TWITCH_VOTE_TIME_TIMER)[number];
 export const TWITCH_VOTE_COOLDOWN = [5, 15, 30, 45, 60, 75, 90];
 export type TwitchVoteCooldownType = (typeof TWITCH_VOTE_COOLDOWN)[number];
-const TwitchBlessings = ["Enable Blessings", "Disables Item Blessings", "Disable All Blessings"] as const;
-export type TwitchBlessingType = (typeof TwitchBlessings)[number];
-export const TWITCH_WEEKLY_EVENT_DURATION = [100, 150, 200];
-export type TwitchWeeklyEventDurationType = (typeof TWITCH_WEEKLY_EVENT_DURATION)[number];
+export const TWITCH_BLESSINGS = ["Enable Blessings", "Disables Item Blessings", "Disable All Blessings"] as const;
+export type TwitchBlessingType = (typeof TWITCH_BLESSINGS)[number];
+export const TWITCH_WEEKLY_EVENT_EFFECT_DURATION = [100, 150, 200];
+export type TwitchWeeklyEventEffectDurationType = (typeof TWITCH_WEEKLY_EVENT_EFFECT_DURATION)[number];
 
 export const TALENT_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
 export type TalentNumberType = (typeof TALENT_NUMBERS)[number];

@@ -5,52 +5,65 @@
 
 	let clipPathState = $derived($page.route.id?.includes("(app)"));
 
-	type layoutType = "app" | "noframe" | "emporium" | "root";
+	type layoutType = "app" | "noframe" | "emporium" | "frame";
 
 	let layoutState: layoutType = $derived.by(() => {
-		if ($page.route.id?.includes("(app)")) return "app";
+		if ($page.route.id?.includes("(frame)")) return "frame";
 
 		if ($page.route.id?.includes("(noframe)")) return "noframe";
 
 		if ($page.route.id?.includes("(emporium)")) return "emporium";
 
-		return "root";
+		return "app";
 	});
 
-	let videoUrl = $derived.by(() => {
-		if (layoutState === "emporium") return "/videos/backgrounds/emporium.webm";
+	let posterUrl = $derived.by(() => {
+		if (layoutState === "emporium") return "/videos/backgrounds/emporium.png";
 
-		return "/videos/backgrounds/home.mp4";
+		return "/videos/backgrounds/home-frame.png";
 	});
 
-	let videoPlayer: HTMLVideoElement | null = $state(null);
+	let backgroundImageUrl = $derived.by(() => {
+		if (layoutState === "emporium") return "url('/videos/backgrounds/emporium.png')	";
 
-	$effect(() => {
-		if (videoPlayer) {
-			videoPlayer.src = videoUrl;
-		}
+		return "url('/videos/backgrounds/home-frame.png')";
 	});
 </script>
 
 {#if userState.showVideo.value}
 	<!-- <img src="/videos/backgrounds/home.gif" alt="Main Background Video" /> -->
 	<video
+		class="app-background fixed {clipPathState ? 'clipped' : ''} {layoutState === 'emporium' ? 'block' : 'hidden'}"
 		muted
 		playsInline
 		autoPlay={true}
 		loop={true}
-		class="app-background fixed {clipPathState ? 'clipped' : ''}"
-		bind:this={videoPlayer}
+		poster={posterUrl}
+		src="/videos/backgrounds/emporium.mp4"
+		style="--background: {backgroundImageUrl}"
 	>
-		<source src={videoUrl} type="video/mp4" />
+	</video>
+	<video
+		class="app-background fixed {clipPathState ? 'clipped' : ''} {layoutState !== 'emporium' ? 'block' : 'hidden'}"
+		muted
+		playsInline
+		autoPlay={true}
+		loop={true}
+		poster={posterUrl}
+		src="/videos/backgrounds/home.mp4"
+		style="--background: {backgroundImageUrl}"
+	>
 	</video>
 {:else}
-	<div class="app-background image fixed object-cover w-full h-full top-0 left-0 z-[-1] {clipPathState ? 'clipped' : ''}"></div>
+	<div
+		class="app-background image fixed object-cover w-full h-full top-0 left-0 z-[-1] {clipPathState ? 'clipped' : ''}"
+		style="--background: {backgroundImageUrl}"
+	></div>
 {/if}
 
 <style>
 	.app-background.image {
-		background: url(/images/backgrounds/home-frame.webp) no-repeat top left / cover;
+		background: var(--background) center / cover;
 		left: 0;
 		width: 100vw;
 	}
@@ -58,12 +71,15 @@
 		top: 0;
 		left: 0px;
 		position: fixed;
-		background: url("/images/background2.jpg") top left / cover;
 		width: 100vw;
 		height: 100vh;
 		object-fit: cover;
 		max-width: none;
 		pointer-events: none;
+		background-color: black;
+		background-image: var(--background);
+		background-size: cover;
+		background-position: center;
 	}
 
 	img {

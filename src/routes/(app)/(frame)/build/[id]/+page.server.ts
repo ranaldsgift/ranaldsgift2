@@ -27,8 +27,12 @@ export const load = async (event) => {
 
 	let pageDescription = `${careerBuild.name} by ${careerBuild.user.name}.
         ${careerBuild.career.name} build for ${careerBuild.career.hero.name}. 
-		${careerBuild.primaryWeapon.weapon.name} with ${careerBuild.primaryWeapon.property1?.name}, ${careerBuild.primaryWeapon.property2?.name}, and ${careerBuild.primaryWeapon.trait?.name}.
-		${careerBuild.secondaryWeapon.weapon.name} with ${careerBuild.secondaryWeapon.property1?.name}, ${careerBuild.secondaryWeapon.property2?.name}, and ${careerBuild.secondaryWeapon.trait?.name}.
+		${careerBuild.primaryWeapon.weapon?.name ?? "Primary Weapon"} with ${careerBuild.primaryWeapon.property1?.name}, ${
+		careerBuild.primaryWeapon.property2?.name
+	}, and ${careerBuild.primaryWeapon.trait?.name}.
+		${careerBuild.secondaryWeapon.weapon?.name ?? "Secondary Weapon"} with ${careerBuild.secondaryWeapon.property1?.name}, ${
+		careerBuild.secondaryWeapon.property2?.name
+	}, and ${careerBuild.secondaryWeapon.trait?.name}.
 		Necklace with ${careerBuild.necklace.property1?.name}, ${careerBuild.necklace.property2?.name}, and ${careerBuild.necklace.trait?.name}.
 		Charm with ${careerBuild.charm.property1?.name}, ${careerBuild.charm.property2?.name}, and ${careerBuild.charm.trait?.name}.
 		Trinket with ${careerBuild.trinket.property1?.name}, ${careerBuild.trinket.property2?.name}, and ${careerBuild.trinket.trait?.name}.`;

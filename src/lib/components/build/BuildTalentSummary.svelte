@@ -27,7 +27,9 @@
 </script>
 
 <div class="build-talent-summary max-mobile:w-full background-25 border-05 glass p-3 z-10">
-	<div class="talent-string-container flex items-center justify-center gap-4 col-span-2 tablet:col-span-4 w-full px-2 text-center text-[#f0d9af] text-[1.3rem]">
+	<div
+		class="talent-string-container flex items-center justify-center gap-4 col-span-2 tablet:col-span-4 w-full px-2 text-center text-[#f0d9af] text-[1.3rem]"
+	>
 		<span class="skull-2"></span>
 		{getTalentString(build)}
 		<span class="skull-2"></span>
@@ -35,20 +37,20 @@
 	<div class="divider-21 w-full h-[20px] mb-2 col-span-2 tablet:col-span-4"></div>
 	{#each getSelectedTalents(build) as talent, index}
 		<span
-				class="talent-lock-icon justify-self-center"
-				style="--size: 40px;
+			class="talent-lock-icon justify-self-center"
+			style="--size: 40px;
 				--fontSize: 10px;
-				--talent-tier-level: '{Math.ceil(talent!.talentNumber / 3)  * 5}';"
+				--talent-tier-level: '{(index + 1) * 5}';"
 		></span>
 		{#if talent}
-		<div class="talent-container selected" data-career={build.career.id}>
-			<div class="talent-button-wrapper background-26">
-				<CareerTalentIcon size="40px" careerId={build.career.id} talentNumber={talent.talentNumber} class="z-[0]"
-				></CareerTalentIcon>
-				<p class="talent-name background-13">{talent.name}</p>
-				<p class="talent-description">{talent.description}</p>
+			<div class="talent-container selected" data-career={build.career.id}>
+				<div class="talent-button-wrapper background-26">
+					<CareerTalentIcon size="40px" careerId={build.career.id} talentNumber={talent.talentNumber} class="z-[0]"
+					></CareerTalentIcon>
+					<p class="talent-name background-13">{talent.name}</p>
+					<p class="talent-description">{talent.description}</p>
+				</div>
 			</div>
-		</div>
 		{:else}
 			<div class="talent-container">
 				<p class="talent-name">No Talent Selected</p>
@@ -95,7 +97,7 @@
 		box-shadow: inset 0 10px 10px -10px #fff;
 	}
 	.talent-button-wrapper::after {
-		content: '';
+		content: "";
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -163,64 +165,64 @@
 	.talent-container:hover {
 		cursor: pointer;
 	}
-	.talent-container[data-career="1"]  .talent-name {
+	.talent-container[data-career="1"] .talent-name {
 		background: linear-gradient(-16deg, rgba(87, 57, 57, 0.43) 30%, transparent);
 	}
-	.talent-container[data-career="2"]  .talent-name {
+	.talent-container[data-career="2"] .talent-name {
 		background: linear-gradient(-16deg, rgba(89, 98, 61, 0.45) 30%, transparent);
 	}
-	.talent-container[data-career="3"]  .talent-name {
+	.talent-container[data-career="3"] .talent-name {
 		background: linear-gradient(-16deg, rgba(9, 20, 41, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="4"]  .talent-name {
+	.talent-container[data-career="4"] .talent-name {
 		background: linear-gradient(-16deg, rgba(29, 37, 5, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="5"]  .talent-name {
+	.talent-container[data-career="5"] .talent-name {
 		background: linear-gradient(-16deg, rgba(10, 54, 63, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="6"]  .talent-name {
+	.talent-container[data-career="6"] .talent-name {
 		background: linear-gradient(-16deg, rgba(52, 0, 0, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="7"]  .talent-name {
+	.talent-container[data-career="7"] .talent-name {
 		background: linear-gradient(-16deg, rgba(10, 23, 8, 0.65) 30%, transparent);
-		}
-	.talent-container[data-career="8"]  .talent-name {
+	}
+	.talent-container[data-career="8"] .talent-name {
 		background: linear-gradient(-16deg, rgba(13, 26, 43, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="9"]  .talent-name {
+	.talent-container[data-career="9"] .talent-name {
 		background: linear-gradient(-16deg, rgba(31, 20, 40, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="10"]  .talent-name {
+	.talent-container[data-career="10"] .talent-name {
 		background: linear-gradient(-16deg, rgba(32, 38, 40, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="11"]  .talent-name {
+	.talent-container[data-career="11"] .talent-name {
 		background: linear-gradient(-16deg, rgba(40, 31, 15, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="12"]  .talent-name {
+	.talent-container[data-career="12"] .talent-name {
 		background: linear-gradient(-16deg, rgba(35, 35, 30, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="13"]  .talent-name {
+	.talent-container[data-career="13"] .talent-name {
 		background: linear-gradient(-16deg, rgba(46, 16, 0, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="14"]  .talent-name {
+	.talent-container[data-career="14"] .talent-name {
 		background: linear-gradient(-16deg, rgba(36, 6, 2, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="15"]  .talent-name {
+	.talent-container[data-career="15"] .talent-name {
 		background: linear-gradient(-16deg, rgba(30, 10, 20, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="16"]  .talent-name {
+	.talent-container[data-career="16"] .talent-name {
 		background: linear-gradient(-16deg, rgba(30, 10, 20, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="17"]  .talent-name {
+	.talent-container[data-career="17"] .talent-name {
 		background: linear-gradient(-16deg, rgba(30, 10, 20, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="18"]  .talent-name {
+	.talent-container[data-career="18"] .talent-name {
 		background: linear-gradient(-16deg, rgba(30, 10, 20, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="19"]  .talent-name {
+	.talent-container[data-career="19"] .talent-name {
 		background: linear-gradient(-16deg, rgba(30, 10, 20, 0.65) 30%, transparent);
 	}
-	.talent-container[data-career="20"]  .talent-name {
+	.talent-container[data-career="20"] .talent-name {
 		background: linear-gradient(-16deg, rgba(30, 10, 20, 0.65) 30%, transparent);
 	}
 	.skull-2 {

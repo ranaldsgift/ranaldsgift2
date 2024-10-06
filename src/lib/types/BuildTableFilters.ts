@@ -14,7 +14,6 @@ export type BuildTableFilter = {
 	difficultyModifierId?: number | null;
 	potionId?: number | null;
 	buildRoleId?: number | null;
-	twitchSettingId?: number | null;
 	bookSettingId?: number | null;
 	patchId?: number | null;
 	missionId?: number | null;

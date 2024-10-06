@@ -1,16 +1,52 @@
-import type { IEntity } from "$lib/entities/BaseEntity";
+import { browser } from "$app/environment";
+import type { IAuthoredEntity, IEntity } from "$lib/entities/BaseEntity";
+import type { IUser } from "$lib/entities/User";
 
 export class AsyncStore<TModel extends IEntity> {
+	/**
+	 * @param rootApiUrl The base URL for API requests.
+	 * @param cacheDuration Optional. The duration in milliseconds for which data is cached. Defaults to 1 minute.
+	 */
 	constructor(rootApiUrl: string, cacheDuration?: number) {
 		this.apiUrl = rootApiUrl;
+		this.storageKeyPrefix = "asyncStore_" + rootApiUrl;
 		if (cacheDuration) {
 			this.cacheDuration = cacheDuration;
 		}
+
+		// Initialize cache with items from localStorage
+		if (browser) {
+			this.initializeCache();
+		}
 	}
-	private apiUrl: string;
+
+	private initializeCache() {
+		for (let i = 0; i < localStorage.length; i++) {
+			const key = localStorage.key(i);
+			if (key && key.startsWith(this.storageKeyPrefix)) {
+				const value = localStorage.getItem(key);
+				if (value) {
+					const { expires, data } = JSON.parse(value);
+					if (expires > Date.now()) {
+						const cacheKey = key.replace("asyncStore_", "");
+						this.cache.set(cacheKey, {
+							expires,
+							data: Promise.resolve(data),
+						});
+					} else {
+						// Remove expired items from localStorage
+						localStorage.removeItem(key);
+					}
+				}
+			}
+		}
+	}
+
+	protected apiUrl: string;
+	protected storageKeyPrefix: string;
 	// Default duration is 1 minute
-	private cacheDuration: number = 60 * 1000;
-	private cache = new Map<string, { expires: number; data: Promise<{ items: TModel[]; count: number }> }>();
+	protected cacheDuration: number = 60 * 1000;
+	protected cache = new Map<string, { expires: number; data: Promise<{ items: TModel[]; count: number }> }>();
 
 	/**
 	 * Load data from the API using the provided query string, if any.
@@ -95,10 +131,21 @@ export class AsyncStore<TModel extends IEntity> {
 	}
 	async invalidateById(id: string | number) {
 		for (const [key, { data }] of this.cache) {
-			console.log("awaiting promise");
 			const { items } = await data;
-			console.log("promise resolved");
 			if (items.some((item) => item.id === id)) {
+				this.cache.delete(key);
+				const localStorageKey = `asyncStore_${key}`;
+				localStorage.removeItem(localStorageKey);
+			}
+		}
+	}
+}
+
+export class AuthoredAsyncStore<TModel extends IAuthoredEntity> extends AsyncStore<TModel> {
+	async invalidateByUserId(userId: string) {
+		for (const [key, { data }] of this.cache) {
+			const { items } = await data;
+			if (items.some((item) => item.user?.id === userId)) {
 				this.cache.delete(key);
 				const localStorageKey = `asyncStore_${key}`;
 				localStorage.removeItem(localStorageKey);

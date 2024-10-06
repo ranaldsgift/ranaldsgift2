@@ -15,7 +15,12 @@ import { CareerTalent, type ICareerTalent } from "../career/CareerTalent";
 import { User, type IUser } from "../User";
 import { DifficultyModifier, type IDifficultyModifier } from "../DifficultyModifier";
 import { GameModeEnum } from "$lib/enums/GameModeEnum";
-import type { TwitchVoteCooldownType, TwitchVoteTimeType, TwitchWeeklyEventDurationType } from "$lib/data/constants/constants";
+import type {
+	TwitchBlessingType,
+	TwitchVoteCooldownType,
+	TwitchVoteTimeType,
+	TwitchWeeklyEventEffectDurationType,
+} from "$lib/data/constants/constants";
 
 @Entity({})
 export class CareerBuild extends AuthoredEntity<ICareerBuild> {
@@ -126,16 +131,19 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	twitchSpawnSize!: number;
 
 	@Column("smallint", { nullable: true })
-	voteTimer!: TwitchVoteTimeType;
+	twitchVoteTimer!: TwitchVoteTimeType;
 
 	@Column("smallint", { nullable: true })
-	voteCooldown!: TwitchVoteCooldownType;
+	twitchVoteCooldown!: TwitchVoteCooldownType;
+
+	@Column("varchar", { nullable: true })
+	twitchBlessing!: TwitchBlessingType;
 
 	@Column("boolean", { nullable: true })
-	isTwitchWeeklyEvent!: boolean;
+	twitchDisableWeeklyEvents!: boolean;
 
 	@Column("smallint", { nullable: true })
-	twitchWeeklyEventDuration!: TwitchWeeklyEventDurationType;
+	twitchWeeklyEventEffectDuration!: TwitchWeeklyEventEffectDurationType;
 
 	@Type(() => BuildRole)
 	@ManyToMany(() => BuildRole)
@@ -196,10 +204,11 @@ export interface ICareerBuild {
 	book?: IBookSetting | null;
 	isTwitch?: boolean;
 	twitchSpawnSize?: number;
-	voteTimer?: TwitchVoteTimeType;
-	voteCooldown?: TwitchVoteCooldownType;
-	isTwitchWeeklyEvent?: boolean;
-	twitchWeeklyEventDuration?: TwitchWeeklyEventDurationType;
+	twitchVoteTimer?: TwitchVoteTimeType;
+	twitchVoteCooldown?: TwitchVoteCooldownType;
+	twitchBlessing?: TwitchBlessingType;
+	twitchDisableWeeklyEvents?: boolean;
+	twitchWeeklyEventEffectDuration?: TwitchWeeklyEventEffectDurationType;
 	roles?: IBuildRole[] | null;
 	videos?: string[];
 	//pageView?: IPageViewsCareerBuild;

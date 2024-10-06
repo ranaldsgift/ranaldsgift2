@@ -1,4 +1,10 @@
 <script lang="ts">
+	import {
+		TWITCH_BLESSINGS,
+		TWITCH_VOTE_COOLDOWN,
+		TWITCH_VOTE_TIME_TIMER,
+		TWITCH_WEEKLY_EVENT_EFFECT_DURATION,
+	} from "$lib/data/constants/constants";
 	import type { IBookSetting } from "$lib/entities/BookSetting";
 	import type { IBuildRole } from "$lib/entities/BuildRole";
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
@@ -16,6 +22,7 @@
 		PotionsStore,
 		TwitchSettingsStore,
 	} from "$lib/stores/DataStores";
+	import ContentHeader from "../ContentHeader.svelte";
 
 	type Props = {
 		build: ICareerBuild;
@@ -29,7 +36,6 @@
 	let difficultyModifiers: IDifficultyModifier[] = $state([]);
 	let potions: IPotion[] = $state([]);
 	let buildRoles: IBuildRole[] = $state([]);
-	let twitchSettings: ITwitchSetting[] = $state([]);
 	let bookSettings: IBookSetting[] = $state([]);
 
 	const loadBuildOptions = async () => {
@@ -56,11 +62,6 @@
 		if (buildRoles.length === 0) {
 			const { items } = await BuildRolesStore.loadData();
 			buildRoles = items;
-		}
-
-		if (twitchSettings.length === 0) {
-			const { items } = await TwitchSettingsStore.loadData();
-			twitchSettings = items;
 		}
 
 		if (bookSettings.length === 0) {
@@ -106,13 +107,6 @@
 		build.book = selectedBook ?? null;
 	};
 
-	const handleTwitchChange = (event: Event) => {
-		const selectElement = event.target as HTMLSelectElement;
-		const selectedTwitchId = parseInt(selectElement.value);
-		const selectedTwitch = twitchSettings.find((twitch) => twitch.id === selectedTwitchId);
-		build.twitch = selectedTwitch ?? null;
-	};
-
 	const handleRolesChange = (event: Event) => {
 		const selectElement = event.target as HTMLSelectElement;
 		const selectedRoleIds = Array.from(selectElement.selectedOptions).map((option) => parseInt(option.value));
@@ -128,73 +122,119 @@
 		</div>
 	</div>
 {:then}
-	<div class="flex mt-4 gap-2 {CLASS} items-start flex-wrap">
-		<select class="p-2" value={build.difficulty?.id ?? null} onchange={handleDifficultyChange}>
-			<option value={null}>None</option>
-			{#each difficulties as difficulty}
-				<option value={difficulty.id} selected={difficulty.id === build.difficulty?.id}>
-					{difficulty.name}
-				</option>
-			{/each}
-		</select>
+	<div class="flex flex-col gap-2">
+		<div>
+			<ContentHeader>Build Options</ContentHeader>
+			<div class="flex mt-4 gap-2 {CLASS} items-start flex-wrap">
+				<select class="p-2" value={build.difficulty?.id} placeholder="Difficulty" onchange={handleDifficultyChange}>
+					<option value={undefined} selected>Difficulty</option>
+					{#each difficulties as difficulty}
+						<option value={difficulty.id} selected={difficulty.id === build.difficulty?.id}>
+							{difficulty.name}
+						</option>
+					{/each}
+				</select>
 
-		<select class="p-2" value={build.difficultyModifier?.id ?? null} onchange={handleDifficultyModifierChange}>
-			<option value={null}>None</option>
-			{#each difficultyModifiers as difficultyModifier}
-				<option value={difficultyModifier.id} selected={difficultyModifier.id === build.difficultyModifier?.id}>
-					{difficultyModifier.name}
-				</option>
-			{/each}
-		</select>
+				<select class="p-2" value={build.difficultyModifier?.id} onchange={handleDifficultyModifierChange}>
+					<option value={undefined} selected>Difficulty Modifier</option>
+					{#each difficultyModifiers as difficultyModifier}
+						<option value={difficultyModifier.id} selected={difficultyModifier.id === build.difficultyModifier?.id}>
+							{difficultyModifier.name}
+						</option>
+					{/each}
+				</select>
 
-		<select class="p-2" value={build.mission?.id ?? null} onchange={handleMissionChange}>
-			<option value={null}>None</option>
-			{#each missions as mission}
-				<option value={mission.id} selected={mission.id === build.mission?.id}>
-					{mission.name}
-				</option>
-			{/each}
-		</select>
+				<select class="p-2" value={build.mission?.id} onchange={handleMissionChange}>
+					<option value={undefined} selected>Mission</option>
+					{#each missions as mission}
+						<option value={mission.id} selected={mission.id === build.mission?.id}>
+							{mission.name}
+						</option>
+					{/each}
+				</select>
 
-		<select class="p-2" value={build.potion?.id ?? null} onchange={handlePotionChange}>
-			<option value={null}>None</option>
-			{#each potions as potion}
-				<option value={potion.id} selected={potion.id === build.potion?.id}>
-					{potion.name}
-				</option>
-			{/each}
-		</select>
+				<select class="p-2" value={build.potion?.id} onchange={handlePotionChange}>
+					<option value={undefined} selected>Potion</option>
+					{#each potions as potion}
+						<option value={potion.id} selected={potion.id === build.potion?.id}>
+							{potion.name}
+						</option>
+					{/each}
+				</select>
 
-		<select class="p-2" value={build.book?.id ?? null} onchange={handleBookChange}>
-			<option value={null}>None</option>
-			{#each bookSettings as book}
-				<option value={book.id} selected={book.id === build.book?.id}>
-					{book.name}
-				</option>
-			{/each}
-		</select>
+				<select class="p-2" value={build.book?.id} onchange={handleBookChange}>
+					<option value={undefined} selected>Book</option>
+					{#each bookSettings as book}
+						<option value={book.id} selected={book.id === build.book?.id}>
+							{book.name}
+						</option>
+					{/each}
+				</select>
 
-		<select class="p-2" value={build.twitch?.id ?? null} onchange={handleTwitchChange}>
-			<option value={null}>None</option>
-			{#each twitchSettings as twitch}
-				<option value={twitch.id} selected={twitch.id === build.twitch?.id}>
-					{twitch.name}
-				</option>
-			{/each}
-		</select>
+				<select class="p-2" multiple onchange={handleRolesChange}>
+					{#each buildRoles as role}
+						<option value={role.id} selected={build.roles?.some((r) => r.id === role.id)}>
+							{role.name}
+						</option>
+					{/each}
+				</select>
 
-		<select class="p-2" multiple onchange={handleRolesChange}>
-			{#each buildRoles as role}
-				<option value={role.id} selected={build.roles?.some((r) => r.id === role.id)}>
-					{role.name}
-				</option>
-			{/each}
-		</select>
+				<div class="styled-input">
+					<label for="isTwitch">Twitch</label>
+					<input id="isTwitch" type="checkbox" bind:checked={build.isTwitch} />
+				</div>
+			</div>
+		</div>
+		{#if build.isTwitch}
+			<div>
+				<ContentHeader>Twitch Settings</ContentHeader>
+				<div class="flex flex-wrap gap-2 input-container">
+					<input
+						class="styled-input min-w-[140px]"
+						type="number"
+						min="100"
+						max="300"
+						step="1"
+						placeholder="Spawn Size"
+						value={build.twitchSpawnSize}
+					/>
+					<select value={build.twitchVoteTimer}>
+						<option value={undefined} selected>Vote Timer</option>
+						{#each TWITCH_VOTE_TIME_TIMER as timer}
+							<option value={timer}>{timer}</option>
+						{/each}
+					</select>
+					<select value={build.twitchVoteCooldown}>
+						<option value={undefined} selected>Vote Cooldown</option>
+						{#each TWITCH_VOTE_COOLDOWN as cooldown}
+							<option value={cooldown}>{cooldown}</option>
+						{/each}
+					</select>
+					<select value={build.twitchBlessing}>
+						<option value={undefined} selected>Blessing</option>
+						{#each TWITCH_BLESSINGS as blessing}
+							<option value={blessing}>{blessing}</option>
+						{/each}
+					</select>
+					<div class="styled-input">
+						<label for="twitchDisableWeeklyEvents">Disable Weekly Events</label>
+						<input id="twitchDisableWeeklyEvents" type="checkbox" bind:checked={build.twitchDisableWeeklyEvents} />
+					</div>
+					<select value={build.twitchWeeklyEventEffectDuration}>
+						<option value={undefined} selected>Weekly Event Effect Duration</option>
+						{#each TWITCH_WEEKLY_EVENT_EFFECT_DURATION as duration}
+							<option value={duration}>{duration}</option>
+						{/each}
+					</select>
+				</div>
+			</div>
+		{/if}
 	</div>
 {/await}
 
 <style>
-	select {
+	select,
+	.styled-input {
 		border-image: url("/images/borders/border-13.png");
 		border-image-width: auto;
 		border-image-slice: 21;

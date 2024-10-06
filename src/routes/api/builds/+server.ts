@@ -24,7 +24,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 	let buildRoleId = url.searchParams.get("buildRoleId");
 	let patchId = url.searchParams.get("patchId");
 	let search = url.searchParams.get("search");
-	let sort = url.searchParams.get("sort");
+	let sort = url.searchParams.get("sort") || "dateModified";
 	let asc = url.searchParams.get("asc") === "true";
 	let favoriteByUserId = url.searchParams.get("favoriteByUserId");
 	let ratedByUserId = url.searchParams.get("ratedByUserId");
@@ -280,8 +280,6 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 				query = query.orderBy("build_ratingscount", asc ? "ASC" : "DESC");
 			} else if (sort === "favoritesCount") {
 				query = query.orderBy("build_favoritescount", asc ? "ASC" : "DESC");
-			} else if (sort === "random") {
-				query = query.orderBy("RANDOM()");
 			} else {
 				query = query.orderBy(`build.${sort}`, asc ? "ASC" : "DESC");
 			}

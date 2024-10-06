@@ -7,6 +7,7 @@
 	import type { SubmitFunction } from "@sveltejs/kit";
 
 	let email = $state("");
+	let isEmailValid = $derived(email.length > 0 && email.includes("@"));
 	let isSubmittingLogin = $state(false);
 
 	const submitLogin: SubmitFunction = () => {
@@ -32,10 +33,11 @@
 	<Header>Login</Header>
 	<div class="border-01 background-40 p-5 login-container mt-[42px] flex flex-col gap-5">
 		<p class="text-center">Enter your e-mail to sign in with a Magic Link.</p>
+		<p class="text-center">If this is your first time logging in, your account will be created.</p>
 		<p class="text-center italic">A link will be sent to your e-mail to authenticate yourself.</p>
 		<input class="border-13 py-2 px-4 bg-neutral-900 text-center" name="email" type="email" bind:value={email} placeholder="E-mail" />
 		<div class="m-auto">
-			<Button class={isSubmittingLogin ? "disabled" : ""}>Login</Button>
+			<Button disabled={isSubmittingLogin || !isEmailValid}>Login</Button>
 		</div>
 	</div>
 </form>

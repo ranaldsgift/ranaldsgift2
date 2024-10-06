@@ -1,5 +1,6 @@
 import { instanceToPlain, type ClassTransformOptions } from "class-transformer";
 import { BaseEntity as TypeOrmBaseEntity } from "typeorm";
+import type { IUser } from "./User";
 
 export abstract class BaseEntity<TInterface extends IEntity> extends TypeOrmBaseEntity {
 	toObject(options?: ClassTransformOptions): TInterface {
@@ -9,4 +10,8 @@ export abstract class BaseEntity<TInterface extends IEntity> extends TypeOrmBase
 
 export interface IEntity {
 	id?: number | string;
+}
+
+export interface IAuthoredEntity extends IEntity {
+	user?: IUser;
 }

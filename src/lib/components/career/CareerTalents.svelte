@@ -5,12 +5,11 @@
 	import CareerTalentIcon from "./CareerTalentIcon.svelte";
 
 	type Props = {
-		talents: ICareerTalent[];
 		build: ICareerBuild;
 		readOnly?: boolean;
 	};
 
-	let { talents, build = $bindable(), readOnly = false }: Props = $props();
+	let { build = $bindable(), readOnly = false }: Props = $props();
 
 	let careerId = $derived(build.career.id);
 	let showDescriptions = $state(false);

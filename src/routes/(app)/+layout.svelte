@@ -2,8 +2,8 @@
 	import Background from "$lib/components/Background.svelte";
 	import EventBanner from "$lib/components/EventBanner.svelte";
 	import TopNavigation from "$lib/components/navigation/TopNavigation.svelte";
+	import { Toaster } from "$lib/components/ui/sonner";
 	import { META_IMAGE_URL, ROOT_PAGE_DESCRIPTION, ROOT_PAGE_TITLE } from "$lib/data/constants/constants.js";
-	import { Toaster } from "svelte-sonner";
 
 	let { children } = $props();
 </script>
@@ -14,12 +14,12 @@
 	<meta property="image" content={META_IMAGE_URL} />
 </svelte:head>
 
-<Toaster />
+<Toaster></Toaster>
 
-<TopNavigation />
+<TopNavigation></TopNavigation>
 
-<Background />
+<Background></Background>
 
 {@render children()}
 
-<EventBanner />
+<EventBanner></EventBanner>

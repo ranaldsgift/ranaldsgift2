@@ -23,7 +23,7 @@
 <div class="build-list-item-container">
 	<a class="link-overlay" href={`/build/${build.id}`} data-sveltekit-preload-data="tap">&nbsp;</a>
 	<div class="build-list-item desktop:h-full" data-career={build.careerId} data-build={build.id}>
-		<div class="career-portrait border-04 mobile:w-[100px] mobile:h-[120px]" style="background: {windowState.isMobile ? `url('/images/careers/${build.careerId}/portrait-wide.png') no-repeat right / contain, url('/images/backgrounds/background29.png')` : `url('/images/careers/${build.careerId}/portrait.png')`}"></div>
+		<div class="career-portrait border-04 mobile:w-[100px] mobile:h-[120px]" style="background: {windowState.isMobile || windowState.isTablet ? `url('/images/careers/${build.careerId}/portrait-wide.png') center right / contain no-repeat, url('/images/backgrounds/background29.png')` : `url('/images/careers/${build.careerId}/portrait.png') center / contain no-repeat`}"></div>
 		<div class="build-description-container">
 			<p class="build-name header-underline">{build.name}</p>
 			<p class="build-hero">{build.career.name}</p>
@@ -301,11 +301,6 @@
 	.date-updated {
 		text-transform: lowercase;
 	}
-
-	/* 
-.build-list-item[data-career='1'] {
-    background-image: linear-gradient(to bottom, #200000d6, #1e0000), url('/images/backgrounds/background39.png');
-} */
 
 	.build-list-item[data-career="1"]:before {
 		background-image: linear-gradient(rgba(87, 57, 57, 0.3), rgba(87, 57, 57, 0.3)),

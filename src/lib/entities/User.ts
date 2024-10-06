@@ -46,15 +46,21 @@ export class User extends TimestampedEntity<IUser> {
 	@OneToMany(() => CareerBuild, (build) => build.user)
 	authoredBuilds!: CareerBuild[];
 
+	authoredBuildsCount!: number;
+
 	@Type(() => CareerBuild)
 	@ManyToMany(() => CareerBuild, (build) => build.userFavorites)
 	@JoinTable()
 	favoriteBuilds!: CareerBuild[];
 
+	favoriteBuildsCount!: number;
+
 	@Type(() => CareerBuild)
 	@ManyToMany(() => CareerBuild, (build) => build.userRatings)
 	@JoinTable()
 	ratedBuilds!: CareerBuild[];
+
+	ratedBuildsCount!: number;
 
 	/*    getBadges(): { icon: string, text: string }[] {
         const badges = [];
@@ -76,6 +82,9 @@ export interface IUser {
 	isSupporter: boolean;
 	isDeveloper: boolean;
 	authoredBuilds: ICareerBuild[];
+	authoredBuildsCount: number;
 	favoriteBuilds: ICareerBuild[];
+	favoriteBuildsCount: number;
 	ratedBuilds: ICareerBuild[];
+	ratedBuildsCount: number;
 }

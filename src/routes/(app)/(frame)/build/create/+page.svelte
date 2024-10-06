@@ -1,32 +1,29 @@
 <script lang="ts">
+	import Seo from "$lib/components/SEO.svelte";
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import BuildEditor from "$lib/components/build/BuildEditor.svelte";
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
-	import Seo from "$lib/components/SEO.svelte";
-	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
-	import type { ICareer } from "$lib/entities/career/Career.js";
-	import BuildHelper from "$lib/helpers/BuildHelper.js";
-	import CareerHelper from "$lib/helpers/CareerHelper.js";
-	import { getBuildCreatorPageState } from "$lib/state/BuildCreatorPageState.svelte.js";
-	import { getBuildEditorPageState } from "$lib/state/BuildEditorPageState.svelte.js";
 	import { error } from "@sveltejs/kit";
 	import { toast } from "svelte-sonner";
+	import BuildHelper from "$lib/helpers/BuildHelper.js";
+	import { getBuildCreatorPageState } from "$lib/state/BuildCreatorPageState.svelte.js";
+	import { goto, invalidate } from "$app/navigation";
+	import { CareerBuildsStore } from "$lib/stores/DataStores.js";
+	import { getUserState } from "$lib/state/UserState.svelte.js";
+	const { data } = $props();
 
-	let { data } = $props();
+	const pageState = getBuildCreatorPageState();
+	const userState = getUserState();
 
-	let pageState = getBuildCreatorPageState();
-
-	if (!pageState.build) {
-		pageState.build = data.build as ICareerBuild;
+	if (!data.build) {
+		error(404, "Heroes Page - Invalid ViewModel");
 	}
 
-	const careerSelectionHandler = (career: ICareer) => {
-		if (pageState.build?.career !== career) {
-			const build = CareerHelper.getNewCareerBuildForCareer(career);
-			const mergedBuildState = Object.assign({}, pageState.build, build);
-			pageState.build = mergedBuildState;
-		}
-	};
+	if (!pageState.build) {
+		pageState.build = data.build;
+	}
+
+	let isValid = $derived(BuildHelper.isValid(pageState.build) && userState.user);
 
 	const saveBuild = async () => {
 		if (!pageState.build) {
@@ -36,7 +33,7 @@
 		let missingFields = BuildHelper.getMissingFields(pageState.build);
 
 		if (missingFields.length > 0) {
-			toast(`Build is missing the following fields: ${missingFields.join(", ")}.`, {
+			toast(`Build is missing the following fields: ${missingFields.join(", ")}. Please check your build and try again.`, {
 				position: "bottom-center",
 			});
 			return;
@@ -51,30 +48,45 @@
 				body: JSON.stringify(pageState.build),
 			});
 
+			const json = await response.json();
+
 			if (response.ok) {
-				toast("Build saved successfully!", { position: "bottom-center" });
+				toast.success("Build created!", { position: "bottom-center" });
+				let userId = pageState.build?.user?.id;
+
+				goto(`/build/${json.buildId}`).then(() => {
+					if (userId) {
+						CareerBuildsStore.invalidateByUserId(userId);
+					}
+					pageState.build = null;
+				});
 			} else {
-				const json = await response.json();
-				toast(json.error, { position: "bottom-center" });
+				toast.error(json.error, { position: "bottom-center" });
 			}
 		} catch (error) {
 			console.error("Error saving build:", error);
-			toast("Failed to save build. Please try again.", { position: "bottom-center" });
+			toast.error("Failed to save build. Please try again.", { position: "bottom-center" });
 		}
 	};
+
+	$inspect(pageState.build);
 </script>
 
-<Seo title="Build Creator" />
-
-<Breadcrumb links={[{ href: `/builds`, text: "Builds" }]}>Create</Breadcrumb>
-
-<PageButtonContainer>
-	<button class="button-02" onclick={saveBuild}>Save</button>
-	<a class="button-02" href={`/builds`}>Cancel</a>
-</PageButtonContainer>
-
 {#if pageState.build}
-	<div class="edit-build-page">
+	<Seo title={pageState.build.name} />
+
+	<Breadcrumb links={[{ href: `/builds`, text: "Builds" }]}>Create</Breadcrumb>
+
+	<PageButtonContainer>
+		<button class="button-02" onclick={saveBuild} disabled={!isValid}>Save</button>
+	</PageButtonContainer>
+
+	<div class="create-build-page">
+		{#if !userState.user}
+			<p class=" m-auto text-center w-fit py-2 px-4 mb-4 border-02 background-22">
+				Please <a href="/login">login or create an account</a> to save a build.
+			</p>
+		{/if}
 		<BuildEditor bind:build={pageState.build} bind:inventoryTab={pageState.inventoryTab.value} />
 	</div>
 {/if}

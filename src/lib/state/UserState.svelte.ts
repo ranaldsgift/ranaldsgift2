@@ -21,6 +21,10 @@ class UserState {
 		});
 	}
 
+	updateUser(user: IUser) {
+		this.user = user;
+	}
+
 	reset() {
 		this.user = null;
 	}

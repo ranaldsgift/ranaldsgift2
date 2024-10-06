@@ -34,7 +34,6 @@
 
 		if (count > 0) {
 			if (weapons.length === 0) {
-				console.log("Loading weapons");
 				let { items: weaponData } = await WeaponsStore.loadData();
 				weapons = weaponData;
 			}
@@ -115,7 +114,7 @@
 	</div>
 {:then}
 	{#if $rows.length > 0}
-		<div class={className}>
+		<div class="test {className}">
 			<ContainerTitle>{title ?? "Builds"}</ContainerTitle>
 			<div class="p-5 border-01 background-20 gap-5 grid desktop:grid-cols-2 desktop:grid-flow-row {className}">
 				{#each $rows as row}

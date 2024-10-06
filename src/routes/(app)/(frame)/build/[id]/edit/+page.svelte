@@ -7,6 +7,7 @@
 	import { toast } from "svelte-sonner";
 	import { getBuildEditorPageState } from "$lib/state/BuildEditorPageState.svelte.js";
 	import BuildHelper from "$lib/helpers/BuildHelper.js";
+	import { CareerBuildsStore } from "$lib/stores/DataStores.js";
 	const { data } = $props();
 
 	const pageState = getBuildEditorPageState();
@@ -26,6 +27,15 @@
 		pageState.build = data.viewModel.build;
 	}
 
+	// TODO - Show the missing fields on hover of the disabled save button
+	let missingFieldsMessage = $derived.by(() => {
+		if (!pageState.build) {
+			return "";
+		}
+		let missingFields = BuildHelper.getMissingFields(pageState.build).join(", ");
+		return `Build is missing the following fields: ${missingFields}. Please check your build and try again.`;
+	});
+
 	const saveBuild = async () => {
 		if (!pageState.build) {
 			error(500, "Build not found");
@@ -34,8 +44,9 @@
 		let missingFields = BuildHelper.getMissingFields(pageState.build);
 
 		if (missingFields.length > 0) {
-			toast(`Build is missing the following fields: ${missingFields.join(", ")}. Please check your build and try again.`, {
+			toast.warning(`Build is missing the following fields: ${missingFields.join(", ")}. Please check your build and try again.`, {
 				position: "bottom-center",
+				duration: 5000,
 			});
 			return;
 		}
@@ -50,14 +61,17 @@
 			});
 
 			if (response.ok) {
-				toast("Build saved successfully!", { position: "bottom-center" });
+				toast.success("Build saved!", { position: "bottom-center" });
+				if (pageState.build.id) {
+					CareerBuildsStore.invalidateById(pageState.build.id);
+				}
 			} else {
 				const json = await response.json();
-				toast(json.error, { position: "bottom-center" });
+				toast.error(json.error, { position: "bottom-center" });
 			}
 		} catch (error) {
 			console.error("Error saving build:", error);
-			toast("Failed to save build. Please try again.", { position: "bottom-center" });
+			toast.error("Failed to save build. Please try again.", { position: "bottom-center" });
 		}
 	};
 

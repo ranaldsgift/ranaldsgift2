@@ -3,7 +3,7 @@
 </script>
 
 <div class="build-list-item-container">
-	<div class="build-list-item-skeleton h-[177px] w-full border-31">
+	<div class="build-list-item-skeleton h-[309px] tablet:h-[177px] w-full border-31">
 		<div class="career-portrait h-[120px] w-[100px] border-04">
 			<Skeleton class="h-full w-full"></Skeleton>
 		</div>
@@ -103,8 +103,9 @@
 	.weapons {
 		grid-area: buildWeapons;
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: min-content min-content;
 		grid-column-gap: 5px;
+		justify-items: start;
 	}
 
 	.weapon-container {
@@ -116,7 +117,7 @@
 	.traits {
 		grid-area: buildTraits;
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
+		grid-template-columns: min-content min-content min-content;
 		grid-column-gap: 5px;
 	}
 

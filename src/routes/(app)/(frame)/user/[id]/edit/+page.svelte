@@ -1,20 +1,46 @@
 <script lang="ts">
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import { type IUser } from "$lib/entities/User";
-	import * as api from "$lib/api.js";
 	import Seo from "$lib/components/SEO.svelte";
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
+	import PageContainer from "$lib/components/containers/PageContainer.svelte";
+	import ContentContainer from "$lib/components/ContentContainer.svelte";
+	import ContentHeader from "$lib/components/ContentHeader.svelte";
+	import TextInput from "$lib/components/input/TextInput.svelte";
+	import { toast } from "svelte-sonner";
+	import { getUserState } from "$lib/state/UserState.svelte.js";
+	import { invalidate } from "$app/navigation";
+	import { CareerBuildsStore } from "$lib/stores/DataStores.js";
 
 	const { data } = $props();
+	const userState = getUserState();
 	const user = $state<IUser>(data.userData);
+	let serializedUser = $state(JSON.stringify(data.userData));
+	let isDirty = $derived.by(() => serializedUser !== JSON.stringify(user));
 
 	const saveUserHandler = async () => {
-		const response = await api.post("/api/user/save", user);
+		try {
+			const response = await fetch("/api/user/save", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(user),
+			});
 
-		if (response.ok) {
-			alert("User saved");
-		} else {
-			alert("Failed to save user");
+			if (response.ok) {
+				toast.success("User saved", { position: "bottom-center" });
+				userState.updateUser(user);
+				serializedUser = JSON.stringify(user);
+				invalidate(`user:${user.id}`);
+				CareerBuildsStore.invalidateByUserId(user.id);
+			} else {
+				const json = await response.json();
+				toast.error(json.error, { position: "bottom-center" });
+			}
+		} catch (error) {
+			console.error("Error saving user:", error);
+			toast.error("Failed to save user. Please try again.", { position: "bottom-center" });
 		}
 	};
 </script>
@@ -28,47 +54,43 @@
 	]}>Edit Profile</Breadcrumb
 >
 
-<div class="page-layout">
-	{#if user && data.sessionUser?.id === user.id}
-		<PageButtonContainer>
-			<button class="button-02" onclick={saveUserHandler}>Save</button>
-		</PageButtonContainer>
-		<div>
-			<div class="user-info-container background-14 border-08">
+<PageButtonContainer>
+	<button class="button-02" onclick={saveUserHandler} disabled={!isDirty}>Save</button>
+	<a href={`/user/${user.id}`} class="button-02">Cancel</a>
+</PageButtonContainer>
+
+<PageContainer>
+	<ContentHeader>Edit Profile</ContentHeader>
+	<ContentContainer>
+		{#if user && data.sessionUser?.id === user.id}
+			<div class="user-info-container">
 				<span>Username</span>
-				<input bind:value={user.name} />
+				<TextInput bind:value={user.name} placeholder="Username..." />
 				<span>Steam Friend Code</span>
-				<input bind:value={user.steam} />
+				<TextInput bind:value={user.steam} placeholder="Steam Friend Code..." />
 				<span>Discord</span>
-				<input bind:value={user.discord} />
+				<TextInput bind:value={user.discord} placeholder="Discord..." />
 				<span>Twitch</span>
-				<input bind:value={user.twitch} />
+				<TextInput bind:value={user.twitch} placeholder="Twitch..." />
 				<span>Youtube</span>
-				<input bind:value={user.youtube} />
+				<TextInput bind:value={user.youtube} placeholder="Youtube..." />
 			</div>
-		</div>
-	{:else}
-		<div>
+		{:else}
 			<h1>User not found</h1>
-		</div>
-	{/if}
-</div>
+		{/if}
+	</ContentContainer>
+</PageContainer>
 
 <style>
-	.page-layout {
-		max-width: 1200px;
-		margin: 0 auto;
-	}
 	.user-info-container {
 		color: #8bc34a;
-		font-size: 1.5em;
+		font-size: 1.5rem;
 		display: grid;
 		grid-template-columns: max-content 1fr;
 		justify-items: left;
 		text-align: left;
 		grid-column-gap: 15px;
 		grid-row-gap: 5px;
-		padding: 20px;
 		position: relative;
 		grid-row-gap: 10px;
 	}
