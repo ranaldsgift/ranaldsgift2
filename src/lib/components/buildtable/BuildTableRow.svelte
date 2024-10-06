@@ -18,6 +18,8 @@
 	if (!build.careerId) {
 		error(404, "Career Data for the build failed to load.");
 	}
+
+	let tooltipPosition: "left" | "center" = $derived(windowState.isMobile || windowState.isTablet ? "left" : "center");
 </script>
 
 <div class="build-list-item-container">
@@ -35,13 +37,13 @@
 		<div class="weapons grid">
 			{#if build.primaryWeapon.weapon}
 			<div class="weapon-container">
-				<WeaponIcon weapon={build.primaryWeapon.weapon} size="45px"></WeaponIcon>
+				<WeaponIcon weapon={build.primaryWeapon.weapon} size="45px" {tooltipPosition}></WeaponIcon>
 				<TraitIcon trait={build.primaryWeapon.trait!} size="45px"></TraitIcon>
 			</div>
 			{/if}
 			{#if build.secondaryWeapon.weapon}
 			<div class="weapon-container">
-				<WeaponIcon weapon={build.secondaryWeapon.weapon} size="45px"></WeaponIcon>            
+				<WeaponIcon weapon={build.secondaryWeapon.weapon} size="45px" {tooltipPosition}></WeaponIcon>            
 				<TraitIcon trait={build.secondaryWeapon.trait!} size="45px"></TraitIcon>
 			</div>
 			{/if}
@@ -96,9 +98,7 @@
 		grid-column-gap: 10px;
 		pointer-events: none;
 	}
-	.build-list-item :global(.build-author),
-	.build-list-item :global(.traits > *),
-	.build-list-item :global(.weapons > *) {
+	.build-list-item :global(.build-author) {
 		pointer-events: all;
 	}
 	a.link-overlay {
@@ -112,9 +112,8 @@
 	.build-list-item-container {
 		position: relative;
 	}
-	.build-list-item-container :global(.trait-icon),
 	.build-list-item-container :global(.weapon-icon) {		
-		background-size: calc(100% - 12px) !important;
+		background-size: 100% !important;
 	}
 	.edit-build-page .build-list-item .weapons,
 	.edit-build-page .build-list-item .traits {
