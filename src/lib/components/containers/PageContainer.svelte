@@ -9,8 +9,7 @@ type Props = {
 let { class: className, children }: Props = $props();
 </script>
 
-<div class="page-layout border-01 m-auto max-w-7xl top-left-shadow relative {className} p-2 mobile:p-5">
-	
+<div class="page-layout border-01 m-auto max-w-7xl top-left-shadow relative {className} p-2 mobile:p-5">	
     {@render children()}
 </div>
 <style>

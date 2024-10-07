@@ -1,4 +1,4 @@
-import { CareerBuild, type ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
+import { type ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
 import { UserRoleEnum } from "$lib/enums/UserRoleEnum.js";
 import type { EditBuildPageViewModel } from "$lib/viewmodels/BuildPageViewModel.js";
 import { error } from "@sveltejs/kit";

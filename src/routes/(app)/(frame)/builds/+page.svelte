@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { ICareerBuild } from "./../../../lib/entities/builds/CareerBuild.ts";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
@@ -9,10 +8,9 @@
 	import type { BuildTableFilter } from "$lib/types/BuildTableFilters";
 	import { getBuildsPageState } from "$lib/state/BuildsPageState.svelte.ts";
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
-	import { getUserState } from "$lib/state/UserState.svelte.ts";
+	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 
 	let buildsPageState = getBuildsPageState();
-	let userState = getUserState();
 
 	if ($page.url.search) {
 		buildsPageState.filter = getBuildStateFromUrl();
@@ -79,11 +77,9 @@
 
 <Breadcrumb links={[{ href: `/`, text: "Home" }]}>Builds</Breadcrumb>
 
-{#if userState.user}
-	<PageButtonContainer>
-		<a href="/build/create" class="button-02">Create</a>
-	</PageButtonContainer>
-{/if}
+<PageButtonContainer>
+	<a href="/build/create" class="button-02">Create</a>
+</PageButtonContainer>
 
 <div class="page flex flex-col gap-0">
 	<div class="top-left-shadow">

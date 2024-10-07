@@ -2,18 +2,23 @@ import { User } from "$lib/entities/User";
 import { error } from "@sveltejs/kit";
 
 export const load = async (event) => {
+	event.depends(`user:${event.params.id}`);
 	const { id } = event.params;
 
 	let user: User | null = null;
 
-	// If the ID is a UUID, this is the new supabase user ID
+	let query = User.createQueryBuilder("user")
+		.loadRelationCountAndMap("user.authoredBuildsCount", "user.authoredBuilds")
+		.loadRelationCountAndMap("user.ratedBuildsCount", "user.ratedBuilds")
+		.loadRelationCountAndMap("user.favoriteBuildsCount", "user.favoriteBuilds");
+
 	if (id.includes("-")) {
-		user = await User.findOne({ where: { id } });
+		query = query.where("user.id = :id", { id });
+	} else {
+		query = query.where("user.firebaseId = :id", { id });
 	}
-	// Otherwise, it's the old firebase user ID
-	else {
-		user = await User.findOne({ where: { firebaseId: id } });
-	}
+
+	user = await query.getOne();
 
 	if (!user) {
 		error(404, "User not found");

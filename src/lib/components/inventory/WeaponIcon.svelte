@@ -6,9 +6,10 @@
 		weapon: IWeapon;
 		class?: string;
 		size?: string;
+		tooltipPosition?: "left" | "right" | "center";
 	};
 
-	let { weapon, class: CLASS = "", size = "62px" }: Props = $props();
+	let { weapon, class: CLASS = "", size = "62px", tooltipPosition = "left" }: Props = $props();
 </script>
 
 {#if weapon}
@@ -17,7 +18,7 @@
 		style="--size: {size}; background: url('/images/weapons/{weapon.codename}.png') no-repeat center / calc(100% + 8px), 
                         url('/images/backgrounds/icon-background-2.png') no-repeat center / 100% 100%;"
 	>
-		<div class="tooltip border-35">
+		<div class="tooltip border-35 {tooltipPosition}">
 			<span class="name header-underline">{weapon.name}</span>
 			<span class="description">
 				{weapon && weapon.tooltips ? weapon.tooltips.map((tooltip) => tooltip.name).join(", ") : ""}
@@ -33,6 +34,7 @@
 		height: var(--size);
 		width: var(--size);
 		grid-area: itemIcon;
+		position: relative;
 	}
 	.weapon-icon:before:hover {
 		display: none !important;
@@ -62,10 +64,23 @@
 		grid-auto-flow: row;
 		grid-row-gap: 5px;
 		box-shadow: inset 0 0 10px 5px #000000;
-		translate: calc(-100% + 82px) calc(-100% - 10px);
 		width: max-content;
 		text-align: left;
 	}
+	.tooltip.left {
+		left: 0px;
+		bottom: calc(100% + 5px);
+	}
+	.tooltip.right {
+		right: 0px;
+		bottom: calc(100% + 5px);
+	}
+	.tooltip.center {
+		left: 50%;
+		transform: translateX(-50%);
+		bottom: calc(100% + 5px);
+	}
+
 	.weapon-icon:hover > .tooltip {
 		display: grid;
 	}

@@ -1,6 +1,8 @@
 import { User, type IUser } from "$lib/entities/User.js";
+import { LogHelper } from "$lib/helpers/LogHelper.js";
 import { json } from "@sveltejs/kit";
 import { plainToInstance } from "class-transformer";
+import { QueryFailedError } from "typeorm";
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request, locals }) {
@@ -22,14 +24,25 @@ export async function POST({ request, locals }) {
 		}
 	}
 
-	const userEntity = plainToInstance(User, userPojo);
+	let userEntity = plainToInstance(User, userPojo);
 
 	if (!userEntity) {
 		return json({ error: "Unable to parse user data" }, { status: 400 });
 	}
 
-	userEntity.save({ data: { session } });
-	locals.sessionUserProfile = userPojo;
+	try {
+		userEntity = await userEntity.save({ data: { session } });
+		locals.sessionUserProfile = userEntity.toObject();
+	} catch (err) {
+		if (err instanceof QueryFailedError) {
+			LogHelper.error(`/api/user/save - ${err.message} - CODE: [${err.driverError.code}]`);
+			let errorMessage = "Failed to save user";
+			if (err.driverError.code === "23505") {
+				errorMessage = "User with that name already exists";
+			}
+			return json({ error: errorMessage }, { status: 400 });
+		}
+	}
 
-	return json({ message: "User data saved" });
+	return json(userPojo);
 }

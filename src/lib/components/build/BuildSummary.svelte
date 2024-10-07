@@ -20,10 +20,10 @@
 
 <div class="build-summary-container {CLASS}">
 	<div class="build-melee-summary">
-		{@render itemSummary(build.primaryWeapon.weapon.name, build.primaryWeapon)}
+		{@render itemSummary(build.primaryWeapon.weapon?.name || "Primary Weapon", build.primaryWeapon)}
 	</div>
 	<div class="build-range-summary">
-		{@render itemSummary(build.secondaryWeapon.weapon.name, build.secondaryWeapon)}
+		{@render itemSummary(build.secondaryWeapon.weapon?.name || "Secondary Weapon", build.secondaryWeapon)}
 	</div>
 	<div class="build-jewelry-summary necklace-summary">
 		{@render itemSummary("Necklace", build.necklace, "jewelry-icon necklace-icon border-04")}
@@ -43,8 +43,10 @@
 		<p class="item-trait-name">{item.trait.name}</p>
 		{/if}
 	</div>
-	{#if "weapon" in item}
-	<WeaponIcon weapon={item.weapon}></WeaponIcon>
+	{#if "weapon" in item && item.weapon}
+	<div class="pointer-events-none">
+		<WeaponIcon weapon={item.weapon}></WeaponIcon>
+	</div>
 	{:else if itemIcon}
 	<div class={itemIcon}></div>
 	{/if}

@@ -35,7 +35,7 @@
 	};
 </script>
 
-<div class="top-navigation tablet:!bg-none tablet:!h-[45px]">
+<div class="top-navigation">
 	<button class="hamburger-menu-icon {isMenuOpen ? 'active' : ''}" onclick={() => handleMenuClick()}>
 		<span class="hamburger-line"></span>
 		<span class="hamburger-line"></span>
@@ -46,6 +46,7 @@
 		{#if isFramePath}
 			<a href="/about" class="hidden tablet:block rg-icon mb-[-4px] hover:!no-underline">&nbsp;</a>
 		{/if}
+		<a href="/build/create" title="Create New Build" class="new-build-icon"> </a>
 		<input
 			type="checkbox"
 			class="background-toggle"
@@ -58,6 +59,16 @@
 </div>
 
 <style>
+	.new-build-icon {
+		background: url("/images/icons/anvil-icon.png") center / contain no-repeat;
+		display: block;
+		width: 34px;
+		height: 27px;
+		transition: background 0.3s ease;
+	}
+	.new-build-icon:hover {
+		background: url("/images/icons/anvil-icon-hover.png") center / contain no-repeat;
+	}
 	.icon-container {
 		height: 40px;
 	}
@@ -88,6 +99,7 @@
 	@media (min-width: 768px) {
 		.top-navigation {
 			box-shadow: none;
+			background: none;
 		}
 	}
 

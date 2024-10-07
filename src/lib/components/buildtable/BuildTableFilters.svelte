@@ -38,7 +38,6 @@
 	let difficultyModifiers = $state<IDifficultyModifier[]>([]);
 	let potions = $state<IPotion[]>([]);
 	let buildRoles = $state<IBuildRole[]>([]);
-	let twitchSettings = $state<ITwitchSetting[]>([]);
 	let bookSettings = $state<IBookSetting[]>([]);
 
 	let careersData = $state<ICareer[]>([]);
@@ -133,11 +132,6 @@
 			buildRoles = items;
 		}
 
-		if (twitchSettings.length === 0) {
-			const { items } = await TwitchSettingsStore.loadData();
-			twitchSettings = items;
-		}
-
 		if (bookSettings.length === 0) {
 			const { items } = await BookSettingsStore.loadData();
 			bookSettings = items;
@@ -175,6 +169,9 @@
 			filter.difficultyId != null ||
 			filter.difficultyModifierId != null ||
 			filter.potionId != null ||
+			filter.bookSettingId != null ||
+			filter.buildRoleId != null ||
+			filter.missionId != null ||
 			(filter.search != null && filter.search.length > 0) ||
 			filter.sort != "dateModified" ||
 			filter.asc != false;
@@ -199,6 +196,9 @@
 			difficultyId: null,
 			difficultyModifierId: null,
 			potionId: null,
+			bookSettingId: null,
+			buildRoleId: null,
+			missionId: null,
 		};
 	}
 
@@ -310,12 +310,6 @@
 					<option value={null}>All Book Settings</option>
 					{#each bookSettings as bookSetting}
 						<option value={bookSetting.id}>{bookSetting.name}</option>
-					{/each}
-				</select>
-				<select bind:value={filter.twitchSettingId} class="flex-1 min-w-[200px]">
-					<option value={null}>All Twitch Settings</option>
-					{#each twitchSettings as twitchSetting}
-						<option value={twitchSetting.id}>{twitchSetting.name}</option>
 					{/each}
 				</select>
 				<select bind:value={filter.buildRoleId} class="flex-1 min-w-[200px]">

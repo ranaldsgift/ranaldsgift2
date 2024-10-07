@@ -33,20 +33,24 @@
 			<input class="!text-[1.3rem] !text-[#f0d9af]" type="text" bind:value={build.summary} placeholder="A brief summary for your build" maxlength="120" />
 			<div class="summary-container px-5">
 				<CareerBuildSummaryContainer {build} career={build.career}></CareerBuildSummaryContainer>
-				<BuildTalentSummary {build}></BuildTalentSummary>
+				<div class="hidden desktop:block">
+					<BuildTalentSummary {build}></BuildTalentSummary>
+				</div>
 			</div>
 			<div class="divider-03 h-[48px]"></div>
-			<BuildSummary class="px-5" {build}></BuildSummary>
-			<BuildOptionsEditor bind:build></BuildOptionsEditor>
+			<div class="hidden desktop:block mb-4">
+				<BuildSummary class="px-5" {build}></BuildSummary>
+			</div>
+			<div class="px-5">
+				<BuildOptionsEditor bind:build></BuildOptionsEditor>
+			</div>
 		</div>
 		<BuildGuideEditor bind:guide={build.description}></BuildGuideEditor>
 		<div class="build-talents-container">
-			<CareerTalents
-				bind:build={build}
-			></CareerTalents>
+			<CareerTalents bind:build={build}></CareerTalents>
 		</div>
 	</div>
-	<div class="inventory-container top-left-shadow">
+	<div class="inventory-container top-left-shadow self-start">
 		<CareerInventory bind:build bind:inventoryTab={inventoryTab}></CareerInventory>
 	</div>
 </div>

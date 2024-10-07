@@ -5,7 +5,6 @@
 	import BuildRating from "../build/BuildRating.svelte";
 	import WeaponIcon from "../inventory/WeaponIcon.svelte";
 	import TraitIcon from "../inventory/TraitIcon.svelte";
-  import { browser } from '$app/environment';
 	import { getWindowState } from "$lib/state/WindowState.svelte";
 	
 	type Props = {
@@ -19,12 +18,14 @@
 	if (!build.careerId) {
 		error(404, "Career Data for the build failed to load.");
 	}
+
+	let tooltipPosition: "left" | "center" = $derived(windowState.isMobile || windowState.isTablet ? "left" : "center");
 </script>
 
 <div class="build-list-item-container">
 	<a class="link-overlay" href={`/build/${build.id}`} data-sveltekit-preload-data="tap">&nbsp;</a>
 	<div class="build-list-item desktop:h-full" data-career={build.careerId} data-build={build.id}>
-		<div class="career-portrait border-04 mobile:w-[100px] mobile:h-[120px]" style="background: {windowState.isMobile ? `url('/images/careers/${build.careerId}/portrait-wide.png') no-repeat right / contain, url('/images/backgrounds/background29.png')` : `url('/images/careers/${build.careerId}/portrait.png')`}"></div>
+		<div class="career-portrait border-04 mobile:w-[100px] mobile:h-[120px]" style="background: {windowState.isMobile || windowState.isTablet ? `url('/images/careers/${build.careerId}/portrait-wide.png') center right / contain no-repeat, url('/images/backgrounds/background29.png')` : `url('/images/careers/${build.careerId}/portrait.png') center / contain no-repeat`}"></div>
 		<div class="build-description-container">
 			<p class="build-name header-underline">{build.name}</p>
 			<p class="build-hero">{build.career.name}</p>
@@ -34,14 +35,18 @@
 			<BuildRating {build}></BuildRating>
 		</div>
 		<div class="weapons grid">
+			{#if build.primaryWeapon.weapon}
 			<div class="weapon-container">
-				<WeaponIcon weapon={build.primaryWeapon.weapon} size="45px"></WeaponIcon>
+				<WeaponIcon weapon={build.primaryWeapon.weapon} size="45px" {tooltipPosition}></WeaponIcon>
 				<TraitIcon trait={build.primaryWeapon.trait!} size="45px"></TraitIcon>
-				</div>
+			</div>
+			{/if}
+			{#if build.secondaryWeapon.weapon}
 			<div class="weapon-container">
-				<WeaponIcon weapon={build.secondaryWeapon.weapon} size="45px"></WeaponIcon>            
+				<WeaponIcon weapon={build.secondaryWeapon.weapon} size="45px" {tooltipPosition}></WeaponIcon>            
 				<TraitIcon trait={build.secondaryWeapon.trait!} size="45px"></TraitIcon>
 			</div>
+			{/if}
 		</div>
 		<div class="traits grid">
 			<div>
@@ -93,9 +98,7 @@
 		grid-column-gap: 10px;
 		pointer-events: none;
 	}
-	.build-list-item :global(.build-author),
-	.build-list-item :global(.traits > *),
-	.build-list-item :global(.weapons > *) {
+	.build-list-item :global(.build-author) {
 		pointer-events: all;
 	}
 	a.link-overlay {
@@ -109,9 +112,8 @@
 	.build-list-item-container {
 		position: relative;
 	}
-	.build-list-item-container :global(.trait-icon),
 	.build-list-item-container :global(.weapon-icon) {		
-		background-size: calc(100% - 12px) !important;
+		background-size: 100% !important;
 	}
 	.edit-build-page .build-list-item .weapons,
 	.edit-build-page .build-list-item .traits {
@@ -298,11 +300,6 @@
 	.date-updated {
 		text-transform: lowercase;
 	}
-
-	/* 
-.build-list-item[data-career='1'] {
-    background-image: linear-gradient(to bottom, #200000d6, #1e0000), url('/images/backgrounds/background39.png');
-} */
 
 	.build-list-item[data-career="1"]:before {
 		background-image: linear-gradient(rgba(87, 57, 57, 0.3), rgba(87, 57, 57, 0.3)),

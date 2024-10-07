@@ -33,10 +33,21 @@
 			marker.style.transform = `translateX(${rect.left - containerRect.left - 10}px)`;
 		}
 	}
+
+	$effect(() => {
+        // Add resize event listener
+        window.addEventListener('resize', updateMarkerPosition);
+
+        // Clean up the event listener when the component is destroyed
+        return () => {
+            window.removeEventListener('resize', updateMarkerPosition);
+        };
+    });
 </script>
 
-<div class="page-container w-full h-full relative">
-	<div class="top-bar flex items-center gap-5 px-[80px] relative" bind:this={menuContainer}>
+<div class="page-container w-full h-[calc(100vh-45px)] tablet:h-full relative mt-[45px] tablet:mt-0">
+	<div class="top-bar flex items-center pl-[20px] max-w-[100vw] tablet:px-[80px] relative" bind:this={menuContainer}>
+		<div class="menu-options-container flex items-center gap-5 max-w-[100%] h-[100%] overflow-x-auto pr-[20px] tablet:pr-0">
 		{#each menuOptions as option}
 			<a
 				href={option.href}
@@ -44,8 +55,9 @@
 			>
 				{option.label}
 			</a>
-		{/each}
-		<div class="selected-marker" bind:this={marker}></div>
+			{/each}
+		</div>
+		<div class="selected-marker pointer-events-none" bind:this={marker}></div>
 	</div>
 	<div class="page-content">
 		{@render children()}
@@ -54,6 +66,21 @@
 </div>
 
 <style>
+	.top-bar {
+		-webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS devices */
+	}
+
+	.menu-options-container {
+		-ms-overflow-style: none;  /* IE and Edge */
+		scrollbar-width: none;  /* Firefox */
+	}
+
+	.menu-options-container::-webkit-scrollbar {
+		display: none; /* Chrome, Safari and Opera */
+	}
+	.menu-options-container::-webkit-scrollbar {
+		height: 1px;
+	}
 	.page-content, .bottom-bar {
 		border-image: url(/images/borders/border-11.png);
 		border-image-slice: 3 5 0 5;

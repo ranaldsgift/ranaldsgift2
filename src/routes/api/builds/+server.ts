@@ -1,6 +1,4 @@
-import { CareerCache } from "$lib/cache/CareerCache";
 import { PatchCache } from "$lib/cache/PatchCache";
-import { WeaponCache } from "$lib/cache/WeaponCache";
 import { CareerBuild, type ICareerBuild } from "$lib/entities/builds/CareerBuild";
 import BuildHelper from "$lib/helpers/BuildHelper";
 import { error, type RequestHandler } from "@sveltejs/kit";
@@ -23,11 +21,10 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 	let difficultyModifierId = url.searchParams.get("difficultyModifierId");
 	let potionId = url.searchParams.get("potionId");
 	let bookSettingId = url.searchParams.get("bookSettingId");
-	let twitchSettingId = url.searchParams.get("twitchSettingId");
 	let buildRoleId = url.searchParams.get("buildRoleId");
 	let patchId = url.searchParams.get("patchId");
 	let search = url.searchParams.get("search");
-	let sort = url.searchParams.get("sort");
+	let sort = url.searchParams.get("sort") || "dateModified";
 	let asc = url.searchParams.get("asc") === "true";
 	let favoriteByUserId = url.searchParams.get("favoriteByUserId");
 	let ratedByUserId = url.searchParams.get("ratedByUserId");
@@ -59,38 +56,81 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			.leftJoinAndSelect("build.potion", "potion")
 			.leftJoinAndSelect("build.book", "book")
 			.leftJoinAndSelect("build.roles", "roles")
-			.leftJoinAndSelect("build.career", "career")
-			.leftJoinAndSelect("career.hero", "hero")
-			.leftJoinAndSelect("build.primaryWeapon", "primaryWeaponBuild")
+			.leftJoin("build.career", "career")
+			.addSelect(["career.id", "career.name"])
+			.leftJoin("career.hero", "hero")
+			.addSelect(["hero.id", "hero.name"])
+			.leftJoin("build.primaryWeapon", "primaryWeaponBuild")
+			.addSelect([
+				"primaryWeaponBuild.id",
+				"primaryWeaponBuild.rarity",
+				"primaryWeaponBuild.weaponId",
+				"primaryWeaponBuild.powerLevel",
+				"primaryWeaponBuild.property1Value",
+				"primaryWeaponBuild.property2Value",
+			])
 			.leftJoin("primaryWeaponBuild.weapon", "primaryWeapon")
-			.addSelect(["primaryWeapon.id", "primaryWeapon.name"])
-			.leftJoinAndSelect("build.secondaryWeapon", "secondaryWeaponBuild")
+			.addSelect(["primaryWeapon.id"])
+			.leftJoin("primaryWeaponBuild.property1", "primaryWeaponProperty1")
+			.addSelect(["primaryWeaponProperty1.id"])
+			.leftJoin("primaryWeaponBuild.property2", "primaryWeaponProperty2")
+			.addSelect(["primaryWeaponProperty2.id"])
+			.leftJoin("primaryWeaponBuild.trait", "primaryWeaponTrait")
+			.addSelect(["primaryWeaponTrait.id"])
+
+			.leftJoin("build.secondaryWeapon", "secondaryWeaponBuild")
+			.addSelect([
+				"secondaryWeaponBuild.id",
+				"secondaryWeaponBuild.rarity",
+				"secondaryWeaponBuild.weaponId",
+				"secondaryWeaponBuild.powerLevel",
+				"secondaryWeaponBuild.property1Value",
+				"secondaryWeaponBuild.property2Value",
+			])
 			.leftJoin("secondaryWeaponBuild.weapon", "secondaryWeapon")
-			.addSelect(["secondaryWeapon.id", "secondaryWeapon.name"])
-			.leftJoinAndSelect("build.necklace", "necklace")
-			.leftJoinAndSelect("build.charm", "charm")
-			.leftJoinAndSelect("build.trinket", "trinket")
-			.leftJoinAndSelect("primaryWeaponBuild.property1", "pwb.property1")
-			.leftJoinAndSelect("primaryWeaponBuild.property2", "pwb.property2")
-			.leftJoinAndSelect("primaryWeaponBuild.trait", "pwb.trait")
-			.leftJoinAndSelect("secondaryWeaponBuild.property1", "swb.property1")
-			.leftJoinAndSelect("secondaryWeaponBuild.property2", "swb.property2")
-			.leftJoinAndSelect("secondaryWeaponBuild.trait", "swb.trait")
-			.leftJoinAndSelect("necklace.property1", "necklaceBuild.property1")
-			.leftJoinAndSelect("necklace.property2", "necklaceBuild.property2")
-			.leftJoinAndSelect("necklace.trait", "necklaceBuild.trait")
-			.leftJoinAndSelect("charm.property1", "charmBuild.property1")
-			.leftJoinAndSelect("charm.property2", "charmBuild.property2")
-			.leftJoinAndSelect("charm.trait", "charmBuild.trait")
-			.leftJoinAndSelect("trinket.property1", "trinketBuild.property1")
-			.leftJoinAndSelect("trinket.property2", "trinketBuild.property2")
-			.leftJoinAndSelect("trinket.trait", "trinketBuild.trait")
-			.leftJoinAndSelect("build.talent1", "talent1")
-			.leftJoinAndSelect("build.talent2", "talent2")
-			.leftJoinAndSelect("build.talent3", "talent3")
-			.leftJoinAndSelect("build.talent4", "talent4")
-			.leftJoinAndSelect("build.talent5", "talent5")
-			.leftJoinAndSelect("build.talent6", "talent6")
+			.addSelect(["secondaryWeapon.id"])
+			.leftJoin("secondaryWeaponBuild.property1", "secondaryWeaponProperty1")
+			.addSelect(["secondaryWeaponProperty1.id"])
+			.leftJoin("secondaryWeaponBuild.property2", "secondaryWeaponProperty2")
+			.addSelect(["secondaryWeaponProperty2.id"])
+			.leftJoin("secondaryWeaponBuild.trait", "secondaryWeaponTrait")
+			.addSelect(["secondaryWeaponTrait.id"])
+			.leftJoin("build.necklace", "necklace")
+			.addSelect(["necklace.id", "necklace.rarity", "necklace.powerLevel", "necklace.property1Value", "necklace.property2Value"])
+			.leftJoin("necklace.property1", "necklaceProperty1")
+			.addSelect(["necklaceProperty1.id"])
+			.leftJoin("necklace.property2", "necklaceProperty2")
+			.addSelect(["necklaceProperty2.id"])
+			.leftJoin("necklace.trait", "necklaceTrait")
+			.addSelect(["necklaceTrait.id"])
+			.leftJoin("build.charm", "charm")
+			.addSelect(["charm.id", "charm.rarity", "charm.powerLevel", "charm.property1Value", "charm.property2Value"])
+			.leftJoin("charm.property1", "charmProperty1")
+			.addSelect(["charmProperty1.id"])
+			.leftJoin("charm.property2", "charmProperty2")
+			.addSelect(["charmProperty2.id"])
+			.leftJoin("charm.trait", "charmTrait")
+			.addSelect(["charmTrait.id"])
+			.leftJoin("build.trinket", "trinket")
+			.addSelect(["trinket.id", "trinket.rarity", "trinket.powerLevel", "trinket.property1Value", "trinket.property2Value"])
+			.leftJoin("trinket.property1", "trinketProperty1")
+			.addSelect(["trinketProperty1.id"])
+			.leftJoin("trinket.property2", "trinketProperty2")
+			.addSelect(["trinketProperty2.id"])
+			.leftJoin("trinket.trait", "trinketTrait")
+			.addSelect(["trinketTrait.id"])
+			.leftJoin("build.talent1", "talent1")
+			.addSelect(["talent1.id"])
+			.leftJoin("build.talent2", "talent2")
+			.addSelect(["talent2.id"])
+			.leftJoin("build.talent3", "talent3")
+			.addSelect(["talent3.id"])
+			.leftJoin("build.talent4", "talent4")
+			.addSelect(["talent4.id"])
+			.leftJoin("build.talent5", "talent5")
+			.addSelect(["talent5.id"])
+			.leftJoin("build.talent6", "talent6")
+			.addSelect(["talent6.id"])
 			.addSelect((subQuery) => {
 				return subQuery
 					.select("COUNT(ratings.userId)", "ratingsCount")
@@ -240,8 +280,6 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 				query = query.orderBy("build_ratingscount", asc ? "ASC" : "DESC");
 			} else if (sort === "favoritesCount") {
 				query = query.orderBy("build_favoritescount", asc ? "ASC" : "DESC");
-			} else if (sort === "random") {
-				query = query.orderBy("RANDOM()");
 			} else {
 				query = query.orderBy(`build.${sort}`, asc ? "ASC" : "DESC");
 			}
@@ -288,9 +326,9 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 		}
 
 		let buildPojo = build.toObject({ exposeUnsetFields: false });
-		buildPojo.career = await CareerCache.get(build.careerId!);
+		/* 		buildPojo.career = await CareerCache.get(build.careerId!);
 		buildPojo.primaryWeapon.weapon = await WeaponCache.get(build.primaryWeapon.weaponId!);
-		buildPojo.secondaryWeapon.weapon = await WeaponCache.get(build.secondaryWeapon.weaponId!);
+		buildPojo.secondaryWeapon.weapon = await WeaponCache.get(build.secondaryWeapon.weaponId!); */
 		buildPojo.patchNumber = BuildHelper.getPatch(buildPojo, patches)?.number;
 		buildPojo.ratingsCount = parseInt(data.raw.find((r) => r.build_id === build.id)?.build_ratingscount || "0");
 		buildPojo.favoritesCount = parseInt(data.raw.find((r) => r.build_id === build.id)?.build_favoritescount || "0");
