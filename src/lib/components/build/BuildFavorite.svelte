@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { ROOT_API_URL } from "$lib/data/constants/constants";
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 	import { getUserState } from "$lib/state/UserState.svelte";
 	import { toast } from "svelte-sonner";
@@ -15,7 +16,7 @@
 
 	const handleFavorite = async () => {
 		if (userState.user) {
-			const response = await fetch(`/api/build/${build.id}/favorite`, {
+			const response = await fetch(`${ROOT_API_URL}/build/${build.id}/favorite`, {
 				method: "POST",
 				headers: {
 					"content-type": "application/json",

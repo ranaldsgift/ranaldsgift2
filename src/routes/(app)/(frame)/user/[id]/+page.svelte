@@ -8,6 +8,7 @@
 	import ContentHeader from "$lib/components/ContentHeader.svelte";
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import Seo from "$lib/components/SEO.svelte";
+	import { ROOT_API_URL } from "$lib/data/constants/constants.js";
 	import { getUserState } from "$lib/state/UserState.svelte.js";
 	import { type SubmitFunction } from "@sveltejs/kit";
 	import { toast } from "svelte-sonner";
@@ -52,7 +53,7 @@
 {#if data.sessionUser?.id === data.userData.id}
 	<PageButtonContainer>
 		<a class="button-02" href={`/user/${data.userData.id}/edit`}>Edit</a>
-		<form action="/api/user?/logout" method="POST" use:enhance={logoutHandler}>
+		<form action={`${ROOT_API_URL}/user?/logout`} method="POST" use:enhance={logoutHandler}>
 			<button type="submit" class="button-02">Logout</button>
 		</form>
 	</PageButtonContainer>

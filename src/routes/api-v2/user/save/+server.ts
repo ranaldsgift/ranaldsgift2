@@ -35,7 +35,7 @@ export async function POST({ request, locals }) {
 		locals.sessionUserProfile = userEntity.toObject();
 	} catch (err) {
 		if (err instanceof QueryFailedError) {
-			LogHelper.error(`/api/user/save - ${err.message} - CODE: [${err.driverError.code}]`);
+			LogHelper.error(`/api-v2/user/save - ${err.message} - CODE: [${err.driverError.code}]`);
 			let errorMessage = "Failed to save user";
 			if (err.driverError.code === "23505") {
 				errorMessage = "User with that name already exists";

@@ -11,6 +11,7 @@
 	import { getUserState } from "$lib/state/UserState.svelte.js";
 	import { invalidate } from "$app/navigation";
 	import { CareerBuildsStore } from "$lib/stores/DataStores.js";
+	import { ROOT_API_URL } from "$lib/data/constants/constants.js";
 
 	const { data } = $props();
 	const userState = getUserState();
@@ -20,7 +21,7 @@
 
 	const saveUserHandler = async () => {
 		try {
-			const response = await fetch("/api/user/save", {
+			const response = await fetch(`${ROOT_API_URL}/user/save`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

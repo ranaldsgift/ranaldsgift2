@@ -4,6 +4,7 @@
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 	import { getUserState } from "$lib/state/UserState.svelte";
 	import { toast } from "svelte-sonner";
+	import { ROOT_API_URL } from "$lib/data/constants/constants";
 
 	type Props = {
 		build: ICareerBuild;
@@ -25,7 +26,7 @@
 				return;
 			}
 
-			const response = await fetch(`/api/build/${build.id}/rate`, {
+			const response = await fetch(`${ROOT_API_URL}/build/${build.id}/rate`, {
 				method: "POST",
 				headers: {
 					"content-type": "application/json",

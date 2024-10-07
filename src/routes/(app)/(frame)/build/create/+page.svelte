@@ -10,6 +10,7 @@
 	import { goto, invalidate } from "$app/navigation";
 	import { CareerBuildsStore } from "$lib/stores/DataStores.js";
 	import { getUserState } from "$lib/state/UserState.svelte.js";
+	import { ROOT_API_URL } from "$lib/data/constants/constants.js";
 	const { data } = $props();
 
 	const pageState = getBuildCreatorPageState();
@@ -40,7 +41,7 @@
 		}
 
 		try {
-			const response = await fetch("/api/build/save", {
+			const response = await fetch(`${ROOT_API_URL}/build/save`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

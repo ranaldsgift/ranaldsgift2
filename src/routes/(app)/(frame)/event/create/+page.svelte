@@ -4,6 +4,7 @@
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import TextEditor from "$lib/components/quill/TextEditor.svelte";
 	import Seo from "$lib/components/SEO.svelte";
+	import { ROOT_API_URL } from "$lib/data/constants/constants";
 	import type { IEvent } from "$lib/entities/Event";
 
 	let event: Partial<IEvent> = $state({
@@ -16,7 +17,7 @@
 
 	async function saveEvent() {
 		try {
-			const response = await fetch("/api/event/save", {
+			const response = await fetch(`${ROOT_API_URL}/event/save`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

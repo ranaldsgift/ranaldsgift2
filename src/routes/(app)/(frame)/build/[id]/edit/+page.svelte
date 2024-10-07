@@ -8,6 +8,7 @@
 	import { getBuildEditorPageState } from "$lib/state/BuildEditorPageState.svelte.js";
 	import BuildHelper from "$lib/helpers/BuildHelper.js";
 	import { CareerBuildsStore } from "$lib/stores/DataStores.js";
+	import { ROOT_API_URL } from "$lib/data/constants/constants.js";
 	const { data } = $props();
 
 	const pageState = getBuildEditorPageState();
@@ -52,7 +53,7 @@
 		}
 
 		try {
-			const response = await fetch("/api/build/save", {
+			const response = await fetch(`${ROOT_API_URL}/build/save`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
