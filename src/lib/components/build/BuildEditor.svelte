@@ -24,7 +24,7 @@
 	}
 </script>
 
-<div class="build-editor grid grid-cols-2 gap-5">
+<div class="build-editor grid grid-cols-2 tablet:gap-5">
 	<CareerSelection bind:selectedCareer={build!.career}></CareerSelection>
 	<div class="career-container top-left-shadow">
 		<ContainerTitle>Summary</ContainerTitle>
@@ -85,7 +85,6 @@
 	.build-editor {
 		display: grid;
 		align-self: start;
-		gap: 20px;
 		grid-template-columns: 100% !important;
 		grid-template-areas: "careerSelection" "careerContainer" "careerInventory" !important;
 	}
