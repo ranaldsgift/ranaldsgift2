@@ -10,6 +10,9 @@ export type BuildTableFilter = {
 	charmTraitId?: number | null;
 	necklaceTraitId?: number | null;
 	trinketTraitId?: number | null;
+	isBot?: boolean | null;
+	isDeathwish?: boolean | null;
+	isTwitch?: boolean | null;
 	difficultyId?: number | null;
 	difficultyModifierId?: number | null;
 	potionId?: number | null;

@@ -12,7 +12,7 @@
 	let { build, patchNumber }: Props = $props();
 </script>
 
-<div class="build-header-details-container">
+<div class="build-header-details-container mb-5 mobile:mb-0">
 	<div class="header-layout">
 		<span class="build-header heading mobile:text-[1.5rem] tablet:text-[2rem] text-[1.2rem]">{build.name}</span>
 		<BuildFavorite {build}></BuildFavorite>

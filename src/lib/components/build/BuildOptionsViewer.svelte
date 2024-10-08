@@ -16,8 +16,32 @@
 	{#if build.difficultyModifier}
 		<span>{build.difficultyModifier.name}</span>
 	{/if}
-	{#if build.twitch}
-		<span>{build.twitch.name}</span>
+	{#if build.isDeathwish}
+		<span>Deathwish ✓</span>
+	{/if}
+	{#if build.isTwitch}
+		<span>Twitch ✓</span>
+		{#if build.twitchSpawnSize}
+			<span>Spawn Size: {build.twitchSpawnSize}</span>
+		{/if}
+		{#if build.twitchVoteTimer}
+			<span>Vote Timer: {build.twitchVoteTimer}</span>
+		{/if}
+		{#if build.twitchVoteCooldown}
+			<span>Vote Cooldown: {build.twitchVoteCooldown}</span>
+		{/if}
+		{#if build.twitchBlessing}
+			<span>Blessings: {build.twitchBlessing}</span>
+		{/if}
+		{#if build.twitchDisableWeeklyEvents}
+			<span>Weekly Events ✗</span>
+		{/if}
+		{#if build.twitchWeeklyEventEffectDuration}
+			<span>Weekly Event Effect Duration: {build.twitchWeeklyEventEffectDuration}</span>
+		{/if}
+	{/if}
+	{#if build.isBot}
+		<span>Bot ✓</span>
 	{/if}
 	{#if build.mission}
 		<span>{build.mission.name}</span>

@@ -16,13 +16,16 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 	let charmTraitId = url.searchParams.get("charmTraitId");
 	let necklaceTraitId = url.searchParams.get("necklaceTraitId");
 	let trinketTraitId = url.searchParams.get("trinketTraitId");
-	let missionId = url.searchParams.get("missionId");
+	let isBot = url.searchParams.get("isBot");
+	let isDeathwish = url.searchParams.get("isDeathwish");
+	let isTwitch = url.searchParams.get("isTwitch");
 	let difficultyId = url.searchParams.get("difficultyId");
 	let difficultyModifierId = url.searchParams.get("difficultyModifierId");
 	let potionId = url.searchParams.get("potionId");
-	let bookSettingId = url.searchParams.get("bookSettingId");
 	let buildRoleId = url.searchParams.get("buildRoleId");
+	let bookSettingId = url.searchParams.get("bookSettingId");
 	let patchId = url.searchParams.get("patchId");
+	let missionId = url.searchParams.get("missionId");
 	let search = url.searchParams.get("search");
 	let sort = url.searchParams.get("sort") || "dateModified";
 	let asc = url.searchParams.get("asc") === "true";
@@ -120,17 +123,17 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			.leftJoin("trinket.trait", "trinketTrait")
 			.addSelect(["trinketTrait.id"])
 			.leftJoin("build.talent1", "talent1")
-			.addSelect(["talent1.id"])
+			.addSelect(["talent1.id", "talent1.talentNumber"])
 			.leftJoin("build.talent2", "talent2")
-			.addSelect(["talent2.id"])
+			.addSelect(["talent2.id", "talent2.talentNumber"])
 			.leftJoin("build.talent3", "talent3")
-			.addSelect(["talent3.id"])
+			.addSelect(["talent3.id", "talent3.talentNumber"])
 			.leftJoin("build.talent4", "talent4")
-			.addSelect(["talent4.id"])
+			.addSelect(["talent4.id", "talent4.talentNumber"])
 			.leftJoin("build.talent5", "talent5")
-			.addSelect(["talent5.id"])
+			.addSelect(["talent5.id", "talent5.talentNumber"])
 			.leftJoin("build.talent6", "talent6")
-			.addSelect(["talent6.id"])
+			.addSelect(["talent6.id", "talent6.talentNumber"])
 			.addSelect((subQuery) => {
 				return subQuery
 					.select("COUNT(ratings.userId)", "ratingsCount")
@@ -207,6 +210,18 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			if (Number(trinketTraitId)) {
 				query = query.andWhere(`trinket.trait.id = :trinketTraitId`, { trinketTraitId: trinketTraitId });
 			}
+		}
+
+		if (isBot) {
+			query = query.andWhere(`build.isBot = :isBot`, { isBot: isBot });
+		}
+
+		if (isDeathwish) {
+			query = query.andWhere(`build.isDeathwish = :isDeathwish`, { isDeathwish: isDeathwish });
+		}
+
+		if (isTwitch) {
+			query = query.andWhere(`build.isTwitch = :isTwitch`, { isTwitch: isTwitch });
 		}
 
 		if (difficultyId) {

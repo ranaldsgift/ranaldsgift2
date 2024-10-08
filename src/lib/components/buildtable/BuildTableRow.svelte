@@ -6,12 +6,17 @@
 	import WeaponIcon from "../inventory/WeaponIcon.svelte";
 	import TraitIcon from "../inventory/TraitIcon.svelte";
 	import { getWindowState } from "$lib/state/WindowState.svelte";
+	import CareerTalentIcon from "../career/CareerTalentIcon.svelte";
+	import BuildHelper from "$lib/helpers/BuildHelper";
 	
 	type Props = {
 		build: ICareerBuild;
+		compact?: boolean;
 	};
 
-	const { build }: Props = $props();
+	const { build, compact = false }: Props = $props();
+
+	let selectedTalents = $derived.by(() => { console.log(BuildHelper.getTalents(build)); return BuildHelper.getTalents(build) });
 
 	const windowState = getWindowState();
 
@@ -22,9 +27,10 @@
 	let tooltipPosition: "left" | "center" = $derived(windowState.isMobile || windowState.isTablet ? "left" : "center");
 </script>
 
+{#if build.careerId}
 <div class="build-list-item-container">
 	<a class="link-overlay" href={`/build/${build.id}`} data-sveltekit-preload-data="tap">&nbsp;</a>
-	<div class="build-list-item desktop:h-full" data-career={build.careerId} data-build={build.id}>
+	<div class="build-list-item desktop:h-full" data-career={build.careerId} data-build={build.id} data-compact={compact}>
 		<div class="career-portrait border-04 mobile:w-[100px] mobile:h-[120px]" style="background: {windowState.isMobile || windowState.isTablet ? `url('/images/careers/${build.careerId}/portrait-wide.png') center right / contain no-repeat, url('/images/backgrounds/background29.png')` : `url('/images/careers/${build.careerId}/portrait.png') center / contain no-repeat`}"></div>
 		<div class="build-description-container">
 			<p class="build-name header-underline">{build.name}</p>
@@ -48,6 +54,13 @@
 			</div>
 			{/if}
 		</div>
+		<div class="talents grid">
+			{#each selectedTalents as talent}
+			<div class="talent-icon-container" style="--overlay: {talent?.talentNumber ? talent.talentNumber % 3 === 0  ? `'3'` : `'${talent.talentNumber % 3}'` : '-'}">
+				<CareerTalentIcon talentNumber={talent?.talentNumber ?? 0} careerId={build.careerId} size="45px"></CareerTalentIcon>
+			</div>
+			{/each}
+		</div>
 		<div class="traits grid">
 			<div>
 			<TraitIcon trait={build.necklace.trait!} size="45px"></TraitIcon>
@@ -65,6 +78,7 @@
 		</div>
 	</div>
 </div>
+{/if}
 
 <style>
 	.weapon-container {
@@ -81,21 +95,39 @@
 		background-repeat: no-repeat;
 		background-size: contain;
 		margin-left: 15px;
+		margin-right: 5px;
+	}
+
+	.build-list-item[data-compact="true"] {
+        grid-template-areas:
+			"buildDescription buildDescription buildDescription buildRating"
+			"buildTalents buildTalents buildTalents empty2"
+			"buildWeapons buildWeapons buildTraits empty2"
+			"buildFooter buildFooter buildFooter buildFooter";
+        grid-template-columns: auto auto 1fr;
+		grid-template-rows: auto 45px 45px 40px;
+        padding: 0 0 0 15px;
+	}
+	
+
+	.build-list-item[data-compact="true"]  .career-portrait {
+		display: none;
 	}
 
 	.build-list-item {
 		display: grid;
 		grid-template-columns: auto auto auto 1fr auto;
 		position: relative;
-		grid-template-rows: auto 45px 40px;
+		grid-template-rows: auto 45px 45px 40px;
 		grid-row-gap: 5px;
 		grid-template-areas:
 			"heroIcon buildDescription buildDescription buildDescription buildRating"
-			"heroIcon buildWeapons buildTraits buildTraits empty2"
+			"heroIcon buildTalents buildTalents buildTalents empty2"
+			"heroIcon buildWeapons buildWeapons buildTraits empty2"
 			"heroIcon buildFooter buildFooter buildFooter buildFooter";
 		text-transform: uppercase;
 		cursor: pointer;
-		grid-column-gap: 10px;
+		grid-column-gap: 5px;
 		pointer-events: none;
 	}
 	.build-list-item :global(.build-author) {
@@ -291,9 +323,6 @@
 	.build-list-item .talent-icon[data-talent="3"]::after {
 		content: "3";
 	}
-	.build-list-item .talents {
-		display: none;
-	}
 	.build-author {
 		color: #0096fb;
 	}
@@ -449,16 +478,55 @@
 		box-sizing: border-box;
 	}
 
+	.talent-icon-container {	
+		position: relative;
+	}
+	.talent-icon-container::before {
+		margin: 4px;
+		overflow: hidden;
+		content: var(--overlay);
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: calc(100% - 8px);
+		width: calc(100% - 8px);
+		z-index: 1;
+		display: grid;
+		align-content: center;
+		justify-content: center;
+		background: radial-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 35%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+		font-size: 1.2rem;
+		color: #fff;
+		text-shadow: 0 0 10px #1900ff;
+	}
+	.talent-icon-container::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		border-image: url("/images/borders/border-04.png");
+		border-image-slice: 15;
+		border-image-width: 15px;
+		border-style: solid;
+		border-image-repeat: repeat;
+		box-sizing: border-box;
+		pointer-events: none;
+		box-shadow: inset 0 0 6px 3px #000;
+	}
+
 	@media (max-width: 768px) {
     .build-list-item {
         grid-template-areas:
             "heroIcon heroIcon"
             "buildDescription buildRating"
+            "buildTalents buildTalents"
             "buildWeapons buildWeapons"
             "buildTraits buildTraits"
             "buildFooter buildFooter" !important;
         grid-template-columns: 1fr auto !important;
-        grid-template-rows: auto auto auto auto 40px !important;
+        grid-template-rows: auto auto auto auto auto 40px !important;
         padding: 15px 0 0 15px;
     }
     .build-list-item .build-creation-info {

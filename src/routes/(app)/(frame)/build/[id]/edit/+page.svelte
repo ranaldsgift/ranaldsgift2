@@ -14,7 +14,7 @@
 	const pageState = getBuildEditorPageState();
 
 	if (!data.viewModel || !data.viewModel.build) {
-		error(404, "Heroes Page - Invalid ViewModel");
+		error(404, "Build not found");
 	}
 
 	if (!pageState.selectedCareer) {
@@ -22,11 +22,11 @@
 	}
 
 	if (!pageState.build || pageState.build.id !== data.viewModel.build.id) {
-		if (!data.viewModel.build) {
-			error(500, "Build not found");
-		}
 		pageState.build = data.viewModel.build;
 	}
+
+	let serializedBuild = $state(JSON.stringify(pageState.build));
+	let isDirty = $derived.by(() => serializedBuild !== JSON.stringify(pageState.build));
 
 	// TODO - Show the missing fields on hover of the disabled save button
 	let missingFieldsMessage = $derived.by(() => {
@@ -76,6 +76,10 @@
 		}
 	};
 
+	const resetBuildState = () => {
+		pageState.build = null;
+	};
+
 	$inspect(pageState.build);
 </script>
 
@@ -91,7 +95,7 @@
 
 	<PageButtonContainer>
 		<button class="button-02" onclick={saveBuild}>Save</button>
-		<a class="button-02" href={`/build/${pageState.build.id}`}>Cancel</a>
+		<a class="button-02" href={`/build/${pageState.build.id}`} onclick={resetBuildState}>Cancel</a>
 	</PageButtonContainer>
 
 	<div class="edit-build-page">
