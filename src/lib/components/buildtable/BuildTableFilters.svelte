@@ -8,7 +8,6 @@
 	import type { IMission } from "$lib/entities/Mission";
 	import type { IPatch } from "$lib/entities/Patch";
 	import type { IPotion } from "$lib/entities/Potion";
-	import type { ITwitchSetting } from "$lib/entities/TwitchSetting";
 	import type { IWeapon } from "$lib/entities/Weapon";
 	import type { BuildTableFilter } from "$lib/types/BuildTableFilters";
 	import ContainerTitle from "../ContainerTitle.svelte";
@@ -449,7 +448,14 @@
 		height: 20px;
 		transition: background 0.1s ease-in-out;
 	}
-	.show-filters-button-icon:hover {
+	.show-filters-button {
+		opacity: 0.7;
+		transition: opacity 0.2s ease-in-out;
+	}
+	.show-filters-button:hover {
+		opacity: 1;
+	}
+	.show-filters-button:hover .show-filters-button-icon {
 		background: url("/images/icons/arrow_focus.png");
 		background-size: 20px;
 	}
@@ -458,6 +464,13 @@
 		transition: opacity 0.2s ease-in-out;
 	}
 	.clear-search:hover {
+		opacity: 1;
+	}
+	.clear-filters-button {
+		opacity: 0.7;
+		transition: opacity 0.2s ease-in-out;
+	}
+	.clear-filters-button:hover {
 		opacity: 1;
 	}
 </style>

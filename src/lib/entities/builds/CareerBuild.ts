@@ -204,11 +204,11 @@ export interface ICareerBuild {
 	book?: IBookSetting | null;
 	isTwitch?: boolean;
 	twitchSpawnSize?: number;
-	twitchVoteTimer?: TwitchVoteTimeType;
-	twitchVoteCooldown?: TwitchVoteCooldownType;
-	twitchBlessing?: TwitchBlessingType;
+	twitchVoteTimer?: TwitchVoteTimeType | null;
+	twitchVoteCooldown?: TwitchVoteCooldownType | null;
+	twitchBlessing?: TwitchBlessingType | null;
 	twitchDisableWeeklyEvents?: boolean;
-	twitchWeeklyEventEffectDuration?: TwitchWeeklyEventEffectDurationType;
+	twitchWeeklyEventEffectDuration?: TwitchWeeklyEventEffectDurationType | null;
 	roles?: IBuildRole[] | null;
 	videos?: string[];
 	//pageView?: IPageViewsCareerBuild;

@@ -11,9 +11,10 @@
 	
 	type Props = {
 		build: ICareerBuild;
+		compact?: boolean;
 	};
 
-	const { build }: Props = $props();
+	const { build, compact = false }: Props = $props();
 
 	let selectedTalents = $derived.by(() => { console.log(BuildHelper.getTalents(build)); return BuildHelper.getTalents(build) });
 
@@ -29,7 +30,7 @@
 {#if build.careerId}
 <div class="build-list-item-container">
 	<a class="link-overlay" href={`/build/${build.id}`} data-sveltekit-preload-data="tap">&nbsp;</a>
-	<div class="build-list-item desktop:h-full" data-career={build.careerId} data-build={build.id}>
+	<div class="build-list-item desktop:h-full" data-career={build.careerId} data-build={build.id} data-compact={compact}>
 		<div class="career-portrait border-04 mobile:w-[100px] mobile:h-[120px]" style="background: {windowState.isMobile || windowState.isTablet ? `url('/images/careers/${build.careerId}/portrait-wide.png') center right / contain no-repeat, url('/images/backgrounds/background29.png')` : `url('/images/careers/${build.careerId}/portrait.png') center / contain no-repeat`}"></div>
 		<div class="build-description-container">
 			<p class="build-name header-underline">{build.name}</p>
@@ -94,6 +95,23 @@
 		background-repeat: no-repeat;
 		background-size: contain;
 		margin-left: 15px;
+		margin-right: 5px;
+	}
+
+	.build-list-item[data-compact="true"] {
+        grid-template-areas:
+			"buildDescription buildDescription buildDescription buildRating"
+			"buildTalents buildTalents buildTalents empty2"
+			"buildWeapons buildWeapons buildTraits empty2"
+			"buildFooter buildFooter buildFooter buildFooter";
+        grid-template-columns: auto auto 1fr;
+		grid-template-rows: auto 45px 45px 40px;
+        padding: 0 0 0 15px;
+	}
+	
+
+	.build-list-item[data-compact="true"]  .career-portrait {
+		display: none;
 	}
 
 	.build-list-item {
@@ -105,11 +123,11 @@
 		grid-template-areas:
 			"heroIcon buildDescription buildDescription buildDescription buildRating"
 			"heroIcon buildTalents buildTalents buildTalents empty2"
-			"heroIcon buildWeapons buildTraits buildTraits empty2"
+			"heroIcon buildWeapons buildWeapons buildTraits empty2"
 			"heroIcon buildFooter buildFooter buildFooter buildFooter";
 		text-transform: uppercase;
 		cursor: pointer;
-		grid-column-gap: 10px;
+		grid-column-gap: 5px;
 		pointer-events: none;
 	}
 	.build-list-item :global(.build-author) {
@@ -476,10 +494,10 @@
 		display: grid;
 		align-content: center;
 		justify-content: center;
-		background: radial-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 20%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
-		font-size: 1rem;
+		background: radial-gradient(rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 35%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+		font-size: 1.2rem;
 		color: #fff;
-		text-shadow: 0 0 10px #000;
+		text-shadow: 0 0 10px #1900ff;
 	}
 	.talent-icon-container::after {
 		content: "";

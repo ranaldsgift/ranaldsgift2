@@ -11,6 +11,7 @@
 	import BuildSummary from "./BuildSummary.svelte";
 	import BuildTalentSummary from "./BuildTalentSummary.svelte";
 	import BuildOptionsEditor from "./BuildOptionsEditor.svelte";
+	import TextEditor from "../quill/TextEditor.svelte";
 
 	type Props = {
 		build: ICareerBuild;
@@ -44,8 +45,8 @@
 			<div class="px-5">
 				<BuildOptionsEditor bind:build></BuildOptionsEditor>
 			</div>
-		</div>
-		<BuildGuideEditor bind:guide={build.description}></BuildGuideEditor>
+		</div>		
+		<TextEditor bind:content={build.description}></TextEditor>
 		<div class="build-talents-container">
 			<CareerTalents bind:build={build}></CareerTalents>
 		</div>

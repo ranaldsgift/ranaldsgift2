@@ -113,6 +113,15 @@
 		const selectedRoles = buildRoles.filter((role) => selectedRoleIds.includes(role.id));
 		build.roles = selectedRoles.length > 0 ? selectedRoles : null;
 	};
+
+	const handleTwitchToggle = () => {
+		build.twitchSpawnSize = build.isTwitch ? 100 : undefined;
+		build.twitchVoteTimer = null;
+		build.twitchVoteCooldown = null;
+		build.twitchBlessing = null;
+		build.twitchDisableWeeklyEvents = false;
+		build.twitchWeeklyEventEffectDuration = null;
+	};
 </script>
 
 {#await loadBuildOptions()}
@@ -135,7 +144,7 @@
 					onchange={handleDifficultyChange}
 					data-dirty={build.difficulty?.id}
 				>
-					<option value={undefined} selected>Difficulty</option>
+					<option value={null} selected>Difficulty</option>
 					{#each difficulties as difficulty}
 						<option value={difficulty.id} selected={difficulty.id === build.difficulty?.id}>
 							{difficulty.name}
@@ -149,7 +158,7 @@
 					onchange={handleDifficultyModifierChange}
 					data-dirty={build.difficultyModifier?.id}
 				>
-					<option value={undefined} selected>Difficulty Modifier</option>
+					<option value={null} selected>Difficulty Modifier</option>
 					{#each difficultyModifiers as difficultyModifier}
 						<option value={difficultyModifier.id} selected={difficultyModifier.id === build.difficultyModifier?.id}>
 							{difficultyModifier.name}
@@ -157,38 +166,17 @@
 					{/each}
 				</select>
 
-				<select class="p-2" value={build.mission?.id} onchange={handleMissionChange} data-dirty={build.mission?.id}>
-					<option value={undefined} selected>Mission</option>
-					{#each missions as mission}
-						<option value={mission.id} selected={mission.id === build.mission?.id}>
-							{mission.name}
-						</option>
-					{/each}
-				</select>
-
-				<select class="p-2" value={build.potion?.id} onchange={handlePotionChange} data-dirty={build.potion?.id}>
-					<option value={undefined} selected>Potion</option>
-					{#each potions as potion}
-						<option value={potion.id} selected={potion.id === build.potion?.id}>
-							{potion.name}
-						</option>
-					{/each}
-				</select>
-
-				<select class="p-2" value={build.book?.id} onchange={handleBookChange} data-dirty={build.book?.id}>
-					<option value={undefined} selected>Book</option>
-					{#each bookSettings as book}
-						<option value={book.id} selected={book.id === build.book?.id}>
-							{book.name}
-						</option>
-					{/each}
-				</select>
+				<div class="styled-input" data-dirty={build.isDeathwish ? true : null}>
+					<label for="deathwish">Deathwish {build.isDeathwish ? "✓" : "✗"}</label>
+					<input id="deathwish" type="checkbox" bind:checked={build.isDeathwish} />
+				</div>
 
 				<select
-					class="p-2"
+					class="p-2 col-span-1 row-span-2"
 					multiple
 					onchange={handleRolesChange}
 					data-dirty={build.roles != null && build.roles.length > 0 ? true : null}
+					title="Ctrl+click to select/deselect multiple roles"
 				>
 					{#each buildRoles as role}
 						<option value={role.id} selected={build.roles?.some((r) => r.id === role.id)}>
@@ -197,9 +185,36 @@
 					{/each}
 				</select>
 
+				<select class="p-2" value={build.mission?.id} onchange={handleMissionChange} data-dirty={build.mission?.id}>
+					<option value={null} selected>Mission</option>
+					{#each missions as mission}
+						<option value={mission.id} selected={mission.id === build.mission?.id}>
+							{mission.name}
+						</option>
+					{/each}
+				</select>
+
+				<select class="p-2" value={build.potion?.id} onchange={handlePotionChange} data-dirty={build.potion?.id}>
+					<option value={null} selected>Potion</option>
+					{#each potions as potion}
+						<option value={potion.id} selected={potion.id === build.potion?.id}>
+							{potion.name}
+						</option>
+					{/each}
+				</select>
+
+				<select class="p-2" value={build.book?.id} onchange={handleBookChange} data-dirty={build.book?.id}>
+					<option value={null} selected>Book</option>
+					{#each bookSettings as book}
+						<option value={book.id} selected={book.id === build.book?.id}>
+							{book.name}
+						</option>
+					{/each}
+				</select>
+
 				<div class="styled-input" data-dirty={build.isTwitch ? true : null}>
 					<label for="isTwitch">Twitch {build.isTwitch ? "✓" : "✗"}</label>
-					<input id="isTwitch" type="checkbox" bind:checked={build.isTwitch} />
+					<input id="isTwitch" type="checkbox" bind:checked={build.isTwitch} onchange={handleTwitchToggle} />
 				</div>
 			</div>
 		</div>
@@ -220,29 +235,29 @@
 						data-dirty={build.twitchSpawnSize}
 					/>
 					<select bind:value={build.twitchVoteTimer} data-dirty={build.twitchVoteTimer}>
-						<option value={undefined} selected>Vote Timer</option>
+						<option value={null} selected>Vote Timer</option>
 						{#each TWITCH_VOTE_TIME_TIMER as timer}
 							<option value={timer}>{timer}</option>
 						{/each}
 					</select>
 					<select bind:value={build.twitchVoteCooldown} data-dirty={build.twitchVoteCooldown}>
-						<option value={undefined} selected>Vote Cooldown</option>
+						<option value={null} selected>Vote Cooldown</option>
 						{#each TWITCH_VOTE_COOLDOWN as cooldown}
 							<option value={cooldown}>{cooldown}</option>
 						{/each}
 					</select>
 					<select bind:value={build.twitchBlessing} data-dirty={build.twitchBlessing}>
-						<option value={undefined} selected>Blessing</option>
+						<option value={null} selected>Blessing</option>
 						{#each TWITCH_BLESSINGS as blessing}
 							<option value={blessing}>{blessing}</option>
 						{/each}
 					</select>
 					<div class="styled-input" data-dirty={build.twitchDisableWeeklyEvents ? true : null}>
-						<label for="twitchDisableWeeklyEvents">Weekly Events {build.twitchDisableWeeklyEvents ? "✓" : "✗"} </label>
+						<label for="twitchDisableWeeklyEvents">Weekly Events {build.twitchDisableWeeklyEvents ? "✗" : "✓"} </label>
 						<input id="twitchDisableWeeklyEvents" type="checkbox" bind:checked={build.twitchDisableWeeklyEvents} />
 					</div>
 					<select bind:value={build.twitchWeeklyEventEffectDuration} data-dirty={build.twitchWeeklyEventEffectDuration}>
-						<option value={undefined} selected>Weekly Event Effect Duration</option>
+						<option value={null} selected>Weekly Event Effect Duration</option>
 						{#each TWITCH_WEEKLY_EVENT_EFFECT_DURATION as duration}
 							<option value={duration}>{duration}</option>
 						{/each}
