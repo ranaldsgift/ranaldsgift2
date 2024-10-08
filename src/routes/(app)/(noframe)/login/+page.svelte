@@ -32,7 +32,7 @@
 
 <form
 	method="POST"
-	action={`${ROOT_API_URL}/user?/login&redirectTo={$page.url.href}`}
+	action={`${ROOT_API_URL}/user?/login&redirectTo=${$page.url.href}`}
 	class="m-auto max-w-xl relative mt-10"
 	use:enhance={submitLogin}
 >
