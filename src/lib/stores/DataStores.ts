@@ -34,6 +34,6 @@ export const TwitchSettingsStore = new AsyncStore<ITwitchSetting>(`${ROOT_API_UR
 export const BookSettingsStore = new AsyncStore<IBookSetting>(`${ROOT_API_URL}/booksettings`, STATIC_DATA_CACHE_DURATION);
 export const PotionsStore = new AsyncStore<IPotion>(`${ROOT_API_URL}/potions`, STATIC_DATA_CACHE_DURATION);
 export const BuildRolesStore = new AsyncStore<IBuildRole>(`${ROOT_API_URL}/buildroles`, STATIC_DATA_CACHE_DURATION);
-export const EventsStore = new AsyncStore<IEvent>(`${ROOT_API_URL}/events`, STATIC_DATA_CACHE_DURATION);
+export const EventsStore = new AsyncStore<IEvent>(`${ROOT_API_URL}/events`, 60 * 1000 * 5);
 
 export const CareerBuildsStore = new AuthoredAsyncStore<ICareerBuild>(`${ROOT_API_URL}/builds`, 60 * 1000 * 5);

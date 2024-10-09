@@ -24,6 +24,7 @@
 		<BuildCreationInfo {build}></BuildCreationInfo>
 		<span class="text-divider-02"></span>
 		<div><span>Patch&nbsp;&nbsp;</span><span class="patch-number">{patchNumber}</span></div>
+		<a href={`/build/${build.id}/overlay`} target="_blank" class="twitch-icon" title="Stream overlay"> </a>
 	</div>
 	{#if build.summary}
 		<div class="mobile:text-[1.5rem] text-[1.2rem] text-[#f0d9af] px-4 py-2 mobile:pb-0">{build.summary}</div>
@@ -64,5 +65,18 @@
 		font-size: 1.4em;
 		color: #f0d9af;
 		text-decoration: none;
+	}
+	.twitch-icon {
+		background-image: url("/images/icons/twitch.png");
+		background-size: 40px;
+		background-repeat: no-repeat;
+		background-position: center;
+		width: 30px;
+		height: 30px;
+		transition: background-image 0.1s ease-in-out;
+		cursor: pointer;
+	}
+	.twitch-icon:hover {
+		background-image: url("/images/icons/twitch-hover.png");
 	}
 </style>

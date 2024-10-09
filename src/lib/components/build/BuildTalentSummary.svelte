@@ -9,7 +9,14 @@
 	const { build }: Props = $props();
 
 	const getSelectedTalents = (build: ICareerBuild) => {
-		return [build.talent1, build.talent2, build.talent3, build.talent4, build.talent5, build.talent6];
+		return [
+			build.level5Talent,
+			build.level10Talent,
+			build.level15Talent,
+			build.level20Talent,
+			build.level25Talent,
+			build.level30Talent,
+		];
 	};
 
 	const getTalentString = (build: ICareerBuild) => {

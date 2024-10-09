@@ -13,9 +13,9 @@
 	let events = $state<IEvent[]>([]);
 
 	$effect(() => {
-		const endAfterTime = new Date().toISOString().split("T")[0];
+		const currentDate = new Date().toISOString().split("T")[0];
 
-		EventsStore.loadData(`isActive=true&endAfter=${endAfterTime}`).then((data) => {
+		EventsStore.loadData(`isActive=true&startBefore=${currentDate}&endAfter=${currentDate}`).then((data) => {
 			events = data.items;
 		});
 	});

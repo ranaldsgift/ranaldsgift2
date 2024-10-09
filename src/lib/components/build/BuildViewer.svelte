@@ -35,7 +35,7 @@
 		<BuildGuideView {build}></BuildGuideView>
 	{/if}
 	<div class="build-talents-container">
-		<CareerTalents careerId={build.career.id} {build} readOnly={true}></CareerTalents>
+		<CareerTalents {build} readOnly={true}></CareerTalents>
 	</div>
 </div>
 

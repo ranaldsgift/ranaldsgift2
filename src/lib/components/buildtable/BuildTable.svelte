@@ -115,9 +115,9 @@
 	</div>
 {:then}
 	{#if $rows.length > 0}
-		<div class="test {className}">
+		<div class={className}>
 			<ContainerTitle>{title ?? "Builds"}</ContainerTitle>
-			<div class="p-5 border-01 background-20 gap-5 grid desktop:grid-cols-2 desktop:grid-flow-row {className}">
+			<div class="p-5 border-01 background-20 gap-5 grid {!compact ? 'desktop:grid-cols-2' : ''} desktop:grid-flow-row">
 				{#each $rows as row}
 					<BuildTableRow build={row} {compact}></BuildTableRow>
 				{/each}
