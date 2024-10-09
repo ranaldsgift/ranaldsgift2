@@ -20,22 +20,22 @@
 		if (BuildHelper.isTalentSelected(talent, build)) {
 			switch (tier) {
 				case 1:
-					build.talent1 = undefined;
+					build.level5Talent = undefined;
 					break;
 				case 2:
-					build.talent2 = undefined;
+					build.level10Talent = undefined;
 					break;
 				case 3:
-					build.talent3 = undefined;
+					build.level15Talent = undefined;
 					break;
 				case 4:
-					build.talent4 = undefined;
+					build.level20Talent = undefined;
 					break;
 				case 5:
-					build.talent5 = undefined;
+					build.level25Talent = undefined;
 					break;
 				case 6:
-					build.talent6 = undefined;
+					build.level30Talent = undefined;
 					break;
 			}
 			return;
@@ -43,22 +43,22 @@
 
 		switch (tier) {
 			case 1:
-				build.talent1 = talent;
+				build.level5Talent = talent;
 				break;
 			case 2:
-				build.talent2 = talent;
+				build.level10Talent = talent;
 				break;
 			case 3:
-				build.talent3 = talent;
+				build.level15Talent = talent;
 				break;
 			case 4:
-				build.talent4 = talent;
+				build.level20Talent = talent;
 				break;
 			case 5:
-				build.talent5 = talent;
+				build.level25Talent = talent;
 				break;
 			case 6:
-				build.talent6 = talent;
+				build.level30Talent = talent;
 				break;
 		}
 	};

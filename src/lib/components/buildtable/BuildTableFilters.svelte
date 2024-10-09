@@ -21,7 +21,6 @@
 		MissionsStore,
 		PatchesStore,
 		PotionsStore,
-		TwitchSettingsStore,
 	} from "$lib/stores/DataStores";
 
 	type Props = {
@@ -209,6 +208,24 @@
 		{ value: "ratingsCount", label: "Rating" },
 	];
 
+	const twitchOptions = [
+		{ value: null, label: "Twitch" },
+		{ value: true, label: "Twitch ✓" },
+		{ value: false, label: "Twitch ✗" },
+	];
+
+	const botOptions = [
+		{ value: null, label: "Bot" },
+		{ value: true, label: "Bot ✓" },
+		{ value: false, label: "Bot ✗" },
+	];
+
+	const deathwishOptions = [
+		{ value: null, label: "Deathwish" },
+		{ value: true, label: "Deathwish ✓" },
+		{ value: false, label: "Deathwish ✗" },
+	];
+
 	const resetOffset = () => {
 		filter.offset = 0;
 	};
@@ -239,7 +256,7 @@
 		</div>
 		<div class="flex flex-wrap gap-2 w-full justify-center mt-[-10px]">
 			<button
-				class="show-filters-button flex justify-center items-center gap-2 h-[35px]"
+				class="show-filters-button z-[1] flex justify-center items-center gap-2 h-[35px]"
 				onclick={() => (showFilters = !showFilters)}
 			>
 				<span>More Filter Options</span>
@@ -291,18 +308,21 @@
 						<option value={hero.id}>{hero.name}</option>
 					{/each}
 				</select>
-				<div class="flex-1 min-w-[200px]" data-dirty={filter.isTwitch ? "true" : null}>
-					<label for="isTwitch">Twitch {filter.isTwitch ? "✓" : "✗"}</label>
-					<input id="isTwitch" type="checkbox" bind:checked={filter.isTwitch} onchange={resetOffset} />
-				</div>
-				<div class="flex-1 min-w-[200px]" data-dirty={filter.isBot ? "true" : null}>
-					<label for="isBot">Bot {filter.isBot ? "✓" : "✗"}</label>
-					<input id="isBot" type="checkbox" bind:checked={filter.isBot} onchange={resetOffset} />
-				</div>
-				<div class="flex-1 min-w-[200px]" data-dirty={filter.isDeathwish ? "true" : null}>
-					<label for="isDeathwish">Deathwish {filter.isDeathwish ? "✓" : "✗"}</label>
-					<input id="isDeathwish" type="checkbox" bind:checked={filter.isDeathwish} onchange={resetOffset} />
-				</div>
+				<select bind:value={filter.isTwitch} class="flex-1 min-w-[200px]" data-dirty={filter.isTwitch} onchange={resetOffset}>
+					{#each twitchOptions as option}
+						<option value={option.value}>{option.label}</option>
+					{/each}
+				</select>
+				<select bind:value={filter.isBot} class="flex-1 min-w-[200px]" data-dirty={filter.isBot} onchange={resetOffset}>
+					{#each botOptions as option}
+						<option value={option.value}>{option.label}</option>
+					{/each}
+				</select>
+				<select bind:value={filter.isDeathwish} class="flex-1 min-w-[200px]" data-dirty={filter.isDeathwish} onchange={resetOffset}>
+					{#each deathwishOptions as option}
+						<option value={option.value}>{option.label}</option>
+					{/each}
+				</select>
 				<select
 					bind:value={filter.difficultyId}
 					class="flex-1 min-w-[200px]"

@@ -55,9 +55,8 @@
 		<BuildViewer {build} patchNumber={data.viewModel.patchNumber}></BuildViewer>
 	</div>
 	<div class="build-side-container top-left-shadow">
-		<BuildTable filter={similarBuildsFilter} title={`Similar Builds by ${build.user?.name}`} class="!grid-cols-1" compact={true}
-		></BuildTable>
-		<BuildTable filter={moreBuildsFilter} title={`More ${build.career.name} Builds`} class="!grid-cols-1" compact={true}></BuildTable>
+		<BuildTable filter={similarBuildsFilter} title={`Similar Builds by ${build.user?.name}`} compact={true}></BuildTable>
+		<BuildTable filter={moreBuildsFilter} title={`More ${build.career.name} Builds`} compact={true}></BuildTable>
 	</div>
 </div>
 

@@ -32,6 +32,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { DataSource } from "typeorm";
 import { DifficultyModifier } from "$lib/entities/DifficultyModifier";
 import { Event } from "$lib/entities/Event";
+import { CareerBuildCareers } from "$lib/entities/views/CareerBuildCareers";
 
 let PRIVATE_SUPABASE_HOST = env.PRIVATE_SUPABASE_HOST;
 let PRIVATE_SUPABASE_PASSWORD = env.PRIVATE_SUPABASE_PASSWORD;
@@ -91,6 +92,7 @@ class TypeOrm {
 					TrinketBuild,
 					PageViewsCareerBuild,
 					Event,
+					CareerBuildCareers,
 				],
 				migrations: [],
 				subscribers: [EntitySubscriber, AuthoredEntitySubscriber],

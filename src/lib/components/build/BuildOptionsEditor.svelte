@@ -144,7 +144,7 @@
 					onchange={handleDifficultyChange}
 					data-dirty={build.difficulty?.id}
 				>
-					<option value={null} selected>Difficulty</option>
+					<option value={undefined} selected>Difficulty</option>
 					{#each difficulties as difficulty}
 						<option value={difficulty.id} selected={difficulty.id === build.difficulty?.id}>
 							{difficulty.name}
@@ -158,7 +158,7 @@
 					onchange={handleDifficultyModifierChange}
 					data-dirty={build.difficultyModifier?.id}
 				>
-					<option value={null} selected>Difficulty Modifier</option>
+					<option value={undefined} selected>Difficulty Modifier</option>
 					{#each difficultyModifiers as difficultyModifier}
 						<option value={difficultyModifier.id} selected={difficultyModifier.id === build.difficultyModifier?.id}>
 							{difficultyModifier.name}
@@ -186,7 +186,7 @@
 				</select>
 
 				<select class="p-2" value={build.mission?.id} onchange={handleMissionChange} data-dirty={build.mission?.id}>
-					<option value={null} selected>Mission</option>
+					<option value={undefined} selected>Mission</option>
 					{#each missions as mission}
 						<option value={mission.id} selected={mission.id === build.mission?.id}>
 							{mission.name}
@@ -195,7 +195,7 @@
 				</select>
 
 				<select class="p-2" value={build.potion?.id} onchange={handlePotionChange} data-dirty={build.potion?.id}>
-					<option value={null} selected>Potion</option>
+					<option value={undefined} selected>Potion</option>
 					{#each potions as potion}
 						<option value={potion.id} selected={potion.id === build.potion?.id}>
 							{potion.name}
@@ -204,7 +204,7 @@
 				</select>
 
 				<select class="p-2" value={build.book?.id} onchange={handleBookChange} data-dirty={build.book?.id}>
-					<option value={null} selected>Book</option>
+					<option value={undefined} selected>Book</option>
 					{#each bookSettings as book}
 						<option value={book.id} selected={book.id === build.book?.id}>
 							{book.name}

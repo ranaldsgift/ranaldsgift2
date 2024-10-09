@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import CareerTalent from '$lib/components/career/CareerTalent.svelte';
 	import CareerTalentIcon from '$lib/components/career/CareerTalentIcon.svelte';
@@ -36,6 +37,10 @@
 		});
 		return talentsString.join(" - ");
 	};
+	
+	$effect(() => {
+		goto(`?compact=${compact}&vertical=${vertical}`, { replaceState: true, keepFocus: true, noScroll: true });
+	});
 </script>
 
 {#if build}

@@ -11,7 +11,14 @@ class BuildHelper {
 			return false;
 		}
 
-		if (!build.talent1 || !build.talent2 || !build.talent3 || !build.talent4 || !build.talent5 || !build.talent6) {
+		if (
+			!build.level5Talent ||
+			!build.level10Talent ||
+			!build.level15Talent ||
+			!build.level20Talent ||
+			!build.level25Talent ||
+			!build.level30Talent
+		) {
 			return false;
 		}
 
@@ -49,27 +56,27 @@ class BuildHelper {
 			missingFields.push("trinket");
 		}
 
-		if (!build.talent1) {
+		if (!build.level5Talent) {
 			missingFields.push("talent1");
 		}
 
-		if (!build.talent2) {
+		if (!build.level10Talent) {
 			missingFields.push("talent2");
 		}
 
-		if (!build.talent3) {
+		if (!build.level15Talent) {
 			missingFields.push("talent3");
 		}
 
-		if (!build.talent4) {
+		if (!build.level20Talent) {
 			missingFields.push("talent4");
 		}
 
-		if (!build.talent5) {
+		if (!build.level25Talent) {
 			missingFields.push("talent5");
 		}
 
-		if (!build.talent6) {
+		if (!build.level30Talent) {
 			missingFields.push("talent6");
 		}
 
@@ -81,7 +88,14 @@ class BuildHelper {
 	}
 
 	static getTalents(build: ICareerBuild): (ICareerTalent | null | undefined)[] {
-		return [build.talent1, build.talent2, build.talent3, build.talent4, build.talent5, build.talent6];
+		return [
+			build.level5Talent,
+			build.level10Talent,
+			build.level15Talent,
+			build.level20Talent,
+			build.level25Talent,
+			build.level30Talent,
+		];
 	}
 
 	static isTalentSelected(talent: ICareerTalent | null | undefined, build: ICareerBuild): boolean {
@@ -172,12 +186,12 @@ class BuildHelper {
 
 		const talents =
 			talentsParam?.split("-").length === 6 ? talentsParam.split("-").map((talent) => parseInt(talent)) : [0, 0, 0, 0, 0, 0];
-		build.talent1 = build.career.talents.find((talent) => talent.talentNumber === talents[0]);
-		build.talent2 = build.career.talents.find((talent) => talent.talentNumber === talents[1]);
-		build.talent3 = build.career.talents.find((talent) => talent.talentNumber === talents[2]);
-		build.talent4 = build.career.talents.find((talent) => talent.talentNumber === talents[3]);
-		build.talent5 = build.career.talents.find((talent) => talent.talentNumber === talents[4]);
-		build.talent6 = build.career.talents.find((talent) => talent.talentNumber === talents[5]);
+		build.level5Talent = build.career.talents.find((talent) => talent.talentNumber === talents[0]);
+		build.level10Talent = build.career.talents.find((talent) => talent.talentNumber === talents[1]);
+		build.level15Talent = build.career.talents.find((talent) => talent.talentNumber === talents[2]);
+		build.level20Talent = build.career.talents.find((talent) => talent.talentNumber === talents[3]);
+		build.level25Talent = build.career.talents.find((talent) => talent.talentNumber === talents[4]);
+		build.level30Talent = build.career.talents.find((talent) => talent.talentNumber === talents[5]);
 
 		const necklaceParams = searchParams.get("necklace");
 		if (necklaceParams?.split("-").length === 3) {
@@ -266,9 +280,9 @@ class BuildHelper {
 			return "";
 		}
 
-		let talentParams = `${build.talent1?.talentNumber ?? 0}-${build.talent2?.talentNumber ?? 0}-${build.talent3?.talentNumber ?? 0}-${
-			build.talent4?.talentNumber ?? 0
-		}-${build.talent5?.talentNumber ?? 0}-${build.talent6?.talentNumber ?? 0}`;
+		let talentParams = `${build.level5Talent?.talentNumber ?? 0}-${build.level10Talent?.talentNumber ?? 0}-${
+			build.level15Talent?.talentNumber ?? 0
+		}-${build.level20Talent?.talentNumber ?? 0}-${build.level25Talent?.talentNumber ?? 0}-${build.level30Talent?.talentNumber ?? 0}`;
 
 		let searchParams = "?";
 		searchParams += `career=${build.career.id}`;
@@ -282,9 +296,9 @@ class BuildHelper {
 	}
 
 	static getSearchParamsFromBuild(build: ICareerBuild): { key: string; value: string }[] {
-		let talentParams = `${build.talent1?.talentNumber ?? 0}-${build.talent2?.talentNumber ?? 0}-${build.talent3?.talentNumber ?? 0}-${
-			build.talent4?.talentNumber ?? 0
-		}-${build.talent5?.talentNumber ?? 0}-${build.talent6?.talentNumber ?? 0}`;
+		let talentParams = `${build.level5Talent?.talentNumber ?? 0}-${build.level10Talent?.talentNumber ?? 0}-${
+			build.level15Talent?.talentNumber ?? 0
+		}-${build.level20Talent?.talentNumber ?? 0}-${build.level25Talent?.talentNumber ?? 0}-${build.level30Talent?.talentNumber ?? 0}`;
 
 		return [
 			{ key: "career", value: build.career.id.toString() },

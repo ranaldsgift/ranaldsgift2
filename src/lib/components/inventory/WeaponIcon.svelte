@@ -15,8 +15,8 @@
 {#if weapon}
 	<div
 		class="weapon-icon border-04 {CLASS}"
-		style="--size: {size}; background: url('/images/weapons/{weapon.codename}.png') no-repeat center / calc(100% + 8px), 
-                        url('/images/backgrounds/icon-background-2.png') no-repeat center / 100% 100%;"
+		style="--size: {size}; background: url('/images/weapons/{weapon.codename}.png') no-repeat center / cover, 
+                        url('/images/backgrounds/icon-background-2.png') no-repeat center / cover;"
 	>
 		<div class="tooltip border-35 {tooltipPosition}">
 			<span class="name header-underline">{weapon.name}</span>

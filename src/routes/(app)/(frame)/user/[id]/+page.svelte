@@ -28,8 +28,8 @@
 				: `This user has not created a profile yet.`
 	);
 
-	let favoriteFilter = $state({ favoriteByUserId: data.userData.id, limit: 3, offset: 0 });
-	let ratedFilter = $state({ ratedByUserId: data.userData.id, limit: 3, offset: 0 });
+	let favoriteFilter = $state({ favoriteByUserId: data.userData.id, limit: 4, offset: 0 });
+	let ratedFilter = $state({ ratedByUserId: data.userData.id, limit: 4, offset: 0 });
 	let authoredFilter = $state({ userId: data.userData.id, limit: 10, offset: 0 });
 
 	const logoutHandler: SubmitFunction = async () => {

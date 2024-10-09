@@ -2,7 +2,6 @@
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 	import type { ICareerTalent } from "$lib/entities/career/CareerTalent";
 	import TextEditor from "../quill/TextEditor.svelte";
-	import BuildGuideContainer from "./BuildGuideContainer.svelte";
 
 	type Props = {
 		build: ICareerBuild;
@@ -20,20 +19,30 @@
 	};
 
 	const replaceGear = (guide: string) => {
-		const primaryWeaponHtml = `<div class="weapon-icon border-05 size-[60px]" style="background: url('/images/weapons/${build.primaryWeapon.weapon.codename}.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/icon-background-2.png') no-repeat center / 100% 100%;"></div>`;
-		const secondaryWeaponHtml = `<div class="weapon-icon border-05 size-[60px]" style="background: url('/images/weapons/${build.secondaryWeapon.weapon.codename}.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/icon-background-2.png') no-repeat center / 100% 100%;"></div>`;
+		if (build.primaryWeapon.weapon) {
+			const primaryWeaponHtml = `<div class="weapon-icon border-05 size-[60px]" style="background: url('/images/weapons/${build.primaryWeapon.weapon.codename}.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/icon-background-2.png') no-repeat center / 100% 100%;"></div>`;
+			const primaryRegex = new RegExp(`\[(]\\s*Melee\\s*\[)]|\[(]\\s*Primary\\s*\[)]`, "g");
+			guide = guide.replace(primaryRegex, primaryWeaponHtml);
+		}
 
-		const primaryRegex = new RegExp(`\[(]\\s*Melee\\s*\[)]|\[(]\\s*Primary\\s*\[)]`, "g");
-		const secondaryRegex = new RegExp(`\[(]\\s*Secondary\\s*\[)]|\[(]\\s*Ranged\\s*\[)]`, "g");
-
-		guide = guide.replace(primaryRegex, primaryWeaponHtml);
-		guide = guide.replace(secondaryRegex, secondaryWeaponHtml);
+		if (build.secondaryWeapon.weapon) {
+			const secondaryWeaponHtml = `<div class="weapon-icon border-05 size-[60px]" style="background: url('/images/weapons/${build.secondaryWeapon.weapon.codename}.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/icon-background-2.png') no-repeat center / 100% 100%;"></div>`;
+			const secondaryRegex = new RegExp(`\[(]\\s*Secondary\\s*\[)]|\[(]\\s*Ranged\\s*\[)]`, "g");
+			guide = guide.replace(secondaryRegex, secondaryWeaponHtml);
+		}
 
 		return guide;
 	};
 
 	const replaceTalents = (guide: string) => {
-		let selectedTalents = [build.talent1, build.talent2, build.talent3, build.talent4, build.talent5, build.talent6];
+		let selectedTalents = [
+			build.level5Talent,
+			build.level10Talent,
+			build.level15Talent,
+			build.level20Talent,
+			build.level25Talent,
+			build.level30Talent,
+		];
 
 		selectedTalents.forEach((talent) => {
 			guide = replaceTalent(talent, guide);
@@ -42,7 +51,7 @@
 		return guide;
 	};
 
-	const replaceTalent = (talent: ICareerTalent | undefined, guide: string) => {
+	const replaceTalent = (talent: ICareerTalent | null | undefined, guide: string) => {
 		if (!talent) return guide;
 
 		const regex = new RegExp(`\[(]\\s*Level ${Math.ceil(talent!.talentNumber / 3) * 5}\\s*\[)]`, "g");
@@ -63,8 +72,12 @@
 
 <style>
 	.build-description-container {
-		background: linear-gradient(180deg, rgba(43, 18, 18, 0.2784313725490196) 35%, rgba(0, 0, 0, 0.30196078431372547));
+		color: #000;
+		background:
+			url("/images/backgrounds/text-background-bottom.png") bottom / contain no-repeat,
+			url("/images/backgrounds/text-background.png") top / contain repeat-y;
 		-webkit-backdrop-filter: blur(10px);
 		backdrop-filter: blur(10px);
+		padding-bottom: 40px;
 	}
 </style>

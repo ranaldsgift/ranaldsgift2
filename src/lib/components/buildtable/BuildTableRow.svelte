@@ -16,7 +16,7 @@
 
 	const { build, compact = false }: Props = $props();
 
-	let selectedTalents = $derived.by(() => { console.log(BuildHelper.getTalents(build)); return BuildHelper.getTalents(build) });
+	let selectedTalents = $derived.by(() => { return BuildHelper.getTalents(build) });
 
 	const windowState = getWindowState();
 

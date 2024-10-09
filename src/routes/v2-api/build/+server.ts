@@ -44,12 +44,12 @@ export const GET: RequestHandler = async ({ url, params }) => {
 		.leftJoinAndSelect("trinket.property1", "trinketBuild.property1")
 		.leftJoinAndSelect("trinket.property2", "trinketBuild.property2")
 		.leftJoinAndSelect("trinket.trait", "trinketBuild.trait")
-		.leftJoinAndSelect("build.talent1", "talent1")
-		.leftJoinAndSelect("build.talent2", "talent2")
-		.leftJoinAndSelect("build.talent3", "talent3")
-		.leftJoinAndSelect("build.talent4", "talent4")
-		.leftJoinAndSelect("build.talent5", "talent5")
-		.leftJoinAndSelect("build.talent6", "talent6")
+		.leftJoinAndSelect("build.level5Talent", "level5Talent")
+		.leftJoinAndSelect("build.level10Talent", "level10Talent")
+		.leftJoinAndSelect("build.level15Talent", "level15Talent")
+		.leftJoinAndSelect("build.level20Talent", "level20Talent")
+		.leftJoinAndSelect("build.level25Talent", "level25Talent")
+		.leftJoinAndSelect("build.level30Talent", "level30Talent")
 		.loadRelationCountAndMap("build.ratingsCount", "build.userRatings")
 		.loadRelationCountAndMap("build.favoritesCount", "build.userFavorites");
 

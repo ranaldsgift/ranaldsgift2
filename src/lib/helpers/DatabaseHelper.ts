@@ -41,6 +41,7 @@ import PropertyCategoryEnum from "$lib/enums/PropertyCategoryEnum";
 import TraitCategoryEnum from "$lib/enums/TraitCategoryEnum";
 import { CareerCache } from "$lib/cache/CareerCache";
 import { plainToInstance } from "class-transformer";
+import { DifficultyModifier } from "$lib/entities/DifficultyModifier";
 
 // Use this flag to import data from Firebase into Supabase
 let IMPORT_FIREBASE_DATA = true;
@@ -63,9 +64,10 @@ export class DatabaseHelper {
 			await this.createMissions();
 			await this.createPatches();
 			await this.createPotions();
-			await this.createTwitchSettings();
+			//await this.createTwitchSettings();
 			await this.createBookSettings();
 			await this.createDifficulties();
+			await this.createDifficultyModifiers();
 
 			// TODO - Realistically this logic is not related to this app and should be a separate service
 			// It may be worth keeping just to be used to populate the database with "dummy" data for "testing"
@@ -428,9 +430,41 @@ export class DatabaseHelper {
 				continue;
 			}
 
+			let difficultyName = oldDifficulty.name;
+			if (difficultyName === "C1DWONS") {
+				difficultyName = "Cataclysm 2";
+			}
+			if (difficultyName === "C3DWONS") {
+				difficultyName = "Cataclysm 3";
+			}
+
 			difficulty = new Difficulty();
-			difficulty.name = oldDifficulty.name;
+			difficulty.name = difficultyName;
 			await difficulty.save();
+		}
+
+		LogHelper.info("Created difficulties successfully!");
+	}
+
+	/**
+	 * Populates the database with initial Difficulty Modifier data
+	 */
+	private static async createDifficultyModifiers() {
+		LogHelper.info("Creating difficulty modifiers...");
+
+		const difficultyModifiers = ["Onslaught", "Onslaught+", "Dutch Spice Tourney Version", "Spicy Onslaught"];
+
+		for (var difficultyModifierName of difficultyModifiers) {
+			var difficultyModifierEntity = await DifficultyModifier.findOne({ where: { name: difficultyModifierName } });
+
+			if (difficultyModifierEntity) {
+				LogHelper.info(`Difficulty modifier with name ${difficultyModifierName} already exists in the database. Skipping...`);
+				continue;
+			}
+
+			difficultyModifierEntity = new DifficultyModifier();
+			difficultyModifierEntity.name = difficultyModifierName;
+			await difficultyModifierEntity.save();
 		}
 
 		LogHelper.info("Created difficulties successfully!");
@@ -654,6 +688,21 @@ export class DatabaseHelper {
 		}
 	}
 
+	private static isBotBuild(firebaseBuild: FirebaseBuild) {
+		const lowerCaseName = firebaseBuild.name.toLowerCase();
+
+		if (
+			lowerCaseName.includes("bot|") ||
+			lowerCaseName.includes("bot build") ||
+			lowerCaseName.includes("build bot") ||
+			lowerCaseName.includes(" bot ")
+		) {
+			LogHelper.info(`Build with name ${firebaseBuild.name} is a bot build.`);
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * Use this function to migrate build data from Firebase to the the supabase database
 	 */
@@ -672,8 +721,8 @@ export class DatabaseHelper {
 		const difficultyData = await Difficulty.find();
 		const missionData = await Mission.find();
 		const potionData = await Potion.find();
-		const twitchData = await TwitchSetting.find();
 		const bookData = await BookSetting.find();
+		const onslaughtModifier = await DifficultyModifier.findOne({ where: { name: "Onslaught" } });
 
 		for (var i = 0; i < buildIds.length; i++) {
 			let firebaseBuild = buildData[i];
@@ -1002,7 +1051,7 @@ export class DatabaseHelper {
 				LogHelper.error(`Talent with number ${firebaseBuild.talent1} not found for career ${career.name}`);
 				continue;
 			}
-			build.talent1 = talent1;
+			build.level5Talent = talent1;
 
 			let talent2 = build.career.talents.find((talent) => {
 				return talent.talentNumber === firebaseBuild.talent2 + 3;
@@ -1011,7 +1060,7 @@ export class DatabaseHelper {
 				LogHelper.error(`Talent with number ${firebaseBuild.talent2 + 3} not found for career ${career.name}`);
 				continue;
 			}
-			build.talent2 = talent2;
+			build.level10Talent = talent2;
 
 			let talent3 = build.career.talents.find((talent) => {
 				return talent.talentNumber === firebaseBuild.talent3 + 6;
@@ -1020,7 +1069,7 @@ export class DatabaseHelper {
 				LogHelper.error(`Talent with number ${firebaseBuild.talent3 + 6} not found for career ${career.name}`);
 				continue;
 			}
-			build.talent3 = talent3;
+			build.level15Talent = talent3;
 
 			let talent4 = build.career.talents.find((talent) => {
 				return talent.talentNumber === firebaseBuild.talent4 + 9;
@@ -1029,7 +1078,7 @@ export class DatabaseHelper {
 				LogHelper.error(`Talent with number ${firebaseBuild.talent4 + 9} not found for career ${career.name}`);
 				continue;
 			}
-			build.talent4 = talent4;
+			build.level20Talent = talent4;
 
 			let talent5 = build.career.talents.find((talent) => {
 				return talent.talentNumber === firebaseBuild.talent5 + 12;
@@ -1038,7 +1087,7 @@ export class DatabaseHelper {
 				LogHelper.error(`Talent with number ${firebaseBuild.talent5 + 12} not found for career ${career.name}`);
 				continue;
 			}
-			build.talent5 = talent5;
+			build.level25Talent = talent5;
 
 			let talent6 = build.career.talents.find((talent) => {
 				return talent.talentNumber === firebaseBuild.talent6 + 15;
@@ -1047,7 +1096,7 @@ export class DatabaseHelper {
 				LogHelper.error(`Talent with number ${firebaseBuild.talent6 + 15} not found for career ${career.name}`);
 				continue;
 			}
-			build.talent6 = talent6;
+			build.level30Talent = talent6;
 
 			// Setting Roles
 			if (firebaseBuild.roles) {
@@ -1074,9 +1123,26 @@ export class DatabaseHelper {
 
 			// Setting Difficulty
 			if (firebaseBuild.difficulty) {
+				let firebaseDifficultyId = firebaseBuild.difficulty;
+
+				// Old builds used 7 and 8 for C1 and C3 respectively, since 8 is now C3 we can keep this but 7 is now Cataclysm 2
+				// Assign old builds with C1DWONS to Cataclysm 1 to fix this issue
+				// Assign old builds with C1DWONS or C3DWONS to both Deathwish and Onslaught
+				if (firebaseDifficultyId === 7 || firebaseDifficultyId === 8) {
+					build.isDeathwish = true;
+					if (onslaughtModifier) {
+						build.difficultyModifier = onslaughtModifier;
+					}
+				}
+
+				if (firebaseDifficultyId === 7) {
+					firebaseDifficultyId = 2;
+				}
+
 				var difficulty = difficultyData.find((difficulty) => {
-					return difficulty.id === firebaseBuild.difficulty;
+					return difficulty.id === firebaseDifficultyId;
 				});
+
 				if (difficulty) {
 					build.difficulty = difficulty;
 				}
@@ -1094,11 +1160,17 @@ export class DatabaseHelper {
 
 			// Setting Twitch
 			if (firebaseBuild.twitch) {
-				var twitch = twitchData.find((twitch) => {
-					return twitch.id === firebaseBuild.twitch;
-				});
-				if (twitch) {
-					build.twitch = twitch;
+				build.isTwitch = true;
+				switch (firebaseBuild.twitch) {
+					case 1:
+						build.twitchSpawnSize = 100;
+						break;
+					case 2:
+						build.twitchSpawnSize = 150;
+						break;
+					case 3:
+						build.twitchSpawnSize = 200;
+						break;
 				}
 			}
 
@@ -1113,9 +1185,12 @@ export class DatabaseHelper {
 			}
 
 			// Setting Videos
-			if (firebaseBuild.videos) {
+			if (firebaseBuild.videos && firebaseBuild.videos.length > 0) {
 				build.videos = firebaseBuild.videos;
 			}
+
+			// Setting bot
+			build.isBot = DatabaseHelper.isBotBuild(firebaseBuild);
 
 			// Save the build
 			build = await build.save({ data: { authorizationBypassKey: env.PRIVATE_DATABASE_AUTHORIZATION_BYPASS_KEY } });

@@ -46,6 +46,9 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@ManyToOne(() => Career)
 	career!: Career;
 
+	@Column("smallint", { nullable: true })
+	portraitFrameId?: number;
+
 	@Type(() => WeaponBuild)
 	@OneToOne(() => WeaponBuild, { eager: true, cascade: true })
 	@JoinColumn()
@@ -75,53 +78,53 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	powerLevel!: number;
 
 	@Type(() => CareerTalent)
-	@ManyToOne(() => CareerTalent, { eager: true })
-	talent1!: CareerTalent;
+	@ManyToOne(() => CareerTalent, { eager: true, nullable: true })
+	level5Talent!: CareerTalent;
 
 	@Type(() => CareerTalent)
-	@ManyToOne(() => CareerTalent, { eager: true })
-	talent2!: CareerTalent;
+	@ManyToOne(() => CareerTalent, { eager: true, nullable: true })
+	level10Talent!: CareerTalent;
 
 	@Type(() => CareerTalent)
-	@ManyToOne(() => CareerTalent, { eager: true })
-	talent3!: CareerTalent;
+	@ManyToOne(() => CareerTalent, { eager: true, nullable: true })
+	level15Talent!: CareerTalent;
 
 	@Type(() => CareerTalent)
-	@ManyToOne(() => CareerTalent, { eager: true })
-	talent4!: CareerTalent;
+	@ManyToOne(() => CareerTalent, { eager: true, nullable: true })
+	level20Talent!: CareerTalent;
 
 	@Type(() => CareerTalent)
-	@ManyToOne(() => CareerTalent, { eager: true })
-	talent5!: CareerTalent;
+	@ManyToOne(() => CareerTalent, { eager: true, nullable: true })
+	level25Talent!: CareerTalent;
 
 	@Type(() => CareerTalent)
-	@ManyToOne(() => CareerTalent, { eager: true })
-	talent6!: CareerTalent;
+	@ManyToOne(() => CareerTalent, { eager: true, nullable: true })
+	level30Talent!: CareerTalent;
 
 	@Column("boolean", { default: false })
 	isBot!: boolean;
 
 	@Type(() => Difficulty)
-	@ManyToOne(() => Difficulty, { eager: true })
+	@ManyToOne(() => Difficulty, { eager: true, nullable: true })
 	difficulty!: Difficulty;
 
 	@Type(() => DifficultyModifier)
-	@ManyToOne(() => DifficultyModifier, { eager: true })
+	@ManyToOne(() => DifficultyModifier, { eager: true, nullable: true })
 	difficultyModifier!: DifficultyModifier;
 
 	@Column("boolean", { default: false })
 	isDeathwish!: boolean;
 
 	@Type(() => Mission)
-	@ManyToOne(() => Mission, { eager: true })
+	@ManyToOne(() => Mission, { eager: true, nullable: true })
 	mission!: Mission;
 
 	@Type(() => Potion)
-	@ManyToOne(() => Potion, { eager: true })
+	@ManyToOne(() => Potion, { eager: true, nullable: true })
 	potion!: Potion;
 
 	@Type(() => BookSetting)
-	@ManyToOne(() => BookSetting, { eager: true })
+	@ManyToOne(() => BookSetting, { eager: true, nullable: true })
 	book!: BookSetting;
 
 	@Column("boolean", { default: false })
@@ -186,15 +189,16 @@ export interface ICareerBuild {
 	description?: string;
 	careerId?: number;
 	career: ICareer;
+	portraitFrameId?: number;
 	primaryWeapon: IWeaponBuild;
 	secondaryWeapon: IWeaponBuild;
 	powerLevel?: number;
-	talent1?: ICareerTalent | null;
-	talent2?: ICareerTalent | null;
-	talent3?: ICareerTalent | null;
-	talent4?: ICareerTalent | null;
-	talent5?: ICareerTalent | null;
-	talent6?: ICareerTalent | null;
+	level5Talent?: ICareerTalent | null;
+	level10Talent?: ICareerTalent | null;
+	level15Talent?: ICareerTalent | null;
+	level20Talent?: ICareerTalent | null;
+	level25Talent?: ICareerTalent | null;
+	level30Talent?: ICareerTalent | null;
 	isBot?: boolean;
 	difficulty?: IDifficulty | null;
 	difficultyModifier?: IDifficultyModifier | null;
