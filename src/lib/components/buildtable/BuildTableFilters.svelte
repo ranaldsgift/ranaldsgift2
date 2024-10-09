@@ -225,7 +225,7 @@
 		{ value: true, label: "Deathwish ✓" },
 		{ value: false, label: "Deathwish ✗" },
 	];
-
+  
 	const resetOffset = () => {
 		filter.offset = 0;
 	};
@@ -428,7 +428,6 @@
 		color: #30e158;
 		cursor: pointer;
 	}
-
 	option {
 		background-color: #080404;
 	}
