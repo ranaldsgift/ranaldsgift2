@@ -1192,6 +1192,10 @@ export class DatabaseHelper {
 			// Setting bot
 			build.isBot = DatabaseHelper.isBotBuild(firebaseBuild);
 
+			// Set date modified and created
+			build.dateModified = new Date(firebaseBuild.dateModified.value._seconds * 1000);
+			build.dateCreated = new Date(firebaseBuild.dateCreated.value._seconds * 1000);
+
 			// Save the build
 			build = await build.save({ data: { authorizationBypassKey: env.PRIVATE_DATABASE_AUTHORIZATION_BYPASS_KEY } });
 
