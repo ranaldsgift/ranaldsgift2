@@ -15,7 +15,16 @@
 		isActive: true,
 	});
 
+	const startDateTime = new Date(event.startDate!);
+	const endDateTime = new Date(event.endDate!);
+
+	let startDate = $state(new Date(startDateTime.getTime() - startDateTime.getTimezoneOffset() * 60000).toISOString().slice(0, -1));
+	let endDate = $state(new Date(endDateTime.getTime() - endDateTime.getTimezoneOffset() * 60000).toISOString().slice(0, -1));
+
 	async function saveEvent() {
+		event.startDate = new Date(startDate);
+		event.endDate = new Date(endDate);
+
 		try {
 			const response = await fetch(`${ROOT_API_URL}/event/save`, {
 				method: "POST",
@@ -61,12 +70,12 @@
 
 		<div>
 			<label for="startDate" class="block mb-1">Start Date:</label>
-			<input id="startDate" type="datetime-local" bind:value={event.startDate} required class="w-full p-2 border rounded" />
+			<input id="startDate" type="datetime-local" bind:value={startDate} required class="w-full p-2 border rounded" />
 		</div>
 
 		<div>
 			<label for="endDate" class="block mb-1">End Date:</label>
-			<input id="endDate" type="datetime-local" bind:value={event.endDate} required class="w-full p-2 border rounded" />
+			<input id="endDate" type="datetime-local" bind:value={endDate} required class="w-full p-2 border rounded" />
 		</div>
 
 		<div>
