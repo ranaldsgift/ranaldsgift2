@@ -73,11 +73,14 @@
 	$inspect(pageState.build);
 </script>
 
+<Seo
+	title="Create Your Vermintide 2 Build"
+	description="Create your own Vermintide 2 builds with our build editor and share it with the community!"
+/>
+
+<Breadcrumb links={[{ href: `/builds`, text: "Builds" }]}>Create</Breadcrumb>
+
 {#if pageState.build}
-	<Seo title={pageState.build.name} />
-
-	<Breadcrumb links={[{ href: `/builds`, text: "Builds" }]}>Create</Breadcrumb>
-
 	<PageButtonContainer>
 		<button class="button-02" onclick={saveBuild} disabled={!isValid}>Save</button>
 	</PageButtonContainer>
