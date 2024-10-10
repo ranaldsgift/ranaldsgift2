@@ -5,7 +5,6 @@ on:
     branches:
       - azure-swa
       - azure-dev
-      - supabase-otp-fixes
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:

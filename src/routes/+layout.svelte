@@ -31,6 +31,10 @@
 			console.debug('Auth state change');
 			if (newSession?.expires_at !== session?.expires_at || _ === 'INITIAL_SESSION') {
 				console.debug('Invalidating all');
+				console.debug('newSession');
+				console.debug(newSession);
+				console.debug('session');
+				console.debug(session);
 				invalidateAll();
 			}
 		});
