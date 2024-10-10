@@ -8,7 +8,6 @@
 	import type { IMission } from "$lib/entities/Mission";
 	import type { IPatch } from "$lib/entities/Patch";
 	import type { IPotion } from "$lib/entities/Potion";
-	import type { ITwitchSetting } from "$lib/entities/TwitchSetting";
 	import type { IWeapon } from "$lib/entities/Weapon";
 	import type { BuildTableFilter } from "$lib/types/BuildTableFilters";
 	import ContainerTitle from "../ContainerTitle.svelte";
@@ -22,7 +21,6 @@
 		MissionsStore,
 		PatchesStore,
 		PotionsStore,
-		TwitchSettingsStore,
 	} from "$lib/stores/DataStores";
 
 	type Props = {
@@ -92,6 +90,33 @@
 		}
 	});
 
+	const defaultFilter: BuildTableFilter = {
+		userId: null,
+		heroId: null,
+		careerId: null,
+		weaponId: null,
+		primaryWeaponId: null,
+		secondaryWeaponId: null,
+		charmTraitId: null,
+		necklaceTraitId: null,
+		trinketTraitId: null,
+		isBot: false,
+		isDeathwish: false,
+		isTwitch: false,
+		difficultyId: null,
+		difficultyModifierId: null,
+		potionId: null,
+		bookSettingId: null,
+		buildRoleId: null,
+		missionId: null,
+		patchId: null,
+		search: "",
+		sort: "dateModified",
+		asc: false,
+		offset: 0,
+		limit: 10,
+	};
+
 	const loadFiltersData = async () => {
 		if (careersData.length === 0) {
 			const { items } = await CareersStore.loadData();
@@ -143,6 +168,7 @@
 		clearTimeout(timer);
 		timer = setTimeout(() => {
 			filter.search = searchString;
+			resetOffset();
 		}, 750);
 	};
 
@@ -156,50 +182,19 @@
 	}
 
 	let hasActiveFilters = $derived.by(() => {
-		let active =
-			filter.userId != null ||
-			filter.heroId != null ||
-			filter.careerId != null ||
-			filter.weaponId != null ||
-			filter.primaryWeaponId != null ||
-			filter.secondaryWeaponId != null ||
-			filter.charmTraitId != null ||
-			filter.necklaceTraitId != null ||
-			filter.trinketTraitId != null ||
-			filter.difficultyId != null ||
-			filter.difficultyModifierId != null ||
-			filter.potionId != null ||
-			filter.bookSettingId != null ||
-			filter.buildRoleId != null ||
-			filter.missionId != null ||
-			(filter.search != null && filter.search.length > 0) ||
-			filter.sort != "dateModified" ||
-			filter.asc != false;
-		return active;
+		for (const key in filter) {
+			const value = filter[key as keyof BuildTableFilter];
+			const defaultValue = defaultFilter[key as keyof BuildTableFilter];
+
+			if (value != null && value !== defaultValue) {
+				return true;
+			}
+		}
+		return false;
 	});
 
 	function clearAllFilters() {
-		filter = {
-			...filter,
-			userId: null,
-			heroId: null,
-			careerId: null,
-			weaponId: null,
-			primaryWeaponId: null,
-			secondaryWeaponId: null,
-			charmTraitId: null,
-			necklaceTraitId: null,
-			trinketTraitId: null,
-			search: null,
-			sort: "dateModified",
-			asc: false,
-			difficultyId: null,
-			difficultyModifierId: null,
-			potionId: null,
-			bookSettingId: null,
-			buildRoleId: null,
-			missionId: null,
-		};
+		filter = { ...defaultFilter, search: null };
 	}
 
 	$effect(() => {
@@ -212,6 +207,28 @@
 		{ value: "name", label: "Name" },
 		{ value: "ratingsCount", label: "Rating" },
 	];
+
+	const twitchOptions = [
+		{ value: null, label: "Twitch" },
+		{ value: true, label: "Twitch ✓" },
+		{ value: false, label: "Twitch ✗" },
+	];
+
+	const botOptions = [
+		{ value: null, label: "Bot" },
+		{ value: true, label: "Bot ✓" },
+		{ value: false, label: "Bot ✗" },
+	];
+
+	const deathwishOptions = [
+		{ value: null, label: "Deathwish" },
+		{ value: true, label: "Deathwish ✓" },
+		{ value: false, label: "Deathwish ✗" },
+	];
+  
+	const resetOffset = () => {
+		filter.offset = 0;
+	};
 </script>
 
 <div class="gap-2 flex flex-wrap border-01 background-15">
@@ -239,7 +256,7 @@
 		</div>
 		<div class="flex flex-wrap gap-2 w-full justify-center mt-[-10px]">
 			<button
-				class="show-filters-button flex justify-center items-center gap-2 h-[35px]"
+				class="show-filters-button z-[1] flex justify-center items-center gap-2 h-[35px]"
 				onclick={() => (showFilters = !showFilters)}
 			>
 				<span>More Filter Options</span>
@@ -258,67 +275,100 @@
 		</div>
 		{#if showFilters}
 			<div class="build-filters-container flex flex-wrap gap-2" transition:slide={{ duration: 300 }}>
-				<button
-					class="sort-toggle flex-1 min-w-[200px] grid grid-cols-[1fr_auto] items-center text-left"
-					onclick={() => (filter.asc = !filter.asc)}
+				<div class="flex-1 min-w-[200px]" data-dirty={filter.asc != null}>
+					<label for="sortOrder">Sort Order {filter.asc ? "↑" : "↓"}</label>
+					<input id="sortOrder" type="checkbox" bind:checked={filter.asc} onchange={resetOffset} />
+				</div>
+				<select
+					bind:value={filter.sort}
+					class="flex-1 min-w-[200px]"
+					placeholder="Sort"
+					data-dirty={filter.sort}
+					onchange={resetOffset}
 				>
-					{filter.asc ? "Ascending" : "Descending"}
-					<span>{filter.asc ? "↑" : "↓"}</span>
-				</button>
-				<select bind:value={filter.sort} class="flex-1 min-w-[200px]" placeholder="Sort">
 					{#each sortOptions as option}
 						<option value={option.value}>{option.label}</option>
 					{/each}
 				</select>
-				<select bind:value={filter.careerId} class="flex-1 min-w-[200px]">
+				<select bind:value={filter.careerId} class="flex-1 min-w-[200px]" data-dirty={filter.careerId} onchange={resetOffset}>
 					<option value={null}>All Careers</option>
 					{#each careers as career}
 						<option value={career.id}>{career.name}</option>
 					{/each}
 				</select>
-				<select bind:value={filter.weaponId} class="flex-1 min-w-[200px]">
+				<select bind:value={filter.weaponId} class="flex-1 min-w-[200px]" data-dirty={filter.weaponId} onchange={resetOffset}>
 					<option value={null}>All Weapons</option>
 					{#each weapons as weapon}
 						<option value={weapon.id}>{weapon.name}</option>
 					{/each}
 				</select>
-				<select bind:value={filter.heroId} class="flex-1 min-w-[200px]">
+				<select bind:value={filter.heroId} class="flex-1 min-w-[200px]" data-dirty={filter.heroId} onchange={resetOffset}>
 					<option value={null}>All Heroes</option>
 					{#each heroes as hero}
 						<option value={hero.id}>{hero.name}</option>
 					{/each}
 				</select>
-				<select bind:value={filter.difficultyId} class="flex-1 min-w-[200px]">
+				<select bind:value={filter.isTwitch} class="flex-1 min-w-[200px]" data-dirty={filter.isTwitch} onchange={resetOffset}>
+					{#each twitchOptions as option}
+						<option value={option.value}>{option.label}</option>
+					{/each}
+				</select>
+				<select bind:value={filter.isBot} class="flex-1 min-w-[200px]" data-dirty={filter.isBot} onchange={resetOffset}>
+					{#each botOptions as option}
+						<option value={option.value}>{option.label}</option>
+					{/each}
+				</select>
+				<select bind:value={filter.isDeathwish} class="flex-1 min-w-[200px]" data-dirty={filter.isDeathwish} onchange={resetOffset}>
+					{#each deathwishOptions as option}
+						<option value={option.value}>{option.label}</option>
+					{/each}
+				</select>
+				<select
+					bind:value={filter.difficultyId}
+					class="flex-1 min-w-[200px]"
+					data-dirty={filter.difficultyId}
+					onchange={resetOffset}
+				>
 					<option value={null}>All Difficulties</option>
 					{#each difficulties as difficulty}
 						<option value={difficulty.id}>{difficulty.name}</option>
 					{/each}
 				</select>
-				<select bind:value={filter.difficultyModifierId} class="flex-1 min-w-[200px]">
+				<select
+					bind:value={filter.difficultyModifierId}
+					class="flex-1 min-w-[200px]"
+					data-dirty={filter.difficultyModifierId}
+					onchange={resetOffset}
+				>
 					<option value={null}>All Difficulty Modifiers</option>
 					{#each difficultyModifiers as difficultyModifier}
 						<option value={difficultyModifier.id}>{difficultyModifier.name}</option>
 					{/each}
 				</select>
-				<select bind:value={filter.potionId} class="flex-1 min-w-[200px]">
+				<select bind:value={filter.potionId} class="flex-1 min-w-[200px]" data-dirty={filter.potionId} onchange={resetOffset}>
 					<option value={null}>All Potions</option>
 					{#each potions as potion}
 						<option value={potion.id}>{potion.name}</option>
 					{/each}
 				</select>
-				<select bind:value={filter.bookSettingId} class="flex-1 min-w-[200px]">
+				<select
+					bind:value={filter.bookSettingId}
+					class="flex-1 min-w-[200px]"
+					data-dirty={filter.bookSettingId}
+					onchange={resetOffset}
+				>
 					<option value={null}>All Book Settings</option>
 					{#each bookSettings as bookSetting}
 						<option value={bookSetting.id}>{bookSetting.name}</option>
 					{/each}
 				</select>
-				<select bind:value={filter.buildRoleId} class="flex-1 min-w-[200px]">
+				<select bind:value={filter.buildRoleId} class="flex-1 min-w-[200px]" data-dirty={filter.buildRoleId} onchange={resetOffset}>
 					<option value={null}>All Build Roles</option>
 					{#each buildRoles as buildRole}
 						<option value={buildRole.id}>{buildRole.name}</option>
 					{/each}
 				</select>
-				<select bind:value={filter.missionId} class="flex-1 min-w-[200px]">
+				<select bind:value={filter.missionId} class="flex-1 min-w-[200px]" data-dirty={filter.missionId} onchange={resetOffset}>
 					<option value={null}>All Missions</option>
 					{#each missions as mission}
 						<option value={mission.id}>{mission.name}</option>
@@ -336,6 +386,22 @@
 </div>
 
 <style>
+	label {
+		width: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		display: flex;
+		align-content: center;
+		flex-wrap: wrap-reverse;
+		padding: 10px 20px;
+		cursor: pointer;
+		color: #838383;
+	}
+	label:hover {
+		color: #30e158;
+	}
 	.build-filters-container > * {
 		border-image: url("/images/borders/border-13.png");
 		border-image-width: auto;
@@ -345,9 +411,22 @@
 		min-height: 60px;
 		align-content: center;
 		background: linear-gradient(180deg, #2b1212 35%, #000);
-		color: #30e158;
+		color: #838383;
 		font-size: 1.3rem;
 		padding: 10px 20px;
+		position: relative;
+		transition: color 0.2s ease-in-out;
+	}
+	.build-filters-container > [data-dirty],
+	.build-filters-container > [data-dirty] > label {
+		color: #30e158;
+	}
+
+	.build-filters-container > *:hover {
+		background: linear-gradient(180deg, #3b1818 35%, #111);
+		box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+		color: #30e158;
+		cursor: pointer;
 	}
 	option {
 		background-color: #080404;
@@ -388,7 +467,14 @@
 		height: 20px;
 		transition: background 0.1s ease-in-out;
 	}
-	.show-filters-button-icon:hover {
+	.show-filters-button {
+		opacity: 0.7;
+		transition: opacity 0.2s ease-in-out;
+	}
+	.show-filters-button:hover {
+		opacity: 1;
+	}
+	.show-filters-button:hover .show-filters-button-icon {
 		background: url("/images/icons/arrow_focus.png");
 		background-size: 20px;
 	}
@@ -397,6 +483,13 @@
 		transition: opacity 0.2s ease-in-out;
 	}
 	.clear-search:hover {
+		opacity: 1;
+	}
+	.clear-filters-button {
+		opacity: 0.7;
+		transition: opacity 0.2s ease-in-out;
+	}
+	.clear-filters-button:hover {
 		opacity: 1;
 	}
 </style>

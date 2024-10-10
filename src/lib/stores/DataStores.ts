@@ -1,3 +1,4 @@
+import { ROOT_API_URL } from "$lib/data/constants/constants";
 import type { IBookSetting } from "$lib/entities/BookSetting";
 import type { IBuildRole } from "$lib/entities/BuildRole";
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
@@ -17,19 +18,22 @@ import { AsyncStore, AuthoredAsyncStore } from "./AsyncStore";
 
 const STATIC_DATA_CACHE_DURATION = 60 * 60 * 1000 * 24; // 24 hours
 
-export const HeroesStore = new AsyncStore<Hero>("/api/heroes", STATIC_DATA_CACHE_DURATION);
-export const CareersStore = new AsyncStore<ICareer>("/api/careers", STATIC_DATA_CACHE_DURATION);
-export const WeaponsStore = new AsyncStore<IWeapon>("/api/weapons", STATIC_DATA_CACHE_DURATION);
-export const PropertiesStore = new AsyncStore<IProperty>("/api/properties", STATIC_DATA_CACHE_DURATION);
-export const TraitsStore = new AsyncStore<ITrait>("/api/traits", STATIC_DATA_CACHE_DURATION);
-export const DifficultiesStore = new AsyncStore<IDifficulty>("/api/difficulties", STATIC_DATA_CACHE_DURATION);
-export const DifficultyModifiersStore = new AsyncStore<IDifficultyModifier>("/api/difficultymodifiers", STATIC_DATA_CACHE_DURATION);
-export const MissionsStore = new AsyncStore<IMission>("/api/missions", STATIC_DATA_CACHE_DURATION);
-export const PatchesStore = new AsyncStore<IPatch>("/api/patches", STATIC_DATA_CACHE_DURATION);
-export const TwitchSettingsStore = new AsyncStore<ITwitchSetting>("/api/twitchsettings", STATIC_DATA_CACHE_DURATION);
-export const BookSettingsStore = new AsyncStore<IBookSetting>("/api/booksettings", STATIC_DATA_CACHE_DURATION);
-export const PotionsStore = new AsyncStore<IPotion>("/api/potions", STATIC_DATA_CACHE_DURATION);
-export const BuildRolesStore = new AsyncStore<IBuildRole>("/api/buildroles", STATIC_DATA_CACHE_DURATION);
-export const EventsStore = new AsyncStore<IEvent>(`/api/events`, STATIC_DATA_CACHE_DURATION);
+export const HeroesStore = new AsyncStore<Hero>(`${ROOT_API_URL}/heroes`, STATIC_DATA_CACHE_DURATION);
+export const CareersStore = new AsyncStore<ICareer>(`${ROOT_API_URL}/careers`, STATIC_DATA_CACHE_DURATION);
+export const WeaponsStore = new AsyncStore<IWeapon>(`${ROOT_API_URL}/weapons`, STATIC_DATA_CACHE_DURATION);
+export const PropertiesStore = new AsyncStore<IProperty>(`${ROOT_API_URL}/properties`, STATIC_DATA_CACHE_DURATION);
+export const TraitsStore = new AsyncStore<ITrait>(`${ROOT_API_URL}/traits`, STATIC_DATA_CACHE_DURATION);
+export const DifficultiesStore = new AsyncStore<IDifficulty>(`${ROOT_API_URL}/difficulties`, STATIC_DATA_CACHE_DURATION);
+export const DifficultyModifiersStore = new AsyncStore<IDifficultyModifier>(
+	`${ROOT_API_URL}/difficultymodifiers`,
+	STATIC_DATA_CACHE_DURATION
+);
+export const MissionsStore = new AsyncStore<IMission>(`${ROOT_API_URL}/missions`, STATIC_DATA_CACHE_DURATION);
+export const PatchesStore = new AsyncStore<IPatch>(`${ROOT_API_URL}/patches`, STATIC_DATA_CACHE_DURATION);
+export const TwitchSettingsStore = new AsyncStore<ITwitchSetting>(`${ROOT_API_URL}/twitchsettings`, STATIC_DATA_CACHE_DURATION);
+export const BookSettingsStore = new AsyncStore<IBookSetting>(`${ROOT_API_URL}/booksettings`, STATIC_DATA_CACHE_DURATION);
+export const PotionsStore = new AsyncStore<IPotion>(`${ROOT_API_URL}/potions`, STATIC_DATA_CACHE_DURATION);
+export const BuildRolesStore = new AsyncStore<IBuildRole>(`${ROOT_API_URL}/buildroles`, STATIC_DATA_CACHE_DURATION);
+export const EventsStore = new AsyncStore<IEvent>(`${ROOT_API_URL}/events`, 60 * 1000 * 5);
 
-export const CareerBuildsStore = new AuthoredAsyncStore<ICareerBuild>("/api/builds", 60 * 1000 * 5);
+export const CareerBuildsStore = new AuthoredAsyncStore<ICareerBuild>(`${ROOT_API_URL}/builds`, 60 * 1000 * 5);

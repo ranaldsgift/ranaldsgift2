@@ -8,6 +8,7 @@
 	import ContentHeader from "$lib/components/ContentHeader.svelte";
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import Seo from "$lib/components/SEO.svelte";
+	import { ROOT_API_URL } from "$lib/data/constants/constants.js";
 	import { getUserState } from "$lib/state/UserState.svelte.js";
 	import { type SubmitFunction } from "@sveltejs/kit";
 	import { toast } from "svelte-sonner";
@@ -26,10 +27,6 @@
 				? "Your Profile. Contains a list of your favorite and rated builds."
 				: `This user has not created a profile yet.`
 	);
-
-	let favoriteFilter = $state({ favoriteByUserId: data.userData.id, limit: 3, offset: 0 });
-	let ratedFilter = $state({ ratedByUserId: data.userData.id, limit: 3, offset: 0 });
-	let authoredFilter = $state({ userId: data.userData.id, limit: 10, offset: 0 });
 
 	const logoutHandler: SubmitFunction = async () => {
 		return async ({ result, update }) => {
@@ -52,7 +49,7 @@
 {#if data.sessionUser?.id === data.userData.id}
 	<PageButtonContainer>
 		<a class="button-02" href={`/user/${data.userData.id}/edit`}>Edit</a>
-		<form action="/api/user?/logout" method="POST" use:enhance={logoutHandler}>
+		<form action={`${ROOT_API_URL}/user?/logout`} method="POST" use:enhance={logoutHandler}>
 			<button type="submit" class="button-02">Logout</button>
 		</form>
 	</PageButtonContainer>
@@ -89,14 +86,26 @@
 		</div>
 		{#if data.sessionUser?.id === data.userData.id}
 			{#if data.userData.favoriteBuildsCount > 0}
-				<BuildTable class="top-left-shadow" title="My Favorite Builds" filter={favoriteFilter}></BuildTable>
+				<BuildTable
+					class="top-left-shadow"
+					title="My Favorite Builds"
+					filter={{ favoriteByUserId: data.userData.id, limit: 4, offset: 0 }}
+				></BuildTable>
 			{/if}
 			{#if data.userData.ratedBuildsCount > 0}
-				<BuildTable class="top-left-shadow" title="My Rated Builds" filter={ratedFilter}></BuildTable>
+				<BuildTable
+					class="top-left-shadow"
+					title="My Rated Builds"
+					filter={{ ratedByUserId: data.userData.id, limit: 4, offset: 0 }}
+				></BuildTable>
 			{/if}
 		{/if}
 		{#if data.userData.authoredBuildsCount > 0}
-			<BuildTable class="top-left-shadow" title={data.userData.name + "'s Builds"} filter={authoredFilter}></BuildTable>
+			<BuildTable
+				class="top-left-shadow"
+				title={data.userData.name + "'s Builds"}
+				filter={{ userId: data.userData.id, limit: 10, offset: 0 }}
+			></BuildTable>
 		{:else if data.userData.id === data.sessionUser?.id}
 			<ContentContainer>
 				<h1>You will see a list of your builds here once you <a href="/build/create">created</a> one.</h1>

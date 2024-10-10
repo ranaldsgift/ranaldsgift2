@@ -312,7 +312,7 @@ button:disabled {
   font-size: 120%;
   box-shadow: inset 0 0 75px black, inset 0 -5px 1px #3b3b3b, inset 0 5px 1px #979797 !important;
   text-decoration: none;
-  height: 36px;
+  height: 40px;
   margin: 5px;
   outline: none;
   cursor: pointer;
@@ -346,10 +346,10 @@ button:disabled {
 .button-02::before, .button-02::after {
   position: absolute;
   content: '';
-  height: calc(100% + 8px);
+  height: 100%;
   width: 100%;  
   background-repeat: no-repeat; 
-  top: -4px;
+  top: -1px;
 }
 
 .button-01 a {

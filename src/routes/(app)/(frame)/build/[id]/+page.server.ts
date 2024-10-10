@@ -1,4 +1,5 @@
 import { PatchCache } from "$lib/cache/PatchCache.js";
+import { ROOT_API_URL } from "$lib/data/constants/constants";
 import { type ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
 import BuildHelper from "$lib/helpers/BuildHelper.js";
 import type { BuildPageViewModel } from "$lib/viewmodels/BuildPageViewModel.js";
@@ -9,7 +10,7 @@ export const load = async (event) => {
 
 	let careerBuild: ICareerBuild | null = null;
 
-	const response = await event.fetch(`/api/build?id=${id}`, { method: "GET" });
+	const response = await event.fetch(`${ROOT_API_URL}/build?id=${id}`, { method: "GET" });
 
 	if (!response.ok) {
 		error(404, `Failed to fetch build ${id}.`);

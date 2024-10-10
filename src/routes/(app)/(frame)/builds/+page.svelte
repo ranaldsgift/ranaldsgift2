@@ -10,13 +10,17 @@
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 
+	let { data } = $props();
+
+	console.log(data.stats);
+
 	let buildsPageState = getBuildsPageState();
 
 	if ($page.url.search) {
-		buildsPageState.filter = getBuildStateFromUrl();
+		buildsPageState.filter = getFilterFromUrl();
 	}
 
-	function getBuildStateFromUrl() {
+	function getFilterFromUrl() {
 		const params = new URLSearchParams($page.url.search);
 		const userId = params.get("userId");
 		const heroId = params.get("heroId");
@@ -27,6 +31,16 @@
 		const charmTraitId = params.get("charmTraitId");
 		const necklaceTraitId = params.get("necklaceTraitId");
 		const trinketTraitId = params.get("trinketTraitId");
+		const isBot = params.get("isBot");
+		const isDeathwish = params.get("isDeathwish");
+		const isTwitch = params.get("isTwitch");
+		const difficultyId = params.get("difficultyId");
+		const difficultyModifierId = params.get("difficultyModifierId");
+		const potionId = params.get("potionId");
+		const buildRoleId = params.get("buildRoleId");
+		const bookSettingId = params.get("bookSettingId");
+		const patchId = params.get("patchId");
+		const missionId = params.get("missionId");
 		const search = params.get("search");
 		const sort = params.get("sort");
 		const ascending = params.get("ascending");
@@ -43,6 +57,16 @@
 			charmTraitId: charmTraitId !== null ? parseInt(charmTraitId) : null,
 			necklaceTraitId: necklaceTraitId !== null ? parseInt(necklaceTraitId) : null,
 			trinketTraitId: trinketTraitId !== null ? parseInt(trinketTraitId) : null,
+			isBot: isBot !== null ? isBot === "true" : null,
+			isDeathwish: isDeathwish !== null ? isDeathwish === "true" : null,
+			isTwitch: isTwitch !== null ? isTwitch === "true" : null,
+			difficultyId: difficultyId !== null ? parseInt(difficultyId) : null,
+			difficultyModifierId: difficultyModifierId !== null ? parseInt(difficultyModifierId) : null,
+			potionId: potionId !== null ? parseInt(potionId) : null,
+			buildRoleId: buildRoleId !== null ? parseInt(buildRoleId) : null,
+			bookSettingId: bookSettingId !== null ? parseInt(bookSettingId) : null,
+			patchId: patchId !== null ? parseInt(patchId) : null,
+			missionId: missionId !== null ? parseInt(missionId) : null,
 			search: search,
 			sort: (sort as keyof ICareerBuild) || "dateModified",
 			asc: ascending !== null ? ascending === "true" : false,
@@ -73,7 +97,7 @@
 	});
 </script>
 
-<Seo title="Builds Page" description="View builds created by the community."></Seo>
+<Seo title="Builds" description="The largest source of community created Vermintide 2 builds."></Seo>
 
 <Breadcrumb links={[{ href: `/`, text: "Home" }]}>Builds</Breadcrumb>
 

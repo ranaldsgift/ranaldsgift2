@@ -1,0 +1,63 @@
+name: Azure Static Web Apps CI/CD
+
+on:
+  push:
+    branches:
+      - azure-swa
+      - azure-dev
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - azure-swa
+      - azure-dev
+
+jobs:
+  build_and_deploy_job:
+    env: 
+      PRIVATE_INITIALIZE_DB: ${{ secrets.PRIVATE_INITIALIZE_DB }}
+      PRIVATE_SYNCHRONIZE_DB: ${{ secrets.PRIVATE_SYNCHRONIZE_DB }}
+      PRIVATE_DATABASE_AUTHORIZATION_BYPASS_KEY: ${{ secrets.PRIVATE_DATABASE_AUTHORIZATION_BYPASS_KEY }}
+      PRIVATE_UPSTASH_REDIS_REST_URL: ${{ secrets.PRIVATE_UPSTASH_REDIS_REST_URL }}
+      PRIVATE_UPSTASH_REDIS_REST_TOKEN: ${{ secrets.PRIVATE_UPSTASH_REDIS_REST_TOKEN }}
+      PRIVATE_SUPABASE_HOST: ${{ secrets.PRIVATE_SUPABASE_HOST }}
+      PRIVATE_SUPABASE_PORT: ${{ secrets.PRIVATE_SUPABASE_PORT }}
+      PRIVATE_SUPABASE_USERNAME: ${{ secrets.PRIVATE_SUPABASE_USERNAME }}
+      PRIVATE_SUPABASE_PASSWORD: ${{ secrets.PRIVATE_SUPABASE_PASSWORD }}
+      PRIVATE_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PRIVATE_SUPABASE_SERVICE_ROLE_KEY }}
+      PUBLIC_SUPABASE_URL: ${{vars.PUBLIC_SUPABASE_URL }}
+      PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
+      
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_FIELD_05E9CDA0F }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          action: "upload"
+          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
+          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
+          app_location: "./" # App source code path
+          api_location: "build/server" # Api source code path - optional
+          output_location: "build/static" # Built app content directory - optional
+          production_branch: "azure-swa"
+          ###### End of Repository/Build Configurations ######
+
+  close_pull_request_job:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close Pull Request Job
+    steps:
+      - name: Close Pull Request
+        id: closepullrequest
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_FIELD_05E9CDA0F }}
+          action: "close"

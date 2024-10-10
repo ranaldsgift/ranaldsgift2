@@ -11,6 +11,7 @@
 	import BuildSummary from "./BuildSummary.svelte";
 	import BuildTalentSummary from "./BuildTalentSummary.svelte";
 	import BuildOptionsEditor from "./BuildOptionsEditor.svelte";
+	import TextEditor from "../quill/TextEditor.svelte";
 
 	type Props = {
 		build: ICareerBuild;
@@ -24,7 +25,7 @@
 	}
 </script>
 
-<div class="build-editor grid grid-cols-2 gap-5">
+<div class="build-editor grid grid-cols-2 tablet:gap-5">
 	<CareerSelection bind:selectedCareer={build!.career}></CareerSelection>
 	<div class="career-container top-left-shadow">
 		<ContainerTitle>Summary</ContainerTitle>
@@ -44,8 +45,8 @@
 			<div class="px-5">
 				<BuildOptionsEditor bind:build></BuildOptionsEditor>
 			</div>
-		</div>
-		<BuildGuideEditor bind:guide={build.description}></BuildGuideEditor>
+		</div>		
+		<TextEditor bind:content={build.description}></TextEditor>
 		<div class="build-talents-container">
 			<CareerTalents bind:build={build}></CareerTalents>
 		</div>
@@ -85,7 +86,6 @@
 	.build-editor {
 		display: grid;
 		align-self: start;
-		gap: 20px;
 		grid-template-columns: 100% !important;
 		grid-template-areas: "careerSelection" "careerContainer" "careerInventory" !important;
 	}

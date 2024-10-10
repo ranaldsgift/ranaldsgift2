@@ -8,12 +8,13 @@
 	import { getBuildEditorPageState } from "$lib/state/BuildEditorPageState.svelte.js";
 	import BuildHelper from "$lib/helpers/BuildHelper.js";
 	import { CareerBuildsStore } from "$lib/stores/DataStores.js";
+	import { ROOT_API_URL } from "$lib/data/constants/constants.js";
 	const { data } = $props();
 
 	const pageState = getBuildEditorPageState();
 
 	if (!data.viewModel || !data.viewModel.build) {
-		error(404, "Heroes Page - Invalid ViewModel");
+		error(404, "Build not found");
 	}
 
 	if (!pageState.selectedCareer) {
@@ -21,11 +22,11 @@
 	}
 
 	if (!pageState.build || pageState.build.id !== data.viewModel.build.id) {
-		if (!data.viewModel.build) {
-			error(500, "Build not found");
-		}
 		pageState.build = data.viewModel.build;
 	}
+
+	let serializedBuild = $state(JSON.stringify(pageState.build));
+	let isDirty = $derived.by(() => serializedBuild !== JSON.stringify(pageState.build));
 
 	// TODO - Show the missing fields on hover of the disabled save button
 	let missingFieldsMessage = $derived.by(() => {
@@ -52,7 +53,7 @@
 		}
 
 		try {
-			const response = await fetch("/api/build/save", {
+			const response = await fetch(`${ROOT_API_URL}/build/save`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -75,6 +76,10 @@
 		}
 	};
 
+	const resetBuildState = () => {
+		pageState.build = null;
+	};
+
 	$inspect(pageState.build);
 </script>
 
@@ -90,7 +95,7 @@
 
 	<PageButtonContainer>
 		<button class="button-02" onclick={saveBuild}>Save</button>
-		<a class="button-02" href={`/build/${pageState.build.id}`}>Cancel</a>
+		<a class="button-02" href={`/build/${pageState.build.id}`} onclick={resetBuildState}>Cancel</a>
 	</PageButtonContainer>
 
 	<div class="edit-build-page">

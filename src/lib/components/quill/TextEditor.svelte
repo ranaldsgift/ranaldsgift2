@@ -86,6 +86,9 @@
 		background: radial-gradient(ellipse at bottom, rgba(106, 55, 29, 0.4117647058823529) 15%, transparent),
 			url("/images/backgrounds/background22.png");
 	}
+	:global(.editor-wrapper:not(.readonly) .ql-editor) {
+		background: black;
+	}
 	:global(.ql-container) {
 		border: none !important;
 		font-size: inherit;
@@ -102,7 +105,7 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		border-image: url("/images/borders/border-02.png");
+		border-image: url("/images/borders/border-01.png");
 		border-image-slice: 15;
 		border-image-width: 15px;
 		border-style: solid;

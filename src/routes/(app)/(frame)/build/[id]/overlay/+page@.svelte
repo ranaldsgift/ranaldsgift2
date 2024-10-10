@@ -1,10 +1,12 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import CareerTalent from '$lib/components/career/CareerTalent.svelte';
 	import CareerTalentIcon from '$lib/components/career/CareerTalentIcon.svelte';
 	import CareerTalentLevelIcon from '$lib/components/career/CareerTalentLevelIcon.svelte';
 	import TraitIcon from '$lib/components/inventory/TraitIcon.svelte';
 	import WeaponIcon from '$lib/components/inventory/WeaponIcon.svelte';
+	import Seo from '$lib/components/SEO.svelte';
 	import type { ICareerBuild } from '$lib/entities/builds/CareerBuild';
 	import BuildHelper from '$lib/helpers/BuildHelper.js';
 	import { error } from '@sveltejs/kit';
@@ -36,7 +38,13 @@
 		});
 		return talentsString.join(" - ");
 	};
+	
+	$effect(() => {
+		goto(`?compact=${compact}&vertical=${vertical}`, { replaceState: true, keepFocus: true, noScroll: true });
+	});
 </script>
+
+<Seo title={`Stream Overlay for ${build.name}`} />
 
 {#if build}
 	<div class="grid grid-cols-[max-content] {compact ? 'gap-[2px]' : 'gap-2'}">

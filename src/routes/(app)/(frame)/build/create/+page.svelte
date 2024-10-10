@@ -10,6 +10,7 @@
 	import { goto, invalidate } from "$app/navigation";
 	import { CareerBuildsStore } from "$lib/stores/DataStores.js";
 	import { getUserState } from "$lib/state/UserState.svelte.js";
+	import { ROOT_API_URL } from "$lib/data/constants/constants.js";
 	const { data } = $props();
 
 	const pageState = getBuildCreatorPageState();
@@ -40,7 +41,7 @@
 		}
 
 		try {
-			const response = await fetch("/api/build/save", {
+			const response = await fetch(`${ROOT_API_URL}/build/save`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -72,11 +73,14 @@
 	$inspect(pageState.build);
 </script>
 
+<Seo
+	title="Create Your Vermintide 2 Build"
+	description="Create your own Vermintide 2 builds with our build editor and share it with the community!"
+/>
+
+<Breadcrumb links={[{ href: `/builds`, text: "Builds" }]}>Create</Breadcrumb>
+
 {#if pageState.build}
-	<Seo title={pageState.build.name} />
-
-	<Breadcrumb links={[{ href: `/builds`, text: "Builds" }]}>Create</Breadcrumb>
-
 	<PageButtonContainer>
 		<button class="button-02" onclick={saveBuild} disabled={!isValid}>Save</button>
 	</PageButtonContainer>

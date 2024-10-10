@@ -1,3 +1,4 @@
+export const ROOT_API_URL = "/v2-api";
 export const NUMBER_OF_CAREERS = 20;
 export const NUMBER_OF_HEROES = 5;
 export const NUMBER_OF_TALENT_TIERS = 6;

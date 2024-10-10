@@ -1,3 +1,4 @@
+import { ROOT_API_URL } from "$lib/data/constants/constants";
 import { type ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
 import { UserRoleEnum } from "$lib/enums/UserRoleEnum.js";
 import type { EditBuildPageViewModel } from "$lib/viewmodels/BuildPageViewModel.js";
@@ -10,7 +11,7 @@ export const load = async (event) => {
 		error(404, `Build ID parameter not found.`);
 	}
 
-	const response = await event.fetch(`/api/build?id=${id}`, { method: "GET" });
+	const response = await event.fetch(`${ROOT_API_URL}/build?id=${id}`, { method: "GET" });
 
 	if (!response.ok) {
 		error(404, `Failed to fetch build ${id}.`);

@@ -1,3 +1,4 @@
+import { ROOT_API_URL } from "$lib/data/constants/constants";
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 import { error } from "console";
 
@@ -6,7 +7,7 @@ export const load = async (event) => {
 
 	let careerBuild: ICareerBuild | null = null;
 
-	const response = await event.fetch(`/api/build?id=${id}`, { method: "GET" });
+	const response = await event.fetch(`${ROOT_API_URL}/build?id=${id}`, { method: "GET" });
 
 	if (!response.ok) {
 		error(404, `Failed to fetch build ${id}.`);
@@ -18,7 +19,7 @@ export const load = async (event) => {
 		error(404, `Build ${id} not found.`);
 	}
 
-	if (!careerBuild.user) {
+	if (!careerBuild?.user) {
 		error(404, `Failed to pull user data for build ${id}.`);
 	}
 

@@ -9,7 +9,14 @@
 	const { build }: Props = $props();
 
 	const getSelectedTalents = (build: ICareerBuild) => {
-		return [build.talent1, build.talent2, build.talent3, build.talent4, build.talent5, build.talent6];
+		return [
+			build.level5Talent,
+			build.level10Talent,
+			build.level15Talent,
+			build.level20Talent,
+			build.level25Talent,
+			build.level30Talent,
+		];
 	};
 
 	const getTalentString = (build: ICareerBuild) => {
@@ -35,42 +42,52 @@
 		<span class="skull-2"></span>
 	</div>
 	<div class="divider-21 w-full h-[20px] mb-2 col-span-2 tablet:col-span-4"></div>
-	{#each getSelectedTalents(build) as talent, index}
-		<span
-			class="talent-lock-icon justify-self-center"
-			style="--size: 40px;
+	<div class="talents-container">
+		{#each getSelectedTalents(build) as talent, index}
+			<div class="talent-container-wrapper">
+				<span
+					class="talent-lock-icon justify-self-center"
+					style="--size: 40px;
 				--fontSize: 10px;
 				--talent-tier-level: '{(index + 1) * 5}';"
-		></span>
-		{#if talent}
-			<div class="talent-container selected" data-career={build.career.id}>
-				<div class="talent-button-wrapper background-26">
-					<CareerTalentIcon size="40px" careerId={build.career.id} talentNumber={talent.talentNumber} class="z-[0]"
-					></CareerTalentIcon>
-					<p class="talent-name background-13">{talent.name}</p>
-					<p class="talent-description">{talent.description}</p>
-				</div>
+				></span>
+				{#if talent}
+					<div class="talent-container selected" data-career={build.career.id}>
+						<div class="talent-button-wrapper background-26">
+							<CareerTalentIcon size="40px" careerId={build.career.id} talentNumber={talent.talentNumber} class="z-[0]"
+							></CareerTalentIcon>
+							<p class="talent-name background-13">{talent.name}</p>
+							<p class="talent-description">{talent.description}</p>
+						</div>
+					</div>
+				{:else}
+					<div class="talent-container">
+						<p class="talent-name">No Talent Selected</p>
+					</div>
+				{/if}
 			</div>
-		{:else}
-			<div class="talent-container">
-				<p class="talent-name">No Talent Selected</p>
-			</div>
-		{/if}
-	{/each}
+		{/each}
+	</div>
 </div>
 
 <style>
-	.build-talent-summary {
+	.talents-container {
 		grid-area: buildTalentSummary;
-		grid-template-columns: 40px auto;
-		grid-auto-rows: auto;
-		row-gap: 3px;
+		grid-template-columns: auto;
+		row-gap: 5px;
+		column-gap: 10px;
 		display: grid;
 	}
+	.talent-container-wrapper {
+		display: grid;
+		grid-template-columns: 40px auto;
+		gap: 5px;
+	}
 	@media (min-width: 768px) {
-		.build-talent-summary {
-			column-gap: 5px;
-			grid-template-columns: 40px auto 40px auto;
+		.talents-container {
+			grid-template-columns: auto auto;
+			grid-template-rows: repeat(3, 1fr);
+			grid-auto-flow: column;
 		}
 	}
 	.talent-container:not(.selected) {

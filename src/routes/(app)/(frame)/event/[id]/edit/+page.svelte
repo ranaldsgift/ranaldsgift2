@@ -3,6 +3,7 @@
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import TextEditor from "$lib/components/quill/TextEditor.svelte";
 	import Seo from "$lib/components/SEO.svelte";
+	import { ROOT_API_URL } from "$lib/data/constants/constants.js";
 	import { error } from "@sveltejs/kit";
 	import { toast } from "svelte-sonner";
 
@@ -25,7 +26,7 @@
 		data.event.startDate = new Date(startDate);
 		data.event.endDate = new Date(endDate);
 		try {
-			const response = await fetch("/api/event/save", {
+			const response = await fetch(`${ROOT_API_URL}/event/save`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

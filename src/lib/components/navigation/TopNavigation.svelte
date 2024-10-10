@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
+	import { ROOT_API_URL } from "$lib/data/constants/constants";
 	import { getUserState } from "$lib/state/UserState.svelte";
 	import { previousPage } from "$lib/stores/PageStores.svelte";
 
@@ -12,7 +13,7 @@
 		localStorage.setItem("showVideo", userState.showVideo.value.toString());
 
 		if (userState.user) {
-			const response = await fetch("/api/user/background", {
+			const response = await fetch(`${ROOT_API_URL}/user/background`, {
 				method: "POST",
 				body: JSON.stringify({ showVideo: userState.showVideo.value }),
 				headers: {

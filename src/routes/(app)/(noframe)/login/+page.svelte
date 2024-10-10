@@ -5,6 +5,7 @@
 	import { toast } from "svelte-sonner";
 	import Header from "$lib/components/Header.svelte";
 	import type { SubmitFunction } from "@sveltejs/kit";
+	import { ROOT_API_URL } from "$lib/data/constants/constants";
 
 	let email = $state("");
 	let isEmailValid = $derived(email.length > 0 && email.includes("@"));
@@ -29,7 +30,12 @@
 	};
 </script>
 
-<form method="POST" action="/api/user?/login&redirectTo={$page.url.href}" class="m-auto max-w-xl relative mt-10" use:enhance={submitLogin}>
+<form
+	method="POST"
+	action={`${ROOT_API_URL}/user?/login&redirectTo=${$page.url.href}`}
+	class="m-auto max-w-xl relative mt-10"
+	use:enhance={submitLogin}
+>
 	<Header>Login</Header>
 	<div class="border-01 background-40 p-5 login-container mt-[42px] flex flex-col gap-5">
 		<p class="text-center">Enter your e-mail to sign in with a Magic Link.</p>

@@ -50,13 +50,13 @@
 	{/if}
 </PageButtonContainer>
 
-<div class="view-build-page build-page grid grid-cols-1" data-readonly={true}>
+<div class="view-build-page build-page grid grid-cols-1 gap-0 tablet:gap-5" data-readonly={true}>
 	<div class="build-main-container">
 		<BuildViewer {build} patchNumber={data.viewModel.patchNumber}></BuildViewer>
 	</div>
-	<div class="build-side-container">
-		<BuildTable filter={similarBuildsFilter} title={`Similar Builds by ${build.user?.name}`} class="!grid-cols-1"></BuildTable>
-		<BuildTable filter={moreBuildsFilter} title={`More ${build.career.name} Builds`} class="!grid-cols-1"></BuildTable>
+	<div class="build-side-container top-left-shadow">
+		<BuildTable filter={similarBuildsFilter} title={`Similar Builds by ${build.user?.name}`} compact={true}></BuildTable>
+		<BuildTable filter={moreBuildsFilter} title={`More ${build.career.name} Builds`} compact={true}></BuildTable>
 	</div>
 </div>
 
@@ -69,7 +69,6 @@
 	}
 	.view-build-page {
 		display: grid;
-		gap: 20px;
 		grid-template-areas: "buildMainContainer" "buildSideContainer";
 	}
 	@media (min-width: 1800px) {
