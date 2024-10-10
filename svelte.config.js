@@ -12,7 +12,9 @@ const config = {
 			customStaticWebAppConfig: {
 				globalHeaders: {
 					'Access-Control-Allow-Origin': '*',
-					'Access-Control-Allow-Methods': 'POST, GET, OPTIONS'
+					'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+					'Access-Control-Allow-Credentials': 'true',
+					'Access-Control-Allow-Headers': 'Content-Type, Authorization, Access-Control-Allow-Headers, Access-Control-Allow-Credentials'
 				}
 			}
 		})
