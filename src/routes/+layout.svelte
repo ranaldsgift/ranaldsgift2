@@ -28,7 +28,9 @@
 
 	$effect(() => {
 		const { data: supabaseData } = supabase.auth.onAuthStateChange((_, newSession) => {
+			console.debug('Auth state change');
 			if (newSession?.expires_at !== session?.expires_at || _ === 'INITIAL_SESSION') {
+				console.debug('Invalidating all');
 				invalidateAll();
 			}
 		});
