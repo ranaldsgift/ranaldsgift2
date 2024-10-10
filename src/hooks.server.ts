@@ -18,7 +18,7 @@ const supabase: Handle = async ({ event, resolve }) => {
 				getAll: () => event.cookies.getAll(),
 				setAll: (cookiesToSet) => {
 					cookiesToSet.forEach(({ name, value, options }) => {
-						event.cookies.set(name, value, { ...options, path: "/", sameSite: "none" });
+						event.cookies.set(name, value, { ...options, path: "/" });
 					});
 				},
 			},
@@ -30,7 +30,7 @@ const supabase: Handle = async ({ event, resolve }) => {
 			getAll: () => event.cookies.getAll(),
 			setAll: (cookiesToSet) => {
 				cookiesToSet.forEach(({ name, value, options }) => {
-					event.cookies.set(name, value, { ...options, path: "/", sameSite: "none" });
+					event.cookies.set(name, value, { ...options, path: "/" });
 				});
 			},
 		},
