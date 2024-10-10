@@ -27,8 +27,8 @@
 	initializeWindowState();
 
 	$effect(() => {
-		console.debug('session');
-		console.debug(session);
+		console.debug('session effect');
+		console.debug(data.sessionUser);
 	});
 
 	$effect(() => {
