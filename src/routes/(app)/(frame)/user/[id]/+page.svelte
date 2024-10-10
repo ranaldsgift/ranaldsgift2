@@ -28,10 +28,6 @@
 				: `This user has not created a profile yet.`
 	);
 
-	let favoriteFilter = $state({ favoriteByUserId: data.userData.id, limit: 4, offset: 0 });
-	let ratedFilter = $state({ ratedByUserId: data.userData.id, limit: 4, offset: 0 });
-	let authoredFilter = $state({ userId: data.userData.id, limit: 10, offset: 0 });
-
 	const logoutHandler: SubmitFunction = async () => {
 		return async ({ result, update }) => {
 			const { error } = await $page.data.supabase.auth.signOut();
@@ -90,14 +86,26 @@
 		</div>
 		{#if data.sessionUser?.id === data.userData.id}
 			{#if data.userData.favoriteBuildsCount > 0}
-				<BuildTable class="top-left-shadow" title="My Favorite Builds" filter={favoriteFilter}></BuildTable>
+				<BuildTable
+					class="top-left-shadow"
+					title="My Favorite Builds"
+					filter={{ favoriteByUserId: data.userData.id, limit: 4, offset: 0 }}
+				></BuildTable>
 			{/if}
 			{#if data.userData.ratedBuildsCount > 0}
-				<BuildTable class="top-left-shadow" title="My Rated Builds" filter={ratedFilter}></BuildTable>
+				<BuildTable
+					class="top-left-shadow"
+					title="My Rated Builds"
+					filter={{ ratedByUserId: data.userData.id, limit: 4, offset: 0 }}
+				></BuildTable>
 			{/if}
 		{/if}
 		{#if data.userData.authoredBuildsCount > 0}
-			<BuildTable class="top-left-shadow" title={data.userData.name + "'s Builds"} filter={authoredFilter}></BuildTable>
+			<BuildTable
+				class="top-left-shadow"
+				title={data.userData.name + "'s Builds"}
+				filter={{ userId: data.userData.id, limit: 10, offset: 0 }}
+			></BuildTable>
 		{:else if data.userData.id === data.sessionUser?.id}
 			<ContentContainer>
 				<h1>You will see a list of your builds here once you <a href="/build/create">created</a> one.</h1>
