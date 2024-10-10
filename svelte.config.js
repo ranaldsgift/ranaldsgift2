@@ -8,7 +8,14 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-		adapter: azure()
+		adapter: azure({
+			customStaticWebAppConfig: {
+				globalHeaders: {
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Methods': 'POST, GET, OPTIONS'
+				}
+			}
+		})
 	},
 
 	vitePlugin: {
