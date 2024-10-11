@@ -139,8 +139,8 @@
 			bind:property1={build.primaryWeapon.property1}
 			bind:property2={build.primaryWeapon.property2}
 			weapon={build.primaryWeapon.weapon}
-			properties={build.primaryWeapon.weapon.properties}
-			traits={build.primaryWeapon.weapon.traits}
+			properties={build.primaryWeapon.weapon?.properties ?? []}
+			traits={build.primaryWeapon.weapon?.traits ?? []}
 		></InventoryItemDisplay>
 	</div>
 	<div class={inventoryTab !== "SECONDARY" ? "hidden" : ""}>
@@ -155,8 +155,8 @@
 			bind:property1={build.secondaryWeapon.property1}
 			bind:property2={build.secondaryWeapon.property2}
 			weapon={build.secondaryWeapon.weapon}
-			properties={build.secondaryWeapon.weapon.properties}
-			traits={build.secondaryWeapon.weapon.traits}
+			properties={build.secondaryWeapon.weapon?.properties ?? []}
+			traits={build.secondaryWeapon.weapon?.traits ?? []}
 		></InventoryItemDisplay>
 	</div>
 	<div class="jewelry-tab {inventoryTab !== 'EQUIPMENT' ? 'hidden' : ''}">
