@@ -51,8 +51,8 @@
 <Breadcrumb
 	links={[
 		{ href: "/", text: "Home" },
-		{ href: `/user/${user.id}`, text: user.name },
-	]}>Edit Profile</Breadcrumb
+		{ href: `/user/${user.id}`, text: user.name || "Your Profile" },
+	]}>Edit</Breadcrumb
 >
 
 <PageButtonContainer>
