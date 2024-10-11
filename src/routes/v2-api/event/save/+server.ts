@@ -29,6 +29,9 @@ export async function POST({ request, locals }) {
 	}
 
 	eventEntity.save({ data: { session } });
+
+	//Remove event description from redis cache in case of large images
+	eventEntity.description = "";
 	EventCache.update(eventEntity.id, eventEntity);
 
 	return json({ message: "Event data saved" });
