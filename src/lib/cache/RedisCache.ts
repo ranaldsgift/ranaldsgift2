@@ -111,7 +111,16 @@ export const PotionCache = new RedisCache<Potion, IPotion>(Potion, "potions");
 export const BookSettingCache = new RedisCache<BookSetting, IBookSetting>(BookSetting, "book-settings");
 export const TwitchSettingCache = new RedisCache<TwitchSetting, ITwitchSetting>(TwitchSetting, "twitch-settings");
 export const BuildRoleCache = new RedisCache<BuildRole, IBuildRole>(BuildRole, "build-roles");
-export const EventCache = new RedisCache<Event, IEvent>(Event, "events");
+export const EventCache = new RedisCache<Event, IEvent>(Event, "events", {
+	select: {
+		id: true,
+		name: true,
+		description: false,
+		startDate: true,
+		endDate: true,
+		isActive: true,
+	},
+});
 export const CareerCache = new RedisCache<Career, ICareer>(Career, "careers", {
 	relations: {
 		passive: true,

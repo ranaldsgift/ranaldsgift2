@@ -1,6 +1,6 @@
 import type { RequestHandler } from "./$types";
-import { error } from "console";
-import { Event, type IEvent } from "$lib/entities/Event";
+import { type IEvent } from "$lib/entities/Event";
+import { EventCache } from "$lib/cache/RedisCache";
 
 export const GET: RequestHandler = async ({ locals, url }) => {
 	const endAfter = url.searchParams.get("endAfter");
@@ -12,32 +12,26 @@ export const GET: RequestHandler = async ({ locals, url }) => {
 		isActive = url.searchParams.get("isActive") === "true";
 	}
 
-	let data: IEvent[] | null = null;
-	try {
-		let query = Event.createQueryBuilder("event");
+	let events: IEvent[] = await EventCache.getAll();
 
-		if (endAfter) {
-			query = query.where("event.endDate > :endAfter", { endAfter: new Date(endAfter) });
-		}
-
-		if (startBefore) {
-			query = query.where("event.startDate < :startBefore", { startBefore: new Date(startBefore) });
-		}
-
-		if (isActive) {
-			query = query.andWhere("event.isActive = :isActive", { isActive: true });
-		}
-
-		let entities = await query.getMany();
-		data = entities.map((entity) => entity.toObject());
-	} catch (err) {
-		console.error(err);
-		error(500, "Internal Server Error");
+	if (events && events.length > 0) {
+		events = events.filter((event) => {
+			if (endAfter && new Date(event.endDate) <= new Date(endAfter)) {
+				return false;
+			}
+			if (startBefore && new Date(event.startDate) >= new Date(startBefore)) {
+				return false;
+			}
+			if (isActive && !event.isActive) {
+				return false;
+			}
+			return true;
+		});
 	}
 
 	const response = JSON.stringify({
-		items: data,
-		count: data?.length || 0,
+		items: events,
+		count: events.length,
 	});
 
 	return new Response(response);
