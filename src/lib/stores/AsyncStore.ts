@@ -1,15 +1,16 @@
 import { browser } from "$app/environment";
 import type { IAuthoredEntity, IEntity } from "$lib/entities/BaseEntity";
-import type { IUser } from "$lib/entities/User";
 
 export class AsyncStore<TModel extends IEntity> {
 	/**
 	 * @param rootApiUrl The base URL for API requests.
 	 * @param cacheDuration Optional. The duration in milliseconds for which data is cached. Defaults to 1 minute.
 	 */
-	constructor(rootApiUrl: string, cacheDuration?: number) {
+	constructor(rootApiUrl: string, cacheDuration?: number, lastUpdatedServer?: number) {
+		this.lastUpdatedServer = lastUpdatedServer;
 		this.apiUrl = rootApiUrl;
 		this.storageKeyPrefix = "asyncStore_" + rootApiUrl;
+		this.lastUpdatedStorageKey = "asyncStore_lastUpdated_" + rootApiUrl;
 		if (cacheDuration) {
 			this.cacheDuration = cacheDuration;
 		}
@@ -20,7 +21,22 @@ export class AsyncStore<TModel extends IEntity> {
 		}
 	}
 
+	private getLastUpdatedClient(): number {
+		const lastUpdatedLocalStorage = localStorage.getItem(this.lastUpdatedStorageKey);
+		return lastUpdatedLocalStorage ? Number(lastUpdatedLocalStorage) : 0;
+	}
+
+	private isClientOutdated(): boolean {
+		if (!this.lastUpdatedServer) return false;
+		return this.lastUpdatedServer > this.getLastUpdatedClient();
+	}
+
 	private initializeCache() {
+		if (this.isClientOutdated()) {
+			this.invalidateAll();
+			return;
+		}
+
 		for (let i = 0; i < localStorage.length; i++) {
 			const key = localStorage.key(i);
 			if (key && key.startsWith(this.storageKeyPrefix)) {
@@ -42,6 +58,8 @@ export class AsyncStore<TModel extends IEntity> {
 		}
 	}
 
+	protected lastUpdatedServer?: number;
+	protected lastUpdatedStorageKey: string;
 	protected apiUrl: string;
 	protected storageKeyPrefix: string;
 	// Default duration is 1 minute
@@ -90,6 +108,9 @@ export class AsyncStore<TModel extends IEntity> {
 							data: result,
 						})
 					);
+					if (this.lastUpdatedServer) {
+						localStorage.setItem(this.lastUpdatedStorageKey, this.lastUpdatedServer.toString());
+					}
 				});
 			}
 		}

@@ -39,9 +39,9 @@ import { bookData } from "$lib/data/legacy/Books";
 import { env } from "$env/dynamic/private";
 import PropertyCategoryEnum from "$lib/enums/PropertyCategoryEnum";
 import TraitCategoryEnum from "$lib/enums/TraitCategoryEnum";
-import { CareerCache } from "$lib/cache/CareerCache";
 import { plainToInstance } from "class-transformer";
 import { DifficultyModifier } from "$lib/entities/DifficultyModifier";
+import { CareerCache } from "$lib/cache/RedisCache";
 
 // Use this flag to import data from Firebase into Supabase
 let IMPORT_FIREBASE_DATA = true;

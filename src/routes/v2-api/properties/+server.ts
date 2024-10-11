@@ -1,4 +1,4 @@
-import { PropertiesCache } from "$lib/cache/PropertiesCache";
+import { PropertiesCache } from "$lib/cache/RedisCache";
 import type { RequestHandler } from "./$types";
 import { error } from "@sveltejs/kit";
 

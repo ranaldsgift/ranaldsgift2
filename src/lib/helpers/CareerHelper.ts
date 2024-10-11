@@ -20,6 +20,15 @@ class CareerHelper {
 		};
 		return buildPojo;
 	}
+
+	static getSorted(careers: ICareer[]): ICareer[] {
+		return careers.sort((a, b) => {
+			if (a.hero.id - b.hero.id === 0) {
+				return a.id - b.id;
+			}
+			return a.hero.id - b.hero.id;
+		});
+	}
 }
 
 export default CareerHelper;
