@@ -109,8 +109,8 @@
 				<p>
 					A mutator mod in the same vein as Onslaught made by Core specifically for the Onslaught Series. This is the difficulty
 					second only to Spicy Onslaught; "Spice the average Dutchie can handle". There are a lot of spawns in Dutch Spice, most
-					notably vastly increased Special spawns. White Stormvermin are introduced, which are normal SV but with super armour
-					type instead of regular armour.
+					notably vastly increased Special spawns. Custom enemies are also introduced, such as White Stormvermin, which are normal
+					SV but with super armour type and Bestigor HP.
 				</p>
 			</ContentContainer>
 			<div class="divider-10 h-[26px] !bg-contain my-2 desktop:hidden"></div>
@@ -125,11 +125,11 @@
 			<ContentContainer class="max-w-[672px] flex flex-col gap-5">
 				<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=1835393505">Deathwish (DW):</a>
 				<p>
-					A difficulty modifier that increases enemy stagger resistances, and Globadier gas damage. Elites can no longer be
-					interrupted out of their overheads with a majority of the classes in the game, and enemies in general tend to stay
-					stunned for a much shorter period of time. Stagger damage multipliers are locked at C1 values (less damage dealt to
-					staggered enemies in C3). Deathwish was originally created by Grimalackt, but it is now updated and maintained by
-					RandomWords with input from the community.
+					A difficulty modifier that increases enemy stagger resistances. Elites can no longer be interrupted out of their
+					overheads with a majority of the classes in the game, and enemies in general tend to stay stunned for a much shorter
+					period of time. Stagger damage multipliers are locked at C1 values (less damage dealt to staggered enemies in C3).
+					Deathwish was originally created by Grimalackt, but it is now updated and maintained by RandomWords with input from the
+					community.
 				</p>
 			</ContentContainer>
 			<div class="divider-10 h-[26px] !bg-contain my-2 desktop:hidden"></div>
@@ -144,6 +144,7 @@
 		<TextHeader>Modifier Overview</TextHeader>
 		<div class="divider-21 w-full h-[20px] mb-2"></div>
 		<img class="w-full max-w-[672px] m-auto" src="https://i.imgur.com/ivVTPat.jpeg" alt="Modifier Overview" />
+		<p class="text-right">*Infographic created by kuli</p>
 	</div>
 </div>
 

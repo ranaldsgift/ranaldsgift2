@@ -44,6 +44,8 @@
 	let selectedCareer = $derived<ICareer | undefined>(careersData.find((career) => career.id === filter.careerId));
 	let selectedHero = $derived<IHero | undefined>(heroesData.find((hero) => hero.id === filter.heroId));
 
+	let isModded = $state(false);
+
 	let heroes = $derived.by<IHero[]>(() => {
 		let heroes: IHero[] = [];
 
@@ -180,6 +182,17 @@
 			filter.search = null;
 		}
 	}
+
+	const handleIsModdedChange = () => {
+		if (isModded) {
+			filter.difficultyModifierId = 1;
+			filter.isDeathwish = true;
+		} else {
+			filter.difficultyModifierId = null;
+			filter.isDeathwish = null;
+		}
+		resetOffset();
+	};
 
 	let hasActiveFilters = $derived.by(() => {
 		for (const key in filter) {
@@ -318,11 +331,6 @@
 						<option value={option.value}>{option.label}</option>
 					{/each}
 				</select>
-				<select bind:value={filter.isDeathwish} class="flex-1 min-w-[200px]" data-dirty={filter.isDeathwish} onchange={resetOffset}>
-					{#each deathwishOptions as option}
-						<option value={option.value}>{option.label}</option>
-					{/each}
-				</select>
 				<select
 					bind:value={filter.difficultyId}
 					class="flex-1 min-w-[200px]"
@@ -332,17 +340,6 @@
 					<option value={null}>All Difficulties</option>
 					{#each difficulties as difficulty}
 						<option value={difficulty.id}>{difficulty.name}</option>
-					{/each}
-				</select>
-				<select
-					bind:value={filter.difficultyModifierId}
-					class="flex-1 min-w-[200px]"
-					data-dirty={filter.difficultyModifierId}
-					onchange={resetOffset}
-				>
-					<option value={null}>All Difficulty Modifiers</option>
-					{#each difficultyModifiers as difficultyModifier}
-						<option value={difficultyModifier.id}>{difficultyModifier.name}</option>
 					{/each}
 				</select>
 				<select bind:value={filter.potionId} class="flex-1 min-w-[200px]" data-dirty={filter.potionId} onchange={resetOffset}>
@@ -374,6 +371,34 @@
 						<option value={mission.id}>{mission.name}</option>
 					{/each}
 				</select>
+				<div class="flex-1 min-w-[200px]" data-dirty={isModded}>
+					<label for="isModded">Modded {isModded ? "✓" : "✗"}</label>
+					<input id="isModded" type="checkbox" bind:checked={isModded} onchange={handleIsModdedChange} />
+				</div>
+				{#if isModded}
+					<select
+						bind:value={filter.isDeathwish}
+						class="flex-1 min-w-[200px]"
+						data-dirty={filter.isDeathwish}
+						onchange={resetOffset}
+					>
+						{#each deathwishOptions as option}
+							<option value={option.value}>{option.label}</option>
+						{/each}
+					</select>
+					<select
+						bind:value={filter.difficultyModifierId}
+						class="flex-1 min-w-[200px]"
+						data-dirty={filter.difficultyModifierId}
+						onchange={resetOffset}
+					>
+						<option value={null}>All Difficulty Modifiers</option>
+						{#each difficultyModifiers as difficultyModifier}
+							<option value={difficultyModifier.id}>{difficultyModifier.name}</option>
+						{/each}
+					</select>
+				{/if}
+
 				<!-- <select bind:value={filter.patchId}>
 				<option value={null}>All Patches</option>
 				{#each patches as patch}

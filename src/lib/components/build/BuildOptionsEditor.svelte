@@ -37,6 +37,7 @@
 	let potions: IPotion[] = $state([]);
 	let buildRoles: IBuildRole[] = $state([]);
 	let bookSettings: IBookSetting[] = $state([]);
+	let isModded = $state(false);
 
 	const loadBuildOptions = async () => {
 		if (missions.length === 0) {
@@ -152,39 +153,6 @@
 					{/each}
 				</select>
 
-				<select
-					class="p-2"
-					value={build.difficultyModifier?.id}
-					onchange={handleDifficultyModifierChange}
-					data-dirty={build.difficultyModifier?.id}
-				>
-					<option value={undefined} selected>Difficulty Modifier</option>
-					{#each difficultyModifiers as difficultyModifier}
-						<option value={difficultyModifier.id} selected={difficultyModifier.id === build.difficultyModifier?.id}>
-							{difficultyModifier.name}
-						</option>
-					{/each}
-				</select>
-
-				<div class="styled-input" data-dirty={build.isDeathwish ? true : null}>
-					<label for="deathwish">Deathwish {build.isDeathwish ? "✓" : "✗"}</label>
-					<input id="deathwish" type="checkbox" bind:checked={build.isDeathwish} />
-				</div>
-
-				<select
-					class="p-2 col-span-1 row-span-2"
-					multiple
-					onchange={handleRolesChange}
-					data-dirty={build.roles != null && build.roles.length > 0 ? true : null}
-					title="Ctrl+click to select/deselect multiple roles"
-				>
-					{#each buildRoles as role}
-						<option value={role.id} selected={build.roles?.some((r) => r.id === role.id)}>
-							{role.name}
-						</option>
-					{/each}
-				</select>
-
 				<select class="p-2" value={build.mission?.id} onchange={handleMissionChange} data-dirty={build.mission?.id}>
 					<option value={undefined} selected>Mission</option>
 					{#each missions as mission}
@@ -203,6 +171,20 @@
 					{/each}
 				</select>
 
+				<select
+					class="p-2 col-span-1 row-span-2"
+					multiple
+					onchange={handleRolesChange}
+					data-dirty={build.roles != null && build.roles.length > 0 ? true : null}
+					title="Ctrl+click to select/deselect multiple roles"
+				>
+					{#each buildRoles as role}
+						<option value={role.id} selected={build.roles?.some((r) => r.id === role.id)}>
+							{role.name}
+						</option>
+					{/each}
+				</select>
+
 				<select class="p-2" value={build.book?.id} onchange={handleBookChange} data-dirty={build.book?.id}>
 					<option value={undefined} selected>Book</option>
 					{#each bookSettings as book}
@@ -215,6 +197,11 @@
 				<div class="styled-input" data-dirty={build.isTwitch ? true : null}>
 					<label for="isTwitch">Twitch {build.isTwitch ? "✓" : "✗"}</label>
 					<input id="isTwitch" type="checkbox" bind:checked={build.isTwitch} onchange={handleTwitchToggle} />
+				</div>
+
+				<div class="styled-input" data-dirty={isModded ? true : null}>
+					<label for="isModded">Modded {isModded ? "✓" : "✗"}</label>
+					<input id="isModded" type="checkbox" bind:checked={isModded} />
 				</div>
 			</div>
 		</div>
@@ -262,6 +249,33 @@
 							<option value={duration}>{duration}</option>
 						{/each}
 					</select>
+				</div>
+			</div>
+		{/if}
+		{#if isModded}
+			<div>
+				<ContentHeader>Modded Options</ContentHeader>
+			</div>
+			<div
+				class="build-options-container grid mt-4 gap-2 items-start grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] w-full max-w-full"
+			>
+				<select
+					class="p-2"
+					value={build.difficultyModifier?.id}
+					onchange={handleDifficultyModifierChange}
+					data-dirty={build.difficultyModifier?.id}
+				>
+					<option value={undefined} selected>Difficulty Modifier</option>
+					{#each difficultyModifiers as difficultyModifier}
+						<option value={difficultyModifier.id} selected={difficultyModifier.id === build.difficultyModifier?.id}>
+							{difficultyModifier.name}
+						</option>
+					{/each}
+				</select>
+
+				<div class="styled-input" data-dirty={build.isDeathwish ? true : null}>
+					<label for="deathwish">Deathwish {build.isDeathwish ? "✓" : "✗"}</label>
+					<input id="deathwish" type="checkbox" bind:checked={build.isDeathwish} />
 				</div>
 			</div>
 		{/if}

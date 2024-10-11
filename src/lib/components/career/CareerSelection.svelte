@@ -73,7 +73,7 @@
 		<div class="divider-18-straight w-[calc(100%-650px)] h-[55px] absolute left-[0px] bottom-[3px]"></div>
 		<div class="divider-18-straight w-[calc(100%-650px)] h-[55px] absolute right-[0px] bottom-[3px]"></div>
 	</div>
-	<div class="careers-icon-container grid auto-rows-[85px] grid-cols-2 tablet:grid-cols-4 gap-2 background-12 border-01 p-5">
+	<div class="careers-icon-container grid auto-rows-[60px] grid-cols-2 tablet:grid-cols-4 gap-2 background-12 border-01 p-5">
 		{#each careersState as career}
 			<div class="icon-wrapper">
 				<button
@@ -116,5 +116,10 @@
 		box-shadow: 0 0 8px 2px gold;
 		outline: 1px solid #fff;
 		cursor: pointer;
+	}
+	@media (min-width: 1800px) {
+		.careers-icon-container {
+			grid-auto-rows: 85px;
+		}
 	}
 </style>
