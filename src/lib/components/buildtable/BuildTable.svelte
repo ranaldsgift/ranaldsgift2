@@ -107,7 +107,7 @@
 {#await loadData()}
 	<div class={className}>
 		<ContainerTitle>{title ?? "Builds"}</ContainerTitle>
-		<div class="p-5 border-01 background-20 gap-5 grid desktop:grid-cols-2 desktop:grid-flow-row">
+		<div class="p-5 border-01 background-20 gap-5 grid {!compact ? 'desktop:grid-cols-2' : ''} desktop:grid-flow-row">
 			{#each { length: filter.limit ?? 5 } as _}
 				<BuildTableRowSkeleton></BuildTableRowSkeleton>
 			{/each}
