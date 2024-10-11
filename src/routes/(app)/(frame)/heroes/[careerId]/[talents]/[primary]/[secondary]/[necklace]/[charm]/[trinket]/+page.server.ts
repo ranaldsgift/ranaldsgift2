@@ -1,7 +1,4 @@
-import { CareerCache } from "$lib/cache/CareerCache.js";
-import { PropertiesCache } from "$lib/cache/PropertiesCache.js";
-import { TraitsCache } from "$lib/cache/TraitsCache.js";
-import { WeaponCache } from "$lib/cache/WeaponCache.js";
+import { CareerCache, PropertiesCache, TraitsCache, WeaponsCache } from "$lib/cache/RedisCache";
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
 import type { INecklaceBuild } from "$lib/entities/builds/NecklaceBuild.js";
 import type { IWeaponBuild } from "$lib/entities/builds/WeaponBuild.js";
@@ -75,7 +72,7 @@ async function getWeapon(id: number, type: "melee" | "range") {
 		error(404, `Weapon with id ${id} not found`);
 	}
 
-	let weapon = await WeaponCache.findByCodename(weaponCodename);
+	let weapon = await WeaponsCache.findBy("codename", weaponCodename);
 
 	if (!weapon) {
 		error(404, `Weapon with id ${id} not found`);
@@ -193,8 +190,8 @@ async function loadCareerFromOldURL(
 	}
 
 	let necklaceParams = necklaceParam.split(",");
-	let properties = await PropertiesCache.getAllForCategory(PropertyCategoryEnum.NECKLACE);
-	let traits = await TraitsCache.getAllForCategory(TraitCategoryEnum.Necklace);
+	let properties = await PropertiesCache.findAllBy("category", PropertyCategoryEnum.NECKLACE);
+	let traits = await TraitsCache.findAllBy("category", TraitCategoryEnum.Necklace);
 
 	property1 = getProperty("necklace", parseInt(necklaceParams[0]), properties);
 	property2 = getProperty("necklace", parseInt(necklaceParams[1]), properties);
@@ -212,8 +209,8 @@ async function loadCareerFromOldURL(
 	}
 
 	let charmParams = charmParam.split(",");
-	properties = await PropertiesCache.getAllForCategory(PropertyCategoryEnum.CHARM);
-	traits = await TraitsCache.getAllForCategory(TraitCategoryEnum.Charm);
+	properties = await PropertiesCache.findAllBy("category", PropertyCategoryEnum.CHARM);
+	traits = await TraitsCache.findAllBy("category", TraitCategoryEnum.Charm);
 
 	property1 = getProperty("charm", parseInt(charmParams[0]), properties);
 	property2 = getProperty("charm", parseInt(charmParams[1]), properties);
@@ -231,8 +228,8 @@ async function loadCareerFromOldURL(
 	}
 
 	let trinketParams = trinketParam.split(",");
-	properties = await PropertiesCache.getAllForCategory(PropertyCategoryEnum.TRINKET);
-	traits = await TraitsCache.getAllForCategory(TraitCategoryEnum.Trinket);
+	properties = await PropertiesCache.findAllBy("category", PropertyCategoryEnum.TRINKET);
+	traits = await TraitsCache.findAllBy("category", TraitCategoryEnum.Trinket);
 
 	property1 = getProperty("trinket", parseInt(trinketParams[0]), properties);
 	property2 = getProperty("trinket", parseInt(trinketParams[1]), properties);
@@ -313,7 +310,7 @@ async function loadCareerFromNewURL(
 	}
 
 	let meleeParams = primaryParam.split(separator);
-	let weapon = await WeaponCache.get(parseInt(meleeParams[0]));
+	let weapon = await WeaponsCache.get(parseInt(meleeParams[0]));
 
 	if (!weapon) {
 		error(404, `Weapon with id ${meleeParams[0]} not found`);
@@ -335,7 +332,7 @@ async function loadCareerFromNewURL(
 		error(404, `Invalid range weapon parameters: ${secondaryParam}`);
 	}
 	let rangeParams = secondaryParam.split(separator);
-	weapon = await WeaponCache.get(parseInt(rangeParams[0]));
+	weapon = await WeaponsCache.get(parseInt(rangeParams[0]));
 
 	if (!weapon) {
 		error(404, `Weapon with id ${rangeParams[0]} not found`);
@@ -358,8 +355,8 @@ async function loadCareerFromNewURL(
 	}
 
 	let necklaceParams = necklaceParam.split(separator);
-	let properties = await PropertiesCache.getAllForCategory(PropertyCategoryEnum.NECKLACE);
-	let traits = await TraitsCache.getAllForCategory(TraitCategoryEnum.Necklace);
+	let properties = await PropertiesCache.findAllBy("category", PropertyCategoryEnum.NECKLACE);
+	let traits = await TraitsCache.findAllBy("category", TraitCategoryEnum.Necklace);
 
 	property1 = getProperty("necklace", parseInt(necklaceParams[0]), properties);
 	property2 = getProperty("necklace", parseInt(necklaceParams[1]), properties);
@@ -377,8 +374,8 @@ async function loadCareerFromNewURL(
 	}
 
 	let charmParams = charmParam.split(separator);
-	properties = await PropertiesCache.getAllForCategory(PropertyCategoryEnum.CHARM);
-	traits = await TraitsCache.getAllForCategory(TraitCategoryEnum.Charm);
+	properties = await PropertiesCache.findAllBy("category", PropertyCategoryEnum.CHARM);
+	traits = await TraitsCache.findAllBy("category", TraitCategoryEnum.Charm);
 
 	property1 = getProperty("charm", parseInt(charmParams[0]), properties);
 	property2 = getProperty("charm", parseInt(charmParams[1]), properties);
@@ -396,8 +393,8 @@ async function loadCareerFromNewURL(
 	}
 
 	let trinketParams = trinketParam.split(separator);
-	properties = await PropertiesCache.getAllForCategory(PropertyCategoryEnum.TRINKET);
-	traits = await TraitsCache.getAllForCategory(TraitCategoryEnum.Trinket);
+	properties = await PropertiesCache.findAllBy("category", PropertyCategoryEnum.TRINKET);
+	traits = await TraitsCache.findAllBy("category", TraitCategoryEnum.Trinket);
 
 	property1 = getProperty("trinket", parseInt(trinketParams[0]), properties);
 	property2 = getProperty("trinket", parseInt(trinketParams[1]), properties);

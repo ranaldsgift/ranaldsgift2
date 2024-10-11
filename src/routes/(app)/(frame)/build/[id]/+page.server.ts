@@ -1,4 +1,4 @@
-import { PatchCache } from "$lib/cache/PatchCache.js";
+import { PatchesCache } from "$lib/cache/RedisCache";
 import { ROOT_API_URL } from "$lib/data/constants/constants";
 import { type ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
 import BuildHelper from "$lib/helpers/BuildHelper.js";
@@ -38,7 +38,7 @@ export const load = async (event) => {
 		Charm with ${careerBuild.charm.property1?.name}, ${careerBuild.charm.property2?.name}, and ${careerBuild.charm.trait?.name}.
 		Trinket with ${careerBuild.trinket.property1?.name}, ${careerBuild.trinket.property2?.name}, and ${careerBuild.trinket.trait?.name}.`;
 
-	const patches = await PatchCache.getAll();
+	const patches = await PatchesCache.getAll();
 
 	const patch = BuildHelper.getPatch(careerBuild, patches);
 

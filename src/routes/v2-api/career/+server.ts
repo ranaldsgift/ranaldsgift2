@@ -1,4 +1,4 @@
-import { CareerCache } from "$lib/cache/CareerCache";
+import { CareerCache } from "$lib/cache/RedisCache";
 import type { RequestHandler } from "./$types";
 
 export const GET: RequestHandler = async ({ url }) => {

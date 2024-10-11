@@ -1,6 +1,6 @@
-import { TraitsCache } from "$lib/cache/TraitsCache";
 import type { RequestHandler } from "./$types";
 import { error } from "@sveltejs/kit";
+import { TraitsCache } from "$lib/cache/RedisCache";
 
 export const GET: RequestHandler = async ({ url }) => {
 	let data = null;

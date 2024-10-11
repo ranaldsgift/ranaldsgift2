@@ -1,8 +1,7 @@
 import { CareerBuild } from "$lib/entities/builds/CareerBuild";
 import { error } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
-import { CareerCache } from "$lib/cache/CareerCache";
-import { WeaponCache } from "$lib/cache/WeaponCache";
+import { CareerCache, WeaponsCache } from "$lib/cache/RedisCache";
 
 export const GET: RequestHandler = async ({ url, params }) => {
 	const id = url.searchParams.get("id");
@@ -67,8 +66,8 @@ export const GET: RequestHandler = async ({ url, params }) => {
 
 	let buildPojo = careerBuild.toObject({ exposeUnsetFields: false });
 	buildPojo.career = await CareerCache.get(careerBuild.careerId);
-	buildPojo.primaryWeapon.weapon = await WeaponCache.get(careerBuild.primaryWeapon.weaponId);
-	buildPojo.secondaryWeapon.weapon = await WeaponCache.get(careerBuild.secondaryWeapon.weaponId);
+	buildPojo.primaryWeapon.weapon = await WeaponsCache.get(careerBuild.primaryWeapon.weaponId);
+	buildPojo.secondaryWeapon.weapon = await WeaponsCache.get(careerBuild.secondaryWeapon.weaponId);
 
 	if (!careerBuild.careerId) {
 		error(404, `Build ${id} does not have a career.`);

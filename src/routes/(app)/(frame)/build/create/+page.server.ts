@@ -1,6 +1,4 @@
-import { CareerCache } from "$lib/cache/CareerCache";
-import { PropertiesCache } from "$lib/cache/PropertiesCache";
-import { TraitsCache } from "$lib/cache/TraitsCache";
+import { CareerCache, PropertiesCache, TraitsCache } from "$lib/cache/RedisCache.js";
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 
 export const load = async ({ locals }) => {

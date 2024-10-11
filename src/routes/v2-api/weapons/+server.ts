@@ -1,12 +1,11 @@
-import { CareerCache } from "$lib/cache/CareerCache";
-import { WeaponCache } from "$lib/cache/WeaponCache";
+import { WeaponsCache } from "$lib/cache/RedisCache";
 import type { RequestHandler } from "./$types";
 import { error } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async ({}) => {
 	let data = null;
 	try {
-		data = await WeaponCache.getAll();
+		data = await WeaponsCache.getAll();
 	} catch (err) {
 		console.error(err);
 		error(500, "Internal Server Error");

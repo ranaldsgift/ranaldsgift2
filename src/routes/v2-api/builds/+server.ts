@@ -1,4 +1,4 @@
-import { PatchCache } from "$lib/cache/PatchCache";
+import { PatchesCache } from "$lib/cache/RedisCache";
 import { CareerBuild, type ICareerBuild } from "$lib/entities/builds/CareerBuild";
 import BuildHelper from "$lib/helpers/BuildHelper";
 import { error, type RequestHandler } from "@sveltejs/kit";
@@ -333,7 +333,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 	}
 
 	let builds: ICareerBuild[] = [];
-	let patches = await PatchCache.getAll();
+	let patches = await PatchesCache.getAll();
 
 	for (let build of data.entities) {
 		if (!build.careerId) {
