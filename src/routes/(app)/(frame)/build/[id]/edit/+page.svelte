@@ -63,9 +63,7 @@
 
 			if (response.ok) {
 				toast.success("Build saved!", { position: "bottom-center" });
-				if (pageState.build.id) {
-					CareerBuildsStore.invalidateById(pageState.build.id);
-				}
+				CareerBuildsStore.invalidateAll();
 			} else {
 				const json = await response.json();
 				toast.error(json.error, { position: "bottom-center" });
