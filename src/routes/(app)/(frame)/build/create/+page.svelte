@@ -53,12 +53,9 @@
 
 			if (response.ok) {
 				toast.success("Build created!", { position: "bottom-center" });
-				let userId = pageState.build?.user?.id;
 
 				goto(`/build/${json.buildId}`).then(() => {
-					if (userId) {
-						CareerBuildsStore.invalidateByUserId(userId);
-					}
+					CareerBuildsStore.invalidateAll();
 					pageState.build = null;
 				});
 			} else {
