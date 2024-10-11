@@ -43,7 +43,7 @@
 		const missionId = params.get("missionId");
 		const search = params.get("search");
 		const sort = params.get("sort");
-		const ascending = params.get("ascending");
+		const asc = params.get("asc");
 		const offset = params.get("offset");
 		const limit = params.get("limit");
 
@@ -69,7 +69,7 @@
 			missionId: missionId !== null ? parseInt(missionId) : null,
 			search: search,
 			sort: (sort as keyof ICareerBuild) || "dateModified",
-			asc: ascending !== null ? ascending === "true" : false,
+			asc: asc !== null ? asc === "true" : false,
 			offset: offset !== null ? parseInt(offset) : 0,
 			limit: limit !== null ? parseInt(limit) : 10,
 		};
