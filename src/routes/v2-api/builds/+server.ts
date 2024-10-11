@@ -320,6 +320,11 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			query = query.andWhere(`build.isDeleted = :isDeleted`, { isDeleted: isDeleted });
 		}
 
+		// Default to 10 if no limit is provided and also limit to maximum of 10
+		if (!limit || limit > 10) {
+			limit = 10;
+		}
+
 		const { raw, entities } = await query
 			.skip(offset * limit)
 			.take(limit)
