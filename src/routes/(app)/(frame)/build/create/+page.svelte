@@ -87,6 +87,10 @@
 			<p class=" m-auto text-center w-fit py-2 px-4 mb-4 border-02 background-22">
 				Please <a href="/login">login or create an account</a> to save a build.
 			</p>
+		{:else if !userState.user.name || userState.user.name.length === 0}
+			<p class=" m-auto text-center w-fit py-2 px-4 mb-4 border-02 background-22">
+				Please <a href={`/user/${userState.user.id}/edit`}>update your profile</a>. You must have a username to save a build.
+			</p>
 		{/if}
 		<BuildEditor bind:build={pageState.build} bind:inventoryTab={pageState.inventoryTab.value} />
 	</div>
