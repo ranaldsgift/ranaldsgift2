@@ -171,19 +171,24 @@
 					{/each}
 				</select>
 
-				<select
-					class="p-2 col-span-1 row-span-2"
-					multiple
-					onchange={handleRolesChange}
-					data-dirty={build.roles != null && build.roles.length > 0 ? true : null}
-					title="Ctrl+click to select/deselect multiple roles"
-				>
-					{#each buildRoles as role}
-						<option value={role.id} selected={build.roles?.some((r) => r.id === role.id)}>
-							{role.name}
-						</option>
-					{/each}
-				</select>
+				<div class="option-wrapper col-span-1 row-span-2">
+					<select
+						multiple
+						onchange={handleRolesChange}
+						data-dirty={build.roles != null && build.roles.length > 0 ? true : null}
+						title="Ctrl+click to select/deselect multiple roles"
+					>
+						{#each buildRoles as role}
+							<option
+								value={role.id}
+								selected={build.roles?.some((r) => r.id === role.id)}
+								class={build.roles?.some((r) => r.id === role.id) ? "checked" : ""}
+							>
+								{role.name}
+							</option>
+						{/each}
+					</select>
+				</div>
 
 				<select class="p-2" value={build.book?.id} onchange={handleBookChange} data-dirty={build.book?.id}>
 					<option value={undefined} selected>Book</option>
@@ -283,8 +288,43 @@
 {/await}
 
 <style>
-	select,
-	.styled-input {
+	select {
+		background: transparent;
+		height: 100%;
+		width: 100%;
+	}
+	option {
+		position: relative;
+	}
+	.option-wrapper {
+		position: relative;
+		background: linear-gradient(180deg, #2b1212 35%, #000);
+	}
+	option::before {
+		content: "";
+		border: 1px solid #30e158;
+		position: absolute;
+		right: 12px;
+		top: 5px;
+		width: 15px;
+		height: 15px;
+	}
+	option.checked::after {
+		content: "✓";
+		position: absolute;
+		right: 10px;
+		top: -5px;
+		color: #30e158;
+		font-size: 1.2rem;
+	}
+
+	.option-wrapper {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
 		border-image: url("/images/borders/border-13.png");
 		border-image-width: auto;
 		border-image-slice: 21;
@@ -293,10 +333,8 @@
 		min-height: 60px;
 		align-content: center;
 		padding: 10px 20px;
-		background: linear-gradient(180deg, #2b1212 35%, #000);
 		font-size: 1.3rem;
 		color: #30e158;
-		position: relative;
 	}
 
 	.styled-input input[type="checkbox"] {
@@ -334,8 +372,8 @@
 		position: relative;
 		transition: color 0.2s ease-in-out;
 	}
-	.build-options-container > [data-dirty],
-	.build-options-container > [data-dirty] > label {
+	.build-options-container [data-dirty],
+	.build-options-container [data-dirty] > label {
 		color: #30e158;
 	}
 
@@ -361,7 +399,15 @@
 		outline: none;
 	}
 
+	select option:not(:checked) {
+		color: #838383;
+		background-color: transparent;
+	}
 	select option:checked,
+	select option:focus {
+		color: #30e158;
+		background-color: transparent;
+	}
 	select option:hover {
 		color: #fff !important;
 		background-color: #c15b24 !important;
