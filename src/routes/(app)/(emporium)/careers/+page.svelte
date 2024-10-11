@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { PageData } from "./$types";
-
-	export let data: PageData;
+	import Seo from "$lib/components/SEO.svelte";
 </script>
+
+<Seo title="Careers" />
 
 <div class="page-layout"></div>

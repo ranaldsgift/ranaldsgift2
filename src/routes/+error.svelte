@@ -1,9 +1,10 @@
 <script>
 	import { page } from "$app/stores";
 	import TopNavigation from "$lib/components/navigation/TopNavigation.svelte";
+	import Seo from "$lib/components/SEO.svelte";
 </script>
 
-<svelte:head><title>Holy Sigmar! - augs.tools</title></svelte:head>
+<Seo title="Holy Sigmar!" />
 
 <TopNavigation></TopNavigation>
 

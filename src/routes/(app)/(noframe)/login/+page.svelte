@@ -6,6 +6,7 @@
 	import Header from "$lib/components/Header.svelte";
 	import type { SubmitFunction } from "@sveltejs/kit";
 	import { ROOT_API_URL } from "$lib/data/constants/constants";
+	import Seo from "$lib/components/SEO.svelte";
 
 	let email = $state("");
 	let isEmailValid = $derived(email.length > 0 && email.includes("@"));
@@ -29,6 +30,8 @@
 		};
 	};
 </script>
+
+<Seo title="Login" description="Login to or register your Ranald's Gift account" />
 
 <form
 	method="POST"

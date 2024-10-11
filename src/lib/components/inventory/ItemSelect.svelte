@@ -5,7 +5,7 @@
 	type Props = {
 		title: string;
 		items: IWeapon[];
-		selectedItem: IWeapon;
+		selectedItem: IWeapon | undefined;
 		handler?: (item: IWeapon) => void;
 	};
 
@@ -31,7 +31,7 @@
 	<div class="px-5 pb-5 flex flex-wrap justify-center gap-2">
 		{#each items as item, index}
 			<button class="inventory-item" onclick={() => selectHandler(item)} tabindex={index} onkeydown={keydownHandler}>
-				<WeaponIcon weapon={item} class={selectedItem.id === item.id ? "selected" : ""}></WeaponIcon>
+				<WeaponIcon weapon={item} class={selectedItem?.id === item.id ? "selected" : ""} tooltipPosition="right"></WeaponIcon>
 			</button>
 		{/each}
 	</div>

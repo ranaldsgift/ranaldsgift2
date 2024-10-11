@@ -1,7 +1,9 @@
 <script lang="ts">
 	import PageContainer from "$lib/components/containers/PageContainer.svelte";
 	import ContentContainer from "$lib/components/ContentContainer.svelte";
+	import Seo from "$lib/components/SEO.svelte";
 	import TextHeader from "$lib/components/TextHeader.svelte";
+	import { META_IMAGE_URL, ROOT_PAGE_DESCRIPTION, ROOT_PAGE_TITLE } from "$lib/data/constants/constants";
 
 	const pages = [
 		{ title: "Builds", url: "/builds", background: "/images/menu/builds.png" },
@@ -22,6 +24,8 @@
 		{ title: "Resources", url: "/resources", background: "/images/menu/resources.png" },
 	];
 </script>
+
+<Seo title="Home" description={ROOT_PAGE_DESCRIPTION} image={META_IMAGE_URL} />
 
 <PageContainer>
 	<TextHeader>Ranald's Gift</TextHeader>
