@@ -100,9 +100,9 @@
 		charmTraitId: null,
 		necklaceTraitId: null,
 		trinketTraitId: null,
-		isBot: false,
-		isDeathwish: false,
-		isTwitch: false,
+		isBot: null,
+		isDeathwish: null,
+		isTwitch: null,
 		difficultyId: null,
 		difficultyModifierId: null,
 		potionId: null,
@@ -225,7 +225,7 @@
 		{ value: true, label: "Deathwish ✓" },
 		{ value: false, label: "Deathwish ✗" },
 	];
-  
+
 	const resetOffset = () => {
 		filter.offset = 0;
 	};
