@@ -1,14 +1,19 @@
-<script>
+<script lang="ts">
 	import { page } from "$app/stores";
 
-	export let title = "Holy Sigmar, Bless This Ravaged Website";
-	export let description = "Your Resource for Vermintide 2 Builds, Mechanics and Gameplay Information";
-	export let image = "/meta-image.png";
+	type Props = {
+		title?: string;
+		description?: string;
+		image?: string;
+	};
+
+	let { title, description, image }: Props = $props();
 </script>
 
 <svelte:head>
 	<title>{title} | ranalds.gift</title>
 	<meta name="description" content={description} />
+	<meta name="image" content={image} />
 	<meta property="og_site_name" content="ranalds.gift" />
 	<meta property="og:url" content="https://ranalds.gift{$page.url.pathname.toString()}" />
 	<meta property="og:type" content="website" />

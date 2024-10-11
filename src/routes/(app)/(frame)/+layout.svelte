@@ -1,7 +1,4 @@
 <script lang="ts">
-	import Background from '$lib/components/Background.svelte';
-	import TopNavigation from '$lib/components/navigation/TopNavigation.svelte';
-
 	const { children } = $props();
 </script>
 

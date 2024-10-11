@@ -6,12 +6,6 @@
 	const { children } = $props();
 </script>
 
-<svelte:head>
-	<title>{ROOT_PAGE_TITLE}</title>
-	<meta name="description" content={ROOT_PAGE_DESCRIPTION} />
-	<meta property="image" content={META_IMAGE_URL} />
-</svelte:head>
-
 <div class="page-container desktop:min-w-[900px]">
 	<div class="page flex flex-col items-center">
 		<a href="/" class="page-title-label text-[2rem] tablet:text-[3rem] hover:no-underline hover:glow">Ranald's Gift</a>

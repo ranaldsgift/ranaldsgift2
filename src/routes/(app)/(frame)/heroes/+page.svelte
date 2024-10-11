@@ -62,8 +62,8 @@
 	let pageTitle = $derived(`${pageState.build.career.name} - ${pageState.build.career.hero.name}`);
 	let pageDescription = $derived(
 		`${pageState.build.career.name} build for ${pageState.build.career.hero.name}. 
-		${pageState.build.primaryWeapon.weapon.name} with ${pageState.build.primaryWeapon.property1?.name}, ${pageState.build.primaryWeapon.property2?.name}, and ${pageState.build.primaryWeapon.trait?.name}.
-		${pageState.build.secondaryWeapon.weapon.name} with ${pageState.build.secondaryWeapon.property1?.name}, ${pageState.build.secondaryWeapon.property2?.name}, and ${pageState.build.secondaryWeapon.trait?.name}.
+		${pageState.build.primaryWeapon.weapon?.name ?? "Primary Weapon"} with ${pageState.build.primaryWeapon.property1?.name}, ${pageState.build.primaryWeapon.property2?.name}, and ${pageState.build.primaryWeapon.trait?.name}.
+		${pageState.build.secondaryWeapon.weapon?.name ?? "Secondary Weapon"} with ${pageState.build.secondaryWeapon.property1?.name}, ${pageState.build.secondaryWeapon.property2?.name}, and ${pageState.build.secondaryWeapon.trait?.name}.
 		Necklace with ${pageState.build.necklace.property1?.name}, ${pageState.build.necklace.property2?.name}, and ${pageState.build.necklace.trait?.name}.
 		Charm with ${pageState.build.charm.property1?.name}, ${pageState.build.charm.property2?.name}, and ${pageState.build.charm.trait?.name}.
 		Trinket with ${pageState.build.trinket.property1?.name}, ${pageState.build.trinket.property2?.name}, and ${pageState.build.trinket.trait?.name}.`
