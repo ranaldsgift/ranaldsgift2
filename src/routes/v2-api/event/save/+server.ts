@@ -1,3 +1,4 @@
+import { EventCache } from "$lib/cache/RedisCache.js";
 import { Event } from "$lib/entities/Event.js";
 import { type IUser } from "$lib/entities/User.js";
 import { json } from "@sveltejs/kit";
@@ -28,6 +29,7 @@ export async function POST({ request, locals }) {
 	}
 
 	eventEntity.save({ data: { session } });
+	EventCache.update(eventEntity.id, eventEntity);
 
 	return json({ message: "Event data saved" });
 }
