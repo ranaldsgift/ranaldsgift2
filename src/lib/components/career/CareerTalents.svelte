@@ -14,6 +14,8 @@
 	let careerId = $derived(build.career.id);
 	let showDescriptions = $state(false);
 
+	let talents = $derived(BuildHelper.getCorrectedTalents(build.career.talents, build.career.id));
+
 	let talentButtonHandler = (talent: ICareerTalent) => {
 		let tier = Math.ceil(talent.talentNumber / 3);
 
@@ -75,7 +77,7 @@
 					<button class="show-talent-descriptions" onclick={() => (showDescriptions = !showDescriptions)}>
 						{showDescriptions ? "Hide" : "Show"} Descriptions
 					</button>
-					{#each build.career.talents as talent}
+					{#each talents as talent}
 						{#if (talent.talentNumber - 1) % 3 === 0}
 							<span
 								class="talent-lock-icon justify-self-center"
