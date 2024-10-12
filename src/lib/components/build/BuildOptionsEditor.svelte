@@ -123,6 +123,13 @@
 		build.twitchDisableWeeklyEvents = false;
 		build.twitchWeeklyEventEffectDuration = null;
 	};
+
+	const handleModdedToggle = () => {
+		if (!isModded) {
+			build.difficultyModifier = null;
+			build.isDeathwish = false;
+		}
+	};
 </script>
 
 {#await loadBuildOptions()}
@@ -206,7 +213,7 @@
 
 				<div class="styled-input" data-dirty={isModded ? true : null}>
 					<label for="isModded">Modded {isModded ? "✓" : "✗"}</label>
-					<input id="isModded" type="checkbox" bind:checked={isModded} />
+					<input id="isModded" type="checkbox" bind:checked={isModded} onchange={handleModdedToggle} />
 				</div>
 			</div>
 		</div>
