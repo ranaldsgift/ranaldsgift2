@@ -66,6 +66,7 @@
 	}
 	.build-side-container {
 		grid-area: buildSideContainer;
+		align-self: start;
 	}
 	.view-build-page {
 		display: grid;

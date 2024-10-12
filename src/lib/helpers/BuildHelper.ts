@@ -1,3 +1,4 @@
+import { correctedTalentsData } from "$lib/data/legacy/CorrectedTalents";
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 import type { ICareer } from "$lib/entities/career/Career";
 import type { ICareerTalent } from "$lib/entities/career/CareerTalent";
@@ -85,6 +86,23 @@ class BuildHelper {
 		}
 
 		return missingFields;
+	}
+
+	static getCorrectedTalents(talents: ICareerTalent[], careerId: number): ICareerTalent[] {
+		let list = talents.map((talent) => {
+			const tieredTalentNumber = talent.talentNumber % 3 === 0 ? 3 : talent.talentNumber % 3;
+			const tier = Math.ceil(talent.talentNumber / 3);
+			console.log("searching for", tieredTalentNumber, tier, careerId);
+			const correctedTalent = correctedTalentsData.find(
+				(t) => t.talent === tieredTalentNumber && t.tier === tier && t.careerId === careerId
+			);
+			if (correctedTalent) {
+				return { ...talent, description: correctedTalent.description };
+			}
+			return talent;
+		});
+		console.log(list);
+		return list;
 	}
 
 	static getTalents(build: ICareerBuild): (ICareerTalent | null | undefined)[] {

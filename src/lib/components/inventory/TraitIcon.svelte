@@ -5,15 +5,32 @@
 		trait: ITrait;
 		class?: string;
 		size?: string;
+		tooltipPosition?: {
+			x: "left" | "right" | "center";
+			y: "top" | "bottom" | "center";
+		};
 	};
 
-	let { trait, class: CLASS = "", size = "60px" }: Props = $props();
+	let { trait, class: CLASS = "", size = "60px", tooltipPosition: position = { x: "center", y: "top" } }: Props = $props();
+	let translateX = $derived(
+		position.x === "center" ? "translateX(-50%)" : position.x === "right" ? "translateX(100%)" : "translateX(0%)"
+	);
+	let translateY = $derived(
+		position.y === "bottom" ? "translateY(100%)" : position.y === "top" ? "translateY(-100%)" : "translateY(-25%)"
+	);
 </script>
 
 <span
 	class={`item-trait-icon trait-icon border-04`}
 	style="--size: {size}; background: url('/images/traits/{trait.name.toLowerCase().replaceAll(' ', '-')}.png'), black"
-></span>
+>
+	<span class="tooltip border-35 max-w-[200px] mobile:max-w-[300px]" style="transform: {translateX} {translateY};">
+		<span class="name header-underline">{trait.name}</span>
+		<span class="description">
+			{trait.description}
+		</span>
+	</span>
+</span>
 
 <style>
 	.item-trait-icon {
@@ -26,8 +43,29 @@
 		box-sizing: border-box;
 		display: inline-block;
 		box-shadow: inset 0 4px 2px white;
+		position: relative;
 	}
 	.item-trait-icon::after {
 		background-color: #0000 !important;
+	}
+	.tooltip {
+		display: none;
+	}
+	.item-trait-icon:hover .tooltip {
+		display: grid;
+		position: relative;
+		top: 0;
+		bottom: 0;
+		left: var(--tooltipLeft);
+		padding: 1.5rem;
+		z-index: 1000;
+		background: linear-gradient(0deg, #000000cf, #00000030), url("/images/backgrounds/background29.png");
+		background-size: cover;
+		text-transform: none;
+		grid-auto-flow: row;
+		grid-row-gap: 5px;
+		box-shadow: inset 0 0 10px 5px #000000;
+		width: max-content;
+		text-align: left;
 	}
 </style>

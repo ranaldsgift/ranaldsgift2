@@ -303,6 +303,12 @@
 						<option value={option.value}>{option.label}</option>
 					{/each}
 				</select>
+				<select bind:value={filter.heroId} class="flex-1 min-w-[200px]" data-dirty={filter.heroId} onchange={resetOffset}>
+					<option value={null}>All Heroes</option>
+					{#each heroes as hero}
+						<option value={hero.id}>{hero.name}</option>
+					{/each}
+				</select>
 				<select bind:value={filter.careerId} class="flex-1 min-w-[200px]" data-dirty={filter.careerId} onchange={resetOffset}>
 					<option value={null}>All Careers</option>
 					{#each careers as career}
@@ -313,12 +319,6 @@
 					<option value={null}>All Weapons</option>
 					{#each weapons as weapon}
 						<option value={weapon.id}>{weapon.name}</option>
-					{/each}
-				</select>
-				<select bind:value={filter.heroId} class="flex-1 min-w-[200px]" data-dirty={filter.heroId} onchange={resetOffset}>
-					<option value={null}>All Heroes</option>
-					{#each heroes as hero}
-						<option value={hero.id}>{hero.name}</option>
 					{/each}
 				</select>
 				<select bind:value={filter.isTwitch} class="flex-1 min-w-[200px]" data-dirty={filter.isTwitch} onchange={resetOffset}>

@@ -3,11 +3,10 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Property, type IProperty } from "../Property";
 import { Trait, type ITrait } from "../Trait";
 import { ItemRarityEnum } from "$lib/enums/ItemRarityEnum";
-import { AuthoredEntity } from "../AuthoredEntity";
-import type { IUser } from "../User";
+import { TimestampedEntity } from "../TimestampedEntity";
 
 @Entity()
-export class CharmBuild extends AuthoredEntity<ICharmBuild> {
+export class CharmBuild extends TimestampedEntity<ICharmBuild> {
 	@PrimaryGeneratedColumn()
 	id!: number;
 
@@ -42,7 +41,6 @@ export class CharmBuild extends AuthoredEntity<ICharmBuild> {
 
 export interface ICharmBuild {
 	id?: number;
-	user?: IUser;
 	rarity?: ItemRarityEnum;
 	powerLevel?: number;
 	property1?: IProperty;
