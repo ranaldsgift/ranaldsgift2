@@ -57,7 +57,7 @@
 	<div class="relative background-33 grid pt-2 min-[1800px]:hidden">
 		<div class="border-01 absolute top-0 left-0 right-0 bottom-0 z-20 pointer-events-none"></div>
 		<div class="max-w-[650px] w-full m-auto block z-10 relative">
-			<div class="flex gap-2 justify-between mx-[5%] mobile:mx-[7%] mb-[-20px]">
+			<div class="flex gap-2 justify-between mx-[5%] mobile:mx-[7%] mb-[10px] tablet:mb-0">
 				{#each heroes as hero}
 					<button onclick={() => handleHeroSelection(hero)}>
 						<img
@@ -68,10 +68,10 @@
 					</button>
 				{/each}
 			</div>
-			<div class="divider-18-horizontal w-full h-[50px] mb-2 block !bg-bottom z-10"></div>
+			<div class="divider-18-horizontal w-full h-[50px] mb-2 !bg-bottom z-10 hidden tablet:block mt-[-20px]"></div>
 		</div>
-		<div class="divider-18-straight w-[calc(100%-650px)] h-[55px] absolute left-[0px] bottom-[3px]"></div>
-		<div class="divider-18-straight w-[calc(100%-650px)] h-[55px] absolute right-[0px] bottom-[3px]"></div>
+		<div class="divider-18-straight w-[calc(100%-650px)] h-[55px] absolute left-[0px] bottom-[3px] hidden tablet:block"></div>
+		<div class="divider-18-straight w-[calc(100%-650px)] h-[55px] absolute right-[0px] bottom-[3px] hidden tablet:block"></div>
 	</div>
 	<div class="careers-icon-container grid auto-rows-[60px] grid-cols-2 tablet:grid-cols-4 gap-2 background-12 border-01 p-5">
 		{#each careersState as career}

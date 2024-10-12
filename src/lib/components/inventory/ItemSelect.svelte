@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { IWeapon } from "$lib/entities/Weapon";
+	import { getWindowState } from "$lib/state/WindowState.svelte";
 	import WeaponIcon from "./WeaponIcon.svelte";
 
 	type Props = {
@@ -10,6 +11,13 @@
 	};
 
 	let { title, items, selectedItem = $bindable(), handler }: Props = $props();
+
+	let windowState = getWindowState();
+
+	let tooltipPosition = $derived<{
+		x?: "left" | "right" | "center";
+		y?: "top" | "bottom" | "center";
+	}>(windowState.isMobile ? { x: "center", y: "top" } : { x: "right", y: "center" });
 
 	const selectHandler = (item: IWeapon) => {
 		selectedItem = item;
@@ -31,7 +39,7 @@
 	<div class="px-5 pb-5 flex flex-wrap justify-center gap-2">
 		{#each items as item, index}
 			<button class="inventory-item" onclick={() => selectHandler(item)} tabindex={index} onkeydown={keydownHandler}>
-				<WeaponIcon weapon={item} class={selectedItem?.id === item.id ? "selected" : ""} tooltipPosition="right"></WeaponIcon>
+				<WeaponIcon weapon={item} class={selectedItem?.id === item.id ? "selected" : ""} {tooltipPosition}></WeaponIcon>
 			</button>
 		{/each}
 	</div>

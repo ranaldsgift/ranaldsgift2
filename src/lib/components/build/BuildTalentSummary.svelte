@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
+	import CareerTalent from "$lib/components/career/CareerTalent.svelte";
 	import CareerTalentIcon from "../career/CareerTalentIcon.svelte";
 
 	type Props = {
@@ -33,7 +34,7 @@
 	};
 </script>
 
-<div class="build-talent-summary max-mobile:w-full background-25 border-05 glass p-3 z-10">
+<div class="build-talent-summary max-mobile:w-full background-25 border-05 glass p-3 z-auto">
 	<div
 		class="talent-string-container flex items-center justify-center gap-4 col-span-2 tablet:col-span-4 w-full px-2 text-center text-[#f0d9af] text-[1.3rem]"
 	>
@@ -52,14 +53,7 @@
 				--talent-tier-level: '{(index + 1) * 5}';"
 				></span>
 				{#if talent}
-					<div class="talent-container selected" data-career={build.career.id}>
-						<div class="talent-button-wrapper background-26">
-							<CareerTalentIcon size="40px" careerId={build.career.id} talentNumber={talent.talentNumber} class="z-[0]"
-							></CareerTalentIcon>
-							<p class="talent-name background-13">{talent.name}</p>
-							<p class="talent-description">{talent.description}</p>
-						</div>
-					</div>
+					<CareerTalent state="selected" careerId={build.career.id} {talent} />
 				{:else}
 					<div class="talent-container">
 						<p class="talent-name">No Talent Selected</p>
@@ -148,33 +142,6 @@
 	.talent-container.selected .talent-button-wrapper,
 	.talent-container:hover .talent-button-wrapper {
 		border-radius: 3px;
-	}
-	.talent-description {
-		pointer-events: none;
-		position: absolute;
-		left: 0;
-		top: 100%;
-		width: calc(100% + 20px);
-		font-size: 1.5rem;
-		background: #0d0d0d;
-		border-image: url("/images/borders/border-02.png");
-		border-image-slice: 15;
-		border-image-width: 15px;
-		border-style: solid;
-		color: #c0c0c0;
-		font-family: caslon-antique-bold;
-		padding: 10px;
-		text-align: left;
-		box-shadow: 0px 0px 5px 1px black;
-		visibility: hidden;
-		box-sizing: border-box;
-		z-index: 10;
-	}
-	.talent-container:hover .talent-description {
-		visibility: visible;
-	}
-	.talent-container:hover .talent-description:hover {
-		visibility: hidden;
 	}
 	.talent-name {
 		grid-area: talentName;

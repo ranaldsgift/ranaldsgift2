@@ -27,7 +27,7 @@
 		content: var(--talent-tier-level);
 		position: absolute;
 		width: 100%;
-		z-index: 99999999999;
+		z-index: 1;
 		font-size: 150%;
 		color: #c15b24;
 		text-align: center;

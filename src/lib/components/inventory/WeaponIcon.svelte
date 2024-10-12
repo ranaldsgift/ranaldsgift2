@@ -6,10 +6,20 @@
 		weapon: IWeapon;
 		class?: string;
 		size?: string;
-		tooltipPosition?: "left" | "right" | "center";
+		tooltipPosition?: {
+			x?: "left" | "right" | "center";
+			y?: "top" | "bottom" | "center";
+		};
 	};
 
-	let { weapon, class: CLASS = "", size = "62px", tooltipPosition = "left" }: Props = $props();
+	let { weapon, class: CLASS = "", size = "62px", tooltipPosition: position = { x: "left", y: "center" } }: Props = $props();
+	let translateX = $derived(
+		position.x === "center" ? "translateX(-50%)" : position.x === "right" ? "translateX(-100%)" : "translateX(0%)"
+	);
+	let translateY = $derived(
+		position.y === "bottom" ? "translateY(100%)" : position.y === "top" ? "translateY(-100%)" : "translateY(-25%)"
+	);
+	let tooltipLeft = $derived(position.x === "center" ? "50%" : "0px");
 </script>
 
 {#if weapon}
@@ -18,10 +28,17 @@
 		style="--size: {size}; background: url('/images/weapons/{weapon.codename}.png') no-repeat center / cover, 
                         url('/images/backgrounds/icon-background-2.png') no-repeat center / cover;"
 	>
-		<div class="tooltip border-35 {tooltipPosition}">
+		<div
+			class="tooltip border-35 max-w-[200px] mobile:max-w-[300px]"
+			style="transform: {translateX} {translateY}; --tooltipLeft: {tooltipLeft}"
+		>
 			<span class="name header-underline">{weapon.name}</span>
 			<span class="description">
-				{weapon && weapon.tooltips ? weapon.tooltips.map((tooltip) => tooltip.name).join(", ") : ""}
+				{#if weapon && weapon.tooltips}
+					{#each weapon.tooltips as tooltip}
+						{tooltip.name}<br />
+					{/each}
+				{/if}
 			</span>
 		</div>
 	</div>
@@ -50,22 +67,28 @@
 		border-style: solid;
 		border-image-repeat: repeat;
 	}
-	.weapon-icon:hover {
-		cursor: pointer;
-	}
 	.weapon-icon > .tooltip {
+		position: relative;
+		top: 0;
+		bottom: 0;
+		left: var(--tooltipLeft);
 		padding: 1.5rem;
 		z-index: 1000;
 		background: linear-gradient(0deg, #000000cf, #00000030), url("/images/backgrounds/background29.png");
 		background-size: cover;
 		text-transform: none;
-		position: absolute;
 		display: none;
 		grid-auto-flow: row;
 		grid-row-gap: 5px;
 		box-shadow: inset 0 0 10px 5px #000000;
 		width: max-content;
 		text-align: left;
+	}
+	.weapon-icon:hover > .tooltip {
+		display: grid;
+	}
+	.weapon-icon > .tooltip:hover {
+		display: none;
 	}
 	.tooltip.left {
 		left: 0px;
@@ -77,12 +100,7 @@
 	}
 	.tooltip.center {
 		left: 50%;
-		transform: translateX(-50%);
 		bottom: calc(100% + 5px);
-	}
-
-	.weapon-icon:hover > .tooltip {
-		display: grid;
 	}
 
 	.weapon-icon .tooltip .description {

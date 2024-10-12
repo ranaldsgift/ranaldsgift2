@@ -6,18 +6,21 @@
 		talent: ICareerTalent | null | undefined;
 		careerId: number;
 		state?: "selected" | "unselected" | "default";
+		size?: string;
+		transparent?: boolean;
+		showDescription?: boolean;
 	};
 
-	let { talent, careerId, state = "default" }: Props = $props();
+	let { talent, careerId, state = "default", size = "40px", transparent = false, showDescription = false }: Props = $props();
 </script>
 
 {#if talent}
-	<div class="talent-container {state}" data-career={careerId}>
-		<div class="talent-button-wrapper background-26">
+	<div class="talent-container {state}" data-career={careerId} data-show-description={showDescription}>
+		<div class="talent-button-wrapper {transparent ? 'bg-transparent' : 'background-26'}" style="--iconSize: {size}">
 			{#if talent}
-				<CareerTalentIcon size="40px" {careerId} talentNumber={talent.talentNumber} class="z-[0]"></CareerTalentIcon>
-				<p class="talent-name background-13">{talent.name}</p>
-				<p class="talent-description">{talent.description}</p>
+				<CareerTalentIcon {size} {careerId} talentNumber={talent.talentNumber} class="z-[0]"></CareerTalentIcon>
+				<p class="talent-name" style={`--talentName: "${talent.name}"`}>{talent.name}</p>
+				<p class="talent-description max-mobile:!w-full">{talent.description}</p>
 			{:else}
 				<span class="talent-icon"></span>
 				<p class="talent-name">No Talent Selected</p>
@@ -32,9 +35,37 @@
 {/if}
 
 <style>
-	.talent-container.unselected {
+	@media (min-width: 460px) {
+		.talent-container[data-show-description="false"] .talent-description {
+			left: -10px;
+		}
+	}
+
+	.talent-container.unselected > * > :global(*) {
 		filter: grayscale(1);
 	}
+	.talent-container[data-show-description="false"] .talent-description {
+		left: 0px;
+		height: auto;
+	}
+	.talent-container[data-show-description="true"] {
+		height: 100%;
+	}
+	.talent-container[data-show-description="true"] .talent-description {
+		text-align: left;
+		grid-area: talentDescription;
+		visibility: visible;
+		position: relative;
+		bottom: auto;
+		box-shadow: inset 0 0 5px 1px #000;
+		padding: 10px 20px;
+		color: #fff;
+	}
+	.talent-container[data-show-description="true"] .talent-button-wrapper {
+		grid-template-areas: "talentIcon talentName" "talentDescription talentDescription";
+		grid-template-rows: 80px 1fr;
+	}
+
 	.talent-container {
 		background-repeat: no-repeat;
 		position: relative;
@@ -48,12 +79,11 @@
 		width: 100%;
 		display: grid;
 		grid-template-areas: "talentIcon talentName";
-		grid-template-columns: 40px 1fr;
+		grid-template-columns: var(--iconSize) 1fr;
 		height: 100%;
 		position: relative;
 		box-sizing: border-box;
 		z-index: initial;
-		box-shadow: inset 0 10px 10px -10px #fff;
 	}
 	.talent-button-wrapper::after {
 		content: "";
@@ -69,8 +99,10 @@
 		border-style: solid;
 		border-image-repeat: repeat;
 		box-sizing: border-box;
+		z-index: 1;
+		box-shadow: inset 0 10px 10px -10px #fff;
 	}
-	.talent-container.selected .talent-button-wrapper {
+	.talent-container.selected .talent-button-wrapper::after {
 		border-image: url("/images/borders/border-16.png");
 		border-image-slice: 36 157;
 		border-image-width: auto;
@@ -88,25 +120,21 @@
 		padding-left: 8px;
 		padding-right: 10px;
 	}
-	.talent-container.selected .talent-button-wrapper,
-	.talent-container:hover .talent-button-wrapper {
-		border-radius: 3px;
-	}
-	.talent-description {
-		pointer-events: none;
-		position: absolute;
-		left: 0;
-		top: 100%;
-		width: calc(100% + 20px);
+	.talent-container .talent-description {
 		font-size: 1.5rem;
 		background: #0d0d0d;
+		padding: 10px;
+	}
+	.talent-container[data-show-description="false"] .talent-description {
+		pointer-events: none;
+		position: absolute;
+		left: 0px;
+		top: 100%;
 		border-image: url("/images/borders/border-02.png");
 		border-image-slice: 15;
 		border-image-width: 15px;
 		border-style: solid;
 		color: #c0c0c0;
-		font-family: caslon-antique-bold;
-		padding: 10px;
 		text-align: left;
 		box-shadow: 0px 0px 5px 1px black;
 		visibility: hidden;
@@ -125,64 +153,132 @@
 	.talent-container:hover {
 		cursor: pointer;
 	}
-	.talent-container[data-career="1"] .talent-name {
-		background: linear-gradient(-16deg, rgba(87, 57, 57, 0.43) 30%, transparent);
+	.talent-container .talent-name {
+		position: relative;
+		color: transparent;
 	}
-	.talent-container[data-career="2"] .talent-name {
-		background: linear-gradient(-16deg, rgba(89, 98, 61, 0.45) 30%, transparent);
+	.talent-container .talent-name::after {
+		content: var(--talentName);
+		color: #c15b24;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		padding-left: 8px;
+		padding-right: 10px;
 	}
-	.talent-container[data-career="3"] .talent-name {
-		background: linear-gradient(-16deg, rgba(9, 20, 41, 0.65) 30%, transparent);
+	.talent-container .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		filter: contrast(175%) saturate(200%);
+		z-index: 0;
 	}
-	.talent-container[data-career="4"] .talent-name {
-		background: linear-gradient(-16deg, rgba(29, 37, 5, 0.65) 30%, transparent);
+
+	.talent-container[data-career="1"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(87, 57, 57, 0.45), rgba(87, 57, 57, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="5"] .talent-name {
-		background: linear-gradient(-16deg, rgba(10, 54, 63, 0.65) 30%, transparent);
+	.talent-container[data-career="2"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(89, 98, 61, 0.45), rgba(89, 98, 61, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="6"] .talent-name {
-		background: linear-gradient(-16deg, rgba(52, 0, 0, 0.65) 30%, transparent);
+	.talent-container[data-career="3"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(9, 20, 41, 0.45), rgba(9, 20, 41, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="7"] .talent-name {
-		background: linear-gradient(-16deg, rgba(10, 23, 8, 0.65) 30%, transparent);
+	.talent-container[data-career="4"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(29, 37, 5, 0.45), rgba(29, 37, 5, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="8"] .talent-name {
-		background: linear-gradient(-16deg, rgba(13, 26, 43, 0.65) 30%, transparent);
+	.talent-container[data-career="5"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(10, 54, 63, 0.45), rgba(10, 54, 63, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="9"] .talent-name {
-		background: linear-gradient(-16deg, rgba(31, 20, 40, 0.65) 30%, transparent);
+	.talent-container[data-career="6"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(52, 0, 0, 0.45), rgba(52, 0, 0, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="10"] .talent-name {
-		background: linear-gradient(-16deg, rgba(32, 38, 40, 0.65) 30%, transparent);
+	.talent-container[data-career="7"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(10, 23, 8, 0.45), rgba(10, 23, 8, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="11"] .talent-name {
-		background: linear-gradient(-16deg, rgba(40, 31, 15, 0.65) 30%, transparent);
+	.talent-container[data-career="8"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(13, 26, 43, 0.45), rgba(13, 26, 43, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="12"] .talent-name {
-		background: linear-gradient(-16deg, rgba(35, 35, 30, 0.65) 30%, transparent);
+	.talent-container[data-career="9"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(31, 20, 40, 0.45), rgba(31, 20, 40, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="13"] .talent-name {
-		background: linear-gradient(-16deg, rgba(46, 16, 0, 0.65) 30%, transparent);
+	.talent-container[data-career="10"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(32, 38, 40, 0.45), rgba(32, 38, 40, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="14"] .talent-name {
-		background: linear-gradient(-16deg, rgba(36, 6, 2, 0.65) 30%, transparent);
+	.talent-container[data-career="11"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(40, 31, 15, 0.45), rgba(40, 31, 15, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="15"] .talent-name {
-		background: linear-gradient(-16deg, rgba(30, 10, 20, 0.65) 30%, transparent);
+	.talent-container[data-career="12"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(35, 35, 30, 0.45), rgba(35, 35, 30, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="16"] .talent-name {
-		background: linear-gradient(-16deg, rgba(30, 10, 20, 0.65) 30%, transparent);
+	.talent-container[data-career="13"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(46, 16, 0, 0.45), rgba(46, 16, 0, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="17"] .talent-name {
-		background: linear-gradient(-16deg, rgba(30, 10, 20, 0.65) 30%, transparent);
+	.talent-container[data-career="14"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(36, 6, 2, 0.45), rgba(36, 6, 2, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="18"] .talent-name {
-		background: linear-gradient(-16deg, rgba(30, 10, 20, 0.65) 30%, transparent);
+	.talent-container[data-career="15"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(89, 98, 61, 0.45), rgba(89, 98, 61, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="19"] .talent-name {
-		background: linear-gradient(-16deg, rgba(30, 10, 20, 0.65) 30%, transparent);
+	.talent-container[data-career="16"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgb(88 63 24 / 45%), rgb(88 63 24 / 45%)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
-	.talent-container[data-career="20"] .talent-name {
-		background: linear-gradient(-16deg, rgba(30, 10, 20, 0.65) 30%, transparent);
+	.talent-container[data-career="17"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgb(88 63 24 / 45%), rgb(88 63 24 / 45%)),
+			url("/images/backgrounds/background26.webp") left / auto;
+	}
+	.talent-container[data-career="18"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(rgb(98 93 96 / 45%), rgb(49 49 49 / 45%)),
+			url("/images/backgrounds/background26.webp") left / auto;
+	}
+	.talent-container[data-career="19"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(30, 10, 20, 0.45), rgba(30, 10, 20, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
+	}
+	.talent-container[data-career="20"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
+		background:
+			linear-gradient(-16deg, rgba(30, 10, 20, 0.45), rgba(30, 10, 20, 0.45)),
+			url("/images/backgrounds/background26.webp") left / auto;
 	}
 </style>

@@ -5,6 +5,7 @@
 	import type { ITrinketBuild } from "$lib/entities/builds/TrinketBuild";
 	import type { IWeaponBuild } from "$lib/entities/builds/WeaponBuild";
 	import PropertyHelper from "$lib/helpers/PropertyHelper";
+	import { getWindowState } from "$lib/state/WindowState.svelte";
 	import TraitIcon from "../inventory/TraitIcon.svelte";
 	import WeaponIcon from "../inventory/WeaponIcon.svelte";
 
@@ -16,6 +17,16 @@
 	};
 
 	const { build, class: CLASS }: Props = $props();
+	
+	let windowState = getWindowState();
+	let tooltipPositionWeapon = $derived<{
+		x: "left" | "right" | "center";
+		y: "top" | "bottom" | "center";
+	}>(!windowState.isWideScreen ? { x: "left", y: "top" } : { x: "center", y: "top" });
+	let tooltipPositionTrait = $derived<{
+		x: "left" | "right" | "center";
+		y: "top" | "bottom" | "center";
+	}>(!windowState.isWideScreen ? { x: "center", y: "top" } : { x: "center", y: "top" });
 </script>
 
 <div class="build-summary-container {CLASS}">
@@ -44,14 +55,12 @@
 		{/if}
 	</div>
 	{#if "weapon" in item && item.weapon}
-	<div class="pointer-events-none">
-		<WeaponIcon weapon={item.weapon}></WeaponIcon>
-	</div>
+		<WeaponIcon weapon={item.weapon} tooltipPosition={tooltipPositionWeapon}></WeaponIcon>
 	{:else if itemIcon}
-	<div class={itemIcon}></div>
+	<div class={`relative ${itemIcon}`}></div>
 	{/if}
 	{#if item.trait}
-	<TraitIcon trait={item.trait}></TraitIcon>
+	<TraitIcon trait={item.trait} tooltipPosition={tooltipPositionTrait}></TraitIcon>
 	{/if}
 	<div class="property-container">
 		{#if item.property1}
@@ -126,7 +135,22 @@
 		font-size: 0.8em;
 		color: #30e158;
 	}
+	.item-summary-header *, .property-container * {
+		position: relative;
+	}
 	.build-summary-container > div {
+		position: relative;
+		box-sizing: border-box;
+		padding: 10px 20px;
+		color: #c8c8c8;
+	}
+	.build-summary-container > div::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
 		background: linear-gradient(315deg, #ffffff1c, transparent);
 		border-image: url("/images/borders/border-05.png");
 		border-image-slice: 30;

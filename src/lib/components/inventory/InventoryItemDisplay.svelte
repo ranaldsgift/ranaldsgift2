@@ -3,6 +3,7 @@
 	import type { ITrait } from "$lib/entities/Trait";
 	import type { IWeapon } from "$lib/entities/Weapon";
 	import PropertyHelper from "$lib/helpers/PropertyHelper";
+	import { getWindowState } from "$lib/state/WindowState.svelte";
 	import TraitIcon from "./TraitIcon.svelte";
 
 	type Props = {
@@ -26,6 +27,12 @@
 		properties,
 		traits,
 	}: Props = $props();
+
+	let windowState = getWindowState();
+	let tooltipPosition = $derived<{
+		x: "left" | "right" | "center";
+		y: "top" | "bottom" | "center";
+	}>(!windowState.isWideScreen ? { x: "left", y: "top" } : { x: "center", y: "top" });
 </script>
 
 <div class="inventory-item-display-container {weapon ? 'weapon' : 'jewelry'}">
@@ -64,7 +71,7 @@
 		</div>
 		{#if trait}
 			<div class="item-trait-container">
-				<TraitIcon {trait}></TraitIcon>
+				<TraitIcon {trait} {tooltipPosition}></TraitIcon>
 				<div class="relative">
 					<p class="item-trait-name">{trait.name}</p>
 					<select bind:value={trait}>
