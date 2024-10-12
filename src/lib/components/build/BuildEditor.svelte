@@ -25,8 +25,6 @@
 	}
 
 	const handleCareerChange = (career: ICareer) => {
-		console.log("Career changed to " + career.name);
-		console.log(!career.primaryWeapons.find(w => w.id === build.primaryWeapon?.id));
 		build.level5Talent = career.talents.find(t => t.talentNumber === build.level5Talent?.talentNumber);
 		build.level10Talent = career.talents.find(t => t.talentNumber === build.level10Talent?.talentNumber);
 		build.level15Talent = career.talents.find(t => t.talentNumber === build.level15Talent?.talentNumber);
