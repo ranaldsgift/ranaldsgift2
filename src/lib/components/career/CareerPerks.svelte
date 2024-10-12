@@ -1,16 +1,19 @@
 <script lang="ts">
 	import type { ICareer } from "$lib/entities/career/Career";
+	import BuildHelper from "$lib/helpers/BuildHelper";
 
 	type Props = {
 		career: ICareer;
 	};
 
 	const { career }: Props = $props();
+
+	let correctedPerks = $derived(BuildHelper.getCorrectedPerks(career));
 </script>
 
 <div class="career-perks-container">
 	<p class="career-perks-header">Perks</p>
-	{#each career.perks as perk}
+	{#each correctedPerks as perk}
 		<div class="career-perk-item-container">
 			<p class="career-perk-item-header">
 				<span class="relative text-[0.6rem] top-[-3px] left-[-4px]">&#9670;</span>{perk.name}

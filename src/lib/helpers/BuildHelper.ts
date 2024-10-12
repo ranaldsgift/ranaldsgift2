@@ -1,6 +1,12 @@
+import { correctedPassivesData } from "$lib/data/legacy/CorrectedPassives";
+import { correctedPerksData } from "$lib/data/legacy/CorrectedPerks";
+import { correctedSkillsData } from "$lib/data/legacy/CorrectedSkills";
 import { correctedTalentsData } from "$lib/data/legacy/CorrectedTalents";
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 import type { ICareer } from "$lib/entities/career/Career";
+import type { ICareerPassive } from "$lib/entities/career/CareerPassive";
+import type { ICareerPerk } from "$lib/entities/career/CareerPerk";
+import type { ICareerSkill } from "$lib/entities/career/CareerSkill";
 import type { ICareerTalent } from "$lib/entities/career/CareerTalent";
 import type { IPatch } from "$lib/entities/Patch";
 import type { IProperty } from "$lib/entities/Property";
@@ -101,6 +107,33 @@ class BuildHelper {
 			return talent;
 		});
 		return list;
+	}
+
+	static getCorrectedSkill(career: ICareer): ICareerSkill {
+		const correctedSkill = correctedSkillsData.find((s) => s.careerId === career.id);
+		if (correctedSkill) {
+			return { ...career.skill, description: correctedSkill.description };
+		}
+		return career.skill;
+	}
+
+	static getCorrectedPassive(career: ICareer): ICareerPassive {
+		const correctedPassive = correctedPassivesData.find((p) => p.careerId === career.id);
+		if (correctedPassive) {
+			return { ...career.passive, description: correctedPassive.description };
+		}
+		return career.passive;
+	}
+
+	static getCorrectedPerks(career: ICareer): ICareerPerk[] {
+		const correctedPerks = career.perks.map((perk) => {
+			const correctedPerk = correctedPerksData.find((p) => p.careerId === career.id && p.name === perk.name);
+			if (correctedPerk) {
+				return { ...perk, description: correctedPerk.description };
+			}
+			return perk;
+		});
+		return correctedPerks;
 	}
 
 	static getTalents(build: ICareerBuild): (ICareerTalent | null | undefined)[] {

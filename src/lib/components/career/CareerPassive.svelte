@@ -1,17 +1,20 @@
 <script lang="ts">
 	import type { ICareer } from "$lib/entities/career/Career";
+	import BuildHelper from "$lib/helpers/BuildHelper";
 
 	type Props = {
 		career: ICareer;
 	};
 
 	const { career }: Props = $props();
+
+	let passiveDescription = $derived(BuildHelper.getCorrectedPassive(career)?.description ?? "");
 </script>
 
 <div class="career-passive-container">
 	<p class="career-passive-header">{career.passive.name}</p>
 	<div class="career-ability-icon border-13" style="background-image: url('/images/careers/{career.id}/passive.png')"></div>
-	<p class="career-passive-description">{career.passive.description}</p>
+	<p class="career-passive-description">{passiveDescription}</p>
 </div>
 
 <style>

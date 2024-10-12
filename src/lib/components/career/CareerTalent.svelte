@@ -9,17 +9,33 @@
 		size?: string;
 		transparent?: boolean;
 		showDescription?: boolean;
+		tooltipPosition?: "top" | "bottom";
 	};
 
-	let { talent, careerId, state = "default", size = "40px", transparent = false, showDescription = false }: Props = $props();
+	let {
+		talent,
+		careerId,
+		state = "default",
+		size = "40px",
+		transparent = false,
+		showDescription = false,
+		tooltipPosition = "bottom",
+	}: Props = $props();
 </script>
 
 {#if talent}
-	<div class="talent-container {state}" data-career={careerId} data-show-description={showDescription}>
+	<div
+		class="talent-container {state}"
+		data-career={careerId}
+		data-show-description={showDescription}
+		data-tooltip-position={tooltipPosition}
+	>
 		<div class="talent-button-wrapper {transparent ? 'bg-transparent' : 'background-26'}" style="--iconSize: {size}">
 			{#if talent}
-				<CareerTalentIcon {size} {careerId} talentNumber={talent.talentNumber} class="z-[0]"></CareerTalentIcon>
-				<p class="talent-name" style={`--talentName: "${talent.name}"`}>{talent.name}</p>
+				<div class="talent-icon-wrapper">
+					<CareerTalentIcon {size} {careerId} talentNumber={talent.talentNumber} class="z-[0]"></CareerTalentIcon>
+				</div>
+				<p class="talent-name">{talent.name}</p>
 				<p class="talent-description max-mobile:!w-full">{talent.description}</p>
 			{:else}
 				<span class="talent-icon"></span>
@@ -35,6 +51,15 @@
 {/if}
 
 <style>
+	.talent-container:hover .talent-name {
+		background: linear-gradient(-16deg, rgb(79 79 79 / 29%) 30%, transparent);
+	}
+	.talent-icon-wrapper {
+		box-shadow:
+			inset 0 10px 10px -10px #fff,
+			0 -1px 0 0 #564640,
+			2px 4px 5px 1px #000;
+	}
 	@media (min-width: 460px) {
 		.talent-container[data-show-description="false"] .talent-description {
 			left: -10px;
@@ -99,7 +124,7 @@
 		border-style: solid;
 		border-image-repeat: repeat;
 		box-sizing: border-box;
-		z-index: 1;
+		z-index: 2;
 		box-shadow: inset 0 10px 10px -10px #fff;
 	}
 	.talent-container.selected .talent-button-wrapper::after {
@@ -124,6 +149,10 @@
 		font-size: 1.5rem;
 		background: #0d0d0d;
 		padding: 10px;
+	}
+	.talent-container[data-show-description="false"][data-tooltip-position="top"] .talent-description {
+		transform: translateY(-100%);
+		top: 0;
 	}
 	.talent-container[data-show-description="false"] .talent-description {
 		pointer-events: none;
@@ -155,10 +184,9 @@
 	}
 	.talent-container .talent-name {
 		position: relative;
-		color: transparent;
+		z-index: 2;
 	}
 	.talent-container .talent-name::after {
-		content: var(--talentName);
 		color: #c15b24;
 		position: absolute;
 		top: 0;
@@ -178,7 +206,7 @@
 		width: 100%;
 		height: 100%;
 		filter: contrast(175%) saturate(200%);
-		z-index: 0;
+		z-index: -1;
 	}
 
 	.talent-container[data-career="1"] .talent-button-wrapper:not(.bg-transparent) .talent-name::before {
