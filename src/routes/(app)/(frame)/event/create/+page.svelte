@@ -6,20 +6,21 @@
 	import Seo from "$lib/components/SEO.svelte";
 	import { ROOT_API_URL } from "$lib/data/constants/constants";
 	import type { IEvent } from "$lib/entities/Event";
+	import { toast } from "svelte-sonner";
 
 	let event: Partial<IEvent> = $state({
 		name: "",
 		description: "",
 		startDate: new Date(),
 		endDate: new Date(),
-		isActive: true,
+		isActive: false,
 	});
 
 	const startDateTime = new Date(event.startDate!);
 	const endDateTime = new Date(event.endDate!);
 
-	let startDate = $state(new Date(startDateTime.getTime() - startDateTime.getTimezoneOffset() * 60000).toISOString().slice(0, -1));
-	let endDate = $state(new Date(endDateTime.getTime() - endDateTime.getTimezoneOffset() * 60000).toISOString().slice(0, -1));
+	let startDate = $state(new Date(startDateTime.getTime() - startDateTime.getTimezoneOffset() * 60000).toISOString().slice(0, -1).slice(0, 16));
+	let endDate = $state(new Date(endDateTime.getTime() - endDateTime.getTimezoneOffset() * 60000).toISOString().slice(0, -1).slice(0, 16));
 
 	async function saveEvent() {
 		event.startDate = new Date(startDate);
@@ -35,14 +36,14 @@
 			});
 
 			if (response.ok) {
-				alert("Event saved successfully!");
+				toast.success("Event created!");
 				goto("/admin/events");
 			} else {
 				throw new Error("Failed to save event");
 			}
 		} catch (error) {
 			console.error("Error saving event:", error);
-			alert("Failed to save event. Please try again.");
+			toast.error("Failed to save event. Please try again.");
 		}
 	}
 </script>
@@ -65,7 +66,7 @@
 		<div>
 			<label for="description" class="block mb-1">Description:</label>
 			<!-- <textarea id="description" bind:value={event.description} rows="4" class="w-full p-2 border rounded"></textarea> -->
-			 <div class="border-2"><TextEditor bind:content={event.description!}></TextEditor></div>
+			 <div class="top-left-shadow"><TextEditor bind:content={event.description!}></TextEditor></div>
 		</div>
 
 		<div>
@@ -81,7 +82,7 @@
 		<div>
 			<label class="flex items-center">
 				<input type="checkbox" bind:checked={event.isActive} class="mr-2" />
-				<span>Is Active</span>
+				<span>Visible Publicly</span>
 			</label>
 		</div>
 

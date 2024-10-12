@@ -35,7 +35,7 @@
 			});
 
 			if (response.ok) {
-				toast("Event saved successfully!", { position: "bottom-center" });
+				toast("Event saved!", { position: "bottom-center" });
 			} else {
 				const json = await response.json();
 				toast(json.error, { position: "bottom-center" });
