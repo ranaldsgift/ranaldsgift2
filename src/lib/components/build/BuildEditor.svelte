@@ -7,11 +7,11 @@
 	import CareerSelection from "../career/CareerSelection.svelte";
 	import CareerTalents from "../career/CareerTalents.svelte";
 	import ContainerTitle from "../ContainerTitle.svelte";
-	import BuildGuideEditor from "./BuildGuideEditor.svelte";
 	import BuildSummary from "./BuildSummary.svelte";
 	import BuildTalentSummary from "./BuildTalentSummary.svelte";
 	import BuildOptionsEditor from "./BuildOptionsEditor.svelte";
 	import TextEditor from "../quill/TextEditor.svelte";
+	import type { ICareer } from "$lib/entities/career/Career";
 
 	type Props = {
 		build: ICareerBuild;
@@ -23,10 +23,29 @@
 	if (!build) {
 		error(404, "Build not found");
 	}
+
+	const handleCareerChange = (career: ICareer) => {
+		console.log("Career changed to " + career.name);
+		console.log(!career.primaryWeapons.find(w => w.id === build.primaryWeapon?.id));
+		build.level5Talent = career.talents.find(t => t.talentNumber === build.level5Talent?.talentNumber);
+		build.level10Talent = career.talents.find(t => t.talentNumber === build.level10Talent?.talentNumber);
+		build.level15Talent = career.talents.find(t => t.talentNumber === build.level15Talent?.talentNumber);
+		build.level20Talent = career.talents.find(t => t.talentNumber === build.level20Talent?.talentNumber);
+		build.level25Talent = career.talents.find(t => t.talentNumber === build.level25Talent?.talentNumber);
+		build.level30Talent = career.talents.find(t => t.talentNumber === build.level30Talent?.talentNumber);
+
+		if (!career.primaryWeapons.find(w => w.id === build.primaryWeapon?.id)) {
+			build.primaryWeapon.weapon = career.primaryWeapons[0];
+		}
+
+		if (!career.secondaryWeapons.find(w => w.id === build.secondaryWeapon?.id)) {
+			build.secondaryWeapon.weapon = career.secondaryWeapons[0].id !== build.primaryWeapon.weapon?.id ? career.secondaryWeapons[0] : career.secondaryWeapons[1];
+		}
+	};
 </script>
 
 <div class="build-editor grid grid-cols-2 tablet:gap-5">
-	<CareerSelection bind:selectedCareer={build!.career}></CareerSelection>
+	<CareerSelection bind:selectedCareer={build!.career} handler={handleCareerChange}></CareerSelection>
 	<div class="career-container top-left-shadow">
 		<ContainerTitle>Summary</ContainerTitle>
 		<div class="build-overview-container border-01 pb-5">

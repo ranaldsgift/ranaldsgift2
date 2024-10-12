@@ -26,6 +26,8 @@
 		if (build.primaryWeapon.property2 && !item.properties.map((item) => item.id).includes(build.primaryWeapon.property2.id)) {
 			build.primaryWeapon.property2 = item.properties[1];
 		}
+
+		build.primaryWeapon.weaponId = item.id;
 	};
 
 	const secondaryWeaponSelectHandler = (item: IWeapon) => {
@@ -38,6 +40,8 @@
 		if (build.secondaryWeapon.property2 && !item.properties.map((item) => item.id).includes(build.secondaryWeapon.property2.id)) {
 			build.secondaryWeapon.property2 = item.properties[1];
 		}
+
+		build.secondaryWeapon.weaponId = item.id;
 	};
 
 	let necklaceProperties: IProperty[] = $state([]);

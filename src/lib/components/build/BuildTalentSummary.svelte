@@ -20,6 +20,15 @@
 		];
 	};
 
+	let selectedTalents = $derived([
+		build.level5Talent,
+		build.level10Talent,
+		build.level15Talent,
+		build.level20Talent,
+		build.level25Talent,
+		build.level30Talent,
+	]);
+
 	const getTalentString = (build: ICareerBuild) => {
 		const talents = getSelectedTalents(build);
 		const talentsString = talents.map((talent) => {
@@ -34,7 +43,7 @@
 	};
 </script>
 
-<div class="build-talent-summary max-mobile:w-full background-25 border-05 glass p-3 z-auto">
+<div class="build-talent-summary max-mobile:w-full background-25 border-05 glass p-3 z-[10]">
 	<div
 		class="talent-string-container flex items-center justify-center gap-4 col-span-2 tablet:col-span-4 w-full px-2 text-center text-[#f0d9af] text-[1.3rem]"
 	>
@@ -44,7 +53,7 @@
 	</div>
 	<div class="divider-21 w-full h-[20px] mb-2 col-span-2 tablet:col-span-4"></div>
 	<div class="talents-container">
-		{#each getSelectedTalents(build) as talent, index}
+		{#each selectedTalents as talent, index}
 			<div class="talent-container-wrapper">
 				<span
 					class="talent-lock-icon justify-self-center"

@@ -4,12 +4,11 @@ import { Property, type IProperty } from "../Property";
 import { Trait, type ITrait } from "../Trait";
 import { ItemRarityEnum } from "$lib/enums/ItemRarityEnum";
 import { WeaponSkin, type IWeaponSkin } from "../WeaponSkin";
-import { AuthoredEntity } from "../AuthoredEntity";
 import { Weapon, type IWeapon } from "../Weapon";
-import type { IUser } from "../User";
+import { TimestampedEntity } from "../TimestampedEntity";
 
 @Entity()
-export class WeaponBuild extends AuthoredEntity<IWeaponBuild> {
+export class WeaponBuild extends TimestampedEntity<IWeaponBuild> {
 	@PrimaryGeneratedColumn()
 	id!: number;
 
@@ -55,7 +54,6 @@ export class WeaponBuild extends AuthoredEntity<IWeaponBuild> {
 
 export interface IWeaponBuild {
 	id?: number;
-	user?: IUser;
 	rarity?: ItemRarityEnum;
 	weaponId?: number;
 	weapon?: IWeapon;

@@ -3,7 +3,6 @@
 	import CareerIcon from "./CareerIcon.svelte";
 	import ContainerTitle from "../ContainerTitle.svelte";
 	import type { IHero } from "$lib/entities/Hero";
-	import { browser } from "$app/environment";
 	import { CareersStore } from "$lib/stores/DataStores";
 	import { getWindowState } from "$lib/state/WindowState.svelte";
 
