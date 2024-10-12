@@ -125,11 +125,11 @@
 			<ContentContainer class="max-w-[672px] flex flex-col gap-5">
 				<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=1835393505">Deathwish (DW):</a>
 				<p>
-					A difficulty modifier that increases enemy stagger resistances. Elites can no longer be interrupted out of their
-					overheads with a majority of the classes in the game, and enemies in general tend to stay stunned for a much shorter
-					period of time. Stagger damage multipliers are locked at C1 values (less damage dealt to staggered enemies in C3).
-					Deathwish was originally created by Grimalackt, but it is now updated and maintained by RandomWords with input from the
-					community.
+					A difficulty modifier that increases enemy stagger resistances, and Globadier gas damage. Elites can no longer be
+					interrupted out of their overheads with a majority of the classes in the game, and enemies in general tend to stay
+					stunned for a much shorter period of time. Stagger damage multipliers are locked at C1 values (less damage dealt to
+					staggered enemies in C3). Deathwish was originally created by Grimalackt, but it is now updated and maintained by
+					RandomWords with input from the community.
 				</p>
 			</ContentContainer>
 			<div class="divider-10 h-[26px] !bg-contain my-2 desktop:hidden"></div>
