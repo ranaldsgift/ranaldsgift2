@@ -94,7 +94,6 @@
 		background-position: 0;
 		background: none;
 		padding: 0;
-		box-shadow: 0px -1px 0 0 #564640;
 	}
 	.talent-button-wrapper {
 		width: 100%;
