@@ -87,9 +87,6 @@
 	.weapon-icon:hover > .tooltip {
 		display: grid;
 	}
-	.weapon-icon > .tooltip:hover {
-		display: none;
-	}
 	.tooltip.left {
 		left: 0px;
 		bottom: calc(100% + 5px);

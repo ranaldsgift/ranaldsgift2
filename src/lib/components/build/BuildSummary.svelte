@@ -26,23 +26,23 @@
 	let tooltipPositionTrait = $derived<{
 		x: "left" | "right" | "center";
 		y: "top" | "bottom" | "center";
-	}>(!windowState.isWideScreen ? { x: "center", y: "top" } : { x: "center", y: "top" });
+	}>(!windowState.isWideScreen ? { x: "left", y: "top" } : { x: "center", y: "top" });
 </script>
 
-<div class="build-summary-container {CLASS}">
-	<div class="build-melee-summary">
+<div class="build-summary-container grid grid-cols-6 gap-4 {CLASS}">
+	<div class="build-melee-summary tablet:col-span-3 col-span-6">
 		{@render itemSummary(build.primaryWeapon.weapon?.name || "Primary Weapon", build.primaryWeapon)}
 	</div>
-	<div class="build-range-summary">
+	<div class="build-range-summary tablet:col-span-3 col-span-6">
 		{@render itemSummary(build.secondaryWeapon.weapon?.name || "Secondary Weapon", build.secondaryWeapon)}
 	</div>
-	<div class="build-jewelry-summary necklace-summary">
+	<div class="build-jewelry-summary necklace-summary tablet:col-span-2 col-span-6">
 		{@render itemSummary("Necklace", build.necklace, "jewelry-icon necklace-icon border-04")}
 	</div>
-	<div class="build-jewelry-summary charm-summary">
+	<div class="build-jewelry-summary charm-summary tablet:col-span-2 col-span-6">
 		{@render itemSummary("Charm", build.charm, "jewelry-icon charm-icon border-04")}
 	</div>
-	<div class="build-jewelry-summary trinket-summary">
+	<div class="build-jewelry-summary trinket-summary tablet:col-span-2 col-span-6">
 		{@render itemSummary("Trinket", build.trinket, "jewelry-icon trinket-icon border-04")}
 	</div>
 </div>
@@ -55,7 +55,7 @@
 		{/if}
 	</div>
 	{#if "weapon" in item && item.weapon}
-		<WeaponIcon weapon={item.weapon} tooltipPosition={tooltipPositionWeapon}></WeaponIcon>
+		<WeaponIcon weapon={item.weapon} tooltipPosition={tooltipPositionWeapon} size="60px"></WeaponIcon>
 	{:else if itemIcon}
 	<div class={`relative ${itemIcon}`}></div>
 	{/if}
@@ -74,35 +74,18 @@
 
 <style>
 	.build-summary-container {
-		display: flex;
-		flex-wrap: wrap;
 		grid-area: buildSummary;
 		color: #f0f0f0;
 		text-align: left;
-		grid-gap: 15px;
-	}
-	
-	.build-summary-container > div {
-		flex: 1 1 172px;
-	} 
-
-	@media (min-width: 1800px) {
-		.build-summary-container {
-			display: flex;
-			flex-wrap: wrap;
-		}
-		.build-summary-container > div {
-			min-width: 172px;
-		}
 	}
 
 	.build-melee-summary,
 	.build-range-summary,
 	.build-jewelry-summary {
 		display: grid;
-		grid-template-areas: "itemSummaryHeader itemSummaryHeader itemSummaryHeader" "itemIcon traitIcon empty" "propertyContainer propertyContainer propertyContainer";
-		grid-template-columns: 60px 60px auto;
-		grid-template-rows: 1fr 60px 1fr;
+		grid-template-areas: "itemIcon itemSummaryHeader" "traitIcon propertyContainer";
+		grid-template-columns: 60px auto;
+		grid-template-rows: 60px auto;
 		grid-row-gap: 10px;
 		grid-column-gap: 10px;
 	}
