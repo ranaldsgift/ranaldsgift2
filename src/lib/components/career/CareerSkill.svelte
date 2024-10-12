@@ -1,17 +1,20 @@
 <script lang="ts">
 	import type { ICareer } from "$lib/entities/career/Career";
+	import BuildHelper from "$lib/helpers/BuildHelper";
 
 	type Props = {
 		career: ICareer;
 	};
 
 	const { career }: Props = $props();
+
+	let skillDescription = $derived(BuildHelper.getCorrectedSkill(career)?.description ?? "");
 </script>
 
 <div class="career-skill-container">
 	<p class="career-skill-header">{career.skill.name}</p>
 	<div class="career-ability-icon border-13" style="background-image: url('/images/careers/{career.id}/skill.png')"></div>
-	<p class="career-skill-description">{career.skill.description}</p>
+	<p class="career-skill-description">{skillDescription}</p>
 </div>
 
 <style>

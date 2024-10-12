@@ -80,9 +80,11 @@
 	@import "https://cdn.quilljs.com/1.3.6/quill.snow.css";
 
 	:global(.ql-toolbar) {
-		border: solid white;
+		border: solid #64493e !important;
 		border-width: 0 0 1px 0 !important;
-		position: relative;
+		position: sticky;
+		top: 50px;
+		z-index: 1;
 		background: radial-gradient(ellipse at bottom, rgba(106, 55, 29, 0.4117647058823529) 15%, transparent),
 			url("/images/backgrounds/background22.png");
 	}
@@ -111,5 +113,12 @@
 		border-style: solid;
 		border-image-repeat: repeat;
 		pointer-events: none;
+		z-index: 2;
+	}
+
+	@media (min-width: 768px) {
+		:global(.ql-toolbar) {
+			top: -22px;
+		}
 	}
 </style>

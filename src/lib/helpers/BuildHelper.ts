@@ -1,6 +1,12 @@
+import { correctedPassivesData } from "$lib/data/legacy/CorrectedPassives";
+import { correctedPerksData } from "$lib/data/legacy/CorrectedPerks";
+import { correctedSkillsData } from "$lib/data/legacy/CorrectedSkills";
 import { correctedTalentsData } from "$lib/data/legacy/CorrectedTalents";
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 import type { ICareer } from "$lib/entities/career/Career";
+import type { ICareerPassive } from "$lib/entities/career/CareerPassive";
+import type { ICareerPerk } from "$lib/entities/career/CareerPerk";
+import type { ICareerSkill } from "$lib/entities/career/CareerSkill";
 import type { ICareerTalent } from "$lib/entities/career/CareerTalent";
 import type { IPatch } from "$lib/entities/Patch";
 import type { IProperty } from "$lib/entities/Property";
@@ -92,7 +98,6 @@ class BuildHelper {
 		let list = talents.map((talent) => {
 			const tieredTalentNumber = talent.talentNumber % 3 === 0 ? 3 : talent.talentNumber % 3;
 			const tier = Math.ceil(talent.talentNumber / 3);
-			console.log("searching for", tieredTalentNumber, tier, careerId);
 			const correctedTalent = correctedTalentsData.find(
 				(t) => t.talent === tieredTalentNumber && t.tier === tier && t.careerId === careerId
 			);
@@ -101,8 +106,34 @@ class BuildHelper {
 			}
 			return talent;
 		});
-		console.log(list);
 		return list;
+	}
+
+	static getCorrectedSkill(career: ICareer): ICareerSkill {
+		const correctedSkill = correctedSkillsData.find((s) => s.careerId === career.id);
+		if (correctedSkill) {
+			return { ...career.skill, description: correctedSkill.description };
+		}
+		return career.skill;
+	}
+
+	static getCorrectedPassive(career: ICareer): ICareerPassive {
+		const correctedPassive = correctedPassivesData.find((p) => p.careerId === career.id);
+		if (correctedPassive) {
+			return { ...career.passive, description: correctedPassive.description };
+		}
+		return career.passive;
+	}
+
+	static getCorrectedPerks(career: ICareer): ICareerPerk[] {
+		const correctedPerks = career.perks.map((perk) => {
+			const correctedPerk = correctedPerksData.find((p) => p.careerId === career.id && p.name === perk.name);
+			if (correctedPerk) {
+				return { ...perk, description: correctedPerk.description };
+			}
+			return perk;
+		});
+		return correctedPerks;
 	}
 
 	static getTalents(build: ICareerBuild): (ICareerTalent | null | undefined)[] {
@@ -305,34 +336,16 @@ class BuildHelper {
 		let searchParams = "?";
 		searchParams += `career=${build.career.id}`;
 		searchParams += `&talents=${talentParams}`;
-		searchParams += `&primary=${build.primaryWeapon.weapon.id}-${build.primaryWeapon.property1?.id}-${build.primaryWeapon.property2?.id}-${build.primaryWeapon.trait?.id}`;
-		searchParams += `&secondary=${build.secondaryWeapon.weapon.id}-${build.secondaryWeapon.property1?.id}-${build.secondaryWeapon.property2?.id}-${build.secondaryWeapon.trait?.id}`;
+		if (build.primaryWeapon) {
+			searchParams += `&primary=${build.primaryWeapon.weapon?.id}-${build.primaryWeapon.property1?.id}-${build.primaryWeapon.property2?.id}-${build.primaryWeapon.trait?.id}`;
+		}
+		if (build.secondaryWeapon) {
+			searchParams += `&secondary=${build.secondaryWeapon.weapon?.id}-${build.secondaryWeapon.property1?.id}-${build.secondaryWeapon.property2?.id}-${build.secondaryWeapon.trait?.id}`;
+		}
 		searchParams += `&necklace=${build.necklace.property1?.id}-${build.necklace.property2?.id}-${build.necklace.trait?.id}`;
 		searchParams += `&charm=${build.charm.property1?.id}-${build.charm.property2?.id}-${build.charm.trait?.id}`;
 		searchParams += `&trinket=${build.trinket.property1?.id}-${build.trinket.property2?.id}-${build.trinket.trait?.id}`;
 		return searchParams;
-	}
-
-	static getSearchParamsFromBuild(build: ICareerBuild): { key: string; value: string }[] {
-		let talentParams = `${build.level5Talent?.talentNumber ?? 0}-${build.level10Talent?.talentNumber ?? 0}-${
-			build.level15Talent?.talentNumber ?? 0
-		}-${build.level20Talent?.talentNumber ?? 0}-${build.level25Talent?.talentNumber ?? 0}-${build.level30Talent?.talentNumber ?? 0}`;
-
-		return [
-			{ key: "career", value: build.career.id.toString() },
-			{ key: "talents", value: talentParams },
-			{
-				key: "primary",
-				value: `${build.primaryWeapon.weapon.id}-${build.primaryWeapon.property1?.id}-${build.primaryWeapon.property2?.id}-${build.primaryWeapon.trait?.id}`,
-			},
-			{
-				key: "secondary",
-				value: `${build.secondaryWeapon.weapon.id}-${build.secondaryWeapon.property1?.id}-${build.secondaryWeapon.property2?.id}-${build.secondaryWeapon.trait?.id}`,
-			},
-			{ key: "necklace", value: `${build.necklace.property1?.id}-${build.necklace.property2?.id}-${build.necklace.trait?.id}` },
-			{ key: "charm", value: `${build.charm.property1?.id}-${build.charm.property2?.id}-${build.charm.trait?.id}` },
-			{ key: "trinket", value: `${build.trinket.property1?.id}-${build.trinket.property2?.id}-${build.trinket.trait?.id}` },
-		];
 	}
 
 	static getPatch(build: ICareerBuild, patches: IPatch[]): IPatch | undefined {

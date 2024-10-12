@@ -4,9 +4,10 @@ import { getContext, setContext } from "svelte";
 class WindowState {
 	windowWidth = $state(browser ? window.innerWidth : 0);
 	isMobile = $derived(this.windowWidth <= 480);
-	isTablet = $derived(this.windowWidth > 480 && this.windowWidth <= 1200);
-	isDesktop = $derived(this.windowWidth >= 1200);
-	isWideScreen = $derived(this.windowWidth >= 1800);
+	isTablet = $derived(this.windowWidth > 480 && this.windowWidth <= 768);
+	isLaptop = $derived(this.windowWidth > 768 && this.windowWidth <= 1200);
+	isDesktop = $derived(this.windowWidth > 1200 && this.windowWidth <= 1800);
+	isWideScreen = $derived(this.windowWidth > 1800);
 
 	constructor() {
 		if (browser) {

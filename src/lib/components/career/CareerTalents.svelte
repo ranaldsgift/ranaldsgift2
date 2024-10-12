@@ -98,6 +98,7 @@
 								size="84px"
 								transparent={true}
 								showDescription={showDescriptions}
+								tooltipPosition="top"
 							/>
 						</button>
 					{/each}

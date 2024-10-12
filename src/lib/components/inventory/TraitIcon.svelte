@@ -24,7 +24,7 @@
 	class={`item-trait-icon trait-icon border-04`}
 	style="--size: {size}; background: url('/images/traits/{trait.name.toLowerCase().replaceAll(' ', '-')}.png'), black"
 >
-	<span class="tooltip border-35 max-w-[200px] mobile:max-w-[300px]" style="transform: {translateX} {translateY};">
+	<span class="tooltip border-35 max-w-[200px] mobile:max-w-[250px]" style="transform: {translateX} {translateY};">
 		<span class="name header-underline">{trait.name}</span>
 		<span class="description">
 			{trait.description}
