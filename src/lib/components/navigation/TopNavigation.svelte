@@ -84,7 +84,7 @@
 		top: -4px;
 		padding-top: 4px;
 		width: calc(100% + 8px);
-		z-index: 10000;
+		z-index: 99;
 		height: 50px;
 		background:
 			linear-gradient(45deg, #222222bd, #1616169e),
