@@ -104,6 +104,14 @@ select::-webkit-scrollbar-thumb {
     background: #30e158;
 }
 
+[data-dialog-overlay] {
+    z-index: 1000;
+}
+
+[data-dialog-content] {
+    z-index: 1000;
+}
+
 body {
   background: transparent;
   font-family: caslon-antique;

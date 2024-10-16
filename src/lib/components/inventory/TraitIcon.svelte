@@ -11,12 +11,12 @@
 		};
 	};
 
-	let { trait, class: CLASS = "", size = "60px", tooltipPosition: position = { x: "center", y: "top" } }: Props = $props();
+	let { trait, class: CLASS = "", size = "60px", tooltipPosition = { x: "left", y: "top" } }: Props = $props();
 	let translateX = $derived(
-		position.x === "center" ? "translateX(-50%)" : position.x === "right" ? "translateX(100%)" : "translateX(0%)"
+		tooltipPosition.x === "center" ? "translateX(-50%)" : tooltipPosition.x === "right" ? "translateX(100%)" : "translateX(0%)"
 	);
 	let translateY = $derived(
-		position.y === "bottom" ? "translateY(100%)" : position.y === "top" ? "translateY(-100%)" : "translateY(-25%)"
+		tooltipPosition.y === "bottom" ? "translateY(100%)" : tooltipPosition.y === "top" ? "translateY(-100%)" : "translateY(-25%)"
 	);
 </script>
 
@@ -56,7 +56,7 @@
 		position: relative;
 		top: 0;
 		bottom: 0;
-		left: var(--tooltipLeft);
+		left: 0;
 		padding: 1.5rem;
 		z-index: 1000;
 		background: linear-gradient(0deg, #000000cf, #00000030), url("/images/backgrounds/background29.png");

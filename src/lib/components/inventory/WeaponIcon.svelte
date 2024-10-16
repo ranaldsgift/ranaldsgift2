@@ -26,7 +26,7 @@
 	<div
 		class="weapon-icon border-04 {CLASS}"
 		style="--size: {size}; background: url('/images/weapons/{weapon.codename}.png') no-repeat center / cover, 
-                        url('/images/backgrounds/icon-background-2.png') no-repeat center / cover;"
+                        url('/images/backgrounds/item-red.png') no-repeat center / cover;"
 	>
 		<div
 			class="tooltip border-35 max-w-[200px] mobile:max-w-[300px]"
