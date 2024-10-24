@@ -15,17 +15,17 @@
     justify-self: right;
 }
 .necklace-icon {
-    background: url('/images/icons/gear/necklace-1.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/item-red.png') no-repeat center / 100% 100%;
+    background: url('/images/illusions/necklace/necklace-1.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/item-red.png') no-repeat center / 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
 }
 .charm-icon {
-    background: url('/images/icons/gear/charm-1.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/item-red.png') no-repeat center / 100% 100%;
+    background: url('/images/illusions/charm/charm-1.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/item-red.png') no-repeat center / 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
 }
 .trinket-icon {
-    background: url('/images/icons/gear/trinket-1.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/item-red.png') no-repeat center / 100% 100%;
+    background: url('/images/illusions/trinket/trinket-1.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/item-red.png') no-repeat center / 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
 }

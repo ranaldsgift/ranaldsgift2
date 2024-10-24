@@ -146,8 +146,8 @@ img.border-02::after {
   }
   .border-17 {
     border-image: url('/images/borders/border-17.png');
-    border-image-slice: 15;
-    border-image-width: 15px;
+    border-image-slice: 5;
+    border-image-width: 5px;
     border-style: solid;
     border-image-repeat: repeat;
   }
