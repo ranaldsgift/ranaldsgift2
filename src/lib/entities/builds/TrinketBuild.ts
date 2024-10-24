@@ -4,6 +4,8 @@ import { Property, type IProperty } from "../Property";
 import { Trait, type ITrait } from "../Trait";
 import { ItemRarityEnum } from "$lib/enums/ItemRarityEnum";
 import { TimestampedEntity } from "../TimestampedEntity";
+import type { IItemBuild } from "./CareerBuild";
+import { Illusion, type IIllusion } from "../ItemIllusion";
 
 @Entity()
 export class TrinketBuild extends TimestampedEntity<ITrinketBuild> {
@@ -13,7 +15,7 @@ export class TrinketBuild extends TimestampedEntity<ITrinketBuild> {
 	@Column({
 		type: "enum",
 		enum: ItemRarityEnum,
-		default: ItemRarityEnum.Orange,
+		default: ItemRarityEnum.Red,
 	})
 	rarity!: ItemRarityEnum;
 
@@ -37,9 +39,13 @@ export class TrinketBuild extends TimestampedEntity<ITrinketBuild> {
 	@Type(() => Trait)
 	@ManyToOne(() => Trait, { eager: true, nullable: true })
 	trait!: Trait;
+
+	@Type(() => Illusion)
+	@ManyToOne(() => Illusion, { nullable: true })
+	illusion!: Illusion;
 }
 
-export interface ITrinketBuild {
+export interface ITrinketBuild extends IItemBuild {
 	id?: number;
 	rarity?: ItemRarityEnum;
 	powerLevel?: number;
@@ -48,4 +54,5 @@ export interface ITrinketBuild {
 	property2?: IProperty;
 	property2Value?: number;
 	trait?: ITrait;
+	illusion?: IIllusion;
 }

@@ -99,7 +99,7 @@
 	.frame-container {
 		position: fixed;
 		top: 0;
-		z-index: 10001;
+		z-index: 100;
 		pointer-events: none;
 	}
 </style>

@@ -4,12 +4,15 @@
 	import { ROOT_API_URL } from "$lib/data/constants/constants";
 	import { getUserState } from "$lib/state/UserState.svelte";
 	import { previousPage } from "$lib/stores/PageStores.svelte";
+	import { toast } from "svelte-sonner";
 
 	const userState = getUserState();
 
 	let isMenuOpen = $derived($page.url.pathname === "/menu");
 
 	const backgroundToggleClickHandler = async (event: Event) => {
+		toast(`Background video ${userState.showVideo.value ? "enabled" : "disabled"}`);
+
 		localStorage.setItem("showVideo", userState.showVideo.value.toString());
 
 		if (userState.user) {

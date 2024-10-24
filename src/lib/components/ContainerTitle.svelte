@@ -7,12 +7,13 @@
 <style>
     span {
         display: grid;
-        box-shadow: inset 0 9px 6px -5px #fff, inset 0 -12px 20px -6px #6a371d !important;
+        box-shadow: inset 0 9px 6px -6px #fff,inset 0 -9px 20px -6px #6a371d;
         color: #f0f0f0;
         background: #000;
         text-align: center;
         align-items: center;
         min-height: 33px;
+        padding-top: 3px;
     }
 </style>
 

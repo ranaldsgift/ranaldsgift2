@@ -63,16 +63,16 @@
 		{#each talents as talent}
 			<div class="grid {vertical ? 'grid-flow-col grid-cols-[40px_40px]' : 'grid-flow-row'}">
 				<div class="border-01">
-					<CareerTalentIcon talentNumber={talent!.talentNumber} careerId={build.career.id} size="40px" class="relative z-[-1]"/>
+					<CareerTalentIcon talentNumber={talent?.talentNumber ?? 0} careerId={build.career.id} size="40px" class="relative z-[-1]"/>
 				</div>
 				<div class="border-01 flex items-center justify-center background-13 text-[#f0d9af] text-[1.3rem]">
-					{talent!.talentNumber % 3 === 0 ? 3 : talent!.talentNumber % 3}
+					{!talent ? 0 : talent.talentNumber % 3 === 0 ? 3 : talent.talentNumber % 3}
 				</div>
 			</div>
 		{/each}
 	{:else}
-		{#each talents as talent}
-			<CareerTalentLevelIcon level={Math.ceil(talent!.talentNumber / 3) * 5}/>
+		{#each talents as talent, index}
+			<CareerTalentLevelIcon level={(index + 1) * 5}/>
 			<CareerTalent {talent} careerId={build.career.id}/>
 		{/each}
 	{/if}
@@ -102,34 +102,36 @@
 {/snippet}
 
 {#snippet gear(build: ICareerBuild)}
-	<WeaponIcon weapon={build.primaryWeapon.weapon} size={gearIconSize}></WeaponIcon>
-	{#if build.primaryWeapon.trait}
-	<TraitIcon trait={build.primaryWeapon.trait} size={gearIconSize}></TraitIcon>
-	{:else}	
-	<span class="item-trait-icon trait-icon border-04 size-[{gearIconSize}]"></span>
-	{/if}
-	<WeaponIcon weapon={build.secondaryWeapon.weapon} size={gearIconSize}></WeaponIcon>
-	{#if build.secondaryWeapon.trait}
-	<TraitIcon trait={build.secondaryWeapon.trait} size={gearIconSize}></TraitIcon>
-	{:else}
-	<span class="item-trait-icon trait-icon border-04 size-[{gearIconSize}]"></span>
-	{/if}
-	<div class="jewelry-icon necklace-icon border-04" style="--size: {gearIconSize}"></div>
-	{#if build.necklace.trait}
-	<TraitIcon trait={build.necklace.trait} size={gearIconSize}></TraitIcon>
-	{:else}
-	<span class="item-trait-icon trait-icon border-04 size-[{gearIconSize}]"></span>
-	{/if}
-	<div class="jewelry-icon charm-icon border-04" style="--size: {gearIconSize}"></div>
-	{#if build.charm.trait}
-	<TraitIcon trait={build.charm.trait} size={gearIconSize}></TraitIcon>
-	{:else}
-	<span class="item-trait-icon trait-icon border-04 size-[{gearIconSize}]"></span>
-	{/if}
-	<div class="jewelry-icon trinket-icon border-04" style="--size: {gearIconSize}"></div>
-	{#if build.trinket.trait}
-	<TraitIcon trait={build.trinket.trait} size={gearIconSize}></TraitIcon>
-	{:else}
-	<span class="item-trait-icon trait-icon border-04 size-[{gearIconSize}]"></span>
+	{#if build.primaryWeapon.weapon && build.secondaryWeapon.weapon}
+		<WeaponIcon weapon={build.primaryWeapon.weapon} size={gearIconSize}></WeaponIcon>
+		{#if build.primaryWeapon.trait}
+		<TraitIcon trait={build.primaryWeapon.trait} size={gearIconSize}></TraitIcon>
+		{:else}	
+		<span class="item-trait-icon trait-icon border-04 size-[{gearIconSize}]"></span>
+		{/if}
+		<WeaponIcon weapon={build.secondaryWeapon.weapon} size={gearIconSize}></WeaponIcon>
+		{#if build.secondaryWeapon.trait}
+		<TraitIcon trait={build.secondaryWeapon.trait} size={gearIconSize}></TraitIcon>
+		{:else}
+		<span class="item-trait-icon trait-icon border-04 size-[{gearIconSize}]"></span>
+		{/if}
+		<div class="jewelry-icon necklace-icon border-04" style="--size: {gearIconSize}"></div>
+		{#if build.necklace.trait}
+		<TraitIcon trait={build.necklace.trait} size={gearIconSize}></TraitIcon>
+		{:else}
+		<span class="item-trait-icon trait-icon border-04 size-[{gearIconSize}]"></span>
+		{/if}
+		<div class="jewelry-icon charm-icon border-04" style="--size: {gearIconSize}"></div>
+		{#if build.charm.trait}
+		<TraitIcon trait={build.charm.trait} size={gearIconSize}></TraitIcon>
+		{:else}
+		<span class="item-trait-icon trait-icon border-04 size-[{gearIconSize}]"></span>
+		{/if}
+		<div class="jewelry-icon trinket-icon border-04" style="--size: {gearIconSize}"></div>
+		{#if build.trinket.trait}
+		<TraitIcon trait={build.trinket.trait} size={gearIconSize}></TraitIcon>
+		{:else}
+		<span class="item-trait-icon trait-icon border-04 size-[{gearIconSize}]"></span>
+		{/if}
 	{/if}
 {/snippet}

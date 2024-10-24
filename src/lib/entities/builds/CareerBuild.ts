@@ -21,6 +21,11 @@ import type {
 	TwitchVoteTimeType,
 	TwitchWeeklyEventEffectDurationType,
 } from "$lib/data/constants/constants";
+import type { ItemRarityEnum } from "$lib/enums/ItemRarityEnum";
+import type { IWeapon } from "../Weapon";
+import type { IProperty } from "../Property";
+import type { ITrait } from "../Trait";
+import type { IIllusion } from "../ItemIllusion";
 
 @Entity({})
 export class CareerBuild extends AuthoredEntity<ICareerBuild> {
@@ -38,6 +43,9 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 
 	@Column("varchar", { nullable: true })
 	description!: string;
+
+	@Column("smallint", { default: 35 })
+	level!: number;
 
 	@Column("number", { nullable: true })
 	careerId?: number;
@@ -73,9 +81,6 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 	@OneToOne(() => TrinketBuild, { eager: true, cascade: true })
 	@JoinColumn()
 	trinket!: TrinketBuild;
-
-	@Column("smallint", { default: 350 })
-	powerLevel!: number;
 
 	@Type(() => CareerTalent)
 	@ManyToOne(() => CareerTalent, { eager: true, nullable: true })
@@ -187,12 +192,12 @@ export interface ICareerBuild {
 	name?: string;
 	summary?: string;
 	description?: string;
+	level?: number;
 	careerId?: number;
 	career: ICareer;
 	portraitFrameId?: number;
 	primaryWeapon: IWeaponBuild;
 	secondaryWeapon: IWeaponBuild;
-	powerLevel?: number;
 	level5Talent?: ICareerTalent | null;
 	level10Talent?: ICareerTalent | null;
 	level15Talent?: ICareerTalent | null;
@@ -227,4 +232,18 @@ export interface ICareerBuild {
 	dateModified?: Date;
 	dateCreated?: Date;
 	patchNumber?: string;
+}
+
+export interface IItemBuild {
+	id?: number;
+	rarity?: ItemRarityEnum;
+	weaponId?: number;
+	weapon?: IWeapon | null;
+	powerLevel?: number;
+	property1?: IProperty;
+	property1Value?: number;
+	property2?: IProperty;
+	property2Value?: number;
+	trait?: ITrait;
+	illusion?: IIllusion;
 }

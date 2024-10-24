@@ -10,15 +10,18 @@
 	import type { ICareer } from "$lib/entities/career/Career";
 	import type { ITrait } from "$lib/entities/Trait";
 	import type { IProperty } from "$lib/entities/Property";
+	import type { Snippet } from "svelte";
 
 	type Props = {
 		filter: BuildTableFilter;
 		class?: string;
 		title?: string;
 		compact?: boolean;
+		header?: Snippet;
+		hideOnEmpty?: boolean;
 	};
 
-	let { filter = $bindable(), class: className, title, compact = false }: Props = $props();
+	let { filter = $bindable(), class: className, title, compact = false, header, hideOnEmpty = true }: Props = $props();
 
 	let builds: ICareerBuild[] = [];
 	let recordCount = $state(0);
@@ -102,21 +105,30 @@
 
 	const handler = new DataHandler(builds);
 	const rows = handler.getRows();
+
+	$effect(() => {
+		if (filter) {
+			loadData();
+		}
+	});
 </script>
 
+{#if $rows.length > 0 || !hideOnEmpty}
+<div class={className}>
+	<ContainerTitle>
+		{#if header}
+			{@render header()}
+		{:else}
+				{title ?? "Builds"}
+		{/if}
+	</ContainerTitle>
 {#await loadData()}
-	<div class={className}>
-		<ContainerTitle>{title ?? "Builds"}</ContainerTitle>
 		<div class="p-5 border-01 background-20 gap-5 grid {!compact ? 'desktop:grid-cols-2' : ''} desktop:grid-flow-row">
 			{#each { length: filter.limit ?? 5 } as _}
 				<BuildTableRowSkeleton></BuildTableRowSkeleton>
 			{/each}
 		</div>
-	</div>
 {:then}
-	{#if $rows.length > 0}
-		<div class={className}>
-			<ContainerTitle>{title ?? "Builds"}</ContainerTitle>
 			<div class="p-5 border-01 background-20 gap-5 grid {!compact ? 'min-[1400px]:grid-cols-2' : ''} desktop:grid-flow-row">
 				{#each $rows as row}
 					<BuildTableRow build={row} {compact}></BuildTableRow>
@@ -153,9 +165,9 @@
 					</button>
 				{/if}
 			</div>
-		</div>
-	{/if}
 {/await}
+</div>
+	{/if}
 
 <style>
 	.build-list-item-skeleton {

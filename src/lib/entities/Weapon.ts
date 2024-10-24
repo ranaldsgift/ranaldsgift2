@@ -1,11 +1,12 @@
 import { Type } from "class-transformer";
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Career, type ICareer } from "./career/Career";
 import { Trait, type ITrait } from "./Trait";
 import { Property, type IProperty } from "./Property";
 import { BaseEntity } from "./BaseEntity";
 import TraitCategoryEnum from "$lib/enums/TraitCategoryEnum";
 import PropertyCategoryEnum from "$lib/enums/PropertyCategoryEnum";
+import { Illusion, type IIllusion } from "./ItemIllusion";
 
 @Entity()
 export class Weapon extends BaseEntity<IWeapon> {
@@ -21,10 +22,18 @@ export class Weapon extends BaseEntity<IWeapon> {
 	@Column("varchar", { nullable: true })
 	description!: string;
 
-	@Type(() => WeaponTooltip)
+	@Type(() => Illusion)
+	@OneToMany(() => Illusion, (illusion) => illusion.weapon, { eager: true, cascade: true })
+	@JoinTable()
+	illusions!: Illusion[];
+
+	@Column("varchar", { nullable: true })
+	tooltip!: string;
+
+	/* 	@Type(() => WeaponTooltip)
 	@ManyToMany(() => WeaponTooltip, { eager: true, cascade: true })
 	@JoinTable()
-	tooltips!: WeaponTooltip[];
+	tooltips!: WeaponTooltip[]; */
 
 	@Column("double precision")
 	dodgeDistance!: number;
@@ -115,7 +124,9 @@ export interface IWeapon {
 	propertyCategory?: PropertyCategoryEnum;
 	properties: IProperty[];
 	traits: ITrait[];
-	tooltips: IWeaponTooltip[];
+	tooltip?: string;
+	/* tooltips: IWeaponTooltip[]; */
+	illusions: IIllusion[];
 }
 
 export interface IWeaponTooltip {

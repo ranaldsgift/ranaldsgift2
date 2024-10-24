@@ -391,7 +391,7 @@
 		cursor: pointer;
 	}
 
-	select option {
+	select:not([multiple]) option {
 		background-color: #080404;
 	}
 
@@ -406,12 +406,12 @@
 		outline: none;
 	}
 
-	select option:not(:checked) {
+	select[multiple] option:not(:checked) {
 		color: #838383;
 		background-color: transparent;
 	}
-	select option:checked,
-	select option:focus {
+	select[multiple] option:checked,
+	select[multiple] option:focus {
 		color: #30e158;
 		background-color: transparent;
 	}

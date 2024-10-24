@@ -15,6 +15,7 @@ import { Weapon, type IWeapon } from "$lib/entities/Weapon";
 import { Trait, type ITrait } from "$lib/entities/Trait";
 import { Property, type IProperty } from "$lib/entities/Property";
 import { Patch, type IPatch } from "$lib/entities/Patch";
+import { Illusion, type IIllusion } from "$lib/entities/ItemIllusion";
 
 class RedisCache<TEntity extends ObjectLiteral, TInterface extends IEntity> {
 	private instance: StaticDataCache<TInterface> | null = null;
@@ -96,13 +97,13 @@ export const WeaponsCache = new RedisCache<Weapon, IWeapon>(Weapon, "weapons", {
 	relations: {
 		properties: true,
 		traits: true,
-		tooltips: true,
 	},
 	relationLoadStrategy: "query",
 	order: {
 		id: "ASC",
 	},
 });
+export const IllusionsCache = new RedisCache<Illusion, IIllusion>(Illusion, "illusions");
 export const PatchesCache = new RedisCache<Patch, IPatch>(Patch, "patches");
 export const MissionCache = new RedisCache<Mission, IMission>(Mission, "missions");
 export const DifficultyCache = new RedisCache<Difficulty, IDifficulty>(Difficulty, "difficulties");
@@ -128,8 +129,8 @@ export const CareerCache = new RedisCache<Career, ICareer>(Career, "careers", {
 		perks: true,
 		talents: true,
 		hero: true,
-		primaryWeapons: { properties: true, traits: true, tooltips: true },
-		secondaryWeapons: { properties: true, traits: true, tooltips: true },
+		primaryWeapons: { properties: true, traits: true },
+		secondaryWeapons: { properties: true, traits: true },
 	},
 	relationLoadStrategy: "query",
 	order: {

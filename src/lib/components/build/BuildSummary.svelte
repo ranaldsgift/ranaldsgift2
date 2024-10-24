@@ -4,8 +4,10 @@
 	import type { INecklaceBuild } from "$lib/entities/builds/NecklaceBuild";
 	import type { ITrinketBuild } from "$lib/entities/builds/TrinketBuild";
 	import type { IWeaponBuild } from "$lib/entities/builds/WeaponBuild";
+	import { ItemTypeEnum } from "$lib/enums/ItemTypeEnum";
 	import PropertyHelper from "$lib/helpers/PropertyHelper";
 	import { getWindowState } from "$lib/state/WindowState.svelte";
+	import ItemIcon from "../inventory/ItemIcon.svelte";
 	import TraitIcon from "../inventory/TraitIcon.svelte";
 	import WeaponIcon from "../inventory/WeaponIcon.svelte";
 
@@ -17,37 +19,27 @@
 	};
 
 	const { build, class: CLASS }: Props = $props();
-	
-	let windowState = getWindowState();
-	let tooltipPositionWeapon = $derived<{
-		x: "left" | "right" | "center";
-		y: "top" | "bottom" | "center";
-	}>(!windowState.isWideScreen ? { x: "left", y: "top" } : { x: "center", y: "top" });
-	let tooltipPositionTrait = $derived<{
-		x: "left" | "right" | "center";
-		y: "top" | "bottom" | "center";
-	}>(!windowState.isWideScreen ? { x: "left", y: "top" } : { x: "center", y: "top" });
 </script>
 
 <div class="build-summary-container grid grid-cols-6 gap-4 {CLASS}">
 	<div class="build-melee-summary tablet:col-span-3 col-span-6">
-		{@render itemSummary(build.primaryWeapon.weapon?.name || "Primary Weapon", build.primaryWeapon)}
+		{@render itemSummary(build.primaryWeapon.weapon?.name || "Primary Weapon", build.primaryWeapon, ItemTypeEnum.Weapon)}
 	</div>
 	<div class="build-range-summary tablet:col-span-3 col-span-6">
-		{@render itemSummary(build.secondaryWeapon.weapon?.name || "Secondary Weapon", build.secondaryWeapon)}
+		{@render itemSummary(build.secondaryWeapon.weapon?.name || "Secondary Weapon", build.secondaryWeapon, ItemTypeEnum.Weapon)}
 	</div>
 	<div class="build-jewelry-summary necklace-summary tablet:col-span-2 col-span-6">
-		{@render itemSummary("Necklace", build.necklace, "jewelry-icon necklace-icon border-04")}
+		{@render itemSummary("Necklace", build.necklace, ItemTypeEnum.Necklace)}
 	</div>
 	<div class="build-jewelry-summary charm-summary tablet:col-span-2 col-span-6">
-		{@render itemSummary("Charm", build.charm, "jewelry-icon charm-icon border-04")}
+		{@render itemSummary("Charm", build.charm, ItemTypeEnum.Charm)}
 	</div>
 	<div class="build-jewelry-summary trinket-summary tablet:col-span-2 col-span-6">
-		{@render itemSummary("Trinket", build.trinket, "jewelry-icon trinket-icon border-04")}
+		{@render itemSummary("Trinket", build.trinket, ItemTypeEnum.Trinket)}
 	</div>
 </div>
 
-{#snippet itemSummary(name: string, item: ItemBuild, itemIcon?: string)}
+{#snippet itemSummary(name: string, item: ItemBuild, itemType: ItemTypeEnum)}
 	<div class="item-summary-header">
 		<p class="item-name">{name}</p>
 		{#if item.trait}
@@ -55,12 +47,13 @@
 		{/if}
 	</div>
 	{#if "weapon" in item && item.weapon}
-		<WeaponIcon weapon={item.weapon} tooltipPosition={tooltipPositionWeapon} size="60px"></WeaponIcon>
-	{:else if itemIcon}
-	<div class={`relative ${itemIcon}`}></div>
+		<!-- <WeaponIcon weapon={item.weapon} rarity={item.rarity} size="60px"></WeaponIcon> -->
+		<ItemIcon itemBuild={item} {itemType}></ItemIcon>
+	{:else}
+		<ItemIcon itemBuild={item} {itemType}></ItemIcon>
 	{/if}
 	{#if item.trait}
-	<TraitIcon trait={item.trait} tooltipPosition={tooltipPositionTrait}></TraitIcon>
+	<TraitIcon trait={item.trait}></TraitIcon>
 	{/if}
 	<div class="property-container">
 		{#if item.property1}

@@ -11,22 +11,32 @@ import type { ICareerTalent } from "$lib/entities/career/CareerTalent";
 import type { IPatch } from "$lib/entities/Patch";
 import type { IProperty } from "$lib/entities/Property";
 import type { ITrait } from "$lib/entities/Trait";
+import { ItemRarityEnum } from "$lib/enums/ItemRarityEnum";
 
 class BuildHelper {
 	static isValid(build: ICareerBuild): boolean {
 		if (!build.career || !build.primaryWeapon || !build.secondaryWeapon || !build.necklace || !build.charm || !build.trinket) {
 			return false;
 		}
-
-		if (
-			!build.level5Talent ||
-			!build.level10Talent ||
-			!build.level15Talent ||
-			!build.level20Talent ||
-			!build.level25Talent ||
-			!build.level30Talent
-		) {
-			return false;
+		if (build.level) {
+			if (build.level < 30 && build.level30Talent) {
+				return false;
+			}
+			if (build.level < 25 && build.level25Talent) {
+				return false;
+			}
+			if (build.level < 20 && build.level20Talent) {
+				return false;
+			}
+			if (build.level < 15 && build.level15Talent) {
+				return false;
+			}
+			if (build.level < 10 && build.level10Talent) {
+				return false;
+			}
+			if (build.level < 5 && build.level5Talent) {
+				return false;
+			}
 		}
 
 		if (!build.name) {
@@ -40,55 +50,31 @@ class BuildHelper {
 		const missingFields: string[] = [];
 
 		if (!build.career) {
-			missingFields.push("career");
+			missingFields.push("Career");
 		}
 
 		if (!build.primaryWeapon) {
-			missingFields.push("primaryWeapon");
+			missingFields.push("Primary Weapon");
 		}
 
 		if (!build.secondaryWeapon) {
-			missingFields.push("secondaryWeapon");
+			missingFields.push("Secondary Weapon");
 		}
 
 		if (!build.necklace) {
-			missingFields.push("necklace");
+			missingFields.push("Necklace");
 		}
 
 		if (!build.charm) {
-			missingFields.push("charm");
+			missingFields.push("Charm");
 		}
 
 		if (!build.trinket) {
-			missingFields.push("trinket");
-		}
-
-		if (!build.level5Talent) {
-			missingFields.push("talent1");
-		}
-
-		if (!build.level10Talent) {
-			missingFields.push("talent2");
-		}
-
-		if (!build.level15Talent) {
-			missingFields.push("talent3");
-		}
-
-		if (!build.level20Talent) {
-			missingFields.push("talent4");
-		}
-
-		if (!build.level25Talent) {
-			missingFields.push("talent5");
-		}
-
-		if (!build.level30Talent) {
-			missingFields.push("talent6");
+			missingFields.push("Trinket");
 		}
 
 		if (!build.name) {
-			missingFields.push("name");
+			missingFields.push("Build Name");
 		}
 
 		return missingFields;
@@ -186,6 +172,8 @@ class BuildHelper {
 					property1: primaryWeaponProperty1,
 					property2: primaryWeaponProperty2,
 					trait: primaryWeaponTrait,
+					powerLevel: 300,
+					rarity: ItemRarityEnum.Red,
 				};
 			}
 		} else {
@@ -194,6 +182,8 @@ class BuildHelper {
 				property1: career.primaryWeapons[0].properties[0],
 				property2: career.primaryWeapons[0].properties[1],
 				trait: career.primaryWeapons[0].traits[0],
+				powerLevel: 300,
+				rarity: ItemRarityEnum.Red,
 			};
 		}
 
@@ -220,6 +210,8 @@ class BuildHelper {
 					property1: secondaryWeaponProperty1,
 					property2: secondaryWeaponProperty2,
 					trait: secondaryWeaponTrait,
+					powerLevel: 300,
+					rarity: ItemRarityEnum.Red,
 				};
 			}
 		} else {
@@ -228,6 +220,8 @@ class BuildHelper {
 				property1: career.secondaryWeapons[0].properties[0],
 				property2: career.secondaryWeapons[0].properties[1],
 				trait: career.secondaryWeapons[0].traits[0],
+				powerLevel: 300,
+				rarity: ItemRarityEnum.Red,
 			};
 		}
 
@@ -257,6 +251,8 @@ class BuildHelper {
 					trait: necklaceTrait,
 					property1: necklaceProperty1,
 					property2: necklaceProperty2,
+					powerLevel: 300,
+					rarity: ItemRarityEnum.Red,
 				};
 			}
 		} else {
@@ -264,6 +260,8 @@ class BuildHelper {
 				trait: traits.find((trait) => trait.category === "defence_accessory"),
 				property1: properties.find((property) => property.category === "necklace"),
 				property2: properties.find((property) => property.category === "necklace", { skip: 1 }),
+				powerLevel: 300,
+				rarity: ItemRarityEnum.Red,
 			};
 		}
 
@@ -282,6 +280,8 @@ class BuildHelper {
 					trait: charmTrait,
 					property1: charmProperty1,
 					property2: charmProperty2,
+					powerLevel: 300,
+					rarity: ItemRarityEnum.Red,
 				};
 			}
 		} else {
@@ -289,6 +289,8 @@ class BuildHelper {
 				trait: traits.find((trait) => trait.category === "offence_accessory"),
 				property1: properties.find((property) => property.category === "charm"),
 				property2: properties.find((property) => property.category === "charm", { skip: 1 }),
+				powerLevel: 300,
+				rarity: ItemRarityEnum.Red,
 			};
 		}
 
@@ -307,6 +309,8 @@ class BuildHelper {
 					trait: trinketTrait,
 					property1: trinketProperty1,
 					property2: trinketProperty2,
+					powerLevel: 300,
+					rarity: ItemRarityEnum.Red,
 				};
 			}
 		} else {
@@ -314,6 +318,8 @@ class BuildHelper {
 				trait: traits.find((trait) => trait.category === "utility_accessory"),
 				property1: properties.find((property) => property.category === "trinket"),
 				property2: properties.find((property) => property.category === "trinket", { skip: 1 }),
+				powerLevel: 300,
+				rarity: ItemRarityEnum.Red,
 			};
 		}
 

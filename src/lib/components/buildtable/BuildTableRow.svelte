@@ -8,6 +8,9 @@
 	import { getWindowState } from "$lib/state/WindowState.svelte";
 	import CareerTalentIcon from "../career/CareerTalentIcon.svelte";
 	import BuildHelper from "$lib/helpers/BuildHelper";
+	import CareerBuildPortrait from "../career/CareerBuildPortrait.svelte";
+	import ItemIcon from "../inventory/ItemIcon.svelte";
+	import { ItemTypeEnum } from "$lib/enums/ItemTypeEnum";
 	
 	type Props = {
 		build: ICareerBuild;
@@ -23,54 +26,63 @@
 	if (!build.careerId) {
 		error(404, "Career Data for the build failed to load.");
 	}
-
-	let tooltipPosition: "left" | "center" = $derived(windowState.isMobile || windowState.isTablet ? "left" : "center");
 </script>
 
 {#if build.careerId}
 <div class="build-list-item-container">
 	<a class="link-overlay" href={`/build/${build.id}`} data-sveltekit-preload-data="tap">&nbsp;</a>
 	<div class="build-list-item desktop:h-full" data-career={build.careerId} data-build={build.id} data-compact={compact}>
-		<div class="career-portrait border-04 mobile:w-[100px] mobile:h-[120px]" style="background: {windowState.isMobile || windowState.isTablet ? `url('/images/careers/${build.careerId}/portrait-wide.png') center right / contain no-repeat, url('/images/backgrounds/background29.png')` : `url('/images/careers/${build.careerId}/portrait.png') center / contain no-repeat`}"></div>
-		<div class="build-description-container">
+		
+		<CareerBuildPortrait build={build} class="justify-self-end mr-[10px]"></CareerBuildPortrait>
+		<div class="build-description-container ml-[15px]">
 			<p class="build-name header-underline">{build.name}</p>
-			<p class="build-hero">{build.career.name}</p>
-			<BuildCreationInfo {build}></BuildCreationInfo>
+			<div class="flex gap-1"><p class="build-hero">{build.career.name}</p>
+				<BuildCreationInfo {build}></BuildCreationInfo>
+			</div>
 		</div>
-		<div class="pointer-events-none z-[1] build-rating pr-[10px]">
+		<div class="pointer-events-none z-[1] build-rating mt-[10px]">
 			<BuildRating {build}></BuildRating>
 		</div>
-		<div class="weapons grid">
+		<div class="weapons grid ml-[15px]">
 			{#if build.primaryWeapon.weapon}
 			<div class="weapon-container">
-				<WeaponIcon weapon={build.primaryWeapon.weapon} size="45px" {tooltipPosition}></WeaponIcon>
-				<TraitIcon trait={build.primaryWeapon.trait!} size="45px"></TraitIcon>
+				<ItemIcon itemBuild={build.primaryWeapon} itemType={ItemTypeEnum.Weapon} size="45px"></ItemIcon>
+				 {#if build.primaryWeapon.trait}
+					<TraitIcon trait={build.primaryWeapon.trait} size="45px"></TraitIcon>
+				{/if}
 			</div>
 			{/if}
 			{#if build.secondaryWeapon.weapon}
 			<div class="weapon-container">
-				<WeaponIcon weapon={build.secondaryWeapon.weapon} size="45px" {tooltipPosition}></WeaponIcon>            
-				<TraitIcon trait={build.secondaryWeapon.trait!} size="45px"></TraitIcon>
+				<ItemIcon itemBuild={build.secondaryWeapon} itemType={ItemTypeEnum.Weapon} size="45px"></ItemIcon>
+				 {#if build.secondaryWeapon.trait}
+					<TraitIcon trait={build.secondaryWeapon.trait} size="45px"></TraitIcon>
+				{/if}
 			</div>
 			{/if}
 		</div>
-		<div class="talents grid">
-			{#each selectedTalents as talent}
-			<div class="talent-icon-container" style="--overlay: {talent?.talentNumber ? talent.talentNumber % 3 === 0  ? `'3'` : `'${talent.talentNumber % 3}'` : '-'}">
+		<div class="talents grid ml-[15px]">
+			{#each selectedTalents as talent, index}
+			{#if build.level && build.level >= (index + 1) * 5}
+			<div class="talent-icon-container" style="--overlay: {talent?.talentNumber ? talent.talentNumber % 3 === 0  ? `'3'` : `'${talent.talentNumber % 3}'` : `'0'`}">
 				<CareerTalentIcon talentNumber={talent?.talentNumber ?? 0} careerId={build.careerId} size="45px"></CareerTalentIcon>
 			</div>
+			{/if}
 			{/each}
 		</div>
 		<div class="traits grid">
-			<div>
-			<TraitIcon trait={build.necklace.trait!} size="45px"></TraitIcon>
-		</div>
-		<div>
-			<TraitIcon trait={build.charm.trait!} size="45px"></TraitIcon>
-		</div>
-		<div>
-			<TraitIcon trait={build.trinket.trait!} size="45px"></TraitIcon>
-		</div>
+			<div class="flex flex-col gap-1">
+				<ItemIcon itemBuild={build.necklace} itemType={ItemTypeEnum.Necklace} size="45px"></ItemIcon>
+				<TraitIcon trait={build.necklace.trait!} size="45px"></TraitIcon>
+			</div>
+			<div class="flex flex-col gap-1">
+				<ItemIcon itemBuild={build.charm} itemType={ItemTypeEnum.Charm} size="45px"></ItemIcon>
+				<TraitIcon trait={build.charm.trait!} size="45px"></TraitIcon>
+			</div>
+			<div class="flex flex-col gap-1">
+				<ItemIcon itemBuild={build.trinket} itemType={ItemTypeEnum.Trinket} size="45px"></ItemIcon>
+				<TraitIcon trait={build.trinket.trait!} size="45px"></TraitIcon>
+			</div>
 		</div>
 		<div class="build-footer pt-[5px] !z-0 pr-[10px] mr-[2px]">
 			<p class="roles">{build.roles?.map((role) => { return role.name; }).join(' / ')}</p>
@@ -82,9 +94,9 @@
 
 <style>
 	.weapon-container {
-		display: grid;
-		grid-template-areas: "itemIcon traitIcon";
-		grid-column-gap: 5px;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
 	}
 	.career-portrait {
 		width: 100px;
@@ -98,33 +110,17 @@
 		margin-right: 5px;
 	}
 
-	.build-list-item[data-compact="true"] {
-        grid-template-areas:
-			"buildDescription buildDescription buildDescription buildRating"
-			"buildTalents buildTalents buildTalents empty2"
-			"buildWeapons buildWeapons buildTraits empty2"
-			"buildFooter buildFooter buildFooter buildFooter";
-        grid-template-columns: auto auto 1fr;
-		grid-template-rows: auto 45px 45px 40px;
-        padding: 0 0 0 15px;
-	}
-	
-
-	.build-list-item[data-compact="true"]  .career-portrait {
-		display: none;
-	}
-
 	.build-list-item {
 		display: grid;
-		grid-template-columns: auto auto auto 1fr auto;
+		grid-template-columns: 110px auto auto 1fr auto;
 		position: relative;
-		grid-template-rows: auto 45px 45px 40px;
+		grid-template-rows: auto 45px 100px 40px;
 		grid-row-gap: 5px;
 		grid-template-areas:
-			"heroIcon buildDescription buildDescription buildDescription buildRating"
-			"heroIcon buildTalents buildTalents buildTalents empty2"
-			"heroIcon buildWeapons buildWeapons buildTraits empty2"
-			"heroIcon buildFooter buildFooter buildFooter buildFooter";
+			"buildDescription buildDescription buildDescription buildRating"
+			"buildTalents buildTalents buildTalents careerPortrait"
+			"buildWeapons buildTraits buildTraits careerPortrait"
+			"buildFooter buildFooter buildFooter buildFooter";
 		text-transform: uppercase;
 		cursor: pointer;
 		grid-column-gap: 5px;
@@ -191,8 +187,7 @@
 	}
 	.weapons {
 		grid-area: buildWeapons;
-		grid-auto-flow: column;
-		grid-auto-columns: min-content;
+		grid-template-columns: repeat(2, 45px);
 		grid-column-gap: 5px;
 	}
 	.traits {
@@ -210,10 +205,6 @@
 		font-size: 0.8em;
 		justify-content: right;
 		padding-bottom: 5px;
-	}
-	.build-hero {
-		font-size: 0.8em;
-		align-self: center;
 	}
 	.build-footer .patch-number {
 		justify-self: right;
@@ -455,7 +446,7 @@
 	}
 	.build-rating {
 		grid-area: buildRating;
-		padding-top: 10px;
+		justify-self: end;
 	}
 	.build-list-item .rating-icon {
 		height: 50px;
@@ -519,14 +510,14 @@
 	@media (max-width: 768px) {
     .build-list-item {
         grid-template-areas:
-            "heroIcon heroIcon"
-            "buildDescription buildRating"
-            "buildTalents buildTalents"
-            "buildWeapons buildWeapons"
-            "buildTraits buildTraits"
-            "buildFooter buildFooter" !important;
-        grid-template-columns: 1fr auto !important;
-        grid-template-rows: auto auto auto auto auto 40px !important;
+            "careerPortrait careerPortrait careerPortrait"
+            "buildDescription buildDescription buildRating"
+            "buildTalents buildTalents buildTalents"
+            "buildWeapons buildTraits buildTraits"
+            "buildFooter buildFooter buildFooter" !important;
+        grid-template-columns: auto 1fr auto !important;
+        grid-template-rows: auto auto auto auto 40px !important;
+		
         padding: 15px 0 0 15px;
     }
     .build-list-item .build-creation-info {

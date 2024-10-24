@@ -1,9 +1,11 @@
 <script lang="ts">
 	import type { IWeapon } from "$lib/entities/Weapon";
+	import type { ItemRarityEnum } from "$lib/enums/ItemRarityEnum";
 	import Skeleton from "../ui/skeleton/skeleton.svelte";
 
 	type Props = {
 		weapon: IWeapon;
+		rarity?: ItemRarityEnum;
 		class?: string;
 		size?: string;
 		tooltipPosition?: {
@@ -12,7 +14,7 @@
 		};
 	};
 
-	let { weapon, class: CLASS = "", size = "62px", tooltipPosition: position = { x: "left", y: "center" } }: Props = $props();
+	let { weapon, rarity, class: CLASS = "", size = "62px", tooltipPosition: position = { x: "left", y: "center" } }: Props = $props();
 	let translateX = $derived(
 		position.x === "center" ? "translateX(-50%)" : position.x === "right" ? "translateX(-100%)" : "translateX(0%)"
 	);
@@ -26,7 +28,7 @@
 	<div
 		class="weapon-icon border-04 {CLASS}"
 		style="--size: {size}; background: url('/images/weapons/{weapon.codename}.png') no-repeat center / cover, 
-                        url('/images/backgrounds/item-red.png') no-repeat center / cover;"
+                        url('/images/backgrounds/item-{rarity?.toLowerCase() ?? 'red'}.png') no-repeat center / cover;"
 	>
 		<div
 			class="tooltip border-35 max-w-[200px] mobile:max-w-[300px]"
@@ -34,11 +36,9 @@
 		>
 			<span class="name header-underline">{weapon.name}</span>
 			<span class="description">
-				{#if weapon && weapon.tooltips}
-					{#each weapon.tooltips as tooltip}
-						{tooltip.name}<br />
-					{/each}
-				{/if}
+				{#each weapon.tooltip?.split(",") ?? [] as tooltip}
+					{tooltip}<br />
+				{/each}
 			</span>
 		</div>
 	</div>

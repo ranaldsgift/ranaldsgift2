@@ -10,6 +10,7 @@
 	import Seo from "$lib/components/SEO.svelte";
 	import { ROOT_API_URL } from "$lib/data/constants/constants.js";
 	import { getUserState } from "$lib/state/UserState.svelte.js";
+	import type { BuildTableFilter } from "$lib/types/BuildTableFilters.js";
 	import { type SubmitFunction } from "@sveltejs/kit";
 	import { toast } from "svelte-sonner";
 
@@ -40,6 +41,24 @@
 			}
 		};
 	};
+
+	let userBuildsFilter: BuildTableFilter = $state({
+		userId: data.userData.id,
+		limit: 10,
+		offset: 0,
+	});
+
+	let ratedBuildsFilter: BuildTableFilter = $state({
+		ratedByUserId: data.userData.id,
+		limit: 4,
+		offset: 0,
+	});
+
+	let favoriteBuildsFilter: BuildTableFilter = $state({
+		favoriteByUserId: data.userData.id,
+		limit: 4,
+		offset: 0,
+	});
 </script>
 
 <Seo title={pageTitle} description={pageDescription} />
@@ -86,26 +105,22 @@
 		</div>
 		{#if data.sessionUser?.id === data.userData.id}
 			{#if data.userData.favoriteBuildsCount > 0}
-				<BuildTable
-					class="top-left-shadow"
-					title="My Favorite Builds"
-					filter={{ favoriteByUserId: data.userData.id, limit: 4, offset: 0 }}
-				></BuildTable>
+				<BuildTable class="top-left-shadow" filter={favoriteBuildsFilter}>
+					{#snippet header()}
+						<a href="/builds?favoriteByUserId={data.userData.id}">My Favorite Builds</a>
+					{/snippet}
+				</BuildTable>
 			{/if}
 			{#if data.userData.ratedBuildsCount > 0}
-				<BuildTable
-					class="top-left-shadow"
-					title="My Rated Builds"
-					filter={{ ratedByUserId: data.userData.id, limit: 4, offset: 0 }}
-				></BuildTable>
+				<BuildTable class="top-left-shadow" filter={ratedBuildsFilter}>
+					{#snippet header()}
+						<a href="/builds?ratedByUserId={data.userData.id}">My Rated Builds</a>
+					{/snippet}
+				</BuildTable>
 			{/if}
 		{/if}
 		{#if data.userData.authoredBuildsCount > 0}
-			<BuildTable
-				class="top-left-shadow"
-				title={data.userData.name + "'s Builds"}
-				filter={{ userId: data.userData.id, limit: 10, offset: 0 }}
-			></BuildTable>
+			<BuildTable class="top-left-shadow" title={data.userData.name + "'s Builds"} filter={userBuildsFilter}></BuildTable>
 		{:else if data.userData.id === data.sessionUser?.id}
 			<ContentContainer>
 				<h1>You will see a list of your builds here once you <a href="/build/create">created</a> one.</h1>

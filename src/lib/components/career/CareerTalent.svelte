@@ -10,6 +10,7 @@
 		transparent?: boolean;
 		showDescription?: boolean;
 		tooltipPosition?: "top" | "bottom";
+		class?: string;
 	};
 
 	let {
@@ -20,12 +21,13 @@
 		transparent = false,
 		showDescription = false,
 		tooltipPosition = "bottom",
+		class: className,
 	}: Props = $props();
 </script>
 
 {#if talent}
 	<div
-		class="talent-container {state}"
+		class="talent-container {state} {className}"
 		data-career={careerId}
 		data-show-description={showDescription}
 		data-tooltip-position={tooltipPosition}
@@ -53,12 +55,6 @@
 <style>
 	.talent-container:hover .talent-name {
 		background: linear-gradient(-16deg, rgb(79 79 79 / 29%) 30%, transparent);
-	}
-	.talent-icon-wrapper {
-		box-shadow:
-			inset 0 10px 10px -10px #fff,
-			0 -1px 0 0 #564640,
-			2px 4px 5px 1px #000;
 	}
 	@media (min-width: 460px) {
 		.talent-container[data-show-description="false"] .talent-description {

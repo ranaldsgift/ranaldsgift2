@@ -2,6 +2,7 @@ import type { ICareerBuild } from "$lib/entities/builds/CareerBuild.js";
 import BuildHelper from "$lib/helpers/BuildHelper.js";
 import { CareerCache, PropertiesCache, TraitsCache } from "$lib/cache/RedisCache.js";
 import type { HeroesPageViewModel } from "$lib/viewmodels/HeroesPageViewModel.js";
+import { ItemRarityEnum } from "$lib/enums/ItemRarityEnum.js";
 
 export const load = async (event) => {
 	let careers = await CareerCache.getAll();
@@ -48,28 +49,37 @@ export const load = async (event) => {
 			property1: careers[0].primaryWeapons[0].properties[0],
 			property2: careers[0].primaryWeapons[0].properties[1],
 			trait: careers[0].primaryWeapons[0].traits[0],
+			powerLevel: 300,
+			rarity: ItemRarityEnum.Red,
 		},
 		secondaryWeapon: {
 			weapon: careers[0].secondaryWeapons[0],
 			property1: careers[0].secondaryWeapons[0].properties[0],
 			property2: careers[0].secondaryWeapons[0].properties[1],
 			trait: careers[0].secondaryWeapons[0].traits[0],
+			powerLevel: 300,
+			rarity: ItemRarityEnum.Red,
 		},
-		powerLevel: 300,
 		necklace: {
 			trait: necklaceTraits[0],
 			property1: necklaceProperties[0],
 			property2: necklaceProperties[1],
+			powerLevel: 300,
+			rarity: ItemRarityEnum.Red,
 		},
 		charm: {
 			trait: charmTraits[0],
 			property1: charmProperties[0],
 			property2: charmProperties[1],
+			powerLevel: 300,
+			rarity: ItemRarityEnum.Red,
 		},
 		trinket: {
 			trait: trinketTraits[0],
 			property1: trinketProperties[1],
 			property2: trinketProperties[2],
+			powerLevel: 300,
+			rarity: ItemRarityEnum.Red,
 		},
 	};
 

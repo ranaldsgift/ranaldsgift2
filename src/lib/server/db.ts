@@ -17,8 +17,7 @@ import { Trait } from "$lib/entities/Trait";
 import { TwitchSetting } from "$lib/entities/TwitchSetting";
 import { User } from "$lib/entities/User";
 import { UserRole } from "$lib/entities/UserRole";
-import { Weapon, WeaponTooltip } from "$lib/entities/Weapon";
-import { WeaponSkin } from "$lib/entities/WeaponSkin";
+import { Weapon } from "$lib/entities/Weapon";
 import { CareerBuild } from "$lib/entities/builds/CareerBuild";
 import { CharmBuild } from "$lib/entities/builds/CharmBuild";
 import { NecklaceBuild } from "$lib/entities/builds/NecklaceBuild";
@@ -33,6 +32,7 @@ import { DataSource } from "typeorm";
 import { DifficultyModifier } from "$lib/entities/DifficultyModifier";
 import { Event } from "$lib/entities/Event";
 import { CareerBuildCareers } from "$lib/entities/views/CareerBuildCareers";
+import { Illusion } from "$lib/entities/ItemIllusion";
 
 let PRIVATE_SUPABASE_HOST = env.PRIVATE_SUPABASE_HOST;
 let PRIVATE_SUPABASE_PASSWORD = env.PRIVATE_SUPABASE_PASSWORD;
@@ -73,8 +73,7 @@ class TypeOrm {
 					CareerSkill,
 					CareerTalent,
 					Weapon,
-					WeaponTooltip,
-					WeaponSkin,
+					Illusion,
 					Property,
 					Trait,
 					BuildRole,

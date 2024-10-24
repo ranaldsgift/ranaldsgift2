@@ -41,7 +41,9 @@ import PropertyCategoryEnum from "$lib/enums/PropertyCategoryEnum";
 import TraitCategoryEnum from "$lib/enums/TraitCategoryEnum";
 import { plainToInstance } from "class-transformer";
 import { DifficultyModifier } from "$lib/entities/DifficultyModifier";
-import { CareerCache } from "$lib/cache/RedisCache";
+import { CareerCache, IllusionsCache } from "$lib/cache/RedisCache";
+import { Illusion } from "$lib/entities/ItemIllusion";
+import { ItemTypeEnum } from "$lib/enums/ItemTypeEnum";
 
 // Use this flag to import data from Firebase into Supabase
 let IMPORT_FIREBASE_DATA = true;
@@ -102,6 +104,12 @@ export class DatabaseHelper {
 			LogHelper.error(`Error initializing database!`);
 			console.log(error);
 		}
+	}
+
+	static async update() {
+		LogHelper.info("Updating database...");
+		await this.updateWeaponTooltips();
+		await this.createIllusions();
 	}
 
 	/**
@@ -229,7 +237,9 @@ export class DatabaseHelper {
 				}
 			}
 
-			weapon.tooltips = [];
+			weapon.tooltip = oldWeapon.description;
+
+			/* weapon.tooltips = [];
 
 			for (var i = 0; i < oldWeapon.description.split(", ").length; i++) {
 				var tooltip = await WeaponTooltip.findOne({ where: { codename: oldWeapon.description.split(", ")[i] } });
@@ -241,7 +251,7 @@ export class DatabaseHelper {
 					await tooltip.save();
 				}
 				weapon.tooltips.push(tooltip);
-			}
+			} */
 
 			weapon.dodgeDistance = parseFloat(oldWeapon.dodgeDistance);
 			weapon.dodgeSpeed = parseFloat(oldWeapon.dodgeSpeed);
@@ -293,6 +303,98 @@ export class DatabaseHelper {
 		}
 
 		LogHelper.info("Created weapons successfully!");
+	}
+
+	/**
+	 * Updates the tooltip for each weapon
+	 */
+	private static async updateWeaponTooltips() {
+		LogHelper.info("Updating weapon tooltips...");
+		let legacyWeapons = LegacyDataHelper.getWeapons();
+		legacyWeapons = legacyWeapons.sort((a: any, b: any) => a.id - b.id);
+
+		for (var oldWeapon of legacyWeapons) {
+			var weapon = await Weapon.findOne({
+				where: { codename: oldWeapon.codeName },
+			});
+
+			if (!weapon) {
+				LogHelper.info(`Weapon with codename ${oldWeapon.codeName} could not be found. Skipping...`);
+				continue;
+			}
+
+			weapon.tooltip = oldWeapon.tooltipLocalized;
+			await weapon.save({ data: { authorizationBypassKey: env.PRIVATE_DATABASE_AUTHORIZATION_BYPASS_KEY } });
+		}
+
+		LogHelper.info("Updated weapon tooltips successfully!");
+	}
+
+	/**
+	 * Creates weapon illusions from a list of file paths
+	 */
+	private static async createIllusions() {
+		LogHelper.info("Creating weapon illusions...");
+
+		const weapons = await Weapon.find();
+
+		let illusionFiles = import.meta.glob(`/static/images/illusions/weapons/**/*.png`);
+
+		for (var weapon of weapons) {
+			// Get all the weapon illusion .png files from /images/illusions/weapons/{weapon.codename}
+
+			//from all illusion files check for ones with a path containing the codename
+			const weaponIllusions = Object.keys(illusionFiles).filter((path) => path.includes(weapon.codename));
+			for (var weaponIllusion of weaponIllusions) {
+				let filename = weaponIllusion.split("/").pop() || "";
+				let extension = filename.split(".").pop();
+
+				let illusion = await Illusion.findOne({ where: { image: filename } });
+
+				if (illusion) {
+					LogHelper.info(
+						`Illusion with name ${filename.replace(`.${extension}`, "")} already exists in the database. Skipping...`
+					);
+					continue;
+				}
+
+				illusion = new Illusion();
+				illusion.name = filename.replace(`.${extension}`, "");
+				illusion.image = filename;
+				illusion.weapon = weapon;
+				illusion.itemType = ItemTypeEnum.Weapon;
+				await illusion.save({ data: { authorizationBypassKey: env.PRIVATE_DATABASE_AUTHORIZATION_BYPASS_KEY } });
+			}
+		}
+
+		const necklaceFiles = import.meta.glob(`/static/images/illusions/necklace/*.png`);
+		const charmFiles = import.meta.glob(`/static/images/illusions/charm/*.png`);
+		const trinketFiles = import.meta.glob(`/static/images/illusions/trinket/*.png`);
+
+		this.createEquipmentIllusions(Object.keys(necklaceFiles), ItemTypeEnum.Necklace);
+		this.createEquipmentIllusions(Object.keys(charmFiles), ItemTypeEnum.Charm);
+		this.createEquipmentIllusions(Object.keys(trinketFiles), ItemTypeEnum.Trinket);
+
+		LogHelper.info("Created weapon illusions successfully!");
+	}
+
+	/**
+	 * Creates equipment illusions from a list of file paths
+	 * @param illusionFiles - The list of file paths to create illusions from
+	 * @param itemType - The type of item to create illusions for
+	 */
+	private static async createEquipmentIllusions(illusionFiles: string[], itemType: ItemTypeEnum) {
+		LogHelper.info(`Creating equipment illusions...`);
+
+		for (var illusionFile of illusionFiles) {
+			const illusion = new Illusion();
+			let filename = illusionFile.split("/").pop() || "";
+			let extension = filename.split(".").pop();
+			illusion.name = filename.replace(`.${extension}`, "");
+			illusion.image = filename;
+			illusion.itemType = itemType;
+			await illusion.save();
+		}
 	}
 
 	/**
@@ -821,7 +923,6 @@ export class DatabaseHelper {
 				continue;
 			}
 			primaryWeaponBuild.trait = primaryWeaponTrait;
-			primaryWeaponBuild.user = user;
 			build.primaryWeapon = primaryWeaponBuild;
 
 			// Setting Secondary Weapon
@@ -881,7 +982,6 @@ export class DatabaseHelper {
 				continue;
 			}
 			secondaryWeaponBuild.trait = secondaryWeaponTrait;
-			secondaryWeaponBuild.user = user;
 			build.secondaryWeapon = secondaryWeaponBuild;
 
 			// Setting Charm
@@ -934,7 +1034,6 @@ export class DatabaseHelper {
 				continue;
 			}
 			charm.trait = charmTrait;
-			charm.user = user;
 			build.charm = charm;
 
 			// Setting Necklace
@@ -987,7 +1086,6 @@ export class DatabaseHelper {
 				continue;
 			}
 			necklace.trait = necklaceTrait;
-			necklace.user = user;
 			build.necklace = necklace;
 
 			// Setting Trinket
@@ -1040,7 +1138,6 @@ export class DatabaseHelper {
 				continue;
 			}
 			trinket.trait = trinketTrait;
-			trinket.user = user;
 			build.trinket = trinket;
 
 			// Setting Talents
@@ -1191,6 +1288,7 @@ export class DatabaseHelper {
 
 			// Setting bot
 			build.isBot = DatabaseHelper.isBotBuild(firebaseBuild);
+			build.level = 35;
 
 			// Set date modified and created
 			build.dateModified = new Date(firebaseBuild.dateModified.value._seconds * 1000);

@@ -7,7 +7,7 @@
 	let { children } = $props();
 </script>
 
-<Toaster></Toaster>
+<Toaster position="bottom-center"></Toaster>
 
 <TopNavigation></TopNavigation>
 

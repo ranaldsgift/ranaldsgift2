@@ -22,7 +22,9 @@ declare global {
 			sessionUserProfile: string | null;
 			events: IEvent[];
 		}
-		// interface PageState {}
+		interface PageState {
+			search: string;
+		}
 		// interface Platform {}
 		// interface Error {}
 		// interface Platform {}

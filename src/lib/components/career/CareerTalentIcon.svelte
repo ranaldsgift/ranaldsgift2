@@ -9,12 +9,16 @@
 	const { careerId, talentNumber, size, class: CLASS }: Props = $props();
 </script>
 
-<span
-	class="talent-icon block {CLASS}"
-	style="--size: {size}; background: url('/images/careers/{careerId}/talents/talent-{talentNumber < 10
-		? '0'
-		: ''}{talentNumber}.png') no-repeat center / contain"
-></span>
+{#if talentNumber === 0}
+	<span class="talent-icon block {CLASS}" style="--size: {size}; background: black;"></span>
+{:else}
+	<span
+		class="talent-icon block {CLASS}"
+		style="--size: {size}; background: url('/images/careers/{careerId}/talents/talent-{talentNumber < 10
+			? '0'
+			: ''}{talentNumber}.png') no-repeat center / contain"
+	></span>
+{/if}
 
 <style>
 	.talent-icon {

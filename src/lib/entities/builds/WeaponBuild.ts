@@ -3,9 +3,10 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Property, type IProperty } from "../Property";
 import { Trait, type ITrait } from "../Trait";
 import { ItemRarityEnum } from "$lib/enums/ItemRarityEnum";
-import { WeaponSkin, type IWeaponSkin } from "../WeaponSkin";
 import { Weapon, type IWeapon } from "../Weapon";
 import { TimestampedEntity } from "../TimestampedEntity";
+import type { IItemBuild } from "./CareerBuild";
+import { Illusion, type IIllusion } from "../ItemIllusion";
 
 @Entity()
 export class WeaponBuild extends TimestampedEntity<IWeaponBuild> {
@@ -15,7 +16,7 @@ export class WeaponBuild extends TimestampedEntity<IWeaponBuild> {
 	@Column({
 		type: "enum",
 		enum: ItemRarityEnum,
-		default: ItemRarityEnum.Orange,
+		default: ItemRarityEnum.Red,
 	})
 	rarity!: ItemRarityEnum;
 
@@ -47,12 +48,12 @@ export class WeaponBuild extends TimestampedEntity<IWeaponBuild> {
 	@ManyToOne(() => Trait, { eager: true, nullable: true })
 	trait!: Trait;
 
-	@Type(() => WeaponSkin)
-	@ManyToOne(() => WeaponSkin, { nullable: true })
-	skin!: WeaponSkin;
+	@Type(() => Illusion)
+	@ManyToOne(() => Illusion, { nullable: true })
+	illusion!: Illusion;
 }
 
-export interface IWeaponBuild {
+export interface IWeaponBuild extends IItemBuild {
 	id?: number;
 	rarity?: ItemRarityEnum;
 	weaponId?: number;
@@ -63,5 +64,5 @@ export interface IWeaponBuild {
 	property2?: IProperty;
 	property2Value?: number;
 	trait?: ITrait;
-	skin?: IWeaponSkin;
+	illusion?: IIllusion;
 }

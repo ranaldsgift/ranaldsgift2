@@ -12,6 +12,8 @@
 	import { page } from "$app/stores";
 	import Seo from "$lib/components/SEO.svelte";
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
+	import { browser } from "$app/environment";
+	import { tick } from "svelte";
 
 	const { data } = $props();
 	const { viewModel } = data;
@@ -37,8 +39,10 @@
 	});
 
 	$effect(() => {
-		if ($page.url.search !== searchParams) {
-			goto(`${searchParams}`, { replaceState: true, keepFocus: true, noScroll: true });
+		if ($page.state.search !== searchParams && browser) {
+			tick().then(() => {
+				replaceState(`${searchParams}`, { search: searchParams });
+			});
 		}
 	});
 

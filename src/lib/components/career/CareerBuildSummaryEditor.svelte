@@ -1,16 +1,26 @@
 <script lang="ts">
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 	import type { ICareer } from "$lib/entities/career/Career";
-	import CareerBuildPortrait from "./CareerBuildPortrait.svelte";
+	import { getWindowState } from "$lib/state/WindowState.svelte";
 	import CooldownBar from "./CooldownBar.svelte";
 	import HealthBar from "./HealthBar.svelte";
+	import { NUMBER_OF_FRAMES } from "$lib/data/constants/constants";
+	import CareerBuildSummaryDialog from "./CareerBuildSummaryDialog.svelte";
+	import CareerBuildPortrait from "./CareerBuildPortrait.svelte";
 
 	type Props = {
 		build: ICareerBuild;
 		career: ICareer;
 	};
 
-	const { build, career }: Props = $props();
+	const { build = $bindable(), career }: Props = $props();
+
+	const windowState = getWindowState();
+	let dialogOpen = $state(false);
+	let frames = $state<{ id: number; image: string }[]>([]);
+	let frameUrl = $derived(build.portraitFrameId ? `url('/images/frames/frame-${build.portraitFrameId}.png')` : "");
+
+	$inspect(frameUrl);
 
 	let health = $derived.by(() => {
 		if (!build.necklace || (build.necklace.property1?.name !== "Health" && build.necklace.property2?.name !== "Health")) {
@@ -62,6 +72,19 @@
 
 		return build.career.skill.cooldown * (1 - cooldownModifier);
 	});
+
+	const loadMoreFrames = () => {
+		let frameCount = frames.length;
+		let newFrameCount = frameCount + 11;
+		if (newFrameCount > NUMBER_OF_FRAMES) {
+			newFrameCount = NUMBER_OF_FRAMES;
+		}
+		for (let i = frameCount + 1; i < newFrameCount; i++) {
+			frames.push({ id: i, image: `url('/images/frames/frame-${i}.png')` });
+		}
+	};
+
+	loadMoreFrames();
 </script>
 
 <div class="career-summary-container">
@@ -69,9 +92,9 @@
 		<p class="career-name-header header-gradient-underline">{career.name}</p>
 		<p class="career-name">{career.hero.name}</p>
 	</div>
-	<div class="career-portrait-container">
+	<button class="portrait-container" onclick={() => (dialogOpen = true)}>
 		<CareerBuildPortrait {build} size="160px"></CareerBuildPortrait>
-	</div>
+	</button>
 	<div class="career-attributes max-w-[400px] mobile:block hidden">
 		<div class="health-container">
 			<p>Health</p>
@@ -84,6 +107,32 @@
 	</div>
 </div>
 
+{#if dialogOpen}
+	<CareerBuildSummaryDialog {build} bind:open={dialogOpen}></CareerBuildSummaryDialog>
+{/if}
+
+<!-- <Dialog.Root bind:open={dialogOpen}>
+	<Dialog.Content>
+		<Dialog.Header>
+			<Dialog.Title>Portrait Frame</Dialog.Title>
+			<Dialog.Description>
+				<p>Select a portrait frame for your build.</p>
+			</Dialog.Description>
+		</Dialog.Header>
+		<div class="max-h-[300px] overflow-y-auto">
+			{#each frames as frame}
+				<button
+					class="size-[80px] {frame.id === build.portraitFrameId ? 'border-30' : ''}"
+					style="background: {frame.image} center / contain no-repeat; --frameId: {frame.id}"
+					onclick={() => (build.portraitFrameId = frame.id)}
+				></button>
+			{/each}
+			<button onclick={loadMoreFrames}>Load More</button>
+		</div>
+		<Dialog.Close class="flex justify-center relative mb-[-45px]"><div class="button-02 max-w-[100px]">Done</div></Dialog.Close>
+	</Dialog.Content>
+</Dialog.Root> -->
+
 <style>
 	.career-name-header {
 		color: #c15b24;
@@ -94,8 +143,26 @@
 		display: flex;
 		flex-direction: column;
 	}
-	.career-portrait-container {
+	.portrait-container {
 		grid-area: careerPortrait;
+	}
+	.career-portrait {
+		height: 74px;
+		background:
+			var(--background) center / contain no-repeat,
+			url("/images/backgrounds/background29.png") top center / cover no-repeat;
+		width: 100%;
+		grid-area: careerPortrait;
+		position: relative;
+	}
+	.career-portrait::after {
+		position: absolute;
+		content: "";
+		top: -40px;
+		left: -15px;
+		width: calc(100% + 30px);
+		height: calc(100% + 50px);
+		background: var(--frameUrl) center bottom / auto 100% no-repeat;
 	}
 
 	.career-name-container {
@@ -129,7 +196,11 @@
 			height: 175px;
 			background-size: contain;
 			border: none;
-			background: var(--background) center right / contain no-repeat;
+			background: var(--background) center / contain no-repeat;
+		}
+		.career-portrait[data-frame] {
+			height: 145px;
+			top: 10px;
 		}
 	}
 </style>
