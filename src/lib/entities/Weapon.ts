@@ -106,27 +106,27 @@ export class WeaponTooltip extends BaseEntity<IWeaponTooltip> {
 }
 
 export interface IWeapon {
-	id: number;
-	name: string;
-	codename: string;
-	description: string;
-	dodgeDistance: number | null;
-	dodgeSpeed: number | null;
-	dodgeCount: number | null;
-	stamina: number | null;
-	blockInnerCost: number | null;
-	blockOuterCost: number | null;
-	blockAngle: number | null;
-	rightClickMovementModifier: number | null;
+	id?: number;
+	name?: string;
+	codename?: string;
+	description?: string;
+	dodgeDistance?: number;
+	dodgeSpeed?: number;
+	dodgeCount?: number;
+	stamina?: number;
+	blockInnerCost?: number;
+	blockOuterCost?: number;
+	blockAngle?: number;
+	rightClickMovementModifier?: number;
 	canWieldPrimary?: ICareer[];
 	canWieldSecondary?: ICareer[];
 	traitCategory?: TraitCategoryEnum;
 	propertyCategory?: PropertyCategoryEnum;
-	properties: IProperty[];
-	traits: ITrait[];
+	properties?: IProperty[];
+	traits?: ITrait[];
 	tooltip?: string;
 	/* tooltips: IWeaponTooltip[]; */
-	illusions: IIllusion[];
+	illusions?: IIllusion[];
 }
 
 export interface IWeaponTooltip {

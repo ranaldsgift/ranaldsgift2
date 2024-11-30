@@ -29,6 +29,7 @@
 		}
 
 		build.primaryWeapon.weaponId = item.id;
+		build.primaryWeapon.illusion = undefined;
 	};
 
 	const secondaryWeaponSelectHandler = (item: IWeapon) => {
@@ -43,6 +44,7 @@
 		}
 
 		build.secondaryWeapon.weaponId = item.id;
+		build.secondaryWeapon.illusion = undefined;
 	};
 
 	let necklaceProperties: IProperty[] = $state([]);
@@ -136,7 +138,8 @@
 		<ItemSelect
 			title="primary"
 			bind:selectedItem={build.primaryWeapon.weapon}
-			items={build.career.primaryWeapons}
+			bind:itemBuild={build.primaryWeapon}
+			items={build.career?.primaryWeapons ?? []}
 			handler={primaryWeaponSelectHandler}
 		></ItemSelect>
 		<InventoryItemDisplay
@@ -150,7 +153,8 @@
 		<ItemSelect
 			title="secondary"
 			bind:selectedItem={build.secondaryWeapon.weapon}
-			items={build.career.secondaryWeapons}
+			bind:itemBuild={build.secondaryWeapon}
+			items={build.career?.secondaryWeapons ?? []}
 			handler={secondaryWeaponSelectHandler}
 		></ItemSelect>
 		<InventoryItemDisplay

@@ -62,13 +62,25 @@
 				--fontSize: 10px;
 				--talent-tier-level: '{(index + 1) * 5}';"
 					></span>
-					{#if talent}
+					{#if talent && build.career}
 						<CareerTalent state="selected" careerId={build.career.id} {talent} />
 					{:else}
 						<div class="talent-container">
 							<p class="talent-name">No Talent Selected</p>
 						</div>
 					{/if}
+				</div>
+			{:else}
+				<div class="talent-container-wrapper">
+					<span
+						class="talent-lock-icon justify-self-center"
+						style="--size: 40px;
+				--fontSize: 10px;
+				--talent-tier-level: '{(index + 1) * 5}';"
+					></span>
+					<div class="talent-container">
+						<p class="talent-name">Unlocked at Level {(index + 1) * 5}</p>
+					</div>
 				</div>
 			{/if}
 		{/each}
@@ -91,7 +103,7 @@
 	@media (min-width: 768px) {
 		.talents-container {
 			grid-template-columns: auto auto;
-			grid-template-rows: repeat(3, 1fr);
+			grid-template-rows: repeat(3, auto);
 			grid-auto-flow: column;
 		}
 	}

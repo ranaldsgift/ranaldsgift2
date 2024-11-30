@@ -16,6 +16,7 @@ import { Trait, type ITrait } from "$lib/entities/Trait";
 import { Property, type IProperty } from "$lib/entities/Property";
 import { Patch, type IPatch } from "$lib/entities/Patch";
 import { Illusion, type IIllusion } from "$lib/entities/ItemIllusion";
+import { Hero, type IHero } from "$lib/entities/Hero";
 
 class RedisCache<TEntity extends ObjectLiteral, TInterface extends IEntity> {
 	private instance: StaticDataCache<TInterface> | null = null;
@@ -139,3 +140,4 @@ export const CareerCache = new RedisCache<Career, ICareer>(Career, "careers", {
 		},
 	},
 });
+export const HeroCache = new RedisCache<Hero, IHero>(Hero, "heroes");

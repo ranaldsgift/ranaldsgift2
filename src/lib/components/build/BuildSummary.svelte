@@ -4,12 +4,14 @@
 	import type { INecklaceBuild } from "$lib/entities/builds/NecklaceBuild";
 	import type { ITrinketBuild } from "$lib/entities/builds/TrinketBuild";
 	import type { IWeaponBuild } from "$lib/entities/builds/WeaponBuild";
+	import type { IProperty } from "$lib/entities/Property";
+	import { ItemRarityEnum } from "$lib/enums/ItemRarityEnum";
 	import { ItemTypeEnum } from "$lib/enums/ItemTypeEnum";
 	import PropertyHelper from "$lib/helpers/PropertyHelper";
-	import { getWindowState } from "$lib/state/WindowState.svelte";
+	import InventoryItemView from "../inventory/InventoryItemView.svelte";
 	import ItemIcon from "../inventory/ItemIcon.svelte";
 	import TraitIcon from "../inventory/TraitIcon.svelte";
-	import WeaponIcon from "../inventory/WeaponIcon.svelte";
+	import Tooltip from "../ui/tooltip/Tooltip.svelte";
 
 	type ItemBuild = IWeaponBuild | INecklaceBuild | ICharmBuild | ITrinketBuild;
 
@@ -21,48 +23,68 @@
 	const { build, class: CLASS }: Props = $props();
 </script>
 
-<div class="build-summary-container grid grid-cols-6 gap-4 {CLASS}">
-	<div class="build-melee-summary tablet:col-span-3 col-span-6">
+<div class="build-summary-container flex flex-wrap gap-5 justify-center {CLASS}">
+	<div class="flex flex-wrap gap-5 justify-center">
 		{@render itemSummary(build.primaryWeapon.weapon?.name || "Primary Weapon", build.primaryWeapon, ItemTypeEnum.Weapon)}
-	</div>
-	<div class="build-range-summary tablet:col-span-3 col-span-6">
 		{@render itemSummary(build.secondaryWeapon.weapon?.name || "Secondary Weapon", build.secondaryWeapon, ItemTypeEnum.Weapon)}
 	</div>
-	<div class="build-jewelry-summary necklace-summary tablet:col-span-2 col-span-6">
+	<div class="flex flex-wrap gap-5 justify-center">
 		{@render itemSummary("Necklace", build.necklace, ItemTypeEnum.Necklace)}
-	</div>
-	<div class="build-jewelry-summary charm-summary tablet:col-span-2 col-span-6">
 		{@render itemSummary("Charm", build.charm, ItemTypeEnum.Charm)}
-	</div>
-	<div class="build-jewelry-summary trinket-summary tablet:col-span-2 col-span-6">
 		{@render itemSummary("Trinket", build.trinket, ItemTypeEnum.Trinket)}
 	</div>
 </div>
 
 {#snippet itemSummary(name: string, item: ItemBuild, itemType: ItemTypeEnum)}
-	<div class="item-summary-header">
-		<p class="item-name">{name}</p>
-		{#if item.trait}
-		<p class="item-trait-name">{item.trait.name}</p>
-		{/if}
-	</div>
-	{#if "weapon" in item && item.weapon}
-		<!-- <WeaponIcon weapon={item.weapon} rarity={item.rarity} size="60px"></WeaponIcon> -->
-		<ItemIcon itemBuild={item} {itemType}></ItemIcon>
-	{:else}
-		<ItemIcon itemBuild={item} {itemType}></ItemIcon>
-	{/if}
-	{#if item.trait}
-	<TraitIcon trait={item.trait}></TraitIcon>
-	{/if}
-	<div class="property-container">
-		{#if item.property1}
-		<li class="item-property-1">{`+ ${item.property1.maximumValue.toFixed(1)}${PropertyHelper.getModifier(item.property1)} ${item.property1.name}`}</li>
-		{/if}
-		{#if item.property2}
-		<li class="item-property-2">{`+ ${item.property2.maximumValue.toFixed(1)}${PropertyHelper.getModifier(item.property2)} ${item.property2.name}`}</li>
-		{/if}
-	</div>
+		<div class="item-summary-container relative mt-10">
+			<div class="h-full">
+				<div class="absolute top-[0px] z-[1] mt-[-40px] left-[50%] translate-x-[-50%]">
+				<Tooltip>
+					<div class="flex items-center justify-center w-full gap-1">
+						<ItemIcon itemBuild={item} {itemType}></ItemIcon>
+						{#if item.trait}
+						<TraitIcon trait={item.trait}></TraitIcon>
+						{/if}	
+					</div>
+					{#snippet content()}
+						<InventoryItemView itemBuild={item} itemType={itemType}></InventoryItemView>
+					{/snippet}
+				</Tooltip>				
+			</div>
+				<div class="item-info-container pt-[1.5rem] pb-[0px] px-[1rem]">
+					{#if item.rarity === ItemRarityEnum.White}
+					<div class="grid min-h-[5rem] items-center">
+						<span class="text-center text-2xl">{item.weapon?.name || itemType.toString()}</span>
+					</div>
+					{/if}
+					{#if item.trait}
+					<div class="header-underline grid">
+						<span class="item-trait-name text-center">{item.trait.name}</span>
+					</div>
+					{/if}
+					{#if item.property1 || item.property2}
+					<div class="grid grid-cols-[min-content_max-content] gap-x-2 items-center justify-self-center">
+						{#if item.property1}
+						{@render itemProperty(item.property1, item.property1Value)}
+						{/if}
+						{#if item.property2}
+						{@render itemProperty(item.property2, item.property2Value)}
+						{/if}
+					</div>
+					{/if}
+				</div>
+			</div>
+		</div>
+{/snippet}
+
+{#snippet itemProperty(property: IProperty, value: number | undefined)}
+		<span class="modifier text-right">
+			{value ? value.toFixed(1) : property.maximumValue?.toFixed(1)}{PropertyHelper.getModifier(property)}
+			{#if value && value !== property.maximumValue}
+			<span class="max-value">({property.maximumValue}{PropertyHelper.getModifier(property)})</span>
+			{/if}
+		</span>
+		<span class="property-name justify-self-start">{property.name}</span>
 {/snippet}
 
 <style>
@@ -82,13 +104,27 @@
 		grid-row-gap: 10px;
 		grid-column-gap: 10px;
 	}
-	.property-container {
+	.item-info-container {
 		grid-area: propertyContainer;
 		align-content: start;
 		display: grid;
 	}
-	.property-container li {
+	.item-property {
 		list-style: none;
+		display: grid;
+		grid-template-columns: min-content 1fr;
+		align-items: center;
+		text-align: center;
+		gap: 0.5rem;
+	}
+	.property-name {
+		color: #79b2f7;
+		font-size: 1.2rem;
+		font-weight: 500;
+	}
+	.modifier {
+		color: #9f9065;
+		font-size: 0.9rem;
 	}
 	.item-summary-header {
 		grid-area: itemSummaryHeader;
@@ -108,19 +144,22 @@
 		background-image: linear-gradient(90deg, #808080b3 10%, #80808000);
 	}
 	.item-trait-name {
-		font-size: 0.8em;
+		font-size: 1.2rem;
 		color: #30e158;
 	}
-	.item-summary-header *, .property-container * {
+	.item-summary-header *, .item-info-container * {
 		position: relative;
 	}
 	.build-summary-container > div {
 		position: relative;
 		box-sizing: border-box;
-		padding: 10px 20px;
-		color: #c8c8c8;
+		flex: auto;
 	}
-	.build-summary-container > div::before {
+	.item-summary-container {
+		//flex: 1;
+		min-width: 170px;
+	}
+	.item-summary-container::before {
 		content: "";
 		position: absolute;
 		top: 0;
@@ -140,7 +179,7 @@
 		color: #c8c8c8;
 	}
 
-	.build-summary-container > div::after {
+	.item-summary-container::after {
 		content: "";
 		position: absolute;
 		top: -2px;
@@ -154,5 +193,9 @@
 		border-image-repeat: repeat;
 		box-sizing: border-box;
 		pointer-events: none;
+	}
+	.max-value {
+		color: #808080;
+		margin-left: 0.25rem;
 	}
 </style>

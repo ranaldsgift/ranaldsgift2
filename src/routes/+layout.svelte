@@ -7,12 +7,14 @@
 	import { afterNavigate, invalidateAll } from "$app/navigation";
 	import { setUserState } from "$lib/state/UserState.svelte.js";
 	import { initializeHeroesPageState } from "$lib/state/HeroesPageState.svelte.js";
-	import { META_IMAGE_URL, ROOT_PAGE_DESCRIPTION, ROOT_PAGE_TITLE } from "$lib/data/constants/constants.js";
 	import { initializeBuildsPageState } from "$lib/state/BuildsPageState.svelte.js";
 	import { initializeBuildEditorPageState } from "$lib/state/BuildEditorPageState.svelte.js";
 	import { initializeBuildCreatorPageState } from "$lib/state/BuildCreatorPageState.svelte.js";
 	import { initializeWindowState } from "$lib/state/WindowState.svelte.js";
 	import { previousPage } from "$lib/stores/PageStores.svelte.js";
+	import { initializeTeamState } from "$lib/state/TeamState.svelte.js";
+	import { initializeAppState } from "$lib/state/AppState.svelte.js";
+	import { initializeVerminDataState } from "$lib/state/VerminDataState.svelte.js";
 
 	let { data, children } = $props();
 
@@ -25,10 +27,13 @@
 	initializeBuildEditorPageState();
 	initializeBuildCreatorPageState();
 	initializeWindowState();
+	initializeTeamState();
+	initializeAppState();
+	initializeVerminDataState();
 
 	$effect(() => {
 		const { data: supabaseData } = supabase.auth.onAuthStateChange((_, newSession) => {
-			if (newSession?.expires_at !== session?.expires_at || _ === 'INITIAL_SESSION') {
+			if (newSession?.expires_at !== session?.expires_at || _ === "INITIAL_SESSION") {
 				invalidateAll();
 			}
 		});
@@ -42,24 +47,22 @@
 				userState.user = user;
 				userState.showVideo.value = user.showVideo;
 			}
-		}
-		else {
+		} else {
 			userState.reset();
 		}
 	});
 
 	$effect(() => {
 		if (userState.showVideo.value) {
-			document.body.classList.add('show-video');
-		}
-		else {
-			document.body.classList.remove('show-video');
+			document.body.classList.add("show-video");
+		} else {
+			document.body.classList.remove("show-video");
 		}
 	});
 
-	afterNavigate(({from}) => {
+	afterNavigate(({ from }) => {
 		previousPage.url = from?.url.pathname || previousPage.url;
-	}) 
+	});
 </script>
 
 {@render children()}

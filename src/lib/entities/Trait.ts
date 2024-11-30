@@ -21,8 +21,8 @@ export class Trait extends BaseEntity<ITrait> {
 }
 
 export interface ITrait {
-	id: number;
-	name: string;
-	description: string;
-	category: TraitCategoryEnum;
+	id?: number;
+	name?: string;
+	description?: string;
+	category?: TraitCategoryEnum;
 }

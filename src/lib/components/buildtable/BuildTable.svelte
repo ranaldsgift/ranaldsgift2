@@ -17,11 +17,12 @@
 		class?: string;
 		title?: string;
 		compact?: boolean;
+		rowsOnly?: boolean;
 		header?: Snippet;
 		hideOnEmpty?: boolean;
 	};
 
-	let { filter = $bindable(), class: className, title, compact = false, header, hideOnEmpty = true }: Props = $props();
+	let { filter = $bindable(), class: className, title, compact = false, header, hideOnEmpty = true, rowsOnly = false }: Props = $props();
 
 	let builds: ICareerBuild[] = [];
 	let recordCount = $state(0);
@@ -114,22 +115,28 @@
 </script>
 
 {#if $rows.length > 0 || !hideOnEmpty}
-<div class={className}>
-	<ContainerTitle>
-		{#if header}
-			{@render header()}
-		{:else}
-				{title ?? "Builds"}
+	<div class={className}>
+		{#if !rowsOnly}
+			<ContainerTitle>
+				{#if header}
+					{@render header()}
+				{:else}
+					{title ?? "Builds"}
+				{/if}
+			</ContainerTitle>
 		{/if}
-	</ContainerTitle>
-{#await loadData()}
-		<div class="p-5 border-01 background-20 gap-5 grid {!compact ? 'desktop:grid-cols-2' : ''} desktop:grid-flow-row">
-			{#each { length: filter.limit ?? 5 } as _}
-				<BuildTableRowSkeleton></BuildTableRowSkeleton>
-			{/each}
-		</div>
-{:then}
-			<div class="p-5 border-01 background-20 gap-5 grid {!compact ? 'min-[1400px]:grid-cols-2' : ''} desktop:grid-flow-row">
+		{#await loadData()}
+			<div class="p-5 border-01 background-20 gap-5 grid {!compact ? 'desktop:grid-cols-2' : ''} desktop:grid-flow-row">
+				{#each { length: filter.limit ?? 5 } as _}
+					<BuildTableRowSkeleton></BuildTableRowSkeleton>
+				{/each}
+			</div>
+		{:then}
+			<div
+				class="{rowsOnly ? '' : 'p-5 border-01 background-20'} gap-5 grid {!compact
+					? 'min-[1400px]:grid-cols-2'
+					: ''} desktop:grid-flow-row"
+			>
 				{#each $rows as row}
 					<BuildTableRow build={row} {compact}></BuildTableRow>
 				{/each}
@@ -165,9 +172,9 @@
 					</button>
 				{/if}
 			</div>
-{/await}
-</div>
-	{/if}
+		{/await}
+	</div>
+{/if}
 
 <style>
 	.build-list-item-skeleton {

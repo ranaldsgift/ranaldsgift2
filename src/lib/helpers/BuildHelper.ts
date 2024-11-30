@@ -140,6 +140,137 @@ class BuildHelper {
 		return this.getTalents(build).filter((t) => t?.talentNumber === talent.talentNumber).length > 0;
 	}
 
+	static getBuildFromHashData(data: ICareerBuild, career: ICareer, properties: IProperty[], traits: ITrait[]): ICareerBuild {
+		const build = {} as ICareerBuild;
+		build.career = career;
+
+		if (data.primaryWeapon) {
+			const primaryWeaponId = data.primaryWeapon.weapon?.id;
+			const primaryWeaponProperty1Id = data.primaryWeapon.property1?.id;
+			const primaryWeaponProperty2Id = data.primaryWeapon.property2?.id;
+			const primaryWeaponTraitId = data.primaryWeapon.trait?.id;
+
+			const primaryWeapon = career.primaryWeapons.find((weapon) => weapon.id === primaryWeaponId);
+
+			if (primaryWeapon) {
+				build.primaryWeapon = {
+					weapon: primaryWeapon,
+					property1: properties.find((property) => property.id === primaryWeaponProperty1Id),
+					property2: properties.find((property) => property.id === primaryWeaponProperty2Id),
+					trait: traits.find((trait) => trait.id === primaryWeaponTraitId),
+					powerLevel: data.primaryWeapon.powerLevel,
+					rarity: data.primaryWeapon.rarity,
+				};
+
+				if (data.primaryWeapon.illusion) {
+					build.primaryWeapon.illusion = {
+						id: data.primaryWeapon.illusion?.id,
+					};
+				}
+			}
+		}
+
+		if (data.secondaryWeapon) {
+			const secondaryWeaponId = data.secondaryWeapon.weapon?.id;
+			const secondaryWeaponProperty1Id = data.secondaryWeapon.property1?.id;
+			const secondaryWeaponProperty2Id = data.secondaryWeapon.property2?.id;
+			const secondaryWeaponTraitId = data.secondaryWeapon.trait?.id;
+
+			const secondaryWeapon = career.secondaryWeapons.find((weapon) => weapon.id === secondaryWeaponId);
+
+			if (secondaryWeapon) {
+				build.secondaryWeapon = {
+					weapon: secondaryWeapon,
+					property1: properties.find((property) => property.id === secondaryWeaponProperty1Id),
+					property2: properties.find((property) => property.id === secondaryWeaponProperty2Id),
+					trait: traits.find((trait) => trait.id === secondaryWeaponTraitId),
+					powerLevel: data.secondaryWeapon.powerLevel,
+					rarity: data.secondaryWeapon.rarity,
+				};
+
+				if (data.secondaryWeapon.illusion) {
+					build.secondaryWeapon.illusion = {
+						id: data.secondaryWeapon.illusion?.id,
+					};
+				}
+			}
+		}
+
+		if (data.necklace) {
+			const necklaceProperty1Id = data.necklace.property1?.id;
+			const necklaceProperty2Id = data.necklace.property2?.id;
+			const necklaceTraitId = data.necklace.trait?.id;
+
+			const necklaceProperty1 = properties.find((property) => property.id === necklaceProperty1Id);
+			const necklaceProperty2 = properties.find((property) => property.id === necklaceProperty2Id);
+			const necklaceTrait = traits.find((trait) => trait.id === necklaceTraitId);
+
+			build.necklace = {
+				trait: necklaceTrait,
+				property1: necklaceProperty1,
+				property2: necklaceProperty2,
+				powerLevel: data.necklace.powerLevel,
+				rarity: data.necklace.rarity,
+			};
+
+			if (data.necklace.illusion) {
+				build.necklace.illusion = {
+					id: data.necklace.illusion?.id,
+				};
+			}
+		}
+
+		if (data.charm) {
+			const charmProperty1Id = data.charm.property1?.id;
+			const charmProperty2Id = data.charm.property2?.id;
+			const charmTraitId = data.charm.trait?.id;
+
+			const charmProperty1 = properties.find((property) => property.id === charmProperty1Id);
+			const charmProperty2 = properties.find((property) => property.id === charmProperty2Id);
+			const charmTrait = traits.find((trait) => trait.id === charmTraitId);
+
+			build.charm = {
+				trait: charmTrait,
+				property1: charmProperty1,
+				property2: charmProperty2,
+				powerLevel: data.charm.powerLevel,
+				rarity: data.charm.rarity,
+			};
+
+			if (data.charm.illusion) {
+				build.charm.illusion = {
+					id: data.charm.illusion?.id,
+				};
+			}
+		}
+
+		if (data.trinket) {
+			const trinketProperty1Id = data.trinket.property1?.id;
+			const trinketProperty2Id = data.trinket.property2?.id;
+			const trinketTraitId = data.trinket.trait?.id;
+
+			const trinketProperty1 = properties.find((property) => property.id === trinketProperty1Id);
+			const trinketProperty2 = properties.find((property) => property.id === trinketProperty2Id);
+			const trinketTrait = traits.find((trait) => trait.id === trinketTraitId);
+
+			build.trinket = {
+				trait: trinketTrait,
+				property1: trinketProperty1,
+				property2: trinketProperty2,
+				powerLevel: data.trinket.powerLevel,
+				rarity: data.trinket.rarity,
+			};
+
+			if (data.trinket.illusion) {
+				build.trinket.illusion = {
+					id: data.trinket.illusion?.id,
+				};
+			}
+		}
+
+		return build;
+	}
+
 	static getBuildFromSearchParams(
 		searchParams: URLSearchParams,
 		career: ICareer,
@@ -162,9 +293,9 @@ class BuildHelper {
 				return null;
 			}
 
-			const primaryWeaponProperty1 = primaryWeapon.properties.find((property) => property.id === primaryWeaponProperty1Id);
-			const primaryWeaponProperty2 = primaryWeapon.properties.find((property) => property.id === primaryWeaponProperty2Id);
-			const primaryWeaponTrait = primaryWeapon.traits.find((trait) => trait.id === primaryWeaponTraitId);
+			const primaryWeaponProperty1 = primaryWeapon.properties?.find((property) => property.id === primaryWeaponProperty1Id);
+			const primaryWeaponProperty2 = primaryWeapon.properties?.find((property) => property.id === primaryWeaponProperty2Id);
+			const primaryWeaponTrait = primaryWeapon.traits?.find((trait) => trait.id === primaryWeaponTraitId);
 
 			if (primaryWeaponProperty1 && primaryWeaponProperty2) {
 				build.primaryWeapon = {
@@ -179,9 +310,9 @@ class BuildHelper {
 		} else {
 			build.primaryWeapon = {
 				weapon: career.primaryWeapons[0],
-				property1: career.primaryWeapons[0].properties[0],
-				property2: career.primaryWeapons[0].properties[1],
-				trait: career.primaryWeapons[0].traits[0],
+				property1: career.primaryWeapons[0].properties?.[0],
+				property2: career.primaryWeapons[0].properties?.[1],
+				trait: career.primaryWeapons[0].traits?.[0],
 				powerLevel: 300,
 				rarity: ItemRarityEnum.Red,
 			};
@@ -200,9 +331,9 @@ class BuildHelper {
 				return null;
 			}
 
-			const secondaryWeaponProperty1 = secondaryWeapon.properties.find((property) => property.id === secondaryWeaponProperty1Id);
-			const secondaryWeaponProperty2 = secondaryWeapon.properties.find((property) => property.id === secondaryWeaponProperty2Id);
-			const secondaryWeaponTrait = secondaryWeapon.traits.find((trait) => trait.id === secondaryWeaponTraitId);
+			const secondaryWeaponProperty1 = secondaryWeapon.properties?.find((property) => property.id === secondaryWeaponProperty1Id);
+			const secondaryWeaponProperty2 = secondaryWeapon.properties?.find((property) => property.id === secondaryWeaponProperty2Id);
+			const secondaryWeaponTrait = secondaryWeapon.traits?.find((trait) => trait.id === secondaryWeaponTraitId);
 
 			if (secondaryWeaponProperty1 && secondaryWeaponProperty2) {
 				build.secondaryWeapon = {
@@ -217,9 +348,9 @@ class BuildHelper {
 		} else {
 			build.secondaryWeapon = {
 				weapon: career.secondaryWeapons[0],
-				property1: career.secondaryWeapons[0].properties[0],
-				property2: career.secondaryWeapons[0].properties[1],
-				trait: career.secondaryWeapons[0].traits[0],
+				property1: career.secondaryWeapons[0].properties?.[0],
+				property2: career.secondaryWeapons[0].properties?.[1],
+				trait: career.secondaryWeapons[0].traits?.[0],
 				powerLevel: 300,
 				rarity: ItemRarityEnum.Red,
 			};
@@ -246,15 +377,19 @@ class BuildHelper {
 			const necklaceProperty2 = properties.find((property) => property.id === necklaceProperty2Id);
 			const necklaceTrait = traits.find((trait) => trait.id === necklaceTraitId);
 
-			if (necklaceTrait && necklaceProperty1 && necklaceProperty2) {
-				build.necklace = {
-					trait: necklaceTrait,
-					property1: necklaceProperty1,
-					property2: necklaceProperty2,
-					powerLevel: 300,
-					rarity: ItemRarityEnum.Red,
-				};
-			}
+			build.necklace = {
+				trait: necklaceTrait,
+				property1: necklaceProperty1,
+				property2: necklaceProperty2,
+				powerLevel: 300,
+				rarity: !necklaceProperty1
+					? ItemRarityEnum.White
+					: !necklaceProperty2
+					? ItemRarityEnum.Green
+					: !necklaceTrait
+					? ItemRarityEnum.Blue
+					: ItemRarityEnum.Red,
+			};
 		} else {
 			build.necklace = {
 				trait: traits.find((trait) => trait.category === "defence_accessory"),
@@ -275,15 +410,19 @@ class BuildHelper {
 			const charmProperty2 = properties.find((property) => property.id === charmProperty2Id);
 			const charmTrait = traits.find((trait) => trait.id === charmTraitId);
 
-			if (charmTrait && charmProperty1 && charmProperty2) {
-				build.charm = {
-					trait: charmTrait,
-					property1: charmProperty1,
-					property2: charmProperty2,
-					powerLevel: 300,
-					rarity: ItemRarityEnum.Red,
-				};
-			}
+			build.charm = {
+				trait: charmTrait,
+				property1: charmProperty1,
+				property2: charmProperty2,
+				powerLevel: 300,
+				rarity: !charmProperty1
+					? ItemRarityEnum.White
+					: !charmProperty2
+					? ItemRarityEnum.Green
+					: !charmTrait
+					? ItemRarityEnum.Blue
+					: ItemRarityEnum.Red,
+			};
 		} else {
 			build.charm = {
 				trait: traits.find((trait) => trait.category === "offence_accessory"),
@@ -304,15 +443,19 @@ class BuildHelper {
 			const trinketProperty2 = properties.find((property) => property.id === trinketProperty2Id);
 			const trinketTrait = traits.find((trait) => trait.id === trinketTraitId);
 
-			if (trinketTrait && trinketProperty1 && trinketProperty2) {
-				build.trinket = {
-					trait: trinketTrait,
-					property1: trinketProperty1,
-					property2: trinketProperty2,
-					powerLevel: 300,
-					rarity: ItemRarityEnum.Red,
-				};
-			}
+			build.trinket = {
+				trait: trinketTrait,
+				property1: trinketProperty1,
+				property2: trinketProperty2,
+				powerLevel: 300,
+				rarity: !trinketProperty1
+					? ItemRarityEnum.White
+					: !trinketProperty2
+					? ItemRarityEnum.Green
+					: !trinketTrait
+					? ItemRarityEnum.Blue
+					: ItemRarityEnum.Red,
+			};
 		} else {
 			build.trinket = {
 				trait: traits.find((trait) => trait.category === "utility_accessory"),
@@ -323,9 +466,9 @@ class BuildHelper {
 			};
 		}
 
-		const powerLevel = searchParams.get("powerLevel");
-		if (powerLevel) {
-			build.powerLevel = parseInt(powerLevel);
+		const level = searchParams.get("level");
+		if (level) {
+			build.level = parseInt(level);
 		}
 		return build;
 	}
@@ -343,14 +486,20 @@ class BuildHelper {
 		searchParams += `career=${build.career.id}`;
 		searchParams += `&talents=${talentParams}`;
 		if (build.primaryWeapon) {
-			searchParams += `&primary=${build.primaryWeapon.weapon?.id}-${build.primaryWeapon.property1?.id}-${build.primaryWeapon.property2?.id}-${build.primaryWeapon.trait?.id}`;
+			searchParams += `&primary=${build.primaryWeapon.weapon?.id}-${build.primaryWeapon.property1?.id ?? 0}-${
+				build.primaryWeapon.property2?.id ?? 0
+			}-${build.primaryWeapon.trait?.id ?? 0}`;
 		}
 		if (build.secondaryWeapon) {
-			searchParams += `&secondary=${build.secondaryWeapon.weapon?.id}-${build.secondaryWeapon.property1?.id}-${build.secondaryWeapon.property2?.id}-${build.secondaryWeapon.trait?.id}`;
+			searchParams += `&secondary=${build.secondaryWeapon.weapon?.id}-${build.secondaryWeapon.property1?.id ?? 0}-${
+				build.secondaryWeapon.property2?.id ?? 0
+			}-${build.secondaryWeapon.trait?.id ?? 0}`;
 		}
-		searchParams += `&necklace=${build.necklace.property1?.id}-${build.necklace.property2?.id}-${build.necklace.trait?.id}`;
-		searchParams += `&charm=${build.charm.property1?.id}-${build.charm.property2?.id}-${build.charm.trait?.id}`;
-		searchParams += `&trinket=${build.trinket.property1?.id}-${build.trinket.property2?.id}-${build.trinket.trait?.id}`;
+		searchParams += `&necklace=${build.necklace.property1?.id ?? 0}-${build.necklace.property2?.id ?? 0}-${
+			build.necklace.trait?.id ?? 0
+		}`;
+		searchParams += `&charm=${build.charm.property1?.id ?? 0}-${build.charm.property2?.id ?? 0}-${build.charm.trait?.id ?? 0}`;
+		searchParams += `&trinket=${build.trinket.property1?.id ?? 0}-${build.trinket.property2?.id ?? 0}-${build.trinket.trait?.id ?? 0}`;
 		return searchParams;
 	}
 

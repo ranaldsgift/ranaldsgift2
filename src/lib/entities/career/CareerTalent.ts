@@ -23,9 +23,9 @@ export class CareerTalent extends BaseEntity<ICareerTalent> {
 }
 
 export interface ICareerTalent {
-	id: number;
-	name: string;
-	description: string;
-	talentNumber: number;
+	id?: number;
+	name?: string;
+	description?: string;
+	talentNumber?: number;
 	career?: ICareer;
 }

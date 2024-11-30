@@ -2,7 +2,7 @@
 	import type { ITrait } from "$lib/entities/Trait";
 
 	type Props = {
-		trait: ITrait;
+		trait?: ITrait | null;
 		class?: string;
 		size?: string;
 		tooltipPosition?: {
@@ -20,17 +20,15 @@
 	);
 </script>
 
-<span
-	class={`item-trait-icon trait-icon border-04`}
-	style="--size: {size}; background: url('/images/traits/{trait.name.toLowerCase().replaceAll(' ', '-')}.png'), black"
->
-	<span class="tooltip border-35 max-w-[200px] mobile:max-w-[250px]" style="transform: {translateX} {translateY};">
-		<span class="name header-underline">{trait.name}</span>
-		<span class="description">
-			{trait.description}
-		</span>
+{#if trait && trait.name}
+	<span
+		class={`item-trait-icon trait-icon border-04`}
+		style="--size: {size}; background: url('/images/traits/{trait.name.toLowerCase().replaceAll(' ', '-')}.png'), black"
+	>
 	</span>
-</span>
+{:else}
+	<span class="item-trait-icon trait-icon lock-icon border-04" style="--size: {size};"></span>
+{/if}
 
 <style>
 	.item-trait-icon {
@@ -44,6 +42,7 @@
 		display: inline-block;
 		box-shadow: inset 0 4px 2px white;
 		position: relative;
+		background-color: #000;
 	}
 	.item-trait-icon::after {
 		background-color: #0000 !important;

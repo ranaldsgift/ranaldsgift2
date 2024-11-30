@@ -5,9 +5,19 @@ import { error } from "@sveltejs/kit";
 
 export const GET: RequestHandler = async ({ url }) => {
 	let data = null;
+	let id = url.searchParams.get("id");
+	let dataCount = 0;
+
 	try {
-		data = await CareerCache.getAll();
-		data = CareerHelper.getSorted(data);
+		if (id) {
+			const career = await CareerCache.get(parseInt(id));
+			data = [career];
+			dataCount = 1;
+		} else {
+			data = await CareerCache.getAll();
+			data = CareerHelper.getSorted(data);
+			dataCount = data.length;
+		}
 	} catch (err) {
 		console.error(err);
 		error(500, "Internal Server Error");
@@ -15,7 +25,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	const response = JSON.stringify({
 		items: data,
-		count: data.length,
+		count: dataCount,
 	});
 
 	return new Response(response);

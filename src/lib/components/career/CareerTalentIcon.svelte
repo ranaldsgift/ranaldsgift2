@@ -10,7 +10,7 @@
 </script>
 
 {#if talentNumber === 0}
-	<span class="talent-icon block {CLASS}" style="--size: {size}; background: black;"></span>
+	<span class="talent-icon lock-icon block {CLASS}" style="--size: {size}; background-color: black;"></span>
 {:else}
 	<span
 		class="talent-icon block {CLASS}"

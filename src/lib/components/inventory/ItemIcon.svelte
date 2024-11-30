@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { IItemBuild } from "$lib/entities/builds/CareerBuild";
 	import { ItemTypeEnum } from "$lib/enums/ItemTypeEnum";
+	import "tippy.js/animations/shift-away.css";
 
 	type Props = {
 		itemBuild: IItemBuild;

@@ -186,7 +186,7 @@ export class CareerBuild extends AuthoredEntity<ICareerBuild> {
 }
 
 export interface ICareerBuild {
-	id?: number;
+	id?: number | string;
 	user?: IUser;
 	firebaseId?: string;
 	name?: string;
@@ -194,7 +194,7 @@ export interface ICareerBuild {
 	description?: string;
 	level?: number;
 	careerId?: number;
-	career: ICareer;
+	career?: ICareer;
 	portraitFrameId?: number;
 	primaryWeapon: IWeaponBuild;
 	secondaryWeapon: IWeaponBuild;
@@ -240,10 +240,10 @@ export interface IItemBuild {
 	weaponId?: number;
 	weapon?: IWeapon | null;
 	powerLevel?: number;
-	property1?: IProperty;
+	property1?: IProperty | null;
 	property1Value?: number;
-	property2?: IProperty;
+	property2?: IProperty | null;
 	property2Value?: number;
-	trait?: ITrait;
+	trait?: ITrait | null;
 	illusion?: IIllusion;
 }

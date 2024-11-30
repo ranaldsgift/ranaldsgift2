@@ -20,7 +20,7 @@
 	data-frame={build.portraitFrameId}
 	class="career-portrait relative {className}"
 	style="--background: url('/images/careers/{build.career
-		.id}/portrait-alt.png'); --frameUrl: {frameUrl}; --size: {size}; --scale: {scale};"
+		?.id}/portrait-alt.png'); --frameUrl: {frameUrl}; --size: {size}; --scale: {scale};"
 >
 	<span class="career-level text-white">{build.level ?? 35}</span>
 </div>

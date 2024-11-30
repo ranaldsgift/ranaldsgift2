@@ -30,11 +30,11 @@ export class Property extends BaseEntity<IProperty> {
 }
 
 export interface IProperty {
-	id: number;
-	name: string;
+	id?: number;
+	name?: string;
 	description?: string | null;
-	minimumValue: number;
-	maximumValue: number;
-	step: number;
-	category: PropertyCategoryEnum;
+	minimumValue?: number;
+	maximumValue?: number;
+	step?: number;
+	category?: PropertyCategoryEnum;
 }

@@ -91,7 +91,7 @@
 						{showDescriptions ? "Hide" : "Show"} Descriptions
 					</button>
 					{#each talents as talent}
-						{#if (talent.talentNumber - 1) % 3 === 0}
+						{#if talent.talentNumber && (talent.talentNumber - 1) % 3 === 0}
 							<span
 								class="talent-lock-icon justify-self-center"
 								style="--size: 84px;

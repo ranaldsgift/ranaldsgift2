@@ -39,13 +39,16 @@
 				if (json.rated) {
 					userState.addRating(build);
 					build.ratingsCount = (build.ratingsCount ?? 0) + 1;
+					toast(`Thanks for rating ${build.user?.name}'s ${build.name}!`, {
+						position: "bottom-center",
+					});
 				} else {
 					userState.removeRating(build);
 					build.ratingsCount = (build.ratingsCount ?? 1) - 1;
+					toast(`Removed your rating of ${build.user?.name}'s ${build.name}.`, {
+						position: "bottom-center",
+					});
 				}
-				toast(json.message, {
-					position: "bottom-center",
-				});
 				invalidateAll();
 				if (build.id) {
 					CareerBuildsStore.invalidateById(build.id);
@@ -61,7 +64,13 @@
 
 <div class="rating flex">
 	<span class="rating-count" title="Number of ratings">{ratingCount}</span>
-	<button data-rated={ratedByUser ? "true" : "false"} class="rating-icon my-[-4px]" title="Rating" onclick={handleRating}></button>
+	<button
+		data-rated={ratedByUser ? "true" : "false"}
+		class="rating-icon my-[-4px]"
+		title="Rating"
+		onclick={handleRating}
+		aria-label="Rating"
+	></button>
 </div>
 
 <style>

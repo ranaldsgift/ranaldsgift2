@@ -9,7 +9,7 @@
 	import CareerTalentIcon from "../career/CareerTalentIcon.svelte";
 	import BuildHelper from "$lib/helpers/BuildHelper";
 	import CareerBuildPortrait from "../career/CareerBuildPortrait.svelte";
-	import ItemIcon from "../inventory/ItemIcon.svelte";
+	import ItemIcon from "../inventory/ItemIconTooltip.svelte";
 	import { ItemTypeEnum } from "$lib/enums/ItemTypeEnum";
 	
 	type Props = {
@@ -30,13 +30,13 @@
 
 {#if build.careerId}
 <div class="build-list-item-container">
-	<a class="link-overlay" href={`/build/${build.id}`} data-sveltekit-preload-data="tap">&nbsp;</a>
+	<a class="link-overlay" href={`/build/${build.id}`} data-sveltekit-preload-data="tap" aria-label={build.name}>&nbsp;</a>
 	<div class="build-list-item desktop:h-full" data-career={build.careerId} data-build={build.id} data-compact={compact}>
 		
 		<CareerBuildPortrait build={build} class="justify-self-end mr-[10px]"></CareerBuildPortrait>
 		<div class="build-description-container ml-[15px]">
 			<p class="build-name header-underline">{build.name}</p>
-			<div class="flex gap-1"><p class="build-hero">{build.career.name}</p>
+			<div class="flex gap-1"><p class="build-hero">{build.career?.name}</p>
 				<BuildCreationInfo {build}></BuildCreationInfo>
 			</div>
 		</div>
@@ -47,27 +47,22 @@
 			{#if build.primaryWeapon.weapon}
 			<div class="weapon-container">
 				<ItemIcon itemBuild={build.primaryWeapon} itemType={ItemTypeEnum.Weapon} size="45px"></ItemIcon>
-				 {#if build.primaryWeapon.trait}
-					<TraitIcon trait={build.primaryWeapon.trait} size="45px"></TraitIcon>
-				{/if}
+				<TraitIcon trait={build.primaryWeapon.trait} size="45px"></TraitIcon>
 			</div>
 			{/if}
 			{#if build.secondaryWeapon.weapon}
 			<div class="weapon-container">
 				<ItemIcon itemBuild={build.secondaryWeapon} itemType={ItemTypeEnum.Weapon} size="45px"></ItemIcon>
-				 {#if build.secondaryWeapon.trait}
-					<TraitIcon trait={build.secondaryWeapon.trait} size="45px"></TraitIcon>
-				{/if}
+				<TraitIcon trait={build.secondaryWeapon.trait} size="45px"></TraitIcon>
 			</div>
 			{/if}
 		</div>
 		<div class="talents grid ml-[15px]">
 			{#each selectedTalents as talent, index}
-			{#if build.level && build.level >= (index + 1) * 5}
-			<div class="talent-icon-container" style="--overlay: {talent?.talentNumber ? talent.talentNumber % 3 === 0  ? `'3'` : `'${talent.talentNumber % 3}'` : `'0'`}">
+			
+			<div class={`talent-icon-container ${!talent ? 'locked' : ''}`} style="--overlay: {talent?.talentNumber ? talent.talentNumber % 3 === 0  ? `'3'` : `'${talent.talentNumber % 3}'` : `''`}">
 				<CareerTalentIcon talentNumber={talent?.talentNumber ?? 0} careerId={build.careerId} size="45px"></CareerTalentIcon>
 			</div>
-			{/if}
 			{/each}
 		</div>
 		<div class="traits grid">
@@ -472,7 +467,7 @@
 	.talent-icon-container {	
 		position: relative;
 	}
-	.talent-icon-container::before {
+	.talent-icon-container:not(.locked)::before {
 		margin: 4px;
 		overflow: hidden;
 		content: var(--overlay);

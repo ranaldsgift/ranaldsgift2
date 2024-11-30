@@ -58,7 +58,7 @@
 
 <div class="inventory-item-display-container {itemBuild.weapon ? 'weapon' : 'jewelry'}">
 	<div class="inventory-item-header border-01" style="--gradientColor: {gradientColor}; --textColor: {textColor};">
-		<InventoryItemDialog bind:itemBuild {itemType} />
+		<InventoryItemDialog bind:itemBuild {itemType} {properties} {traits} />
 	</div>
 	<div class="inventory-item-summary-container border-01">
 		<div class="item-power-level"><input type="number" bind:value={itemBuild.powerLevel} min="0" max="300" /></div>
@@ -70,35 +70,41 @@
 				<p class="item-stamina-text">{itemBuild.weapon.stamina}</p>
 			</div>
 		{/if}
-		<div class="item-properties-container">
-			<div class="relative">
-				<li class="item-property-1">
-					{itemBuild.property1
-						? `+ ${itemBuild.property1.maximumValue.toFixed(1)}${PropertyHelper.getModifier(itemBuild.property1)} ${itemBuild.property1.name}`
-						: ""}
-				</li>
-				<select bind:value={itemBuild.property1}>
-					{#each properties as property}
-						<option value={property}>{property.name}</option>
-					{/each}
-				</select>
+		{#if itemBuild.rarity !== ItemRarityEnum.White}
+			<div class="item-properties-container pb-2">
+				{#if itemBuild.property1}
+					<div class="relative">
+						<li class="item-property-1">
+							{itemBuild.property1
+								? `+ ${itemBuild.property1.maximumValue?.toFixed(1)}${PropertyHelper.getModifier(itemBuild.property1)} ${itemBuild.property1.name}`
+								: ""}
+						</li>
+						<select bind:value={itemBuild.property1}>
+							{#each properties as property}
+								<option value={property}>{property.name}</option>
+							{/each}
+						</select>
+					</div>
+				{/if}
+				{#if itemBuild.property2}
+					<div class="relative">
+						<li class="item-property-2">
+							{itemBuild.property2
+								? `+ ${itemBuild.property2.maximumValue?.toFixed(1)}${PropertyHelper.getModifier(itemBuild.property2)} ${itemBuild.property2.name}`
+								: ""}
+						</li>
+						<select bind:value={itemBuild.property2}>
+							{#each properties as property}
+								<option value={property}>{property.name}</option>
+							{/each}
+						</select>
+					</div>
+				{/if}
 			</div>
-			<div class="relative">
-				<li class="item-property-2">
-					{itemBuild.property2
-						? `+ ${itemBuild.property2.maximumValue.toFixed(1)}${PropertyHelper.getModifier(itemBuild.property2)} ${itemBuild.property2.name}`
-						: ""}
-				</li>
-				<select bind:value={itemBuild.property2}>
-					{#each properties as property}
-						<option value={property}>{property.name}</option>
-					{/each}
-				</select>
-			</div>
-		</div>
-		{#if itemBuild.trait}
+		{/if}
+		{#if !itemBuild.rarity || itemBuild.rarity === ItemRarityEnum.Orange || itemBuild.rarity === ItemRarityEnum.Red}
 			<div class="item-trait-container">
-				<TraitIcon trait={itemBuild.trait} {tooltipPosition}></TraitIcon>
+				<TraitIcon trait={itemBuild.trait ?? null} {tooltipPosition}></TraitIcon>
 				<div class="relative">
 					<p class="item-trait-name">{itemBuild.trait?.name}</p>
 					<select bind:value={itemBuild.trait}>
@@ -167,7 +173,7 @@
 		border-image-width: 15px;
 		border-style: solid;
 		display: grid;
-		grid-template-rows: 1fr 1fr auto;
+		grid-template-rows: 1fr auto auto;
 		grid-template-columns: 1fr 1fr;
 		grid-template-areas: "itemPower itemStamina" "itemProperties itemProperties" "itemTrait itemTrait";
 		background: url("/images/backgrounds/background22.png");
@@ -231,8 +237,17 @@
 	}
 	.item-properties-container li {
 		color: #79b2f7;
-		margin-left: 15px;
-		list-style-type: square;
+		margin-left: 25px;
+		list-style-type: none;
+	}
+	.item-properties-container li::before {
+		content: "◆"; /* Unicode diamond character */
+		position: absolute;
+		left: 0px;
+		/* Optionally adjust size if needed */
+		font-size: 0.8em;
+		height: 100%;
+		margin-top: 0.1rem;
 	}
 	.item-properties-container li::marker {
 		margin-top: -2px;
@@ -254,9 +269,7 @@
 	}
 	.item-trait-description {
 		grid-area: traitDescription;
-		margin-bottom: 16px;
-		min-height: 40px;
-		max-width: calc(100% - 50px);
+		margin: 5px 0 20px;
 	}
 	.inventory-item-display-container.jewelry .item-properties-container {
 		margin-top: 10px;
@@ -277,6 +290,7 @@
 		appearance: none;
 		outline: 0;
 		box-shadow: none;
+		cursor: pointer;
 	}
 	select::-ms-expand {
 		display: none;

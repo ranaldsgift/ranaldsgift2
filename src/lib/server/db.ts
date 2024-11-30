@@ -33,6 +33,29 @@ import { DifficultyModifier } from "$lib/entities/DifficultyModifier";
 import { Event } from "$lib/entities/Event";
 import { CareerBuildCareers } from "$lib/entities/views/CareerBuildCareers";
 import { Illusion } from "$lib/entities/ItemIllusion";
+import { Team } from "$lib/entities/Team";
+import { CareerBuildCareerPrimaryWeapons } from "$lib/entities/views/CareerBuildCareerPrimaryWeapons";
+import { CareerBuildPrimaryWeaponProperties } from "$lib/entities/views/CareerBuildPrimaryWeaponProperties";
+import { CareerBuildCareerProperties } from "$lib/entities/views/CareerBuildCareerProperties";
+import { CareerBuildCareerTraits } from "$lib/entities/views/CareerBuildCareerTraits";
+import { CareerBuildSecondaryWeaponProperties } from "$lib/entities/views/CareerBuildSecondaryWeaponProperties";
+import { CareerBuildHeroes } from "$lib/entities/views/CareerBuildHeroes";
+import { CareerBuildHeroPrimaryWeapons } from "$lib/entities/views/CareerBuildHeroPrimaryWeapons";
+import { CareerBuildTalentCounts } from "$lib/entities/views/CareerBuildTalentCounts";
+import { CareerBuildCareerSecondaryWeapons } from "$lib/entities/views/CareerBuildCareerSecondaryWeapons";
+import { WeaponCounts } from "$lib/entities/views/WeaponCounts";
+import { WeaponTraitCounts } from "$lib/entities/views/WeaponTraitCounts";
+import { WeaponPropertyCounts } from "$lib/entities/views/WeaponPropertyCounts";
+import { CareerWeaponTraitCounts } from "$lib/entities/views/CareerWeaponTraitCounts";
+import { CareerWeaponPropertyCounts } from "$lib/entities/views/CareerWeaponPropertyCounts";
+import { CareerPrimaryWeaponCounts } from "$lib/entities/views/CareerPrimaryWeaponCounts";
+import { CareerSecondaryWeaponCounts } from "$lib/entities/views/CareerSecondaryWeaponCounts";
+import { HeroWeaponTraitCounts } from "$lib/entities/views/HeroWeaponTraitCounts";
+import { HeroWeaponPropertyCounts } from "$lib/entities/views/HeroWeaponPropertyCounts";
+import { HeroPrimaryWeaponCounts } from "$lib/entities/views/HeroPrimaryWeaponCounts";
+import { HeroSecondaryWeaponCounts } from "$lib/entities/views/HeroSecondaryWeaponCounts";
+import { HeroWeaponCounts } from "$lib/entities/views/HeroWeaponCounts";
+import { CareerWeaponCounts } from "$lib/entities/views/CareerWeaponCounts";
 
 let PRIVATE_SUPABASE_HOST = env.PRIVATE_SUPABASE_HOST;
 let PRIVATE_SUPABASE_PASSWORD = env.PRIVATE_SUPABASE_PASSWORD;
@@ -92,6 +115,30 @@ class TypeOrm {
 					PageViewsCareerBuild,
 					Event,
 					CareerBuildCareers,
+					CareerBuildHeroPrimaryWeapons,
+					CareerBuildCareerPrimaryWeapons,
+					CareerBuildCareerSecondaryWeapons,
+					CareerBuildPrimaryWeaponProperties,
+					CareerBuildSecondaryWeaponProperties,
+					CareerBuildCareerProperties,
+					CareerBuildCareerTraits,
+					CareerBuildHeroes,
+					CareerBuildTalentCounts,
+					CareerBuildCareerSecondaryWeapons,
+					WeaponTraitCounts,
+					WeaponPropertyCounts,
+					WeaponCounts,
+					CareerWeaponCounts,
+					CareerPrimaryWeaponCounts,
+					CareerSecondaryWeaponCounts,
+					CareerWeaponTraitCounts,
+					CareerWeaponPropertyCounts,
+					HeroPrimaryWeaponCounts,
+					HeroSecondaryWeaponCounts,
+					HeroWeaponCounts,
+					HeroWeaponTraitCounts,
+					HeroWeaponPropertyCounts,
+					Team,
 				],
 				migrations: [],
 				subscribers: [EntitySubscriber, AuthoredEntitySubscriber],
