@@ -8,6 +8,7 @@
 	import type { ITrait } from "$lib/entities/Trait";
 	import type { InventoryTab } from "$lib/state/HeroesPageState.svelte";
 	import { PropertiesStore, TraitsStore } from "$lib/stores/DataStores";
+	import { ItemTypeEnum } from "$lib/enums/ItemTypeEnum";
 
 	type Props = {
 		build: ICareerBuild;
@@ -28,6 +29,7 @@
 		}
 
 		build.primaryWeapon.weaponId = item.id;
+		build.primaryWeapon.illusion = undefined;
 	};
 
 	const secondaryWeaponSelectHandler = (item: IWeapon) => {
@@ -42,6 +44,7 @@
 		}
 
 		build.secondaryWeapon.weaponId = item.id;
+		build.secondaryWeapon.illusion = undefined;
 	};
 
 	let necklaceProperties: IProperty[] = $state([]);
@@ -135,14 +138,13 @@
 		<ItemSelect
 			title="primary"
 			bind:selectedItem={build.primaryWeapon.weapon}
-			items={build.career.primaryWeapons}
+			bind:itemBuild={build.primaryWeapon}
+			items={build.career?.primaryWeapons ?? []}
 			handler={primaryWeaponSelectHandler}
 		></ItemSelect>
 		<InventoryItemDisplay
-			bind:trait={build.primaryWeapon.trait}
-			bind:property1={build.primaryWeapon.property1}
-			bind:property2={build.primaryWeapon.property2}
-			weapon={build.primaryWeapon.weapon}
+			bind:itemBuild={build.primaryWeapon}
+			itemType={ItemTypeEnum.Weapon}
 			properties={build.primaryWeapon.weapon?.properties ?? []}
 			traits={build.primaryWeapon.weapon?.traits ?? []}
 		></InventoryItemDisplay>
@@ -151,42 +153,31 @@
 		<ItemSelect
 			title="secondary"
 			bind:selectedItem={build.secondaryWeapon.weapon}
-			items={build.career.secondaryWeapons}
+			bind:itemBuild={build.secondaryWeapon}
+			items={build.career?.secondaryWeapons ?? []}
 			handler={secondaryWeaponSelectHandler}
 		></ItemSelect>
 		<InventoryItemDisplay
-			bind:trait={build.secondaryWeapon.trait}
-			bind:property1={build.secondaryWeapon.property1}
-			bind:property2={build.secondaryWeapon.property2}
-			weapon={build.secondaryWeapon.weapon}
+			bind:itemBuild={build.secondaryWeapon}
+			itemType={ItemTypeEnum.Weapon}
 			properties={build.secondaryWeapon.weapon?.properties ?? []}
 			traits={build.secondaryWeapon.weapon?.traits ?? []}
 		></InventoryItemDisplay>
 	</div>
 	<div class="jewelry-tab {inventoryTab !== 'EQUIPMENT' ? 'hidden' : ''}">
 		<InventoryItemDisplay
-			bind:trait={build.necklace.trait}
-			bind:property1={build.necklace.property1}
-			bind:property2={build.necklace.property2}
+			bind:itemBuild={build.necklace}
+			itemType={ItemTypeEnum.Necklace}
 			properties={necklaceProperties}
 			traits={necklaceTraits}
-			header="Necklace"
+		></InventoryItemDisplay>
+		<InventoryItemDisplay bind:itemBuild={build.charm} itemType={ItemTypeEnum.Charm} properties={charmProperties} traits={charmTraits}
 		></InventoryItemDisplay>
 		<InventoryItemDisplay
-			bind:trait={build.charm.trait}
-			bind:property1={build.charm.property1}
-			bind:property2={build.charm.property2}
-			properties={charmProperties}
-			traits={charmTraits}
-			header="Charm"
-		></InventoryItemDisplay>
-		<InventoryItemDisplay
-			bind:trait={build.trinket.trait}
-			bind:property1={build.trinket.property1}
-			bind:property2={build.trinket.property2}
+			bind:itemBuild={build.trinket}
+			itemType={ItemTypeEnum.Trinket}
 			properties={trinketProperties}
 			traits={trinketTraits}
-			header="Trinket"
 		></InventoryItemDisplay>
 	</div>
 </div>

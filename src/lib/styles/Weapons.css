@@ -1,6 +1,6 @@
 
 .weapon-background {
-  background: url('/images/backgrounds/icon-background-2.png');
+  background: url('/images/backgrounds/item-red.png');
   background-size: calc(100% + 2px);
   position: relative;
   cursor: pointer;
@@ -33,7 +33,7 @@
   cursor: pointer;
 }
 .weapon-border {
-  border-image: url('/images/borders/border-04.png' ) center / calc(100% + 8px), url('/images/backgrounds/icon-background-2.png') center / contain;
+  border-image: url('/images/borders/border-04.png' ) center / calc(100% + 8px), url('/images/backgrounds/item-red.png') center / contain;
   border-image-slice: 15;
   border-image-width: 15px;
   border-style: solid;

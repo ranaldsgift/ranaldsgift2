@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 	import type { ICareer } from "$lib/entities/career/Career";
-	import { getWindowState } from "$lib/state/WindowState.svelte";
+	import CareerBuildPortrait from "./CareerBuildPortrait.svelte";
 	import CooldownBar from "./CooldownBar.svelte";
 	import HealthBar from "./HealthBar.svelte";
 
@@ -11,8 +11,6 @@
 	};
 
 	const { build, career }: Props = $props();
-
-	const windowState = getWindowState();
 
 	let health = $derived.by(() => {
 		if (!build.necklace || (build.necklace.property1?.name !== "Health" && build.necklace.property2?.name !== "Health")) {
@@ -71,10 +69,9 @@
 		<p class="career-name-header header-gradient-underline">{career.name}</p>
 		<p class="career-name">{career.hero.name}</p>
 	</div>
-	<div
-		class="career-portrait border-02"
-		style="--background: url('/images/careers/{career.id}/portrait-{windowState.isMobile ? 'wide' : 'alt'}.png')"
-	></div>
+	<div class="career-portrait-container">
+		<CareerBuildPortrait {build} size="160px"></CareerBuildPortrait>
+	</div>
 	<div class="career-attributes max-w-[400px] mobile:block hidden">
 		<div class="health-container">
 			<p>Health</p>
@@ -97,12 +94,7 @@
 		display: flex;
 		flex-direction: column;
 	}
-	.career-portrait {
-		height: 74px;
-		background:
-			var(--background) center right / contain no-repeat,
-			url("/images/backgrounds/background29.png") top center / cover no-repeat;
-		width: 100%;
+	.career-portrait-container {
 		grid-area: careerPortrait;
 	}
 
@@ -129,7 +121,7 @@
 			grid-column-gap: 20px;
 			grid-template-columns: 1fr;
 			grid-template-rows: 1fr;
-			grid-template-columns: 145px minmax(225px, 1fr);
+			grid-template-columns: auto minmax(225px, 1fr);
 			grid-template-rows: auto 1fr;
 			grid-template-areas: "careerPortrait careerName" "careerPortrait careerAttributes";
 		}

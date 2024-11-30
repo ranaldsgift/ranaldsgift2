@@ -30,7 +30,7 @@ export async function POST({ locals, params }) {
 		return json({ error: `Unable to find build ${careerBuildId}` }, { status: 400 });
 	}
 
-	let message = `Thanks for rating ${buildEntity.name}.`;
+	let message = `Thanks for rating ${buildEntity.user?.name}'s ${buildEntity.name}.`;
 	let rated = true;
 
 	if (userEntity.ratedBuilds.some((build) => build.id === buildEntity.id)) {

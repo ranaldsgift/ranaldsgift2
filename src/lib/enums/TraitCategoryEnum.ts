@@ -13,6 +13,7 @@ enum TraitCategoryEnum {
 	RangedHeat = "ranged_heat",
 	RangedEnergy = "ranged_energy",
 	DeusHeavyMelee = "deus_heavy_melee",
+	MeleeRangedHybrid = "melee_ranged_hybrid",
 }
 
 export default TraitCategoryEnum;

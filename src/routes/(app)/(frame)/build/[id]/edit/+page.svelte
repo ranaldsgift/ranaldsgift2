@@ -27,6 +27,7 @@
 
 	let serializedBuild = $state(JSON.stringify(pageState.build));
 	let isDirty = $derived.by(() => serializedBuild !== JSON.stringify(pageState.build));
+	let isValid = $derived(BuildHelper.isValid(pageState.build) && isDirty);
 
 	// TODO - Show the missing fields on hover of the disabled save button
 	let missingFieldsMessage = $derived.by(() => {
@@ -34,6 +35,9 @@
 			return "";
 		}
 		let missingFields = BuildHelper.getMissingFields(pageState.build).join(", ");
+		if (missingFields.length === 0) {
+			return "";
+		}
 		return `Build is missing the following fields: ${missingFields}. Please check your build and try again.`;
 	});
 
@@ -63,6 +67,7 @@
 
 			if (response.ok) {
 				toast.success("Build saved!", { position: "bottom-center" });
+				serializedBuild = JSON.stringify(pageState.build);
 				CareerBuildsStore.invalidateAll();
 			} else {
 				const json = await response.json();
@@ -92,11 +97,14 @@
 	>
 
 	<PageButtonContainer>
-		<button class="button-02" onclick={saveBuild}>Save</button>
+		<button class="button-02" onclick={saveBuild} disabled={!isValid}>Save</button>
 		<a class="button-02" href={`/build/${pageState.build.id}`} onclick={resetBuildState}>Cancel</a>
 	</PageButtonContainer>
 
 	<div class="edit-build-page">
+		{#if missingFieldsMessage.length > 0}
+			<p class="m-auto text-center w-fit py-2 px-4 mb-4 border-02 background-22">{missingFieldsMessage}</p>
+		{/if}
 		<BuildEditor bind:build={pageState.build} bind:inventoryTab={pageState.inventoryTab.value} />
 	</div>
 {/if}

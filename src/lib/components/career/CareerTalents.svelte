@@ -22,26 +22,28 @@
 		if (BuildHelper.isTalentSelected(talent, build)) {
 			switch (tier) {
 				case 1:
-					build.level5Talent = undefined;
+					build.level5Talent = null;
 					break;
 				case 2:
-					build.level10Talent = undefined;
+					build.level10Talent = null;
 					break;
 				case 3:
-					build.level15Talent = undefined;
+					build.level15Talent = null;
 					break;
 				case 4:
-					build.level20Talent = undefined;
+					build.level20Talent = null;
 					break;
 				case 5:
-					build.level25Talent = undefined;
+					build.level25Talent = null;
 					break;
 				case 6:
-					build.level30Talent = undefined;
+					build.level30Talent = null;
 					break;
 			}
 			return;
 		}
+
+		if (build.level && build.level < tier * 5) return;
 
 		switch (tier) {
 			case 1:
@@ -64,6 +66,17 @@
 				break;
 		}
 	};
+
+	$effect(() => {
+		if (build.level) {
+			if (build.level < 30) build.level30Talent = null;
+			if (build.level < 25) build.level25Talent = null;
+			if (build.level < 20) build.level20Talent = null;
+			if (build.level < 15) build.level15Talent = null;
+			if (build.level < 10) build.level10Talent = null;
+			if (build.level < 5) build.level5Talent = null;
+		}
+	});
 </script>
 
 <div>
@@ -78,7 +91,7 @@
 						{showDescriptions ? "Hide" : "Show"} Descriptions
 					</button>
 					{#each talents as talent}
-						{#if (talent.talentNumber - 1) % 3 === 0}
+						{#if talent.talentNumber && (talent.talentNumber - 1) % 3 === 0}
 							<span
 								class="talent-lock-icon justify-self-center"
 								style="--size: 84px;

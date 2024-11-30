@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 	import type { ICareerTalent } from "$lib/entities/career/CareerTalent";
+	import { ItemTypeEnum } from "$lib/enums/ItemTypeEnum";
+	import IllusionHelper from "$lib/helpers/IllusionHelper";
 	import TextEditor from "../quill/TextEditor.svelte";
 
 	type Props = {
@@ -20,31 +22,37 @@
 
 	const replaceGear = (guide: string) => {
 		if (build.primaryWeapon.weapon) {
-			const primaryWeaponHtml = `<div class="weapon-icon border-02 size-[60px]" style="background: url('/images/weapons/${build.primaryWeapon.weapon.codename}.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/icon-background-2.png') no-repeat center / 100% 100%;"></div>`;
+			const illusionUrl = IllusionHelper.getIllusionUrl(build.primaryWeapon, ItemTypeEnum.Weapon);
+			const rarity = build.primaryWeapon.rarity?.toLowerCase() ?? "red";
+			const primaryWeaponHtml = `<div class="weapon-icon border-02 size-[60px]" style="background: url('${illusionUrl}') no-repeat center / calc(100% + 8px), url('/images/backgrounds/item-${rarity.toLowerCase()}.png') no-repeat center / 100% 100%;"></div>`;
 			const primaryRegex = new RegExp(`\[(]\\s*Melee\\s*\[)]|\[(]\\s*Primary\\s*\[)]`, "g");
 			guide = guide.replace(primaryRegex, primaryWeaponHtml);
 		}
 
 		if (build.secondaryWeapon.weapon) {
-			const secondaryWeaponHtml = `<div class="weapon-icon border-02 size-[60px]" style="background: url('/images/weapons/${build.secondaryWeapon.weapon.codename}.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/icon-background-2.png') no-repeat center / 100% 100%;"></div>`;
+			const rarity = build.secondaryWeapon.rarity?.toLowerCase() ?? "red";
+			const secondaryWeaponHtml = `<div class="weapon-icon border-02 size-[60px]" style="background: url('/images/weapons/${build.secondaryWeapon.weapon.codename}.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/item-${rarity.toLowerCase()}.png') no-repeat center / 100% 100%;"></div>`;
 			const secondaryRegex = new RegExp(`\[(]\\s*Secondary\\s*\[)]|\[(]\\s*Ranged\\s*\[)]`, "g");
 			guide = guide.replace(secondaryRegex, secondaryWeaponHtml);
 		}
 
 		if (build.necklace) {
-			const necklaceHtml = `<div class="necklace-icon border-02 size-[60px]" style="background: url('/images/icons/necklace-icon.png') no-repeat center / auto, #000;"></div>`;
+			const rarity = build.necklace.rarity?.toLowerCase() ?? "red";
+			const necklaceHtml = `<div class="necklace-icon border-02 size-[60px]" style="background: url('/images/illusions/necklace/necklace-1.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/item-${rarity.toLowerCase()}.png') no-repeat center / 100% 100%;"></div>`;
 			const necklaceRegex = new RegExp(`\[(]\\s*Necklace\\s*\[)]`, "g");
 			guide = guide.replace(necklaceRegex, necklaceHtml);
 		}
 
 		if (build.charm) {
-			const charmHtml = `<div class="charm-icon border-02 size-[60px]" style="background: url('/images/icons/charm-icon.png') no-repeat center / auto, #000;"></div>`;
+			const rarity = build.charm.rarity?.toLowerCase() ?? "red";
+			const charmHtml = `<div class="charm-icon border-02 size-[60px]" style="background: url('/images/illusions/charm/charm-1.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/item-${rarity.toLowerCase()}.png') no-repeat center / 100% 100%;"></div>`;
 			const charmRegex = new RegExp(`\[(]\\s*Charm\\s*\[)]`, "g");
 			guide = guide.replace(charmRegex, charmHtml);
 		}
 
 		if (build.trinket) {
-			const trinketHtml = `<div class="trinket-icon border-02 size-[60px]" style="background: url('/images/icons/trinket-icon.png') no-repeat center / auto, #000;"></div>`;
+			const rarity = build.trinket.rarity?.toLowerCase() ?? "red";
+			const trinketHtml = `<div class="trinket-icon border-02 size-[60px]" style="background: url('/images/illusions/trinket/trinket-1.png') no-repeat center / calc(100% + 8px), url('/images/backgrounds/item-${rarity.toLowerCase()}.png') no-repeat center / 100% 100%;"></div>`;
 			const trinketRegex = new RegExp(`\[(]\\s*Trinket\\s*\[)]`, "g");
 			guide = guide.replace(trinketRegex, trinketHtml);
 		}

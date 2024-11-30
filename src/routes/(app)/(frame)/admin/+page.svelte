@@ -31,6 +31,10 @@
 			url: "/admin/traits",
 		},
 		{
+			name: "Illusions",
+			url: "/admin/illusions",
+		},
+		{
 			name: "Enemies",
 			url: "/admin/enemies",
 		},
@@ -43,12 +47,8 @@
 			url: "/admin/difficulties",
 		},
 		{
-			name: "Diff. Modifiers",
+			name: "Modifiers",
 			url: "/admin/difficulty-modifiers",
-		},
-		{
-			name: "Twitch Settings",
-			url: "/admin/twitch-settings",
 		},
 		{
 			name: "Build Roles",

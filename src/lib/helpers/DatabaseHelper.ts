@@ -4,7 +4,7 @@ import { CareerSkill } from "$lib/entities/career/CareerSkill";
 import { CareerTalent, type ICareerTalent } from "$lib/entities/career/CareerTalent";
 import { CareerPassive } from "$lib/entities/career/CareerPassive";
 import { Hero } from "$lib/entities/Hero";
-import { Weapon, WeaponTooltip } from "$lib/entities/Weapon";
+import { Weapon } from "$lib/entities/Weapon";
 import { LegacyDataHelper, type LegacyTraitCategory } from "./LegacyDataHelper";
 import { LogHelper } from "./LogHelper";
 import { Trait } from "$lib/entities/Trait";
@@ -18,8 +18,6 @@ import { patchList } from "$lib/data/legacy/PatchList";
 import { Patch } from "$lib/entities/Patch";
 import { potionData } from "$lib/data/legacy/Potions";
 import { Potion } from "$lib/entities/Potion";
-import { twitchData } from "$lib/data/legacy/Twitch";
-import { TwitchSetting } from "$lib/entities/TwitchSetting";
 import { difficultyData } from "$lib/data/legacy/Difficulties";
 import { Difficulty } from "$lib/entities/Difficulty";
 import { firebaseData } from "$lib/data/legacy/FirebaseBackup";
@@ -42,6 +40,8 @@ import TraitCategoryEnum from "$lib/enums/TraitCategoryEnum";
 import { plainToInstance } from "class-transformer";
 import { DifficultyModifier } from "$lib/entities/DifficultyModifier";
 import { CareerCache } from "$lib/cache/RedisCache";
+import { Illusion } from "$lib/entities/ItemIllusion";
+import { ItemTypeEnum } from "$lib/enums/ItemTypeEnum";
 
 // Use this flag to import data from Firebase into Supabase
 let IMPORT_FIREBASE_DATA = true;
@@ -68,6 +68,7 @@ export class DatabaseHelper {
 			await this.createBookSettings();
 			await this.createDifficulties();
 			await this.createDifficultyModifiers();
+			await this.createIllusions();
 
 			// TODO - Realistically this logic is not related to this app and should be a separate service
 			// It may be worth keeping just to be used to populate the database with "dummy" data for "testing"
@@ -104,6 +105,12 @@ export class DatabaseHelper {
 		}
 	}
 
+	static async update() {
+		LogHelper.info("Updating database...");
+		//await this.updateWeaponTooltips();
+		await this.createIllusions();
+	}
+
 	/**
 	 * Populates the database with initial Hero data from legacy data
 	 */
@@ -115,12 +122,13 @@ export class DatabaseHelper {
 		for (var heroName of uniqueHeroes) {
 			var hero = await Hero.findOne({ where: { name: heroName } });
 
-			if (hero) {
-				LogHelper.info(`Hero with name ${heroName} already exists in the database. Skipping...`);
-				continue;
+			if (!hero) {
+				LogHelper.info(`Creating hero with name ${heroName}...`);
+				hero = new Hero();
+			} else {
+				LogHelper.info(`Hero with name ${heroName} already exists in the database. Updating...`);
 			}
 
-			hero = new Hero();
 			hero.name = heroName;
 			await hero.save();
 		}
@@ -138,12 +146,13 @@ export class DatabaseHelper {
 		for (var oldCareer of careers) {
 			var career = await Career.findOne({ where: { codename: oldCareer.codeName } });
 
-			if (career) {
-				LogHelper.info(`Career with codename ${oldCareer.codeName} already exists in the database. Skipping...`);
-				continue;
+			if (!career) {
+				LogHelper.info(`Creating career with codename ${oldCareer.codeName}...`);
+				career = new Career();
+			} else {
+				LogHelper.info(`Career with codename ${oldCareer.codeName} already exists in the database. Updating...`);
 			}
 
-			career = new Career();
 			career.name = oldCareer.name;
 			career.codename = oldCareer.codeName;
 			career.health = oldCareer.health;
@@ -199,12 +208,13 @@ export class DatabaseHelper {
 				relations: { canWieldPrimary: true, canWieldSecondary: true },
 			});
 
-			if (weapon) {
-				LogHelper.info(`Weapon with codename ${oldWeapon.codeName} already exists in the database. Skipping...`);
-				continue;
+			if (!weapon) {
+				LogHelper.info(`Creating weapon with codename ${oldWeapon.codeName}...`);
+				weapon = new Weapon();
+			} else {
+				LogHelper.info(`Weapon with codename ${oldWeapon.codeName} already exists in the database. Updating...`);
 			}
 
-			weapon = new Weapon();
 			weapon.name = oldWeapon.name;
 			weapon.codename = oldWeapon.codeName;
 			weapon.description = oldWeapon.flavorText;
@@ -229,7 +239,9 @@ export class DatabaseHelper {
 				}
 			}
 
-			weapon.tooltips = [];
+			weapon.tooltip = oldWeapon.tooltipLocalized;
+
+			/* weapon.tooltips = [];
 
 			for (var i = 0; i < oldWeapon.description.split(", ").length; i++) {
 				var tooltip = await WeaponTooltip.findOne({ where: { codename: oldWeapon.description.split(", ")[i] } });
@@ -241,7 +253,7 @@ export class DatabaseHelper {
 					await tooltip.save();
 				}
 				weapon.tooltips.push(tooltip);
-			}
+			} */
 
 			weapon.dodgeDistance = parseFloat(oldWeapon.dodgeDistance);
 			weapon.dodgeSpeed = parseFloat(oldWeapon.dodgeSpeed);
@@ -270,7 +282,10 @@ export class DatabaseHelper {
 				weapon.rightClickMovementModifier = parseFloat(oldWeapon.rightClickMovementModifier);
 			}
 
-			const traitCategory = EnumHelper.getValues(TraitCategoryEnum).find((value) => value === oldWeapon.traitCategory);
+			const traitCategory =
+				weapon.name !== "Trollhammer Torpedo"
+					? EnumHelper.getValues(TraitCategoryEnum).find((value) => value === oldWeapon.traitCategory)
+					: TraitCategoryEnum.MeleeRangedHybrid;
 			if (!traitCategory) {
 				LogHelper.error(`Trait category with name ${oldWeapon.traitCategory} is unknown.`);
 				continue;
@@ -296,6 +311,106 @@ export class DatabaseHelper {
 	}
 
 	/**
+	 * Updates the tooltip for each weapon
+	 */
+	private static async updateWeaponTooltips() {
+		LogHelper.info("Updating weapon tooltips...");
+		let legacyWeapons = LegacyDataHelper.getWeapons();
+		legacyWeapons = legacyWeapons.sort((a: any, b: any) => a.id - b.id);
+
+		for (var oldWeapon of legacyWeapons) {
+			var weapon = await Weapon.findOne({
+				where: { codename: oldWeapon.codeName },
+			});
+
+			if (!weapon) {
+				LogHelper.info(`Weapon with codename ${oldWeapon.codeName} could not be found. Skipping...`);
+				continue;
+			}
+
+			weapon.tooltip = oldWeapon.tooltipLocalized;
+			await weapon.save({ data: { authorizationBypassKey: env.PRIVATE_DATABASE_AUTHORIZATION_BYPASS_KEY } });
+		}
+
+		LogHelper.info("Updated weapon tooltips successfully!");
+	}
+
+	/**
+	 * Creates weapon illusions from a list of file paths
+	 */
+	private static async createIllusions() {
+		LogHelper.info("Creating weapon illusions...");
+
+		const weapons = await Weapon.find();
+
+		let illusionFiles = import.meta.glob(`/static/images/illusions/weapons/**/*.png`);
+
+		for (var weapon of weapons) {
+			// Get all the weapon illusion .png files from /images/illusions/weapons/{weapon.codename}
+
+			//from all illusion files check for ones with a path containing the codename
+			const weaponIllusions = Object.keys(illusionFiles).filter((path) => path.includes(`/${weapon.codename}/`));
+			for (var weaponIllusion of weaponIllusions) {
+				let filename = weaponIllusion.split("/").pop() || "";
+				let extension = filename.split(".").pop();
+
+				let illusion = await Illusion.findOne({ where: { image: filename, weapon: { id: weapon.id } } });
+
+				if (illusion) {
+					LogHelper.info(
+						`Illusion with name ${filename.replace(`.${extension}`, "")} already exists in the database. Skipping...`
+					);
+					continue;
+				}
+
+				illusion = new Illusion();
+				illusion.name = filename.replace(`.${extension}`, "");
+				illusion.image = filename;
+				illusion.weapon = weapon;
+				illusion.itemType = ItemTypeEnum.Weapon;
+				await illusion.save({ data: { authorizationBypassKey: env.PRIVATE_DATABASE_AUTHORIZATION_BYPASS_KEY } });
+			}
+		}
+
+		const necklaceFiles = import.meta.glob(`/static/images/illusions/necklace/*.png`);
+		const charmFiles = import.meta.glob(`/static/images/illusions/charm/*.png`);
+		const trinketFiles = import.meta.glob(`/static/images/illusions/trinket/*.png`);
+
+		this.createEquipmentIllusions(Object.keys(necklaceFiles), ItemTypeEnum.Necklace);
+		this.createEquipmentIllusions(Object.keys(charmFiles), ItemTypeEnum.Charm);
+		this.createEquipmentIllusions(Object.keys(trinketFiles), ItemTypeEnum.Trinket);
+
+		LogHelper.info("Created weapon illusions successfully!");
+	}
+
+	/**
+	 * Creates equipment illusions from a list of file paths
+	 * @param illusionFiles - The list of file paths to create illusions from
+	 * @param itemType - The type of item to create illusions for
+	 */
+	private static async createEquipmentIllusions(illusionFiles: string[], itemType: ItemTypeEnum) {
+		LogHelper.info(`Creating equipment illusions...`);
+
+		for (var illusionFile of illusionFiles) {
+			let filename = illusionFile.split("/").pop() || "";
+			let extension = filename.split(".").pop();
+
+			const entity = await Illusion.findOne({ where: { image: filename } });
+
+			if (entity) {
+				LogHelper.info(`Illusion with name ${filename.replace(`.${extension}`, "")} already exists in the database. Skipping...`);
+				continue;
+			}
+
+			const illusion = new Illusion();
+			illusion.name = filename.replace(`.${extension}`, "");
+			illusion.image = filename;
+			illusion.itemType = itemType;
+			await illusion.save();
+		}
+	}
+
+	/**
 	 * Populates the database with initial Property data from legacy data
 	 */
 	private static async createProperties() {
@@ -313,12 +428,13 @@ export class DatabaseHelper {
 			for (var oldProperty of oldPropertyCategory.properties) {
 				var property = await Property.findOne({ where: { name: oldProperty.name, category: propertyCategory } });
 
-				if (property) {
-					LogHelper.info(`Property with name ${oldProperty.name} already exists in the database. Skipping...`);
-					continue;
+				if (!property) {
+					LogHelper.info(`Creating property with name ${oldProperty.name}...`);
+					property = new Property();
+				} else {
+					LogHelper.info(`Property with name ${oldProperty.name} already exists in the database. Updating...`);
 				}
 
-				property = new Property();
 				property.name = oldProperty.name;
 				property.description = oldProperty.description;
 				property.category = propertyCategory;
@@ -351,12 +467,13 @@ export class DatabaseHelper {
 			for (var oldTrait of oldTraitCategory.traits) {
 				var trait = await Trait.findOne({ where: { name: oldTrait.name, category: traitCategory } });
 
-				if (trait) {
-					LogHelper.info(`Trait with name ${oldTrait.name} already exists in the database. Skipping...`);
-					continue;
+				if (!trait) {
+					LogHelper.info(`Creating trait with name ${oldTrait.name}...`);
+					trait = new Trait();
+				} else {
+					LogHelper.info(`Trait with name ${oldTrait.name} already exists in the database. Updating...`);
 				}
 
-				trait = new Trait();
 				trait.name = oldTrait.name;
 				trait.description = oldTrait.description;
 				trait.category = traitCategory;
@@ -364,7 +481,42 @@ export class DatabaseHelper {
 			}
 		}
 
+		await this.createHybridTraits();
+
 		LogHelper.info("Created traits successfully!");
+	}
+
+	public static async createHybridTraits() {
+		LogHelper.info("Creating hybrid traits...");
+
+		const rangedAmmoTraits = await Trait.find({ where: { category: TraitCategoryEnum.RangedAmmo } });
+
+		for (var rangedTrait of rangedAmmoTraits) {
+			let trait = await Trait.findOne({ where: { name: rangedTrait.name, category: TraitCategoryEnum.MeleeRangedHybrid } });
+
+			if (!trait) {
+				LogHelper.info(`Creating trait with name ${rangedTrait.name}...`);
+				trait = new Trait();
+			} else {
+				LogHelper.info(`Trait with name ${rangedTrait.name} already exists in the database. Updating...`);
+			}
+
+			trait.name = rangedTrait.name;
+			trait.description = rangedTrait.description;
+			trait.category = TraitCategoryEnum.MeleeRangedHybrid;
+
+			if (trait.name === "Conservative Shooter") {
+				trait.name = "Parry";
+				trait.description = "Timed blocks reduces stamina cost by 100.0%.";
+			} else if (trait.name === "Scrounger") {
+				trait.name = "Off-balance";
+				trait.description = "Blocking an attack increases the damage the attacker takes by 20.0% for 5.0 seconds.";
+			}
+
+			await trait.save();
+		}
+
+		LogHelper.info("Created hybrid traits successfully!");
 	}
 
 	/**
@@ -376,12 +528,13 @@ export class DatabaseHelper {
 		for (var oldPerk of unlistedPerksData) {
 			var perk = await CareerPerk.findOne({ where: { name: oldPerk.name } });
 
-			if (perk) {
-				LogHelper.info(`Perk with name ${oldPerk.name} already exists in the database. Skipping...`);
-				continue;
+			if (!perk) {
+				LogHelper.info(`Creating career perk with name ${oldPerk.name}...`);
+				perk = new CareerPerk();
+			} else {
+				LogHelper.info(`Career perk with name ${oldPerk.name} already exists in the database. Updating...`);
 			}
 
-			perk = new CareerPerk();
 			perk.name = oldPerk.name;
 			perk.description = oldPerk.description;
 			var career = await Career.findOne({ where: { id: oldPerk.careerId } });
@@ -403,12 +556,13 @@ export class DatabaseHelper {
 		for (var oldBuildRole of roleData) {
 			var buildRole = await BuildRole.findOne({ where: { name: oldBuildRole.name } });
 
-			if (buildRole) {
-				LogHelper.info(`Build role with name ${oldBuildRole.name} already exists in the database. Skipping...`);
-				continue;
+			if (!buildRole) {
+				LogHelper.info(`Creating build role with name ${oldBuildRole.name}...`);
+				buildRole = new BuildRole();
+			} else {
+				LogHelper.info(`Build role with name ${oldBuildRole.name} already exists in the database. Updating...`);
 			}
 
-			buildRole = new BuildRole();
 			buildRole.name = oldBuildRole.name;
 			await buildRole.save();
 		}
@@ -425,9 +579,11 @@ export class DatabaseHelper {
 		for (var oldDifficulty of difficultyData) {
 			var difficulty = await Difficulty.findOne({ where: { name: oldDifficulty.name } });
 
-			if (difficulty) {
-				LogHelper.info(`Difficulty with name ${oldDifficulty.name} already exists in the database. Skipping...`);
-				continue;
+			if (!difficulty) {
+				LogHelper.info(`Creating difficulty with name ${oldDifficulty.name}...`);
+				difficulty = new Difficulty();
+			} else {
+				LogHelper.info(`Difficulty with name ${oldDifficulty.name} already exists in the database. Updating...`);
 			}
 
 			let difficultyName = oldDifficulty.name;
@@ -438,7 +594,6 @@ export class DatabaseHelper {
 				difficultyName = "Cataclysm 3";
 			}
 
-			difficulty = new Difficulty();
 			difficulty.name = difficultyName;
 			await difficulty.save();
 		}
@@ -457,12 +612,13 @@ export class DatabaseHelper {
 		for (var difficultyModifierName of difficultyModifiers) {
 			var difficultyModifierEntity = await DifficultyModifier.findOne({ where: { name: difficultyModifierName } });
 
-			if (difficultyModifierEntity) {
-				LogHelper.info(`Difficulty modifier with name ${difficultyModifierName} already exists in the database. Skipping...`);
-				continue;
+			if (!difficultyModifierEntity) {
+				LogHelper.info(`Creating difficulty modifier with name ${difficultyModifierName}...`);
+				difficultyModifierEntity = new DifficultyModifier();
+			} else {
+				LogHelper.info(`Difficulty modifier with name ${difficultyModifierName} already exists in the database. Updating...`);
 			}
 
-			difficultyModifierEntity = new DifficultyModifier();
 			difficultyModifierEntity.name = difficultyModifierName;
 			await difficultyModifierEntity.save();
 		}
@@ -479,12 +635,13 @@ export class DatabaseHelper {
 		for (var oldMission of missionData) {
 			var mission = await Mission.findOne({ where: { name: oldMission.name } });
 
-			if (mission) {
-				LogHelper.info(`Mission with name ${oldMission.name} already exists in the database. Skipping...`);
-				continue;
+			if (!mission) {
+				LogHelper.info(`Creating mission with name ${oldMission.name}...`);
+				mission = new Mission();
+			} else {
+				LogHelper.info(`Mission with name ${oldMission.name} already exists in the database. Updating...`);
 			}
 
-			mission = new Mission();
 			mission.name = oldMission.name;
 			await mission.save();
 		}
@@ -501,12 +658,13 @@ export class DatabaseHelper {
 		for (var oldPatch of patchList) {
 			var patch = await Patch.findOne({ where: { number: oldPatch.number } });
 
-			if (patch) {
-				LogHelper.info(`Patch with number ${oldPatch.number} already exists in the database. Skipping...`);
-				continue;
+			if (!patch) {
+				LogHelper.info(`Creating patch with number ${oldPatch.number}...`);
+				patch = new Patch();
+			} else {
+				LogHelper.info(`Patch with number ${oldPatch.number} already exists in the database. Updating...`);
 			}
 
-			patch = new Patch();
 			patch.type = PatchTypeEnum[oldPatch.type as "Hotfix" | "Update"];
 			patch.number = oldPatch.number;
 			patch.date = oldPatch.date;
@@ -525,39 +683,18 @@ export class DatabaseHelper {
 		for (var oldPotion of potionData) {
 			var potion = await Potion.findOne({ where: { name: oldPotion.name } });
 
-			if (potion) {
-				LogHelper.info(`Potion with name ${oldPotion.name} already exists in the database. Skipping...`);
-				continue;
+			if (!potion) {
+				LogHelper.info(`Creating potion with name ${oldPotion.name}...`);
+				potion = new Potion();
+			} else {
+				LogHelper.info(`Potion with name ${oldPotion.name} already exists in the database. Updating...`);
 			}
 
-			potion = new Potion();
 			potion.name = oldPotion.name;
 			await potion.save();
 		}
 
 		LogHelper.info("Created potions successfully!");
-	}
-
-	/**
-	 * Populates the database with initial Twitch settings
-	 */
-	private static async createTwitchSettings() {
-		LogHelper.info("Creating Twitch settings...");
-
-		for (var oldTwitchSetting of twitchData) {
-			var twitchSetting = await TwitchSetting.findOne({ where: { name: oldTwitchSetting.name } });
-
-			if (twitchSetting) {
-				LogHelper.info(`Twitch settings with name ${oldTwitchSetting.name} already exists in the database. Skipping...`);
-				continue;
-			}
-
-			twitchSetting = new TwitchSetting();
-			twitchSetting.name = oldTwitchSetting.name;
-			await twitchSetting.save();
-		}
-
-		LogHelper.info("Created Twitch settings successfully!");
 	}
 
 	/**
@@ -569,12 +706,13 @@ export class DatabaseHelper {
 		for (var oldBookSetting of bookData) {
 			var bookSetting = await BookSetting.findOne({ where: { name: oldBookSetting.name } });
 
-			if (bookSetting) {
-				LogHelper.info(`Twitch settings with name ${oldBookSetting.name} already exists in the database. Skipping...`);
-				continue;
+			if (!bookSetting) {
+				LogHelper.info(`Creating Book setting with name ${oldBookSetting.name}...`);
+				bookSetting = new BookSetting();
+			} else {
+				LogHelper.info(`Book setting with name ${oldBookSetting.name} already exists in the database. Updating...`);
 			}
 
-			bookSetting = new BookSetting();
 			bookSetting.name = oldBookSetting.name;
 			await bookSetting.save();
 		}
@@ -821,7 +959,6 @@ export class DatabaseHelper {
 				continue;
 			}
 			primaryWeaponBuild.trait = primaryWeaponTrait;
-			primaryWeaponBuild.user = user;
 			build.primaryWeapon = primaryWeaponBuild;
 
 			// Setting Secondary Weapon
@@ -866,22 +1003,26 @@ export class DatabaseHelper {
 			}
 			secondaryWeaponBuild.property2 = secondaryWeaponProperty2;
 
+			let secondaryWeaponTraitCategory =
+				secondaryWeapon.traitCategory === TraitCategoryEnum.MeleeRangedHybrid
+					? TraitCategoryEnum.RangedAmmo
+					: secondaryWeapon.traitCategory;
+
 			let secondaryLegacyTrait = LegacyDataHelper.getTraitMapById(
-				secondaryWeapon.traitCategory as LegacyTraitCategory,
+				secondaryWeaponTraitCategory as LegacyTraitCategory,
 				firebaseBuild.secondaryWeapon.traitId
 			);
 			let secondaryWeaponTrait = traitData.find((trait) => {
-				return trait.name === secondaryLegacyTrait?.name && trait.category === secondaryWeapon.traitCategory;
+				return trait.name === secondaryLegacyTrait?.name && trait.category === secondaryWeaponTraitCategory;
 			});
 			if (!secondaryWeaponTrait) {
 				LogHelper.error(
-					`Trait with name ${secondaryLegacyTrait?.name} for category ${secondaryWeapon.traitCategory} not found in the database.`
+					`Trait with name ${secondaryLegacyTrait?.name} for category ${secondaryWeaponTraitCategory} not found in the database.`
 				);
 				LogHelper.error(`Could not find firebase trait ID ${firebaseBuild.secondaryWeapon.traitId}`);
 				continue;
 			}
 			secondaryWeaponBuild.trait = secondaryWeaponTrait;
-			secondaryWeaponBuild.user = user;
 			build.secondaryWeapon = secondaryWeaponBuild;
 
 			// Setting Charm
@@ -934,7 +1075,6 @@ export class DatabaseHelper {
 				continue;
 			}
 			charm.trait = charmTrait;
-			charm.user = user;
 			build.charm = charm;
 
 			// Setting Necklace
@@ -987,7 +1127,6 @@ export class DatabaseHelper {
 				continue;
 			}
 			necklace.trait = necklaceTrait;
-			necklace.user = user;
 			build.necklace = necklace;
 
 			// Setting Trinket
@@ -1040,7 +1179,6 @@ export class DatabaseHelper {
 				continue;
 			}
 			trinket.trait = trinketTrait;
-			trinket.user = user;
 			build.trinket = trinket;
 
 			// Setting Talents
@@ -1191,6 +1329,7 @@ export class DatabaseHelper {
 
 			// Setting bot
 			build.isBot = DatabaseHelper.isBotBuild(firebaseBuild);
+			build.level = 35;
 
 			// Set date modified and created
 			build.dateModified = new Date(firebaseBuild.dateModified.value._seconds * 1000);

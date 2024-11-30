@@ -8,6 +8,7 @@ export type InventoryTab = "PRIMARY" | "SECONDARY" | "EQUIPMENT";
 class HeroesPageState {
 	selectedCareer: ICareer | null = $state(null);
 	build: ICareerBuild | null = $state(null);
+	hashes: LocalStorageState<string[]> = new LocalStorageState("BuildHashes", []);
 	inventoryTab: LocalStorageState<InventoryTab> = new LocalStorageState("HeroesPageInventoryTab", "PRIMARY");
 }
 

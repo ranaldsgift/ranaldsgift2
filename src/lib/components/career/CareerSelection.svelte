@@ -3,8 +3,9 @@
 	import CareerIcon from "./CareerIcon.svelte";
 	import ContainerTitle from "../ContainerTitle.svelte";
 	import type { IHero } from "$lib/entities/Hero";
-	import { CareersStore } from "$lib/stores/DataStores";
+	import { CareersStore, HeroesStore } from "$lib/stores/DataStores";
 	import { getWindowState } from "$lib/state/WindowState.svelte";
+	import { browser } from "$app/environment";
 
 	type Props = {
 		selectedCareer: ICareer | null;
@@ -15,10 +16,11 @@
 	let { selectedCareer = $bindable(), careers, handler }: Props = $props();
 
 	let careersData = $state<ICareer[]>(careers ?? []);
+	let heroesData = $state<IHero[]>(careers ? [...new Map(careers?.map((c) => [c.hero.id, c.hero]) ?? []).values()] : []);
 
 	const windowState = getWindowState();
 
-	let selectedHero = $state<IHero | null>(selectedCareer?.hero ?? null);
+	let selectedHero = $state<IHero | null>(null);
 	let heroes = $derived<IHero[]>([...new Map(careersData?.map((c) => [c.hero.id, c.hero]) ?? []).values()]);
 
 	let careersState = $derived.by<ICareer[]>(() => {
@@ -29,7 +31,17 @@
 		return careersData?.filter((c) => c.hero.id === selectedHero?.id) ?? [];
 	});
 
-	let iconStyleState = $derived<"portrait-wide" | "portrait" | "icon">(windowState.isWideScreen ? "portrait" : "portrait-wide");
+	let iconStyleState = $derived<"portrait-wide" | "portrait" | "icon">(
+		!browser || windowState.isWideScreen ? "portrait" : "portrait-wide"
+	);
+
+	$effect(() => {
+		if (!windowState.isWideScreen && !selectedHero) {
+			selectedHero = selectedCareer?.hero ?? heroesData[0];
+		}
+	});
+
+	$inspect(windowState);
 
 	const handleHeroSelection = (hero: IHero) => {
 		if (selectedHero?.id === hero.id) {
@@ -49,6 +61,8 @@
 	$effect(() => {
 		loadCareers();
 	});
+
+	let aspectRatio = $derived<number>(windowState.isWideScreen ? 114 / 134 : 203 / 72);
 </script>
 
 <div class="career-selection-container top-left-shadow self-start">
@@ -56,7 +70,7 @@
 	<div class="relative background-33 grid pt-2 min-[1800px]:hidden">
 		<div class="border-01 absolute top-0 left-0 right-0 bottom-0 z-20 pointer-events-none"></div>
 		<div class="max-w-[650px] w-full m-auto block z-10 relative">
-			<div class="flex gap-2 justify-between mx-[5%] mobile:mx-[7%] mb-[10px] tablet:mb-0">
+			<div class="flex gap-2 justify-between mx-[5%] mobile:mx-[7%] mb-[10px]">
 				{#each heroes as hero}
 					<button onclick={() => handleHeroSelection(hero)}>
 						<img
@@ -67,27 +81,28 @@
 					</button>
 				{/each}
 			</div>
-			<div class="divider-18-horizontal w-full h-[50px] mb-2 !bg-bottom z-10 hidden tablet:block mt-[-20px]"></div>
 		</div>
-		<div class="divider-18-straight w-[calc(100%-650px)] h-[55px] absolute left-[0px] bottom-[3px] hidden tablet:block"></div>
-		<div class="divider-18-straight w-[calc(100%-650px)] h-[55px] absolute right-[0px] bottom-[3px] hidden tablet:block"></div>
 	</div>
-	<div class="careers-icon-container grid auto-rows-[60px] grid-cols-2 tablet:grid-cols-4 gap-2 background-12 border-01 p-5">
-		{#each careersState as career}
-			<div class="icon-wrapper">
-				<button
-					class={career.id === selectedCareer?.id ? "selected" : ""}
-					onclick={() => {
-						selectedCareer = career;
-						if (handler) {
-							handler(career);
-						}
-					}}
-				>
-					<CareerIcon careerId={career.id} style={iconStyleState}></CareerIcon>
-				</button>
-			</div>
-		{/each}
+	<div class="background-12 border-01 p-2 mobile:px-[10%] min-[1800px]:px-5">
+		<div
+			class="careers-icon-container grid grid-cols-2 grid-rows-[72px_72px] desktop:grid-rows-[72px] min-[1800px]:grid-rows-[96px_96px_96px_96px_96px] desktop:grid-cols-[86px_86px_86px_86px] mx-auto justify-center"
+		>
+			{#each careersState as career}
+				<div class="icon-wrapper p-1">
+					<button
+						class={career.id === selectedCareer?.id ? "selected" : ""}
+						onclick={() => {
+							selectedCareer = career;
+							if (handler) {
+								handler(career);
+							}
+						}}
+					>
+						<CareerIcon careerId={career.id} style={iconStyleState}></CareerIcon>
+					</button>
+				</div>
+			{/each}
+		</div>
 	</div>
 </div>
 
@@ -115,10 +130,5 @@
 		box-shadow: 0 0 8px 2px gold;
 		outline: 1px solid #fff;
 		cursor: pointer;
-	}
-	@media (min-width: 1800px) {
-		.careers-icon-container {
-			grid-auto-rows: 85px;
-		}
 	}
 </style>

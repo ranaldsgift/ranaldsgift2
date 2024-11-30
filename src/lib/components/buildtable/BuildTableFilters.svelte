@@ -208,6 +208,7 @@
 
 	function clearAllFilters() {
 		filter = { ...defaultFilter, search: null };
+		isModded = false;
 	}
 
 	$effect(() => {

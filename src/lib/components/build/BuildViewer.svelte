@@ -24,12 +24,17 @@
 	<div class="build-overview-container border-01 pb-5">
 		<BuildHeader {build} {patchNumber}></BuildHeader>
 		<div class="summary-container px-5 mt-0 mobile:mt-[20px] flex-col desktop:flex-row">
-			<CareerBuildSummaryContainer {build} career={build.career}></CareerBuildSummaryContainer>
+			{#if build.career}
+				<CareerBuildSummaryContainer {build} career={build.career}></CareerBuildSummaryContainer>
+			{/if}
 			<BuildTalentSummary {build}></BuildTalentSummary>
 		</div>
 		<div class="divider-03 h-[48px]"></div>
 		<BuildSummary class="px-5" {build}></BuildSummary>
-		<BuildOptionsViewer class="px-5" {build}></BuildOptionsViewer>
+		<div class="divider-03 h-[48px]"></div>
+		<div class="flex justify-center">
+			<BuildOptionsViewer class="px-5" {build}></BuildOptionsViewer>
+		</div>
 	</div>
 	{#if hasBuildDescription}
 		<BuildGuideView {build}></BuildGuideView>

@@ -10,6 +10,7 @@
 		transparent?: boolean;
 		showDescription?: boolean;
 		tooltipPosition?: "top" | "bottom";
+		class?: string;
 	};
 
 	let {
@@ -20,28 +21,26 @@
 		transparent = false,
 		showDescription = false,
 		tooltipPosition = "bottom",
+		class: className,
 	}: Props = $props();
 </script>
 
-{#if talent}
+{#if talent && talent.talentNumber}
 	<div
-		class="talent-container {state}"
+		class="talent-container {state} {className}"
 		data-career={careerId}
 		data-show-description={showDescription}
 		data-tooltip-position={tooltipPosition}
 	>
 		<div class="talent-button-wrapper {transparent ? 'bg-transparent' : 'background-26'}" style="--iconSize: {size}">
-			{#if talent}
-				<div class="talent-icon-wrapper">
-					<CareerTalentIcon {size} {careerId} talentNumber={talent.talentNumber} class="z-[0]"></CareerTalentIcon>
-				</div>
-				<p class="talent-name">{talent.name}</p>
-				<p class="talent-description max-mobile:!w-full">{talent.description}</p>
-			{:else}
-				<span class="talent-icon"></span>
-				<p class="talent-name">No Talent Selected</p>
-				<p class="talent-description"></p>
-			{/if}
+			<div class="talent-icon-wrapper">
+				<CareerTalentIcon {size} {careerId} talentNumber={talent.talentNumber} class="z-[0]"></CareerTalentIcon>
+			</div>
+			<p class="talent-name">{talent.name}</p>
+			<div class="talent-description max-mobile:!w-full !grayscale-0">
+				<h1 class="header-underline">{talent.name}</h1>
+				<p>{talent.description}</p>
+			</div>
 		</div>
 	</div>
 {:else}
@@ -51,14 +50,12 @@
 {/if}
 
 <style>
+	.talent-icon-wrapper {
+		display: flex;
+		align-items: center;
+	}
 	.talent-container:hover .talent-name {
 		background: linear-gradient(-16deg, rgb(79 79 79 / 29%) 30%, transparent);
-	}
-	.talent-icon-wrapper {
-		box-shadow:
-			inset 0 10px 10px -10px #fff,
-			0 -1px 0 0 #564640,
-			2px 4px 5px 1px #000;
 	}
 	@media (min-width: 460px) {
 		.talent-container[data-show-description="false"] .talent-description {
@@ -136,14 +133,14 @@
 	}
 	.talent-container .talent-name {
 		font-size: 1.5rem;
+		line-height: 1.5rem;
 		align-content: center;
 		height: 100%;
 		display: grid;
 		text-align: left;
 		font-family: caslon-antique-bold;
 		color: #c15b24;
-		padding-left: 8px;
-		padding-right: 10px;
+		padding: 5px 10px;
 	}
 	.talent-container .talent-description {
 		font-size: 1.5rem;

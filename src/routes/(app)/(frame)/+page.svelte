@@ -18,6 +18,7 @@
 		{ title: "Chaos Wastes", url: "/wastes" },
 		{ title: "Versus", url: "/versus" },
 		{ title: "Weaves", url: "/weaves" }, */
+		{ title: "Stats", url: "/careers", background: "/images/menu/stats.png" },
 		{ title: "Events", url: "/events", background: "/images/menu/events.png" },
 		{ title: "Onslaught Series", url: "/onslaught-series", background: "/images/menu/onslaught-series.png" },
 		{ title: "Modded Difficulties", url: "/modded-difficulties", background: "/images/menu/modded-difficulties.png" },
@@ -30,13 +31,14 @@
 <PageContainer>
 	<TextHeader>Ranald's Gift</TextHeader>
 	<div class="divider-21 w-full h-[20px] mb-2"></div>
-	<ContentContainer class="max-w-[1200px] w-fit m-auto text-center">
+	<ContentContainer class="max-w-[1200px] m-auto text-center">
 		<p>Your Resource for Vermintide 2 Builds, Mechanics and Gameplay Information</p>
 		<div class="divider-10 h-[26px] !bg-contain my-2"></div>
-		<div class="flex flex-wrap gap-5 max-w-[820px] m-auto justify-center">
-			{#each pages as page}
+		<div class="grid grid-cols-2 gap-5 max-w-[820px] m-auto justify-center">
+			{#each pages as page, index}
 				<a
-					class="menu-button flex-1 p-5 relative"
+					class="menu-button p-5 relative"
+					class:col-span-2={index === 0}
 					style="--title: '{page.title}'; --background: url('{page.background}')"
 					href={page.url}
 					>{page.title}

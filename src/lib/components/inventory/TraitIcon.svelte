@@ -2,7 +2,7 @@
 	import type { ITrait } from "$lib/entities/Trait";
 
 	type Props = {
-		trait: ITrait;
+		trait?: ITrait | null;
 		class?: string;
 		size?: string;
 		tooltipPosition?: {
@@ -11,26 +11,24 @@
 		};
 	};
 
-	let { trait, class: CLASS = "", size = "60px", tooltipPosition: position = { x: "center", y: "top" } }: Props = $props();
+	let { trait, class: CLASS = "", size = "60px", tooltipPosition = { x: "left", y: "top" } }: Props = $props();
 	let translateX = $derived(
-		position.x === "center" ? "translateX(-50%)" : position.x === "right" ? "translateX(100%)" : "translateX(0%)"
+		tooltipPosition.x === "center" ? "translateX(-50%)" : tooltipPosition.x === "right" ? "translateX(100%)" : "translateX(0%)"
 	);
 	let translateY = $derived(
-		position.y === "bottom" ? "translateY(100%)" : position.y === "top" ? "translateY(-100%)" : "translateY(-25%)"
+		tooltipPosition.y === "bottom" ? "translateY(100%)" : tooltipPosition.y === "top" ? "translateY(-100%)" : "translateY(-25%)"
 	);
 </script>
 
-<span
-	class={`item-trait-icon trait-icon border-04`}
-	style="--size: {size}; background: url('/images/traits/{trait.name.toLowerCase().replaceAll(' ', '-')}.png'), black"
->
-	<span class="tooltip border-35 max-w-[200px] mobile:max-w-[250px]" style="transform: {translateX} {translateY};">
-		<span class="name header-underline">{trait.name}</span>
-		<span class="description">
-			{trait.description}
-		</span>
+{#if trait && trait.name}
+	<span
+		class={`item-trait-icon trait-icon border-04`}
+		style="--size: {size}; background: url('/images/traits/{trait.name.toLowerCase().replaceAll(' ', '-')}.png'), black"
+	>
 	</span>
-</span>
+{:else}
+	<span class="item-trait-icon trait-icon lock-icon border-04" style="--size: {size};"></span>
+{/if}
 
 <style>
 	.item-trait-icon {
@@ -44,6 +42,7 @@
 		display: inline-block;
 		box-shadow: inset 0 4px 2px white;
 		position: relative;
+		background-color: #000;
 	}
 	.item-trait-icon::after {
 		background-color: #0000 !important;
@@ -56,7 +55,7 @@
 		position: relative;
 		top: 0;
 		bottom: 0;
-		left: var(--tooltipLeft);
+		left: 0;
 		padding: 1.5rem;
 		z-index: 1000;
 		background: linear-gradient(0deg, #000000cf, #00000030), url("/images/backgrounds/background29.png");
