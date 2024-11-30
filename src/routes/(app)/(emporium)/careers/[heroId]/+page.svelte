@@ -6,9 +6,13 @@
 	import EmporiumLayout from "$lib/components/layout/EmporiumLayout.svelte";
 	import Seo from "$lib/components/SEO.svelte";
 	import TextHeader from "$lib/components/TextHeader.svelte";
+	import { getVerminDataState } from "$lib/state/VerminDataState.svelte.js";
 
 	let { data } = $props();
 	let showAllWeapons = $state(false);
+	let showAllSecondaryWeapons = $state(false);
+
+	let verminData = getVerminDataState();
 </script>
 
 <Seo title="Builds and Stats for the Heroes of Ubersreik" />
@@ -35,7 +39,7 @@
 							>
 							</span>
 							<span class="absolute top-0 left-0 w-full h-full career-name pointer-events-none">
-								{careerStat?.name}
+								{careerStat?.careerName}
 							</span>
 							<div class="border-10 absolute top-0 left-0 w-full h-full pointer-events-none"></div>
 						</a>
@@ -44,7 +48,7 @@
 			{/if}
 		</div>
 		<div
-			class="flex-1 w-full relative top-10"
+			class="w-full bottom-0 absolute h-1/2"
 			style="background: url('/images/careers/hero-{data.viewModel.heroId}-render.png') no-repeat center center / contain;"
 		></div>
 	{/snippet}
@@ -61,7 +65,9 @@
 							<img class="career-icon" src="/images/careers/{careerStat.careerId}/portrait.png" alt={careerStat.name} />
 							<div class="absolute top-0 left-0 w-full h-full border-10 pointer-events-none"></div>
 						</a>
-						<span class="absolute top-0 -translate-y-1/2 w-full text-center label-03 p-3">{careerStat.percentageOfTotal}%</span>
+						<span class="absolute top-0 -translate-y-1/2 w-full text-center label-03 p-3"
+							>{Math.round((careerStat.count / data.viewModel.totalHeroBuilds) * 100)}%</span
+						>
 					</div>
 				{/each}
 			</div>
@@ -74,17 +80,18 @@
 				<div class="weapons-grid">
 					{#each data.viewModel.primaryWeaponStats as primaryWeaponStat, index}
 						<div
-							class="weapon-item relative p-2 pt-5 border-10 mt-8"
+							class="weapon-item relative flex flex-col items-center"
 							class:hidden={!showAllWeapons && index >= 5}
 							style="transition-delay: {(index % 5) * 100}ms"
 						>
-							<div class="p-[25px] label-10 !bg-contain !bg-no-repeat relative">
-								<WeaponIconTooltip weapon={primaryWeaponStat.weapon}></WeaponIconTooltip>
-							</div>
-							<span
-								class="absolute top-0 -translate-y-1/2 left-0 w-full text-center label-03 h-[48px] grid place-content-center"
-								>{primaryWeaponStat.percentageOfTotal}%</span
+							<span class="w-full text-center label-03 h-[48px] grid place-content-center -mb-10 z-10"
+								>{Math.round((primaryWeaponStat.count / data.viewModel.totalPrimaryWeapons) * 100)}%</span
 							>
+							<a href={`/weapons/weapon/${primaryWeaponStat.weaponId}`}>
+								<div class="p-[25px] label-10 !bg-contain !bg-no-repeat relative">
+									<WeaponIconTooltip weapon={verminData.getWeapon(primaryWeaponStat.weaponId)}></WeaponIconTooltip>
+								</div>
+							</a>
 						</div>
 					{/each}
 				</div>
@@ -95,6 +102,39 @@
 					onclick={() => (showAllWeapons = !showAllWeapons)}
 				>
 					{showAllWeapons ? "Show Less" : "View All"}
+				</button>
+			{/if}
+			<div class="absolute top-0 left-0 w-full h-full border-31 pointer-events-none"></div>
+		</div>
+		<div class="flex flex-wrap background-28 relative p-2 !bg-cover w-full justify-center mb-5">
+			<TextHeader>Secondary Weapons</TextHeader>
+			<div class="divider-23 w-full h-[30px]"></div>
+			<div class="weapons-container" class:expanded={showAllSecondaryWeapons}>
+				<div class="weapons-grid">
+					{#each data.viewModel.secondaryWeaponStats as secondaryWeaponStat, index}
+						<div
+							class="weapon-item relative flex flex-col items-center"
+							class:hidden={!showAllSecondaryWeapons && index >= 5}
+							style="transition-delay: {(index % 5) * 100}ms"
+						>
+							<span class="w-full text-center label-03 h-[48px] grid place-content-center -mb-10 z-10"
+								>{Math.round((secondaryWeaponStat.count / data.viewModel.totalSecondaryWeapons) * 100)}%</span
+							>
+							<a href={`/weapons/weapon/${secondaryWeaponStat.weaponId}`}>
+								<div class="p-[25px] label-10 !bg-contain !bg-no-repeat relative">
+									<WeaponIconTooltip weapon={verminData.getWeapon(secondaryWeaponStat.weaponId)}></WeaponIconTooltip>
+								</div>
+							</a>
+						</div>
+					{/each}
+				</div>
+			</div>
+			{#if data.viewModel.secondaryWeaponStats.length > 5}
+				<button
+					class="view-all-btn text-[#9f9065] hover:text-white transition-colors"
+					onclick={() => (showAllSecondaryWeapons = !showAllSecondaryWeapons)}
+				>
+					{showAllSecondaryWeapons ? "Show Less" : "View All"}
 				</button>
 			{/if}
 			<div class="absolute top-0 left-0 w-full h-full border-31 pointer-events-none"></div>

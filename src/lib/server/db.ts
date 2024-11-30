@@ -56,6 +56,7 @@ import { HeroPrimaryWeaponCounts } from "$lib/entities/views/HeroPrimaryWeaponCo
 import { HeroSecondaryWeaponCounts } from "$lib/entities/views/HeroSecondaryWeaponCounts";
 import { HeroWeaponCounts } from "$lib/entities/views/HeroWeaponCounts";
 import { CareerWeaponCounts } from "$lib/entities/views/CareerWeaponCounts";
+import { CareerBuildHeroSecondaryWeapons } from "$lib/entities/views/CareerBuildHeroSecondaryWeapons";
 
 let PRIVATE_SUPABASE_HOST = env.PRIVATE_SUPABASE_HOST;
 let PRIVATE_SUPABASE_PASSWORD = env.PRIVATE_SUPABASE_PASSWORD;
@@ -116,6 +117,7 @@ class TypeOrm {
 					Event,
 					CareerBuildCareers,
 					CareerBuildHeroPrimaryWeapons,
+					CareerBuildHeroSecondaryWeapons,
 					CareerBuildCareerPrimaryWeapons,
 					CareerBuildCareerSecondaryWeapons,
 					CareerBuildPrimaryWeaponProperties,

@@ -182,9 +182,11 @@
 										class:hidden={!showAllPrimaryWeapons && index >= 5}
 										style="transition-delay: {(index % 5) * 100}ms"
 									>
-										<div class="p-[25px] label-10 !bg-contain !bg-no-repeat relative">
-											<WeaponIconTooltip {weapon}></WeaponIconTooltip>
-										</div>
+										<a href={`/weapons/weapon/${primaryWeaponStat.weaponId}`}>
+											<div class="p-[25px] label-10 !bg-contain !bg-no-repeat relative">
+												<WeaponIconTooltip {weapon}></WeaponIconTooltip>
+											</div>
+										</a>
 										<span
 											class="absolute top-0 -translate-y-1/2 left-0 w-full text-center label-03 h-[48px] grid place-content-center"
 											>{getPrimaryWeaponPickRate(primaryWeaponStat.weaponId)}%</span
@@ -208,7 +210,7 @@
 			<div class="flex flex-wrap background-28 relative p-2 !bg-cover w-full justify-center">
 				<TextHeader>Secondary Weapons</TextHeader>
 				<div class="divider-23 w-full h-[30px]"></div>
-				<div class="weapons-container flex flex-col gap-2" class:expanded={showAllPrimaryWeapons}>
+				<div class="weapons-container flex flex-col gap-2 mb-5" class:expanded={showAllPrimaryWeapons}>
 					<div class="weapons-grid flex flex-wrap gap-2 justify-center">
 						{#each data.viewModel.secondaryWeaponStats.sort((a, b) => Number(b.count) - Number(a.count)) as secondaryWeaponStat, index}
 							{#await getWeapon(secondaryWeaponStat.weaponId)}

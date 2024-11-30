@@ -5,6 +5,7 @@
 	import EmporiumLayout from "$lib/components/layout/EmporiumLayout.svelte";
 	import Seo from "$lib/components/SEO.svelte";
 	import TextHeader from "$lib/components/TextHeader.svelte";
+	import { WeaponTooltip } from "$lib/entities/Weapon";
 	import { getVerminDataState } from "$lib/state/VerminDataState.svelte.js";
 
 	let { data } = $props();

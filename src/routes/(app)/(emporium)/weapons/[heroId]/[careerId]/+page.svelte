@@ -13,7 +13,7 @@
 	$inspect(verminData.heroes);
 </script>
 
-<Seo title="Weapons" />
+<Seo title={`${data.careerName} - Weapons`} />
 
 <Breadcrumb
 	links={[
@@ -25,7 +25,7 @@
 
 <EmporiumLayout>
 	{#snippet pageHeader()}
-		Weapons
+		{data.careerName}
 	{/snippet}
 	{#snippet leftContent()}
 		<div class="careers flex flex-col gap-2 w-full max-w-[500px]">

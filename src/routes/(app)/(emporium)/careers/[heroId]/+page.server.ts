@@ -1,9 +1,11 @@
-import { CareerCache, WeaponsCache } from "$lib/cache/RedisCache.js";
-import { CareerBuildCareers, type ICareerBuildCareers } from "$lib/entities/views/CareerBuildCareers";
+import { CareerCache, HeroCache, WeaponsCache } from "$lib/cache/RedisCache.js";
+import { CareerBuildCareers } from "$lib/entities/views/CareerBuildCareers";
 import { CareerBuildHeroPrimaryWeapons } from "$lib/entities/views/CareerBuildHeroPrimaryWeapons.js";
+import { CareerBuildHeroSecondaryWeapons } from "$lib/entities/views/CareerBuildHeroSecondaryWeapons";
 import { LogHelper } from "$lib/helpers/LogHelper.js";
 import TypeOrm from "$lib/server/db";
 import { error } from "@sveltejs/kit";
+import { instanceToPlain } from "class-transformer";
 
 export const load = async ({ params }) => {
 	LogHelper.debug("Loading hero page");
@@ -14,65 +16,58 @@ export const load = async ({ params }) => {
 		error(500, "Database connection failed");
 	}
 
-	let careerStats: ICareerBuildCareers[] = [];
+	let careerStats: CareerBuildCareers[] = [];
 	let heroPrimaryWeaponStats: CareerBuildHeroPrimaryWeapons[] = [];
+	let heroSecondaryWeaponStats: CareerBuildHeroSecondaryWeapons[] = [];
 
 	try {
 		careerStats = await db.getRepository(CareerBuildCareers).findBy({ heroId: Number(params.heroId) });
 		heroPrimaryWeaponStats = await db.getRepository(CareerBuildHeroPrimaryWeapons).findBy({ heroId: Number(params.heroId) });
+		heroSecondaryWeaponStats = await db.getRepository(CareerBuildHeroSecondaryWeapons).findBy({ heroId: Number(params.heroId) });
 	} catch (err) {
 		LogHelper.error(`Error loading career stats for hero ${params.heroId}: ${err}`);
 		error(500, `Error loading career stats for hero ${params.heroId}`);
 	}
 
-	const careers = await CareerCache.getAll();
-	const weapons = await WeaponsCache.getAll();
+	if (careerStats.length > 1) {
+		careerStats = careerStats.sort((a, b) => Number(b.count) - Number(a.count));
+	}
 
-	let careerStatsPojo = careerStats
-		.map((stat) => {
-			let totalBuildsForHero = 0;
-			careerStats.forEach((s) => {
-				if (s.heroId === stat.heroId) {
-					totalBuildsForHero += Number(s.count);
-				}
-			});
-			return {
-				heroId: stat.heroId,
-				careerId: stat.careerId,
-				name: careers.find((c) => c.id === stat.careerId)?.name ?? "",
-				count: Number(stat.count),
-				percentageOfTotal: Math.round((stat.count / totalBuildsForHero) * 100),
-			};
-		})
-		.sort((a, b) => b.percentageOfTotal - a.percentageOfTotal);
+	if (heroPrimaryWeaponStats.length > 1) {
+		heroPrimaryWeaponStats = heroPrimaryWeaponStats.sort((a, b) => Number(b.count) - Number(a.count));
+	}
+
+	if (heroSecondaryWeaponStats.length > 1) {
+		heroSecondaryWeaponStats = heroSecondaryWeaponStats.sort((a, b) => Number(b.count) - Number(a.count));
+	}
+
+	const hero = await HeroCache.get(Number(params.heroId));
+
+	let totalHeroBuilds = 0;
+	careerStats.forEach((stat) => {
+		totalHeroBuilds += Number(stat.count);
+	});
 
 	let totalPrimaryWeapons = 0;
 	heroPrimaryWeaponStats.forEach((stat) => {
 		totalPrimaryWeapons += Number(stat.count);
 	});
 
-	let heroPrimaryWeaponStatsPojo = heroPrimaryWeaponStats
-		.map((stat) => {
-			return {
-				heroId: stat.heroId,
-				weapon: {
-					id: stat.weaponId,
-					name: weapons.find((w) => w.id === stat.weaponId)?.name ?? "",
-					codename: weapons.find((w) => w.id === stat.weaponId)?.codename ?? "",
-					tooltip: weapons.find((w) => w.id === stat.weaponId)?.tooltip ?? "",
-				},
-				count: Number(stat.count),
-				percentageOfTotal: Math.round((stat.count / totalPrimaryWeapons) * 100),
-			};
-		})
-		.sort((a, b) => b.percentageOfTotal - a.percentageOfTotal);
+	let totalSecondaryWeapons = 0;
+	heroSecondaryWeaponStats.forEach((stat) => {
+		totalSecondaryWeapons += Number(stat.count);
+	});
 
 	return {
 		viewModel: {
 			heroId: Number(params.heroId),
-			heroName: careers.find((c) => c.hero.id === Number(params.heroId))?.hero.name ?? "",
-			careerStats: careerStatsPojo,
-			primaryWeaponStats: heroPrimaryWeaponStatsPojo,
+			heroName: hero.name,
+			careerStats: instanceToPlain(careerStats) as CareerBuildCareers[],
+			primaryWeaponStats: instanceToPlain(heroPrimaryWeaponStats) as CareerBuildHeroPrimaryWeapons[],
+			secondaryWeaponStats: instanceToPlain(heroSecondaryWeaponStats) as CareerBuildHeroSecondaryWeapons[],
+			totalPrimaryWeapons,
+			totalSecondaryWeapons,
+			totalHeroBuilds,
 		},
 	};
 };
