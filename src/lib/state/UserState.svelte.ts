@@ -17,6 +17,8 @@ class UserState {
 		$effect(() => {
 			if (this.user) {
 				this.showVideo.value = this.user.showVideo;
+			} else if (window.innerWidth >= 768) {
+				this.showVideo.value = true;
 			}
 		});
 	}
