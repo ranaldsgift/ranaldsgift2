@@ -92,3 +92,13 @@
     width: var(--size);
     height: var(--size);
 }
+.lock-icon {
+    background: url('/images/icons/lock.png') no-repeat center / 75%;
+    width: var(--size);
+    height: var(--size);
+}
+.x-icon {
+    background: url('/images/icons/x.png') no-repeat center / contain;
+    width: var(--size);
+    height: var(--size);
+}

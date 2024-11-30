@@ -89,10 +89,10 @@ html, body {
 @media (min-width: 480px) {
 ::-webkit-scrollbar {
   width: 25px;
-  background: url('/images/scrollers/scroll-15.png') repeat-y 2px;
+  background: url('/images/scrollers/scroll-15.png') repeat-y right;
 }
 ::-webkit-scrollbar-thumb {
-    background: url('/images/scrollers/scroll-07.png') no-repeat top left, url('/images/scrollers/scroll-02.png') no-repeat bottom left, url('/images/scrollers/scroll-12.png') no-repeat center left / 25px calc(100% - 20px);
+    background: url('/images/scrollers/scroll-07.png') no-repeat top right, url('/images/scrollers/scroll-02.png') no-repeat bottom right, url('/images/scrollers/scroll-12.png') no-repeat center right / 25px calc(100% - 20px);
 }
 }
 
@@ -278,6 +278,9 @@ background-image: linear-gradient(90deg,#808080b3 10%, #80808000);
 .divider-22 {
   background: url('/images/dividers/divider-22.png') no-repeat center;
 }
+.divider-23 {
+  background: url('/images/dividers/divider-23.png') no-repeat center, url('/images/dividers/divider-23-repeat.png') repeat center;
+}
 
 .chain-decoration {
   background: url('/images/scrollers/scroll-10.png');
@@ -307,17 +310,15 @@ button:disabled {
   cursor: pointer;
   position: relative;
   text-align: center;
-  max-width: 300px;
   justify-self: center;
-  width: auto;
+  width: fit-content;
   padding: 0 20px;
   color: #928962 !important;
   background: url('/images/labels/label-06.png') no-repeat center;
   background-size: cover;
   align-content: center;
-  display: grid;
   text-transform: uppercase;
-  font-size: 120%;
+  font-size: 1.1rem;
   box-shadow: inset 0 0 75px black, inset 0 -5px 1px #3b3b3b, inset 0 5px 1px #979797 !important;
   text-decoration: none;
   height: 40px;
@@ -325,14 +326,13 @@ button:disabled {
   outline: none;
   cursor: pointer;
   letter-spacing: 2px;
-  grid-template-rows: 1fr;
   align-items: center;
   border-image: url('/images/borders/border-04.png');
   border-image-slice: 15;
   border-image-width: 15px;
   border-style: solid;
   border-image-repeat: repeat;
-  grid-auto-flow: column;
+  display: flex;
   gap: 10px;
 }
 

@@ -123,7 +123,7 @@
   background: url('/images/labels/label-02.png');
 }
 .label-03 {
-  background: url('/images/labels/label-03.png');
+  background: url('/images/labels/label-03.png') no-repeat center / contain;
 }
 .label-04 {
   background: url('/images/labels/label-04.png');
@@ -264,6 +264,33 @@
   .background-43 {
     background: url('/images/backgrounds/background-43.png')
   }
+  .background-44 {
+    background: url('/images/backgrounds/background-44.png')
+  }
+  .background-45 {
+    background: url('/images/backgrounds/background-45.png')
+  }
+  .background-46 {
+    background: url('/images/backgrounds/background-46.png')
+  }
+  .background-47 {
+    background: url('/images/backgrounds/background-47.png')
+  }
+  .background-48 {
+    background: url('/images/backgrounds/background-48.png')
+  }
+  .background-49 {
+    background: url('/images/backgrounds/background-49.png')
+  }
+  .background-50 {
+    background: url('/images/backgrounds/background-50.png')
+  }
+  .background-51 {
+    background: url('/images/backgrounds/background-51.png')
+  }
+  
+
+
   .ranalds-finger {
     background: url('/images/icons/ranaldsfinger.png');
     height: 298px;
