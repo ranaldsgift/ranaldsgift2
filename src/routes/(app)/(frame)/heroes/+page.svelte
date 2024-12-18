@@ -4,7 +4,6 @@
 	import CareerSelection from "$lib/components/career/CareerSelection.svelte";
 	import CareerHelper from "$lib/helpers/CareerHelper.js";
 	import type { ICareer } from "$lib/entities/career/Career.js";
-	import BuildHelper from "$lib/helpers/BuildHelper.js";
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import { toast } from "svelte-sonner";
 	import { error } from "@sveltejs/kit";
@@ -13,14 +12,12 @@
 	import hash from "object-hash";
 	import Tooltip from "$lib/components/ui/tooltip/Tooltip.svelte";
 	import ContainerTitle from "$lib/components/ContainerTitle.svelte";
-	import CareerBuildPortrait from "$lib/components/career/CareerBuildPortrait.svelte";
-	import { getTeamState } from "$lib/state/TeamState.svelte.js";
-	import { LogHelper } from "$lib/helpers/LogHelper.js";
+	import { getUserState } from "$lib/state/UserState.svelte.js";
 
 	const { data } = $props();
 	const { viewModel } = data;
 	const pageState = getHeroesPageState();
-	const teamState = getTeamState();
+	const userState = getUserState();
 
 	if (!viewModel || !viewModel.build) {
 		error(404, "Heroes Page - Invalid ViewModel");
@@ -33,21 +30,6 @@
 	if (!pageState.build) {
 		pageState.build = viewModel.build;
 	}
-
-	let searchParams = $derived.by(() => {
-		if (!pageState.build) {
-			return "";
-		}
-		return BuildHelper.getQueryStringFromBuild(pageState.build);
-	});
-
-	$effect(() => {
-		/* 		if ($page.url.searchParams.get("build") !== hash(pageState.build) && browser) {
-			tick().then(() => {
-				replaceState(`/heroes?build=${hash(pageState.build)}`, { search: hash(pageState.build) });
-			});
-		} */
-	});
 
 	const careerSelectionHandler = (career: ICareer) => {
 		if (pageState.build?.career !== career) {
@@ -91,43 +73,41 @@
 		}
 	};
 
-	const addToTeamHandler = () => {
-		const buildHash = hash(pageState.build);
-		saveBuildToRedis();
+	let selectedTeamIndex = $state(0);
+	let selectedTeam = $derived(userState.teams.value[selectedTeamIndex]);
+	let selectedBuildToReplaceIndex = $state(-1);
 
+	const addToTeamHandler = () => {
 		if (pageState.build) {
-			if (teamState.builds[buildHash]) {
-				toast("Build already in team", {
-					position: "bottom-center",
+			const buildHash = hash(pageState.build);
+			saveBuildToRedis();
+
+			if (selectedTeam && selectedTeam.builds && selectedBuildToReplaceIndex >= 0) {
+				selectedTeam.builds[selectedBuildToReplaceIndex] = { ...pageState.build, id: buildHash };
+			} else if (selectedTeam && selectedTeam.builds) {
+				selectedTeam.builds.push({ ...pageState.build, id: buildHash });
+			} else {
+				userState.teams.value.push({
+					id: userState.teams.value.length,
+					name: pageState.build.career?.name,
+					builds: [{ ...pageState.build, id: buildHash }],
 				});
-				return;
 			}
 
-			teamState.builds[buildHash] = pageState.build;
+			toast(`Build added to ${selectedTeam?.name ?? "team"}`, {
+				position: "bottom-center",
+			});
 		}
 	};
 
-	$effect(() => {
+	// TODO - Investigate if this is a good idea to enable in terms of UpstashRedis costs and if it has any other usability implications
+	/* $effect(() => {
 		LogHelper.debug(`Heroes Page - Build state changed.`);
 		const redisBuild = hash(pageState.build);
 		if (redisBuild) {
 			saveBuildToRedis();
 		}
-	});
-
-	const removeFromTeamHandler = (buildHash: string) => {
-		delete teamState.builds[buildHash];
-	};
-
-	let teamUrl = $derived.by(() => {
-		let teamUrl = "";
-		let i = 0;
-		for (const [key] of Object.entries(teamState.builds)) {
-			teamUrl += key + (i < Object.keys(teamState.builds).length - 1 ? ";" : "");
-			i++;
-		}
-		return `/teams/${teamUrl}`;
-	});
+	}); */
 
 	let pageTitle = $derived(`${pageState.build?.career?.name} - ${pageState.build?.career?.hero.name}`);
 	let pageDescription = $derived(
@@ -169,27 +149,38 @@
 				></button
 			>
 			{#snippet content()}
-				<div class="flex flex-col">
-					<ContainerTitle>Team</ContainerTitle>
-					<div class="border-01 background-14 p-5 flex flex-col gap-2 justify-center items-center">
-						<button class="button-02" onclick={addToTeamHandler}>Add Current Build</button>
-						<div class="flex flex-row gap-2 flex-wrap">
-							{#each Object.entries(teamState.builds) as [key, build]}
-								<div class="relative group">
-									<CareerBuildPortrait {build} size="82px" />
-									<button
-										class="absolute top-0 right-0 p-1 x-icon opacity-50 group-hover:opacity-100 transition-opacity"
-										aria-label="Remove from Team"
-										onclick={() => removeFromTeamHandler(key)}
-										style="--size: 30px;"
-									>
-									</button>
-								</div>
-							{/each}
+				<div class="flex flex-col gap-4">
+					<ContainerTitle>Add to Team</ContainerTitle>
+					<div class="border-01 background-14 p-5 flex flex-col gap-4 justify-center items-center">
+						<div class="w-full">
+							<span class="block mb-2 text-sm font-medium">Select Team</span>
+							<select class="w-full p-2 border rounded bg-background text-foreground" bind:value={selectedTeamIndex}>
+								{#each userState.teams.value as team, index}
+									<option selected={index === 0} value={index}>
+										{team.name ?? team.id}
+									</option>
+								{/each}
+							</select>
 						</div>
-						{#if Object.keys(teamState.builds).length > 0}
-							<a href={teamUrl} class="button-02">View Team</a>
+
+						{#if selectedTeam}
+							<div class="w-full">
+								<span class="block mb-2 text-sm font-medium">Overwrite Build (Optional)</span>
+								<select
+									class="w-full p-2 border rounded bg-background text-foreground"
+									bind:value={selectedBuildToReplaceIndex}
+								>
+									<option value={-1}>Add as new build</option>
+									{#each selectedTeam?.builds ?? [] as build, index}
+										<option value={index}>{build.name}</option>
+									{/each}
+								</select>
+							</div>
 						{/if}
+
+						<button class="button-02" onclick={addToTeamHandler} disabled={!selectedTeam}>
+							{selectedBuildToReplaceIndex >= 0 ? "Overwrite Build" : "Add Build"}
+						</button>
 					</div>
 				</div>
 			{/snippet}

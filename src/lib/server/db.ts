@@ -57,6 +57,7 @@ import { HeroSecondaryWeaponCounts } from "$lib/entities/views/HeroSecondaryWeap
 import { HeroWeaponCounts } from "$lib/entities/views/HeroWeaponCounts";
 import { CareerWeaponCounts } from "$lib/entities/views/CareerWeaponCounts";
 import { CareerBuildHeroSecondaryWeapons } from "$lib/entities/views/CareerBuildHeroSecondaryWeapons";
+import { TimestampedEntitySubscriber } from "$lib/entities/subscribers/TimestampedEntitySubscriber";
 
 let PRIVATE_SUPABASE_HOST = env.PRIVATE_SUPABASE_HOST;
 let PRIVATE_SUPABASE_PASSWORD = env.PRIVATE_SUPABASE_PASSWORD;
@@ -143,7 +144,7 @@ class TypeOrm {
 					Team,
 				],
 				migrations: [],
-				subscribers: [EntitySubscriber, AuthoredEntitySubscriber],
+				subscribers: [EntitySubscriber, AuthoredEntitySubscriber, TimestampedEntitySubscriber],
 				logging: false,
 				// For development only
 				synchronize: PRIVATE_SYNCHRONIZE_DB,

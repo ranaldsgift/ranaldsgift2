@@ -93,6 +93,7 @@
 		<p class="career-name">{career.hero.name}</p>
 	</div>
 	<button class="portrait-container" onclick={() => (dialogOpen = true)}>
+		<div class="settings-icon mx-auto -mb-5" title="Settings"></div>
 		<CareerBuildPortrait {build} size="160px"></CareerBuildPortrait>
 	</button>
 	<div class="career-attributes max-w-[400px] mobile:block hidden">
@@ -134,6 +135,14 @@
 </Dialog.Root> -->
 
 <style>
+	.settings-icon {
+		width: 44px;
+		height: 44px;
+		background: url("/images/icons/settings.png") no-repeat center / contain;
+	}
+	.portrait-container:hover .settings-icon {
+		background: url("/images/icons/settings-hover.png") no-repeat center / contain;
+	}
 	.career-name-header {
 		color: #c15b24;
 		font-size: 1.5rem;

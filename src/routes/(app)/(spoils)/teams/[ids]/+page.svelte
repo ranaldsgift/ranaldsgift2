@@ -15,6 +15,6 @@
 
 <Seo {title} {description} />
 
-<div class="page-layout team-page flex justify-center">
+<div class="page-layout team-page flex justify-center pt-5">
 	<TeamView team={data.team} />
 </div>

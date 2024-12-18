@@ -13,7 +13,9 @@
 <!-- Add CSS variable like --mobile-icon-url to use as background image when browsing from mobile -->
 <span
 	class="career-icon border-02 w-full h-full {selected ? 'selected' : ''} {CLASS}"
-	style="background: url('/images/careers/{careerId}/{style}.png') no-repeat center right / contain, url('/images/backgrounds/background29.png') no-repeat center / cover"
+	style="background: url('/images/careers/{careerId}/{style}.png') no-repeat center {style === 'portrait-wide'
+		? 'right'
+		: ''} / contain, url('/images/backgrounds/background29.png') no-repeat center / cover"
 >
 </span>
 

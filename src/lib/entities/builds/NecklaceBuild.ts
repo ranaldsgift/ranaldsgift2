@@ -3,12 +3,12 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Property, type IProperty } from "../Property";
 import { Trait, type ITrait } from "../Trait";
 import { ItemRarityEnum } from "$lib/enums/ItemRarityEnum";
-import { TimestampedEntity } from "../TimestampedEntity";
 import type { IItemBuild } from "./CareerBuild";
 import { Illusion, type IIllusion } from "../ItemIllusion";
+import { BaseEntity } from "../BaseEntity";
 
 @Entity()
-export class NecklaceBuild extends TimestampedEntity<INecklaceBuild> {
+export class NecklaceBuild extends BaseEntity<INecklaceBuild> {
 	@PrimaryGeneratedColumn()
 	id!: number;
 

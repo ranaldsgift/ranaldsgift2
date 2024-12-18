@@ -1,4 +1,5 @@
 import { env } from "$env/dynamic/private";
+import { LogHelper } from "$lib/helpers/LogHelper";
 import type { Session } from "@supabase/supabase-js";
 import { EventSubscriber, type EntitySubscriberInterface, type UpdateEvent } from "typeorm";
 
@@ -8,6 +9,7 @@ export class EntitySubscriber implements EntitySubscriberInterface {
 	 * Called before post insertion.
 	 */
 	beforeUpdate(event: UpdateEvent<any>) {
+		LogHelper.info("EntitySubscriber.beforeUpdate");
 		const authorizationBypassKey = event.queryRunner.data.authorizationBypassKey as string;
 
 		if (authorizationBypassKey && authorizationBypassKey !== env.PRIVATE_DATABASE_AUTHORIZATION_BYPASS_KEY) {

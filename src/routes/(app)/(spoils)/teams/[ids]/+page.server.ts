@@ -8,6 +8,7 @@ import { LogHelper } from "$lib/helpers/LogHelper.js";
 export const load = async (event) => {
 	LogHelper.debug(`Loading team page`);
 	const ids = event.params.ids;
+	const teamName = event.url.searchParams.get("name");
 
 	if (!ids) {
 		error(404, "Not build ids provided.");
@@ -27,6 +28,7 @@ export const load = async (event) => {
 
 	let team: ITeam = {
 		id: 0,
+		name: teamName ?? "",
 		videos: [],
 		builds: [],
 	};

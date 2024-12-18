@@ -72,7 +72,8 @@
 			backface-visibility: hidden;
 		}
 	}
-	.page-title {
+	.page-title,
+	.page-title-background {
 		display: none;
 	}
 	@media (min-width: 1600px) {

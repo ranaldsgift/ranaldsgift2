@@ -2,11 +2,21 @@ import type { IUser } from "$lib/entities/User";
 import { getContext, setContext } from "svelte";
 import { LocalStorageState } from "./LocalStorageState.svelte";
 import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
+import type { ITeam } from "$lib/entities/Team";
+
+interface TeamState {
+	name: string;
+	description: string;
+	videos: string[];
+	ids: (number | string)[];
+	expanded: boolean[];
+}
 
 class UserState {
 	user: IUser | null = $state(null);
 	showVideo: LocalStorageState<boolean> = new LocalStorageState("showVideo", false);
 	isPrivileged: boolean = $derived(this.user?.role === "Admin" || this.user?.role === "Moderator");
+	teams: LocalStorageState<ITeam[]> = new LocalStorageState("teams", []);
 
 	constructor(user: IUser | null) {
 		if (user) {

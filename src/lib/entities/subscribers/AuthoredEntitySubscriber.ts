@@ -3,6 +3,7 @@ import { EventSubscriber, type EntitySubscriberInterface, type InsertEvent, type
 import { AuthoredEntity } from "../AuthoredEntity";
 import { DataHelper } from "$lib/helpers/DataHelper";
 import { env } from "$env/dynamic/private";
+import { LogHelper } from "$lib/helpers/LogHelper";
 
 @EventSubscriber()
 export class AuthoredEntitySubscriber implements EntitySubscriberInterface<AuthoredEntity<any>> {
@@ -25,7 +26,8 @@ export class AuthoredEntitySubscriber implements EntitySubscriberInterface<Autho
 	/**
 	 * Called before post insertion.
 	 */
-	beforeInsert(event: InsertEvent<AuthoredEntity<any>>): void | Promise<any> {
+	/* 	beforeInsert(event: InsertEvent<AuthoredEntity<any>>): void | Promise<any> {
+		LogHelper.info("AuthoredEntitySubscriber.beforeInsert");
 		// Check if the entity is valid.
 		if (!event.entity) {
 			return;
@@ -47,12 +49,13 @@ export class AuthoredEntitySubscriber implements EntitySubscriberInterface<Autho
 		if (!session || !session.user) {
 			throw new Error(`You must be authenticated to save items!`);
 		}
-	}
+	} */
 
 	/**
 	 * Called before post insertion.
 	 */
 	beforeUpdate(event: UpdateEvent<AuthoredEntity<any>>) {
+		LogHelper.info("AuthoredEntitySubscriber.beforeUpdate");
 		// Check if the entity is valid.
 		if (!event.entity) {
 			return;
