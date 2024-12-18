@@ -104,7 +104,7 @@
 <div class="page flex flex-col gap-0">
 	<div class="top-left-shadow">
 		<BuildTableFilters bind:filter={buildsPageState.filter} bind:showFilters={buildsPageState.showFilters.value}></BuildTableFilters>
-		<BuildTable bind:filter={buildsPageState.filter}></BuildTable>
+		<BuildTable bind:filter={buildsPageState.filter} hideOnEmpty={false}></BuildTable>
 	</div>
 </div>
 
