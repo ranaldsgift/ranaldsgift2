@@ -28,7 +28,7 @@
 								style="background: url('/images/careers/hero-{heroStat.heroId}-wide.png') no-repeat center right / contain;"
 							>
 							</span>
-							<span class="absolute top-0 left-0 w-full h-full career-name pointer-events-none">
+							<span class="absolute top-0 left-0 px-5 w-full h-full career-name pointer-events-none">
 								{heroStat?.name}
 							</span>
 							<div class="border-10 absolute top-0 left-0 w-full h-full pointer-events-none"></div>

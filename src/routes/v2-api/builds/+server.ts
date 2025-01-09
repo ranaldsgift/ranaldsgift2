@@ -1,10 +1,12 @@
 import { PatchesCache } from "$lib/cache/RedisCache";
 import { CareerBuild, type ICareerBuild } from "$lib/entities/builds/CareerBuild";
 import BuildHelper from "$lib/helpers/BuildHelper";
+import { LogHelper } from "$lib/helpers/LogHelper";
 import { error, type RequestHandler } from "@sveltejs/kit";
 import { Brackets } from "typeorm";
 
 export const GET: RequestHandler = async ({ url, locals }) => {
+	LogHelper.info("GET /v2-api/builds");
 	let offset = Number(url.searchParams.get("offset"));
 	let limit = Number(url.searchParams.get("limit"));
 	let userId = url.searchParams.get("userId");

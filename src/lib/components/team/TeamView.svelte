@@ -1,10 +1,8 @@
 <script lang="ts">
 	import type { ITeam } from "$lib/entities/Team.js";
-	import BuildCreationInfo from "../build/BuildCreationInfo.svelte";
 	import BuildOverview from "../build/BuildOverview.svelte";
 	import CareerBuildPortrait from "../career/CareerBuildPortrait.svelte";
 	import TextHeader from "../TextHeader.svelte";
-	import Tooltip from "../ui/tooltip/Tooltip.svelte";
 
 	export let team: ITeam;
 </script>
@@ -13,7 +11,7 @@
 	<TextHeader>{team.name}</TextHeader>
 	<div class="team-view flex flex-wrap gap-4 justify-center">
 		{#each team.builds ?? [] as build}
-			<a href={Number(build.id) ? `/build/${build.id}` : `/heroes?build=${build.id}`} class="hover:!no-underline">
+			<a href={Number(build.id) ? `/build/${build.id}` : `/heroes?build=${build.id}`} class="hover:!no-underline" title={build.name}>
 				<div class="build-overview-wrapper relative mt-[82px]">
 					<div class="absolute top-[-75px] left-[50%] translate-x-[-50%] z-[10]">
 						<CareerBuildPortrait {build} size="142px" />

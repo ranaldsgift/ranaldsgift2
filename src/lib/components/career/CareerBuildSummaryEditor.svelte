@@ -1,10 +1,8 @@
 <script lang="ts">
 	import type { ICareerBuild } from "$lib/entities/builds/CareerBuild";
 	import type { ICareer } from "$lib/entities/career/Career";
-	import { getWindowState } from "$lib/state/WindowState.svelte";
 	import CooldownBar from "./CooldownBar.svelte";
 	import HealthBar from "./HealthBar.svelte";
-	import { NUMBER_OF_FRAMES } from "$lib/data/constants/constants";
 	import CareerBuildSummaryDialog from "./CareerBuildSummaryDialog.svelte";
 	import CareerBuildPortrait from "./CareerBuildPortrait.svelte";
 
@@ -15,14 +13,16 @@
 
 	const { build = $bindable(), career }: Props = $props();
 
-	const windowState = getWindowState();
 	let dialogOpen = $state(false);
-	let frames = $state<{ id: number; image: string }[]>([]);
 	let frameUrl = $derived(build.portraitFrameId ? `url('/images/frames/frame-${build.portraitFrameId}.png')` : "");
 
 	$inspect(frameUrl);
 
 	let health = $derived.by(() => {
+		if (!build.career) {
+			return 0;
+		}
+
 		if (!build.necklace || (build.necklace.property1?.name !== "Health" && build.necklace.property2?.name !== "Health")) {
 			return build.career.health;
 		}
@@ -33,20 +33,24 @@
 			if (build.necklace.property1Value) {
 				healthModifier = build.necklace.property1Value / 100;
 			}
-			healthModifier = build.necklace.property1.maximumValue / 100;
+			healthModifier = build.necklace.property1.maximumValue ?? 100 / 100;
 		}
 
 		if (build.necklace.property2?.name === "Health") {
 			if (build.necklace.property2Value) {
 				healthModifier = build.necklace.property2Value / 100;
 			}
-			healthModifier = build.necklace.property2.maximumValue / 100;
+			healthModifier = build.necklace.property2.maximumValue ?? 100 / 100;
 		}
 
 		return build.career.health * (1 + healthModifier);
 	});
 
 	let cooldown = $derived.by(() => {
+		if (!build.career) {
+			return 0;
+		}
+
 		if (
 			!build.trinket ||
 			(build.trinket.property1?.name !== "Cooldown Reduction" && build.trinket.property2?.name !== "Cooldown Reduction")
@@ -60,31 +64,18 @@
 			if (build.trinket.property1Value) {
 				cooldownModifier = build.trinket.property1Value / 100;
 			}
-			cooldownModifier = build.trinket.property1.maximumValue / 100;
+			cooldownModifier = build.trinket.property1.maximumValue ?? 100 / 100;
 		}
 
 		if (build.trinket.property2?.name === "Cooldown Reduction") {
 			if (build.trinket.property2Value) {
 				cooldownModifier = build.trinket.property2Value / 100;
 			}
-			cooldownModifier = build.trinket.property2.maximumValue / 100;
+			cooldownModifier = build.trinket.property2.maximumValue ?? 100 / 100;
 		}
 
 		return build.career.skill.cooldown * (1 - cooldownModifier);
 	});
-
-	const loadMoreFrames = () => {
-		let frameCount = frames.length;
-		let newFrameCount = frameCount + 11;
-		if (newFrameCount > NUMBER_OF_FRAMES) {
-			newFrameCount = NUMBER_OF_FRAMES;
-		}
-		for (let i = frameCount + 1; i < newFrameCount; i++) {
-			frames.push({ id: i, image: `url('/images/frames/frame-${i}.png')` });
-		}
-	};
-
-	loadMoreFrames();
 </script>
 
 <div class="career-summary-container">
@@ -93,8 +84,8 @@
 		<p class="career-name">{career.hero.name}</p>
 	</div>
 	<button class="portrait-container" onclick={() => (dialogOpen = true)}>
-		<div class="settings-icon mx-auto -mb-5" title="Settings"></div>
 		<CareerBuildPortrait {build} size="160px"></CareerBuildPortrait>
+		<div class="settings-icon mx-auto" title="Settings"></div>
 	</button>
 	<div class="career-attributes max-w-[400px] mobile:block hidden">
 		<div class="health-container">
@@ -111,28 +102,6 @@
 {#if dialogOpen}
 	<CareerBuildSummaryDialog {build} bind:open={dialogOpen}></CareerBuildSummaryDialog>
 {/if}
-
-<!-- <Dialog.Root bind:open={dialogOpen}>
-	<Dialog.Content>
-		<Dialog.Header>
-			<Dialog.Title>Portrait Frame</Dialog.Title>
-			<Dialog.Description>
-				<p>Select a portrait frame for your build.</p>
-			</Dialog.Description>
-		</Dialog.Header>
-		<div class="max-h-[300px] overflow-y-auto">
-			{#each frames as frame}
-				<button
-					class="size-[80px] {frame.id === build.portraitFrameId ? 'border-30' : ''}"
-					style="background: {frame.image} center / contain no-repeat; --frameId: {frame.id}"
-					onclick={() => (build.portraitFrameId = frame.id)}
-				></button>
-			{/each}
-			<button onclick={loadMoreFrames}>Load More</button>
-		</div>
-		<Dialog.Close class="flex justify-center relative mb-[-45px]"><div class="button-02 max-w-[100px]">Done</div></Dialog.Close>
-	</Dialog.Content>
-</Dialog.Root> -->
 
 <style>
 	.settings-icon {

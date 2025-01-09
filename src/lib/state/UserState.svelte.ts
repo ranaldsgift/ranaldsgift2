@@ -17,6 +17,7 @@ class UserState {
 	showVideo: LocalStorageState<boolean> = new LocalStorageState("showVideo", false);
 	isPrivileged: boolean = $derived(this.user?.role === "Admin" || this.user?.role === "Moderator");
 	teams: LocalStorageState<ITeam[]> = new LocalStorageState("teams", []);
+	hashes: LocalStorageState<string[]> = new LocalStorageState("UserBuildHashes", []);
 
 	constructor(user: IUser | null) {
 		if (user) {

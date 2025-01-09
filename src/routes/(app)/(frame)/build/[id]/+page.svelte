@@ -6,6 +6,7 @@
 	import BuildTable from "$lib/components/buildtable/BuildTable.svelte";
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import type { BuildTableFilter } from "$lib/types/BuildTableFilters.js";
+	import ButtonAddToTeam from "$lib/components/team/ButtonAddToTeam.svelte";
 
 	let { data } = $props();
 
@@ -21,24 +22,26 @@
 
 	let author = $derived(data.viewModel.build.user);
 
+	let buildId = $derived(Number(data.viewModel.build.id));
+
 	let similarBuildsFilter: BuildTableFilter = $derived({
 		userId: author.id,
 		careerId: build.careerId,
 		limit: 3,
-		excludeBuildIds: [data.viewModel.build.id],
+		excludeBuildIds: [buildId],
 	});
 
 	let moreBuildsFilter: BuildTableFilter = $derived({
 		careerId: build.careerId,
 		limit: 3,
-		excludeBuildIds: [data.viewModel.build.id],
+		excludeBuildIds: [buildId],
 		excludeAuthorIds: [author.id],
 	});
 
 	$effect(() => {});
 </script>
 
-<Seo title={data.viewModel.title} description={data.viewModel.description} image={`/images/careers/${build.career.id}/portrait.png`}></Seo>
+<Seo title={data.viewModel.title} description={data.viewModel.description} image={`/images/careers/${build.career?.id}/portrait.png`}></Seo>
 
 <Breadcrumb links={[{ href: `/builds`, text: "Builds" }]}>
 	{build.name}
@@ -48,6 +51,7 @@
 	{#if data.sessionUser?.id === author.id}
 		<a class="button-02" href={`/build/${build.id}/edit`}>Edit</a>
 	{/if}
+	<ButtonAddToTeam {build}></ButtonAddToTeam>
 </PageButtonContainer>
 
 <div class="view-build-page build-page grid grid-cols-1 gap-0 tablet:gap-5" data-readonly={true}>
@@ -56,7 +60,7 @@
 	</div>
 	<div class="build-side-container top-left-shadow">
 		<BuildTable filter={similarBuildsFilter} title={`Similar Builds by ${build.user?.name}`} compact={true}></BuildTable>
-		<BuildTable filter={moreBuildsFilter} title={`More ${build.career.name} Builds`} compact={true}></BuildTable>
+		<BuildTable filter={moreBuildsFilter} title={`More ${build.career?.name} Builds`} compact={true}></BuildTable>
 	</div>
 </div>
 

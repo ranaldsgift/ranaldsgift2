@@ -56,7 +56,7 @@
 
 	const getTeamUrl = (teamIndex: number) => {
 		let buildIds = userState.teams.value[teamIndex]?.builds?.map((build) => build.id);
-		let url = `/teams/${buildIds?.join(";")}`;
+		let url = `/teams/${buildIds?.join(";")}${buildIds?.length === 1 ? ";" : ""}`;
 		if (userState.teams.value[teamIndex]?.name) {
 			url += `?name=${userState.teams.value[teamIndex]?.name}`;
 		}

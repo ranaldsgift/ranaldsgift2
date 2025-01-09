@@ -10,14 +10,11 @@
 	import Seo from "$lib/components/SEO.svelte";
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import hash from "object-hash";
-	import Tooltip from "$lib/components/ui/tooltip/Tooltip.svelte";
-	import ContainerTitle from "$lib/components/ContainerTitle.svelte";
-	import { getUserState } from "$lib/state/UserState.svelte.js";
+	import ButtonAddToTeam from "$lib/components/team/ButtonAddToTeam.svelte";
 
 	const { data } = $props();
 	const { viewModel } = data;
 	const pageState = getHeroesPageState();
-	const userState = getUserState();
 
 	if (!viewModel || !viewModel.build) {
 		error(404, "Heroes Page - Invalid ViewModel");
@@ -73,42 +70,6 @@
 		}
 	};
 
-	let selectedTeamIndex = $state(0);
-	let selectedTeam = $derived(userState.teams.value[selectedTeamIndex]);
-	let selectedBuildToReplaceIndex = $state(-1);
-
-	const addToTeamHandler = () => {
-		if (pageState.build) {
-			const buildHash = hash(pageState.build);
-			saveBuildToRedis();
-
-			if (selectedTeam && selectedTeam.builds && selectedBuildToReplaceIndex >= 0) {
-				selectedTeam.builds[selectedBuildToReplaceIndex] = { ...pageState.build, id: buildHash };
-			} else if (selectedTeam && selectedTeam.builds) {
-				selectedTeam.builds.push({ ...pageState.build, id: buildHash });
-			} else {
-				userState.teams.value.push({
-					id: userState.teams.value.length,
-					name: pageState.build.career?.name,
-					builds: [{ ...pageState.build, id: buildHash }],
-				});
-			}
-
-			toast(`Build added to ${selectedTeam?.name ?? "team"}`, {
-				position: "bottom-center",
-			});
-		}
-	};
-
-	// TODO - Investigate if this is a good idea to enable in terms of UpstashRedis costs and if it has any other usability implications
-	/* $effect(() => {
-		LogHelper.debug(`Heroes Page - Build state changed.`);
-		const redisBuild = hash(pageState.build);
-		if (redisBuild) {
-			saveBuildToRedis();
-		}
-	}); */
-
 	let pageTitle = $derived(`${pageState.build?.career?.name} - ${pageState.build?.career?.hero.name}`);
 	let pageDescription = $derived(
 		`${pageState.build?.career?.name} build for ${pageState.build?.career?.hero.name}. 
@@ -138,53 +99,7 @@
 				></svg
 			></button
 		>
-		<Tooltip options={{ delay: [0, 0], animation: false, interactive: true, trigger: "click" }}>
-			<button class="button-02"
-				>Team
-				<svg class="mt-[-2px]" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
-					><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
-						<circle cx="12" cy="12" r="10" />
-						<path d="M12 7v10m-5-5h10" />
-					</g></svg
-				></button
-			>
-			{#snippet content()}
-				<div class="flex flex-col gap-4">
-					<ContainerTitle>Add to Team</ContainerTitle>
-					<div class="border-01 background-14 p-5 flex flex-col gap-4 justify-center items-center">
-						<div class="w-full">
-							<span class="block mb-2 text-sm font-medium">Select Team</span>
-							<select class="w-full p-2 border rounded bg-background text-foreground" bind:value={selectedTeamIndex}>
-								{#each userState.teams.value as team, index}
-									<option selected={index === 0} value={index}>
-										{team.name ?? team.id}
-									</option>
-								{/each}
-							</select>
-						</div>
-
-						{#if selectedTeam}
-							<div class="w-full">
-								<span class="block mb-2 text-sm font-medium">Overwrite Build (Optional)</span>
-								<select
-									class="w-full p-2 border rounded bg-background text-foreground"
-									bind:value={selectedBuildToReplaceIndex}
-								>
-									<option value={-1}>Add as new build</option>
-									{#each selectedTeam?.builds ?? [] as build, index}
-										<option value={index}>{build.name}</option>
-									{/each}
-								</select>
-							</div>
-						{/if}
-
-						<button class="button-02" onclick={addToTeamHandler} disabled={!selectedTeam}>
-							{selectedBuildToReplaceIndex >= 0 ? "Overwrite Build" : "Add Build"}
-						</button>
-					</div>
-				</div>
-			{/snippet}
-		</Tooltip>
+		<ButtonAddToTeam build={pageState.build}></ButtonAddToTeam>
 	</PageButtonContainer>
 
 	<div class="page-layout gap-0 min-[1800px]:gap-5">
@@ -213,13 +128,5 @@
 			grid-template-columns: 1fr 980px 1fr !important;
 			grid-template-areas: "careerSelection careerContainer careerInventory" !important;
 		}
-	}
-
-	@media (min-width: 1000px) and (max-width: 1899px) {
-		/*         .page-layout {
-            width: auto !important;
-            grid-template-columns: auto !important;
-            grid-template-areas: "careerSelection" "careerContainer" "careerInventory" !important;
-        } */
 	}
 </style>
