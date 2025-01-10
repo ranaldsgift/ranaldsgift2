@@ -241,20 +241,6 @@ export class DatabaseHelper {
 
 			weapon.tooltip = oldWeapon.tooltipLocalized;
 
-			/* weapon.tooltips = [];
-
-			for (var i = 0; i < oldWeapon.description.split(", ").length; i++) {
-				var tooltip = await WeaponTooltip.findOne({ where: { codename: oldWeapon.description.split(", ")[i] } });
-
-				if (!tooltip) {
-					tooltip = new WeaponTooltip();
-					tooltip.name = oldWeapon.tooltipLocalized.split(", ")[i];
-					tooltip.codename = oldWeapon.description.split(", ")[i];
-					await tooltip.save();
-				}
-				weapon.tooltips.push(tooltip);
-			} */
-
 			weapon.dodgeDistance = parseFloat(oldWeapon.dodgeDistance);
 			weapon.dodgeSpeed = parseFloat(oldWeapon.dodgeSpeed);
 
@@ -283,7 +269,7 @@ export class DatabaseHelper {
 			}
 
 			const traitCategory =
-				weapon.name !== "Trollhammer Torpedo"
+				weapon.codename !== "dr_deus_01"
 					? EnumHelper.getValues(TraitCategoryEnum).find((value) => value === oldWeapon.traitCategory)
 					: TraitCategoryEnum.MeleeRangedHybrid;
 			if (!traitCategory) {
@@ -1003,21 +989,18 @@ export class DatabaseHelper {
 			}
 			secondaryWeaponBuild.property2 = secondaryWeaponProperty2;
 
-			let secondaryWeaponTraitCategory =
-				secondaryWeapon.traitCategory === TraitCategoryEnum.MeleeRangedHybrid
-					? TraitCategoryEnum.RangedAmmo
-					: secondaryWeapon.traitCategory;
-
 			let secondaryLegacyTrait = LegacyDataHelper.getTraitMapById(
-				secondaryWeaponTraitCategory as LegacyTraitCategory,
+				secondaryWeapon.traitCategory as LegacyTraitCategory,
 				firebaseBuild.secondaryWeapon.traitId
 			);
+
 			let secondaryWeaponTrait = traitData.find((trait) => {
-				return trait.name === secondaryLegacyTrait?.name && trait.category === secondaryWeaponTraitCategory;
+				return trait.name === secondaryLegacyTrait?.name && trait.category === secondaryWeapon.traitCategory;
 			});
+
 			if (!secondaryWeaponTrait) {
 				LogHelper.error(
-					`Trait with name ${secondaryLegacyTrait?.name} for category ${secondaryWeaponTraitCategory} not found in the database.`
+					`Trait with name ${secondaryLegacyTrait?.name} for category ${secondaryWeapon.traitCategory} not found in the database.`
 				);
 				LogHelper.error(`Could not find firebase trait ID ${firebaseBuild.secondaryWeapon.traitId}`);
 				continue;
@@ -1336,10 +1319,11 @@ export class DatabaseHelper {
 			build.dateCreated = new Date(firebaseBuild.dateCreated.value._seconds * 1000);
 
 			// Save the build
-			build = await build.save({ data: { authorizationBypassKey: env.PRIVATE_DATABASE_AUTHORIZATION_BYPASS_KEY } });
+			build = await build.save({
+				data: { authorizationBypassKey: env.PRIVATE_DATABASE_AUTHORIZATION_BYPASS_KEY, manualInsert: true },
+			});
 
 			// Verifying and updating rated builds
-
 			if (firebaseBuild.likes) {
 				for (var firebaseUserId of firebaseBuild.likes) {
 					let user = await User.findOne({ where: { firebaseId: firebaseUserId }, relations: { ratedBuilds: true } });

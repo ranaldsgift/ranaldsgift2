@@ -2,6 +2,7 @@
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import BuildTable from "$lib/components/buildtable/BuildTable.svelte";
 	import CareerTalentIcon from "$lib/components/career/CareerTalentIcon.svelte";
+	import StatIconContainer from "$lib/components/containers/StatIconContainer.svelte";
 	import ContentHeader from "$lib/components/ContentHeader.svelte";
 	import TraitIcon from "$lib/components/inventory/TraitIcon.svelte";
 	import TraitIconTooltip from "$lib/components/inventory/TraitIconTooltip.svelte";
@@ -171,29 +172,21 @@
 				<TextHeader>Primary Weapons</TextHeader>
 				<div class="divider-23 w-full h-[30px]"></div>
 				<div class="weapons-container flex flex-col gap-2" class:expanded={showAllPrimaryWeapons}>
-					<div class="weapons-grid flex flex-wrap gap-2 justify-center">
+					<div class="weapons-grid flex flex-wrap gap-2 justify-center max-w-2xl">
 						{#each data.viewModel.primaryWeaponStats as primaryWeaponStat, index}
-							{#await getWeapon(primaryWeaponStat.weaponId)}
-								<Skeleton class="w-[80px] h-[80px]"></Skeleton>
-							{:then weapon}
-								{#if weapon}
-									<div
-										class="weapon-item relative p-2 pt-5 border-10 mt-8"
-										class:hidden={!showAllPrimaryWeapons && index >= 5}
-										style="transition-delay: {(index % 5) * 100}ms"
-									>
-										<a href={`/weapons/weapon/${primaryWeaponStat.weaponId}`}>
-											<div class="p-[25px] label-10 !bg-contain !bg-no-repeat relative">
-												<WeaponIconTooltip {weapon}></WeaponIconTooltip>
-											</div>
-										</a>
-										<span
-											class="absolute top-0 -translate-y-1/2 left-0 w-full text-center label-03 h-[48px] grid place-content-center"
-											>{getPrimaryWeaponPickRate(primaryWeaponStat.weaponId)}%</span
-										>
-									</div>
-								{/if}
-							{/await}
+							{@const weapon = verminData.getWeapon(primaryWeaponStat.weaponId)}
+							<div class:hidden={!showAllPrimaryWeapons && index >= 5} style="transition-delay: {(index % 5) * 100}ms">
+								<StatIconContainer percentage={getPrimaryWeaponPickRate(primaryWeaponStat.weaponId)}>
+									{#snippet icon()}
+										{#if weapon}
+											<WeaponIconTooltip weapon={verminData.getWeapon(primaryWeaponStat.weaponId)}
+											></WeaponIconTooltip>
+										{:else}
+											<Skeleton class="w-[62px] h-[62px]"></Skeleton>
+										{/if}
+									{/snippet}
+								</StatIconContainer>
+							</div>
 						{/each}
 					</div>
 					{#if data.viewModel.primaryWeaponStats.length > 5}
@@ -210,28 +203,21 @@
 			<div class="flex flex-wrap background-28 relative p-2 !bg-cover w-full justify-center">
 				<TextHeader>Secondary Weapons</TextHeader>
 				<div class="divider-23 w-full h-[30px]"></div>
-				<div class="weapons-container flex flex-col gap-2 mb-5" class:expanded={showAllPrimaryWeapons}>
-					<div class="weapons-grid flex flex-wrap gap-2 justify-center">
+				<div class="weapons-container flex flex-col gap-2" class:expanded={showAllPrimaryWeapons}>
+					<div class="weapons-grid flex flex-wrap gap-2 justify-center max-w-2xl">
 						{#each data.viewModel.secondaryWeaponStats.sort((a, b) => Number(b.count) - Number(a.count)) as secondaryWeaponStat, index}
-							{#await getWeapon(secondaryWeaponStat.weaponId)}
-								<Skeleton class="w-[80px] h-[80px]"></Skeleton>
-							{:then weapon}
-								{#if weapon}
-									<div
-										class="weapon-item relative p-2 pt-5 border-10 mt-8"
-										class:hidden={!showAllSecondaryWeapons && index >= 5}
-										style="transition-delay: {(index % 5) * 100}ms"
-									>
-										<div class="p-[25px] label-10 !bg-contain !bg-no-repeat relative">
+							{@const weapon = verminData.getWeapon(secondaryWeaponStat.weaponId)}
+							<div class:hidden={!showAllSecondaryWeapons && index >= 5} style="transition-delay: {(index % 5) * 100}ms">
+								<StatIconContainer percentage={getSecondaryWeaponPickRate(secondaryWeaponStat.weaponId)}>
+									{#snippet icon()}
+										{#if weapon}
 											<WeaponIconTooltip {weapon}></WeaponIconTooltip>
-										</div>
-										<span
-											class="absolute top-0 -translate-y-1/2 left-0 w-full text-center label-03 h-[48px] grid place-content-center"
-											>{getSecondaryWeaponPickRate(secondaryWeaponStat.weaponId)}%</span
-										>
-									</div>
-								{/if}
-							{/await}
+										{:else}
+											<Skeleton class="w-[62px] h-[62px]"></Skeleton>
+										{/if}
+									{/snippet}
+								</StatIconContainer>
+							</div>
 						{/each}
 					</div>
 					{#if data.viewModel.secondaryWeaponStats.length > 5}
@@ -251,13 +237,11 @@
 					<div class="divider-23 w-full h-[30px]"></div>
 					<div class="relative pb-5 px-5 flex flex-wrap gap-2 justify-center">
 						{#each traitStat.stats as stat}
-							<div class="label-10 p-6 !bg-contain !bg-no-repeat relative mt-5">
-								<TraitIconTooltip trait={verminData.getTrait(stat.traitId)}></TraitIconTooltip>
-								<span
-									class="absolute top-[-10px] left-0 w-full text-center label-03 h-[48px] grid place-content-center z-10"
-									>{Math.round((stat.count / traitStat.totalCount) * 100)}%</span
-								>
-							</div>
+							<StatIconContainer percentage={Math.round((stat.count / traitStat.totalCount) * 100)}>
+								{#snippet icon()}
+									<TraitIconTooltip trait={verminData.getTrait(stat.traitId)}></TraitIconTooltip>
+								{/snippet}
+							</StatIconContainer>
 						{/each}
 					</div>
 					<div class="absolute top-0 left-0 w-full h-full border-31 pointer-events-none"></div>
@@ -274,12 +258,6 @@
 		</div>
 	{/snippet}
 </EmporiumLayout>
-
-{#snippet traitStat(trait: ITrait)}
-	<div class="relative flex flex-col items-center justify-center mt-5 max-w-[80px]">
-		<TraitIcon {trait}></TraitIcon>
-	</div>
-{/snippet}
 
 <style>
 	.talents-grid {

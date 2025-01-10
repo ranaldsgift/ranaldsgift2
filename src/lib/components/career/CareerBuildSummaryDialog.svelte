@@ -52,6 +52,8 @@
 						class="size-[80px] {frame.id === build.portraitFrameId ? 'border-30' : ''}"
 						style="background: {frame.image} center / contain no-repeat; --frameId: {frame.id}"
 						onclick={() => handleFrameSelect(frame.id)}
+						title="Select Portrait Frame"
+						aria-label="Select Portrait Frame"
 					></button>
 				{/each}
 			</div>

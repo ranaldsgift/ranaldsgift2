@@ -4,23 +4,17 @@
 	import CareerSelection from "$lib/components/career/CareerSelection.svelte";
 	import CareerHelper from "$lib/helpers/CareerHelper.js";
 	import type { ICareer } from "$lib/entities/career/Career.js";
-	import BuildHelper from "$lib/helpers/BuildHelper.js";
 	import PageButtonContainer from "$lib/components/PageButtonContainer.svelte";
 	import { toast } from "svelte-sonner";
 	import { error } from "@sveltejs/kit";
 	import Seo from "$lib/components/SEO.svelte";
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import hash from "object-hash";
-	import Tooltip from "$lib/components/ui/tooltip/Tooltip.svelte";
-	import ContainerTitle from "$lib/components/ContainerTitle.svelte";
-	import CareerBuildPortrait from "$lib/components/career/CareerBuildPortrait.svelte";
-	import { getTeamState } from "$lib/state/TeamState.svelte.js";
-	import { LogHelper } from "$lib/helpers/LogHelper.js";
+	import ButtonAddToTeam from "$lib/components/team/ButtonAddToTeam.svelte";
 
 	const { data } = $props();
 	const { viewModel } = data;
 	const pageState = getHeroesPageState();
-	const teamState = getTeamState();
 
 	if (!viewModel || !viewModel.build) {
 		error(404, "Heroes Page - Invalid ViewModel");
@@ -33,21 +27,6 @@
 	if (!pageState.build) {
 		pageState.build = viewModel.build;
 	}
-
-	let searchParams = $derived.by(() => {
-		if (!pageState.build) {
-			return "";
-		}
-		return BuildHelper.getQueryStringFromBuild(pageState.build);
-	});
-
-	$effect(() => {
-		/* 		if ($page.url.searchParams.get("build") !== hash(pageState.build) && browser) {
-			tick().then(() => {
-				replaceState(`/heroes?build=${hash(pageState.build)}`, { search: hash(pageState.build) });
-			});
-		} */
-	});
 
 	const careerSelectionHandler = (career: ICareer) => {
 		if (pageState.build?.career !== career) {
@@ -91,44 +70,6 @@
 		}
 	};
 
-	const addToTeamHandler = () => {
-		const buildHash = hash(pageState.build);
-		saveBuildToRedis();
-
-		if (pageState.build) {
-			if (teamState.builds[buildHash]) {
-				toast("Build already in team", {
-					position: "bottom-center",
-				});
-				return;
-			}
-
-			teamState.builds[buildHash] = pageState.build;
-		}
-	};
-
-	$effect(() => {
-		LogHelper.debug(`Heroes Page - Build state changed.`);
-		const redisBuild = hash(pageState.build);
-		if (redisBuild) {
-			saveBuildToRedis();
-		}
-	});
-
-	const removeFromTeamHandler = (buildHash: string) => {
-		delete teamState.builds[buildHash];
-	};
-
-	let teamUrl = $derived.by(() => {
-		let teamUrl = "";
-		let i = 0;
-		for (const [key] of Object.entries(teamState.builds)) {
-			teamUrl += key + (i < Object.keys(teamState.builds).length - 1 ? ";" : "");
-			i++;
-		}
-		return `/teams/${teamUrl}`;
-	});
-
 	let pageTitle = $derived(`${pageState.build?.career?.name} - ${pageState.build?.career?.hero.name}`);
 	let pageDescription = $derived(
 		`${pageState.build?.career?.name} build for ${pageState.build?.career?.hero.name}. 
@@ -158,42 +99,7 @@
 				></svg
 			></button
 		>
-		<Tooltip options={{ delay: [0, 0], animation: false, interactive: true, trigger: "click" }}>
-			<button class="button-02"
-				>Team
-				<svg class="mt-[-2px]" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"
-					><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
-						<circle cx="12" cy="12" r="10" />
-						<path d="M12 7v10m-5-5h10" />
-					</g></svg
-				></button
-			>
-			{#snippet content()}
-				<div class="flex flex-col">
-					<ContainerTitle>Team</ContainerTitle>
-					<div class="border-01 background-14 p-5 flex flex-col gap-2 justify-center items-center">
-						<button class="button-02" onclick={addToTeamHandler}>Add Current Build</button>
-						<div class="flex flex-row gap-2 flex-wrap">
-							{#each Object.entries(teamState.builds) as [key, build]}
-								<div class="relative group">
-									<CareerBuildPortrait {build} size="82px" />
-									<button
-										class="absolute top-0 right-0 p-1 x-icon opacity-50 group-hover:opacity-100 transition-opacity"
-										aria-label="Remove from Team"
-										onclick={() => removeFromTeamHandler(key)}
-										style="--size: 30px;"
-									>
-									</button>
-								</div>
-							{/each}
-						</div>
-						{#if Object.keys(teamState.builds).length > 0}
-							<a href={teamUrl} class="button-02">View Team</a>
-						{/if}
-					</div>
-				</div>
-			{/snippet}
-		</Tooltip>
+		<ButtonAddToTeam build={pageState.build}></ButtonAddToTeam>
 	</PageButtonContainer>
 
 	<div class="page-layout gap-0 min-[1800px]:gap-5">
@@ -222,13 +128,5 @@
 			grid-template-columns: 1fr 980px 1fr !important;
 			grid-template-areas: "careerSelection careerContainer careerInventory" !important;
 		}
-	}
-
-	@media (min-width: 1000px) and (max-width: 1899px) {
-		/*         .page-layout {
-            width: auto !important;
-            grid-template-columns: auto !important;
-            grid-template-areas: "careerSelection" "careerContainer" "careerInventory" !important;
-        } */
 	}
 </style>

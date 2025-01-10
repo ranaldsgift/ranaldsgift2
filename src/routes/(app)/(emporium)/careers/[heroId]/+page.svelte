@@ -1,11 +1,13 @@
 <script lang="ts">
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import BuildTable from "$lib/components/buildtable/BuildTable.svelte";
+	import StatIconContainer from "$lib/components/containers/StatIconContainer.svelte";
 	import ContentHeader from "$lib/components/ContentHeader.svelte";
 	import WeaponIconTooltip from "$lib/components/inventory/WeaponIconTooltip.svelte";
 	import EmporiumLayout from "$lib/components/layout/EmporiumLayout.svelte";
 	import Seo from "$lib/components/SEO.svelte";
 	import TextHeader from "$lib/components/TextHeader.svelte";
+	import { Skeleton } from "$lib/components/ui/skeleton";
 	import { getVerminDataState } from "$lib/state/VerminDataState.svelte.js";
 
 	let { data } = $props();
@@ -77,20 +79,23 @@
 			<TextHeader>Primary Weapons</TextHeader>
 			<div class="divider-23 w-full h-[30px]"></div>
 			<div class="weapons-container" class:expanded={showAllWeapons}>
-				<div class="weapons-grid">
+				<div class="weapons-grid flex flex-wrap gap-2 justify-center">
 					{#each data.viewModel.primaryWeaponStats as primaryWeaponStat, index}
-						<div
-							class="weapon-item relative flex flex-col items-center"
-							class:hidden={!showAllWeapons && index >= 5}
-							style="transition-delay: {(index % 5) * 100}ms"
-						>
-							<span class="w-full text-center label-03 h-[48px] grid place-content-center -mb-10 z-10"
-								>{Math.round((primaryWeaponStat.count / data.viewModel.totalPrimaryWeapons) * 100)}%</span
-							>
-							<a href={`/weapons/weapon/${primaryWeaponStat.weaponId}`}>
-								<div class="p-[25px] label-10 !bg-contain !bg-no-repeat relative">
-									<WeaponIconTooltip weapon={verminData.getWeapon(primaryWeaponStat.weaponId)}></WeaponIconTooltip>
-								</div>
+						{@const weapon = verminData.getWeapon(primaryWeaponStat.weaponId)}
+						<div class:hidden={!showAllWeapons && index >= 5} style="transition-delay: {(index % 5) * 100}ms">
+							<a href={`/weapons/weapon/${primaryWeaponStat.weaponId}`} class="text-white">
+								<StatIconContainer
+									percentage={Math.round((primaryWeaponStat.count / data.viewModel.totalPrimaryWeapons) * 100)}
+								>
+									{#snippet icon()}
+										{#if weapon}
+											<WeaponIconTooltip weapon={verminData.getWeapon(primaryWeaponStat.weaponId)}
+											></WeaponIconTooltip>
+										{:else}
+											<Skeleton class="w-[62px] h-[62px]"></Skeleton>
+										{/if}
+									{/snippet}
+								</StatIconContainer>
 							</a>
 						</div>
 					{/each}
@@ -112,18 +117,24 @@
 			<div class="weapons-container" class:expanded={showAllSecondaryWeapons}>
 				<div class="weapons-grid">
 					{#each data.viewModel.secondaryWeaponStats as secondaryWeaponStat, index}
+						{@const weapon = verminData.getWeapon(secondaryWeaponStat.weaponId)}
 						<div
 							class="weapon-item relative flex flex-col items-center"
 							class:hidden={!showAllSecondaryWeapons && index >= 5}
 							style="transition-delay: {(index % 5) * 100}ms"
 						>
-							<span class="w-full text-center label-03 h-[48px] grid place-content-center -mb-10 z-10"
-								>{Math.round((secondaryWeaponStat.count / data.viewModel.totalSecondaryWeapons) * 100)}%</span
-							>
-							<a href={`/weapons/weapon/${secondaryWeaponStat.weaponId}`}>
-								<div class="p-[25px] label-10 !bg-contain !bg-no-repeat relative">
-									<WeaponIconTooltip weapon={verminData.getWeapon(secondaryWeaponStat.weaponId)}></WeaponIconTooltip>
-								</div>
+							<a href={`/weapons/weapon/${secondaryWeaponStat.weaponId}`} class="text-white">
+								<StatIconContainer
+									percentage={Math.round((secondaryWeaponStat.count / data.viewModel.totalSecondaryWeapons) * 100)}
+								>
+									{#snippet icon()}
+										{#if weapon}
+											<WeaponIconTooltip {weapon}></WeaponIconTooltip>
+										{:else}
+											<Skeleton class="w-[62px] h-[62px]"></Skeleton>
+										{/if}
+									{/snippet}
+								</StatIconContainer>
 							</a>
 						</div>
 					{/each}

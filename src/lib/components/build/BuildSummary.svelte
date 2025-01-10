@@ -36,55 +36,56 @@
 </div>
 
 {#snippet itemSummary(name: string, item: ItemBuild, itemType: ItemTypeEnum)}
+	<Tooltip>
 		<div class="item-summary-container relative mt-10">
-			<div class="h-full">
+			<div class="h-full w-full">
 				<div class="absolute top-[0px] z-[1] mt-[-40px] left-[50%] translate-x-[-50%]">
-				<Tooltip>
 					<div class="flex items-center justify-center w-full gap-1">
 						<ItemIcon itemBuild={item} {itemType}></ItemIcon>
 						{#if item.trait}
-						<TraitIcon trait={item.trait}></TraitIcon>
-						{/if}	
+							<TraitIcon trait={item.trait}></TraitIcon>
+						{/if}
 					</div>
-					{#snippet content()}
-						<InventoryItemView itemBuild={item} itemType={itemType}></InventoryItemView>
-					{/snippet}
-				</Tooltip>				
-			</div>
+				</div>
 				<div class="item-info-container pt-[1.5rem] pb-[0px] px-[1rem]">
-					{#if item.rarity === ItemRarityEnum.White}
-					<div class="grid min-h-[5rem] items-center">
-						<span class="text-center text-2xl">{item.weapon?.name || itemType.toString()}</span>
-					</div>
-					{/if}
-					{#if item.trait}
 					<div class="header-underline grid">
-						<span class="item-trait-name text-center">{item.trait.name}</span>
+						{#if item.trait}
+							<span class="item-trait-name text-center">{item.trait.name}</span>
+						{:else if item.rarity !== ItemRarityEnum.Orange && item.rarity !== ItemRarityEnum.Red}
+							<span class="item-trait-name text-center !text-gray-500">Trait Locked</span>
+						{/if}
 					</div>
-					{/if}
-					{#if item.property1 || item.property2}
 					<div class="grid grid-cols-[min-content_max-content] gap-x-2 items-center justify-self-center">
 						{#if item.property1}
-						{@render itemProperty(item.property1, item.property1Value)}
+							{@render itemProperty(item.property1, item.property1Value)}
+						{:else}
+							<span class="property-name col-span-2 !text-gray-500">1st Property Locked</span>
 						{/if}
 						{#if item.property2}
-						{@render itemProperty(item.property2, item.property2Value)}
+							{@render itemProperty(item.property2, item.property2Value)}
+						{:else}
+							<span class="property-name col-span-2 !text-gray-500">2nd Property Locked</span>
 						{/if}
 					</div>
-					{/if}
 				</div>
 			</div>
 		</div>
+		{#snippet content()}
+			<div class="top-left-shadow">
+				<InventoryItemView itemBuild={item} {itemType}></InventoryItemView>
+			</div>
+		{/snippet}
+	</Tooltip>
 {/snippet}
 
 {#snippet itemProperty(property: IProperty, value: number | undefined)}
-		<span class="modifier text-right">
-			{value ? value.toFixed(1) : property.maximumValue?.toFixed(1)}{PropertyHelper.getModifier(property)}
-			{#if value && value !== property.maximumValue}
+	<span class="modifier text-right">
+		{value ? value.toFixed(1) : property.maximumValue?.toFixed(1)}{PropertyHelper.getModifier(property)}
+		{#if value && value !== property.maximumValue}
 			<span class="max-value">({property.maximumValue}{PropertyHelper.getModifier(property)})</span>
-			{/if}
-		</span>
-		<span class="property-name justify-self-start">{property.name}</span>
+		{/if}
+	</span>
+	<span class="property-name justify-self-start">{property.name}</span>
 {/snippet}
 
 <style>
@@ -147,7 +148,8 @@
 		font-size: 1.2rem;
 		color: #30e158;
 	}
-	.item-summary-header *, .item-info-container * {
+	.item-summary-header *,
+	.item-info-container * {
 		position: relative;
 	}
 	.build-summary-container > div {

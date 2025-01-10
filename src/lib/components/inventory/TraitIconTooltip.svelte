@@ -39,7 +39,7 @@
 		background-size: 65% !important;
 		box-sizing: border-box;
 		display: inline-block;
-		box-shadow: inset 0 4px 2px white;
+		box-shadow: inset 0 1px 2px white;
 		position: relative;
 		background-color: #000;
 	}

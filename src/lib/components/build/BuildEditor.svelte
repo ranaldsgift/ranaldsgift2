@@ -34,11 +34,13 @@
 
 		if (!career.primaryWeapons.find((w) => w.id === build.primaryWeapon?.id)) {
 			build.primaryWeapon.weapon = career.primaryWeapons[0];
+			build.primaryWeapon.illusion = undefined;
 		}
 
 		if (!career.secondaryWeapons.find((w) => w.id === build.secondaryWeapon?.id)) {
 			build.secondaryWeapon.weapon =
 				career.secondaryWeapons[0].id !== build.primaryWeapon.weapon?.id ? career.secondaryWeapons[0] : career.secondaryWeapons[1];
+			build.secondaryWeapon.illusion = undefined;
 		}
 	};
 </script>
@@ -57,7 +59,9 @@
 				maxlength="120"
 			/>
 			<div class="summary-container px-5">
-				<CareerBuildSummaryEditor bind:build career={build.career}></CareerBuildSummaryEditor>
+				{#if build.career}
+					<CareerBuildSummaryEditor bind:build career={build.career}></CareerBuildSummaryEditor>
+				{/if}
 				<div class="hidden desktop:block">
 					<BuildTalentSummary {build}></BuildTalentSummary>
 				</div>

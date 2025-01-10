@@ -129,6 +129,18 @@ a:hover {
   text-decoration: underline;
 }
 
+.text-primary {
+  color: #c15b24;
+}
+
+.text-secondary {
+  color: #928962;
+}
+
+.text-tertiary {
+  color: #30e158;
+}
+
 .header-underline {
   position: relative;
   width: 100%;

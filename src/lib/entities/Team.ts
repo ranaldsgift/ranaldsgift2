@@ -22,7 +22,7 @@ export class Team extends AuthoredEntity<ITeam> {
 }
 
 export interface ITeam {
-	id: number;
+	id?: number;
 	name?: string;
 	description?: string;
 	videos?: string[];

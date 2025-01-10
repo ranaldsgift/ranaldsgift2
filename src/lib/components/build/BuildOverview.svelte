@@ -143,6 +143,6 @@
 
 <style>
 	.lock-icon {
-		box-shadow: inset 0 4px 2px white;
+		box-shadow: inset 0 1px 2px white;
 	}
 </style>

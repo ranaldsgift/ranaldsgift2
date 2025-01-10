@@ -2,6 +2,7 @@
 	import Breadcrumb from "$lib/components/Breadcrumb.svelte";
 	import ContentButton from "$lib/components/buttons/ContentButton.svelte";
 	import ContentContainer from "$lib/components/ContentContainer.svelte";
+	import DownloadIcon from "$lib/components/icons/DownloadIcon.svelte";
 	import Seo from "$lib/components/SEO.svelte";
 	import TextHeader from "$lib/components/TextHeader.svelte";
 </script>
@@ -85,7 +86,16 @@
 			</ContentContainer>
 			<div class="divider-10 h-[26px] !bg-contain my-2 desktop:hidden"></div>
 			<ContentContainer class="max-w-[672px] flex flex-col gap-5">
-				<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=1619024877">Onslaught (ONS):</a>
+				<div class="grid">
+					<p class="text-[#0096fb]">Onslaught (ONS):</p>
+					<a
+						href="https://steamcommunity.com/sharedfiles/filedetails/?id=1619024877"
+						target="_blank"
+						class="mx-auto !no-underline opacity-40 hover:opacity-100 transition-opacity duration-300"
+					>
+						<DownloadIcon />
+					</a>
+				</div>
 				<p>
 					A difficulty mutator that introduces more elites in hordes, changes the enemy composition of hordes, and also speeds up
 					the pacing of a match which makes hordes and specials appear much more frequently. Events are reworked on every map to
@@ -95,7 +105,16 @@
 			</ContentContainer>
 			<div class="divider-10 h-[26px] !bg-contain my-2 desktop:hidden"></div>
 			<ContentContainer class="max-w-[672px] flex flex-col gap-5">
-				<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2179403386">Onslaught+ (ONS+):</a>
+				<div class="grid">
+					<p class="text-[#0096fb]">Onslaught+ (ONS+):</p>
+					<a
+						href="https://steamcommunity.com/sharedfiles/filedetails/?id=2179403386"
+						target="_blank"
+						class="mx-auto !no-underline opacity-40 hover:opacity-100 transition-opacity duration-300"
+					>
+						<DownloadIcon />
+					</a>
+				</div>
 				<p>
 					A difficulty mutator that aims to provide a more difficult experience than regular Onslaught. ONS+ introduces more
 					elites in hordes, as well as shield units, and some waves include Chaos Warriors. The mod increases the amount of
@@ -105,7 +124,16 @@
 			</ContentContainer>
 			<div class="divider-10 h-[26px] !bg-contain my-2 desktop:hidden"></div>
 			<ContentContainer class="max-w-[672px] flex flex-col gap-5">
-				<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2848074673">Dutch Spice Tourney Version (Dutch):</a>
+				<div class="grid">
+					<p class="text-[#0096fb]">Dutch Spice (Dutch):</p>
+					<a
+						href="https://steamcommunity.com/sharedfiles/filedetails/?id=2848074673"
+						target="_blank"
+						class="mx-auto !no-underline opacity-40 hover:opacity-100 transition-opacity duration-300"
+					>
+						<DownloadIcon />
+					</a>
+				</div>
 				<p>
 					A mutator mod in the same vein as Onslaught made by Core specifically for the Onslaught Series. This is the difficulty
 					second only to Spicy Onslaught; "Spice the average Dutchie can handle". There are a lot of spawns in Dutch Spice, most
@@ -115,7 +143,16 @@
 			</ContentContainer>
 			<div class="divider-10 h-[26px] !bg-contain my-2 desktop:hidden"></div>
 			<ContentContainer class="max-w-[672px] flex flex-col gap-5">
-				<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2157602864">Spicy Onslaught (Spicy):</a>
+				<div class="grid">
+					<p class="text-[#0096fb]">Spicy Onslaught (Spicy):</p>
+					<a
+						href="https://steamcommunity.com/sharedfiles/filedetails/?id=2157602864"
+						target="_blank"
+						class="mx-auto !no-underline opacity-40 hover:opacity-100 transition-opacity duration-300"
+					>
+						<DownloadIcon />
+					</a>
+				</div>
 				<p>
 					A modded difficulty created by Core. It is currently the highest achievable difficulty and a buffed version of Dutch
 					Spice. It cranks everything up Dutch has to offer.
@@ -123,7 +160,16 @@
 			</ContentContainer>
 			<div class="divider-10 h-[26px] !bg-contain my-2 desktop:hidden"></div>
 			<ContentContainer class="max-w-[672px] flex flex-col gap-5">
-				<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=1835393505">Deathwish (DW):</a>
+				<div class="grid">
+					<p class="text-[#0096fb]">Deathwish (DW):</p>
+					<a
+						href="https://steamcommunity.com/sharedfiles/filedetails/?id=1835393505"
+						target="_blank"
+						class="mx-auto !no-underline opacity-40 hover:opacity-100 transition-opacity duration-300"
+					>
+						<DownloadIcon />
+					</a>
+				</div>
 				<p>
 					A difficulty modifier that increases enemy stagger resistances, and Globadier gas damage. Elites can no longer be
 					interrupted out of their overheads with a majority of the classes in the game, and enemies in general tend to stay
@@ -134,7 +180,16 @@
 			</ContentContainer>
 			<div class="divider-10 h-[26px] !bg-contain my-2 desktop:hidden"></div>
 			<ContentContainer class="max-w-[672px] flex flex-col gap-5">
-				<a href="https://steamcommunity.com/sharedfiles/filedetails/?id=1835393505">Deathwish Onslaught (DWONS):</a>
+				<div class="grid">
+					<p class="text-[#0096fb]">Deathwish Onslaught (DWONS):</p>
+					<a
+						href="https://steamcommunity.com/sharedfiles/filedetails/?id=1835393505"
+						target="_blank"
+						class="mx-auto !no-underline opacity-40 hover:opacity-100 transition-opacity duration-300"
+					>
+						<DownloadIcon />
+					</a>
+				</div>
 				<p>
 					The term for stacking the Deathwish and Onslaught modifiers on top of each other. Often used in conjunction with the
 					difficulty level being played (ex. Cata 1 + Onslaught + Deathwish = C1DWONS).

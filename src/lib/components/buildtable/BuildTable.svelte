@@ -85,7 +85,12 @@
 			}
 		}
 
-		builds = [...items];
+		if (!items || items.length === 0) {
+			builds = [];
+		} else {
+			builds = [...items];
+		}
+
 		handler.setRows(builds);
 		loadingData = false;
 	};
@@ -108,7 +113,7 @@
 	const rows = handler.getRows();
 
 	$effect(() => {
-		if (filter) {
+		if (filter && !loadingData) {
 			loadData();
 		}
 	});

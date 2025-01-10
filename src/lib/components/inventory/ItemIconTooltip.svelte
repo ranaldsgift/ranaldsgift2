@@ -45,9 +45,9 @@
 		data-type={itemType}
 	></div>
 	{#snippet content()}
-	<div class="top-left-shadow">
-		<InventoryItemView {itemBuild} {itemType}></InventoryItemView>
-	</div>
+		<div class="top-left-shadow">
+			<InventoryItemView {itemBuild} {itemType}></InventoryItemView>
+		</div>
 	{/snippet}
 </Tooltip>
 
@@ -64,7 +64,7 @@
 
 <style>
 	.item-icon {
-		box-shadow: inset 0 4px 2px white;
+		box-shadow: inset 0 1px 2px white;
 		grid-area: itemIcon;
 		height: var(--size);
 		width: var(--size);

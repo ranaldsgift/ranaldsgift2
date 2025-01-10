@@ -47,7 +47,7 @@
 		display: none !important;
 	}
 	.weapon-icon {
-		box-shadow: inset 0 4px 2px white;
+		box-shadow: inset 0 1px 2px white;
 	}
 	.weapon-icon.selected {
 		border-image: url("/images/borders/border-30.png");

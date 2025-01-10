@@ -3,12 +3,12 @@
 	import CareerIcon from "./CareerIcon.svelte";
 	import ContainerTitle from "../ContainerTitle.svelte";
 	import type { IHero } from "$lib/entities/Hero";
-	import { CareersStore, HeroesStore } from "$lib/stores/DataStores";
+	import { CareersStore } from "$lib/stores/DataStores";
 	import { getWindowState } from "$lib/state/WindowState.svelte";
 	import { browser } from "$app/environment";
 
 	type Props = {
-		selectedCareer: ICareer | null;
+		selectedCareer: ICareer | null | undefined;
 		careers?: ICareer[];
 		handler?: (career: ICareer) => void;
 	};
@@ -61,8 +61,6 @@
 	$effect(() => {
 		loadCareers();
 	});
-
-	let aspectRatio = $derived<number>(windowState.isWideScreen ? 114 / 134 : 203 / 72);
 </script>
 
 <div class="career-selection-container top-left-shadow self-start">
