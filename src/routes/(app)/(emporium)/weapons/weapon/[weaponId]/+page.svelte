@@ -87,13 +87,25 @@
 				{#each data.weaponCareerStats
 					?.filter((c) => c.weaponId === data.weapon.id)
 					.sort((a, b) => b.count - a.count) ?? [] as careerStat}
-					<div class="careers-stats-row top-left-shadow relative mt-4">
-						<a class="relative" href={`/builds?heroId=${data.hero.id}&careerId=${careerStat.careerId}`}>
-							<img class="career-icon" src="/images/careers/{careerStat.careerId}/portrait.png" alt={careerStat.careerName} />
+					<div>
+						<div class="careers-stats-row top-left-shadow relative mt-4">
+							<a class="relative" href={`/careers/${data.hero.id}/${careerStat.careerId}`}>
+								<img
+									class="career-icon"
+									src="/images/careers/{careerStat.careerId}/portrait.png"
+									alt={careerStat.careerName}
+								/>
+							</a>
 							<div class="absolute top-0 left-0 w-full h-full border-10 pointer-events-none"></div>
-						</a>
-						<span class="absolute top-0 -translate-y-1/2 w-full text-center label-03 p-3"
-							>{Math.round((careerStat.count / data.totalBuilds) * 100)}%</span
+							<span class="absolute top-0 left-0 -translate-y-1/2 w-full text-center label-03 p-3"
+								>{Math.round((careerStat.count / data.totalBuilds) * 100)}%</span
+							>
+						</div>
+						<a
+							class="relative w-full block text-center"
+							href={`/builds?heroId=${data.hero.id}&careerId=${careerStat.careerId}`}
+						>
+							View Builds</a
 						>
 					</div>
 				{/each}

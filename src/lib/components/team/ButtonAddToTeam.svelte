@@ -46,7 +46,7 @@
 			} else {
 				userState.teams.value.push({
 					id: userState.teams.value.length,
-					name: build.career?.name,
+					name: `Untitled Team ${userState.teams.value.length + 1}`,
 					builds: [{ ...build, id: buildHash }],
 				});
 			}

@@ -62,13 +62,25 @@
 				{#each data.viewModel.careerStats
 					?.filter((c) => c.heroId === data.viewModel.heroId)
 					.sort((a, b) => b.count - a.count) ?? [] as careerStat}
-					<div class="careers-stats-row top-left-shadow relative mt-4">
-						<a class="relative" href={`/builds?heroId=${data.viewModel.heroId}&careerId=${careerStat.careerId}`}>
-							<img class="career-icon" src="/images/careers/{careerStat.careerId}/portrait.png" alt={careerStat.name} />
+					<div>
+						<div class="careers-stats-row top-left-shadow relative mt-4">
+							<a class="relative" href={`/careers/${data.viewModel.heroId}/${careerStat.careerId}`}>
+								<img
+									class="career-icon"
+									src="/images/careers/{careerStat.careerId}/portrait.png"
+									alt={careerStat.careerName}
+								/>
+							</a>
 							<div class="absolute top-0 left-0 w-full h-full border-10 pointer-events-none"></div>
-						</a>
-						<span class="absolute top-0 -translate-y-1/2 w-full text-center label-03 p-3"
-							>{Math.round((careerStat.count / data.viewModel.totalHeroBuilds) * 100)}%</span
+							<span class="absolute top-0 left-0 -translate-y-1/2 w-full text-center label-03 p-3"
+								>{Math.round((careerStat.count / data.viewModel.totalHeroBuilds) * 100)}%</span
+							>
+						</div>
+						<a
+							class="relative w-full block text-center"
+							href={`/builds?heroId=${data.viewModel.heroId}&careerId=${careerStat.careerId}`}
+						>
+							View Builds</a
 						>
 					</div>
 				{/each}
@@ -79,7 +91,7 @@
 			<TextHeader>Primary Weapons</TextHeader>
 			<div class="divider-23 w-full h-[30px]"></div>
 			<div class="weapons-container" class:expanded={showAllWeapons}>
-				<div class="weapons-grid flex flex-wrap gap-2 justify-center">
+				<div class="weapons-grid flex flex-wrap gap-2 justify-center max-w-2xl mx-auto">
 					{#each data.viewModel.primaryWeaponStats as primaryWeaponStat, index}
 						{@const weapon = verminData.getWeapon(primaryWeaponStat.weaponId)}
 						<div class:hidden={!showAllWeapons && index >= 5} style="transition-delay: {(index % 5) * 100}ms">
@@ -115,7 +127,7 @@
 			<TextHeader>Secondary Weapons</TextHeader>
 			<div class="divider-23 w-full h-[30px]"></div>
 			<div class="weapons-container" class:expanded={showAllSecondaryWeapons}>
-				<div class="weapons-grid">
+				<div class="weapons-grid max-w-2xl mx-auto">
 					{#each data.viewModel.secondaryWeaponStats as secondaryWeaponStat, index}
 						{@const weapon = verminData.getWeapon(secondaryWeaponStat.weaponId)}
 						<div

@@ -22,7 +22,9 @@
 	<ContainerTitle class="w-full">Career Overview</ContainerTitle>
 	<div class="career-details-container">
 		<div class="border-01 p-5">
-			<CareerBuildDetails {build} career={build.career}></CareerBuildDetails>
+			{#if build.career}
+				<CareerBuildDetails {build} career={build.career}></CareerBuildDetails>
+			{/if}
 			<div class="divider-03 h-[48px]"></div>
 			<BuildSummary {build}></BuildSummary>
 		</div>

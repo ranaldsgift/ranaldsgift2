@@ -64,11 +64,11 @@
 	};
 </script>
 
-<div class="h-[400px] w-[300px] relative text-xl overflow-y-auto">
+<div class="h-[400px] w-[300px] relative text-xl overflow-y-auto thin-scroll border-02">
 	<div class="border-02 p-2"><h2 class="text-primary">Team Manager</h2></div>
 	<div class="grid grid-cols-1">
 		{#each userState.teams.value as team, i}
-			<div class="flex" style="background: url('/images/dividers/divider-border-02.png') bottom center repeat-x">
+			<div class="flex divider-border-02">
 				<div class="w-full relative group">
 					<div
 						role="button"
@@ -172,5 +172,13 @@
 	<div class="flex justify-end p-2">
 		<button onclick={addTeam}>Add Team</button>
 	</div>
-	<div class="border-02 absolute bottom-0 left-0 right-0 top-0 pointer-events-none"></div>
 </div>
+
+<style>
+	.divider-border-02 {
+		background: url("/images/dividers/divider-border-02.png");
+		background-size: calc(100% - 6px) 4px;
+		background-position: bottom;
+		background-repeat: no-repeat;
+	}
+</style>

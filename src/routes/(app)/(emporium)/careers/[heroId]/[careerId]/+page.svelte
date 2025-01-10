@@ -176,16 +176,18 @@
 						{#each data.viewModel.primaryWeaponStats as primaryWeaponStat, index}
 							{@const weapon = verminData.getWeapon(primaryWeaponStat.weaponId)}
 							<div class:hidden={!showAllPrimaryWeapons && index >= 5} style="transition-delay: {(index % 5) * 100}ms">
-								<StatIconContainer percentage={getPrimaryWeaponPickRate(primaryWeaponStat.weaponId)}>
-									{#snippet icon()}
-										{#if weapon}
-											<WeaponIconTooltip weapon={verminData.getWeapon(primaryWeaponStat.weaponId)}
-											></WeaponIconTooltip>
-										{:else}
-											<Skeleton class="w-[62px] h-[62px]"></Skeleton>
-										{/if}
-									{/snippet}
-								</StatIconContainer>
+								<a href={`/weapons/weapon/${primaryWeaponStat.weaponId}`} class="text-white">
+									<StatIconContainer percentage={getPrimaryWeaponPickRate(primaryWeaponStat.weaponId)}>
+										{#snippet icon()}
+											{#if weapon}
+												<WeaponIconTooltip weapon={verminData.getWeapon(primaryWeaponStat.weaponId)}
+												></WeaponIconTooltip>
+											{:else}
+												<Skeleton class="w-[62px] h-[62px]"></Skeleton>
+											{/if}
+										{/snippet}
+									</StatIconContainer>
+								</a>
 							</div>
 						{/each}
 					</div>
@@ -208,15 +210,17 @@
 						{#each data.viewModel.secondaryWeaponStats.sort((a, b) => Number(b.count) - Number(a.count)) as secondaryWeaponStat, index}
 							{@const weapon = verminData.getWeapon(secondaryWeaponStat.weaponId)}
 							<div class:hidden={!showAllSecondaryWeapons && index >= 5} style="transition-delay: {(index % 5) * 100}ms">
-								<StatIconContainer percentage={getSecondaryWeaponPickRate(secondaryWeaponStat.weaponId)}>
-									{#snippet icon()}
-										{#if weapon}
-											<WeaponIconTooltip {weapon}></WeaponIconTooltip>
-										{:else}
-											<Skeleton class="w-[62px] h-[62px]"></Skeleton>
-										{/if}
-									{/snippet}
-								</StatIconContainer>
+								<a href={`/weapons/weapon/${secondaryWeaponStat.weaponId}`} class="text-white">
+									<StatIconContainer percentage={getSecondaryWeaponPickRate(secondaryWeaponStat.weaponId)}>
+										{#snippet icon()}
+											{#if weapon}
+												<WeaponIconTooltip {weapon}></WeaponIconTooltip>
+											{:else}
+												<Skeleton class="w-[62px] h-[62px]"></Skeleton>
+											{/if}
+										{/snippet}
+									</StatIconContainer>
+								</a>
 							</div>
 						{/each}
 					</div>

@@ -17,7 +17,7 @@
 </script>
 
 <div class="career-details-container">
-	<CareerBuildSummaryContainer {build} career={build.career}></CareerBuildSummaryContainer>
+	<CareerBuildSummaryContainer {build} {career}></CareerBuildSummaryContainer>
 	<CareerSkill {career}></CareerSkill>
 	<CareerPassive {career}></CareerPassive>
 	<CareerPerks {career}></CareerPerks>
