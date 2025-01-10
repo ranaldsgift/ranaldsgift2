@@ -32,7 +32,7 @@
 
 <div class="relative grid grid-cols-2 gap-10 py-5 px-8 mt-10 h-[calc(100%-110px)]">
 	{#if pageHeader}
-		<div class="absolute top-[-1.75rem] left-[calc(50%+50px)] w-full h-[110px] z-10">
+		<div class="absolute top-[-1.75rem] left-[calc(50%+50px)] w-full h-[110px] z-10 pointer-events-none">
 			<h1 class="text-5xl text-[#9f9065]">
 				{@render pageHeader()}
 			</h1>
@@ -103,6 +103,7 @@
 		background: url("/images/dividers/divider-04.png") left center no-repeat;
 		position: absolute;
 		z-index: 1;
+		pointer-events: none;
 	}
 	.skull-divider.top {
 		top: -42px;
