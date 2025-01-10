@@ -14,7 +14,7 @@
 
 	let health = $derived.by(() => {
 		if (!build.necklace || (build.necklace.property1?.name !== "Health" && build.necklace.property2?.name !== "Health")) {
-			return build.career.health;
+			return career.health;
 		}
 
 		let healthModifier = 0;
@@ -23,17 +23,17 @@
 			if (build.necklace.property1Value) {
 				healthModifier = build.necklace.property1Value / 100;
 			}
-			healthModifier = build.necklace.property1.maximumValue / 100;
+			healthModifier = (build.necklace.property1.maximumValue ?? 0) / 100;
 		}
 
 		if (build.necklace.property2?.name === "Health") {
 			if (build.necklace.property2Value) {
 				healthModifier = build.necklace.property2Value / 100;
 			}
-			healthModifier = build.necklace.property2.maximumValue / 100;
+			healthModifier = (build.necklace.property2.maximumValue ?? 0) / 100;
 		}
 
-		return build.career.health * (1 + healthModifier);
+		return career.health * (1 + healthModifier);
 	});
 
 	let cooldown = $derived.by(() => {
@@ -41,7 +41,7 @@
 			!build.trinket ||
 			(build.trinket.property1?.name !== "Cooldown Reduction" && build.trinket.property2?.name !== "Cooldown Reduction")
 		) {
-			return build.career.skill.cooldown;
+			return career.skill.cooldown;
 		}
 
 		let cooldownModifier = 0;
@@ -50,24 +50,28 @@
 			if (build.trinket.property1Value) {
 				cooldownModifier = build.trinket.property1Value / 100;
 			}
-			cooldownModifier = build.trinket.property1.maximumValue / 100;
+			cooldownModifier = (build.trinket.property1.maximumValue ?? 0) / 100;
 		}
 
 		if (build.trinket.property2?.name === "Cooldown Reduction") {
 			if (build.trinket.property2Value) {
 				cooldownModifier = build.trinket.property2Value / 100;
 			}
-			cooldownModifier = build.trinket.property2.maximumValue / 100;
+			cooldownModifier = (build.trinket.property2.maximumValue ?? 0) / 100;
 		}
 
-		return build.career.skill.cooldown * (1 - cooldownModifier);
+		return career.skill.cooldown * (1 - cooldownModifier);
 	});
 </script>
 
 <div class="career-summary-container">
 	<div class="career-name-container mobile:block hidden">
-		<p class="career-name-header header-gradient-underline">{career.name}</p>
-		<p class="career-name">{career.hero.name}</p>
+		<p class="career-name-header header-gradient-underline">
+			<a class="text-primary" href="/careers/{career.hero.id}/{career.id}">{career.name}</a>
+		</p>
+		<p class="career-name">
+			<a class="text-[#c8c8c8]" href="/careers/{career.hero.id}">{career.hero.name}</a>
+		</p>
 	</div>
 	<div class="career-portrait-container">
 		<CareerBuildPortrait {build} size="160px"></CareerBuildPortrait>

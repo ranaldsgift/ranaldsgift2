@@ -64,14 +64,14 @@
 			if (build.trinket.property1Value) {
 				cooldownModifier = build.trinket.property1Value / 100;
 			}
-			cooldownModifier = build.trinket.property1.maximumValue ?? 100 / 100;
+			cooldownModifier = (build.trinket.property1.maximumValue ?? 0) / 100;
 		}
 
 		if (build.trinket.property2?.name === "Cooldown Reduction") {
 			if (build.trinket.property2Value) {
 				cooldownModifier = build.trinket.property2Value / 100;
 			}
-			cooldownModifier = build.trinket.property2.maximumValue ?? 100 / 100;
+			cooldownModifier = (build.trinket.property2.maximumValue ?? 0) / 100;
 		}
 
 		return build.career.skill.cooldown * (1 - cooldownModifier);
