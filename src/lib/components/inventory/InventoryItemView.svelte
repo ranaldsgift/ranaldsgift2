@@ -68,35 +68,33 @@
 				<p class="item-stamina-text">{itemBuild.weapon.stamina}</p>
 			</div>
 		{/if}
-		{#if itemBuild.property1 || itemBuild.property2}
+		{#if !itemBuild.rarity || itemBuild.rarity !== ItemRarityEnum.White}
 			<div class="item-properties-container pr-5">
-				{#if itemBuild.property1}
-					<div class="relative">
-						<li class="item-property-1">
-							{itemBuild.property1
-								? `+ ${itemBuild.property1.maximumValue?.toFixed(1)}${PropertyHelper.getModifier(itemBuild.property1)} ${itemBuild.property1.name}`
-								: ""}
-						</li>
-					</div>
-				{/if}
-				{#if itemBuild.property2}
+				<div class="relative">
+					<li class="item-property-1">
+						{itemBuild.property1
+							? `+ ${itemBuild.property1.maximumValue?.toFixed(1)}${PropertyHelper.getModifier(itemBuild.property1)} ${itemBuild.property1.name}`
+							: "Any Property"}
+					</li>
+				</div>
+				{#if !itemBuild.rarity || itemBuild.rarity !== ItemRarityEnum.Green}
 					<div class="relative">
 						<li class="item-property-2">
 							{itemBuild.property2
 								? `+ ${itemBuild.property2.maximumValue?.toFixed(1)}${PropertyHelper.getModifier(itemBuild.property2)} ${itemBuild.property2.name}`
-								: ""}
+								: "Any Property"}
 						</li>
 					</div>
 				{/if}
 			</div>
 		{/if}
-		{#if itemBuild.trait}
+		{#if !itemBuild.rarity || itemBuild.rarity === ItemRarityEnum.Orange || itemBuild.rarity === ItemRarityEnum.Red}
 			<div class="item-trait-container">
 				<TraitIcon trait={itemBuild.trait} {tooltipPosition}></TraitIcon>
 				<div class="relative">
-					<p class="item-trait-name">{itemBuild.trait?.name}</p>
+					<p class="item-trait-name">{itemBuild.trait?.name ?? "Any Trait"}</p>
 				</div>
-				<p class="item-trait-description">{itemBuild.trait?.description}</p>
+				<p class="item-trait-description">{itemBuild.trait?.description ?? "No specific trait required"}</p>
 			</div>
 		{/if}
 	</div>

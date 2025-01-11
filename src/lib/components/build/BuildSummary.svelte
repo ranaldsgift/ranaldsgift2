@@ -42,7 +42,7 @@
 				<div class="absolute top-[0px] z-[1] mt-[-40px] left-[50%] translate-x-[-50%]">
 					<div class="flex items-center justify-center w-full gap-1">
 						<ItemIcon itemBuild={item} {itemType}></ItemIcon>
-						{#if item.trait}
+						{#if item.rarity === ItemRarityEnum.Orange || item.rarity === ItemRarityEnum.Red}
 							<TraitIcon trait={item.trait}></TraitIcon>
 						{/if}
 					</div>
@@ -51,17 +51,19 @@
 					<div class="header-underline grid">
 						{#if item.trait}
 							<span class="item-trait-name text-center">{item.trait.name}</span>
-						{:else if item.rarity !== ItemRarityEnum.Orange && item.rarity !== ItemRarityEnum.Red}
+						{:else if !item.rarity || (item.rarity !== ItemRarityEnum.Orange && item.rarity !== ItemRarityEnum.Red)}
 							<span class="item-trait-name text-center !text-gray-500">Trait Locked</span>
+						{:else}
+							<span class="item-trait-name text-center">Any Trait</span>
 						{/if}
 					</div>
 					<div class="grid grid-cols-[min-content_max-content] gap-x-2 items-center justify-self-center">
-						{#if item.property1}
+						{#if !item.rarity || item.rarity !== ItemRarityEnum.White}
 							{@render itemProperty(item.property1, item.property1Value)}
 						{:else}
 							<span class="property-name col-span-2 !text-gray-500">1st Property Locked</span>
 						{/if}
-						{#if item.property2}
+						{#if !item.rarity || (item.rarity !== ItemRarityEnum.White && item.rarity !== ItemRarityEnum.Green)}
 							{@render itemProperty(item.property2, item.property2Value)}
 						{:else}
 							<span class="property-name col-span-2 !text-gray-500">2nd Property Locked</span>
@@ -78,14 +80,19 @@
 	</Tooltip>
 {/snippet}
 
-{#snippet itemProperty(property: IProperty, value: number | undefined)}
-	<span class="modifier text-right">
-		{value ? value.toFixed(1) : property.maximumValue?.toFixed(1)}{PropertyHelper.getModifier(property)}
-		{#if value && value !== property.maximumValue}
-			<span class="max-value">({property.maximumValue}{PropertyHelper.getModifier(property)})</span>
-		{/if}
-	</span>
-	<span class="property-name justify-self-start">{property.name}</span>
+{#snippet itemProperty(property: IProperty | undefined, value: number | undefined)}
+	{#if property}
+		<span class="modifier text-right">
+			{value ? value.toFixed(1) : property.maximumValue?.toFixed(1)}{PropertyHelper.getModifier(property)}
+			{#if value && value !== property.maximumValue}
+				<span class="max-value">({property.maximumValue}{PropertyHelper.getModifier(property)})</span>
+			{/if}
+		</span>
+		<span class="property-name justify-self-start">{property.name}</span>
+	{:else}
+		<span class="modifier text-right">-</span>
+		<span class="property-name justify-self-start">Any Property</span>
+	{/if}
 {/snippet}
 
 <style>

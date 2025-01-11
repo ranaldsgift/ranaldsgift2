@@ -20,6 +20,11 @@
 
 	let { build = $bindable(), inventoryTab = $bindable() }: Props = $props();
 
+	const buildGuidePlaceholder = `Write your detailed build guide here. You can add icons for your selected gear and talents.
+	For weapon icons use (Primary) / (Melee) / (Secondary) / (Ranged)
+	For equipment icons use (Necklace), (Charm), (Trinket)
+	For talent icons use (Level 5), (Level 10), (Level 15), (Level 20), (Level 25), (Level 30)`;
+
 	if (!build) {
 		error(404, "Build not found");
 	}
@@ -74,7 +79,11 @@
 				<BuildOptionsEditor bind:build></BuildOptionsEditor>
 			</div>
 		</div>
-		<TextEditor bind:content={build.description}></TextEditor>
+		<TextEditor
+			className="min-h-[200px] grid grid-rows-[min-content_1fr]"
+			bind:content={build.description}
+			placeholder={buildGuidePlaceholder}
+		></TextEditor>
 		<div class="build-talents-container">
 			<CareerTalents bind:build></CareerTalents>
 		</div>

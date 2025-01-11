@@ -41,8 +41,6 @@
 		}
 	});
 
-	$inspect(windowState);
-
 	const handleHeroSelection = (hero: IHero) => {
 		if (selectedHero?.id === hero.id) {
 			selectedHero = null;

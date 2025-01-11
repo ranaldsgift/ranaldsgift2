@@ -1,6 +1,5 @@
 <script lang="ts">
 	import TextEditor from "../quill/TextEditor.svelte";
-	import BuildGuideContainer from "./BuildGuideContainer.svelte";
 
 	type Props = {
 		guide?: string;
