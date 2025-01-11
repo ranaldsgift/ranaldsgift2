@@ -11,8 +11,6 @@
 	let { data } = $props();
 
 	let verminData = getVerminDataState();
-
-	$inspect(verminData.heroes);
 </script>
 
 <Seo title="Builds and Stats for the Heroes of Ubersreik" />

@@ -9,8 +9,6 @@
 	let { data } = $props();
 
 	let verminData = getVerminDataState();
-
-	$inspect(verminData.heroes);
 </script>
 
 <Seo title="Weapons" />

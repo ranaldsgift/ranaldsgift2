@@ -16,8 +16,6 @@
 	let dialogOpen = $state(false);
 	let frameUrl = $derived(build.portraitFrameId ? `url('/images/frames/frame-${build.portraitFrameId}.png')` : "");
 
-	$inspect(frameUrl);
-
 	let health = $derived.by(() => {
 		if (!build.career) {
 			return 0;
@@ -33,14 +31,14 @@
 			if (build.necklace.property1Value) {
 				healthModifier = build.necklace.property1Value / 100;
 			}
-			healthModifier = build.necklace.property1.maximumValue ?? 100 / 100;
+			healthModifier = (build.necklace.property1.maximumValue ?? 0) / 100;
 		}
 
 		if (build.necklace.property2?.name === "Health") {
 			if (build.necklace.property2Value) {
 				healthModifier = build.necklace.property2Value / 100;
 			}
-			healthModifier = build.necklace.property2.maximumValue ?? 100 / 100;
+			healthModifier = (build.necklace.property2.maximumValue ?? 0) / 100;
 		}
 
 		return build.career.health * (1 + healthModifier);
