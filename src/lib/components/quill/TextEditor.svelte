@@ -13,6 +13,8 @@
 
 	export let readOnly = false;
 	export let content: string | undefined;
+	export let placeholder = "Write something...";
+	export let className = "";
 
 	let quill: Quill;
 	let editor: HTMLElement;
@@ -22,7 +24,7 @@
 		await import("./CustomBlot");
 
 		quill = new Quill(editor, {
-			placeholder: "Write something...",
+			placeholder,
 			theme: "snow",
 			readOnly,
 			modules: {
@@ -72,7 +74,7 @@
 	});
 </script>
 
-<div class="editor-wrapper text-[1.2rem] {readOnly ? 'readonly' : ''}">
+<div class="editor-wrapper text-[1.2rem] {readOnly ? 'readonly' : ''} {className}">
 	<div bind:this={editor}>{@html content}</div>
 </div>
 
@@ -114,6 +116,9 @@
 		border-image-repeat: repeat;
 		pointer-events: none;
 		z-index: 2;
+	}
+	:global(.ql-editor.ql-blank::before) {
+		color: #c2c2c2;
 	}
 
 	@media (min-width: 768px) {
