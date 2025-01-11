@@ -12,12 +12,6 @@
 	};
 
 	let { trait, class: CLASS = "", size = "60px", tooltipPosition = { x: "left", y: "top" } }: Props = $props();
-	let translateX = $derived(
-		tooltipPosition.x === "center" ? "translateX(-50%)" : tooltipPosition.x === "right" ? "translateX(100%)" : "translateX(0%)"
-	);
-	let translateY = $derived(
-		tooltipPosition.y === "bottom" ? "translateY(100%)" : tooltipPosition.y === "top" ? "translateY(-100%)" : "translateY(-25%)"
-	);
 </script>
 
 {#if trait && trait.name}
@@ -26,8 +20,10 @@
 		style="--size: {size}; background: url('/images/traits/{trait.name.toLowerCase().replaceAll(' ', '-')}.png'), black"
 	>
 	</span>
-{:else}
+{:else if trait === undefined}
 	<span class="item-trait-icon trait-icon lock-icon border-04" style="--size: {size};"></span>
+{:else}
+	<span class="item-trait-icon trait-icon border-04 text-3xl content-center text-center" style="--size: {size};">?</span>
 {/if}
 
 <style>

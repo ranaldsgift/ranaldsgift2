@@ -72,28 +72,28 @@
 		{/if}
 		{#if itemBuild.rarity !== ItemRarityEnum.White}
 			<div class="item-properties-container pb-2">
-				{#if itemBuild.property1}
-					<div class="relative">
-						<li class="item-property-1">
-							{itemBuild.property1
-								? `+ ${itemBuild.property1.maximumValue?.toFixed(1)}${PropertyHelper.getModifier(itemBuild.property1)} ${itemBuild.property1.name}`
-								: ""}
-						</li>
-						<select bind:value={itemBuild.property1}>
-							{#each properties as property}
-								<option value={property}>{property.name}</option>
-							{/each}
-						</select>
-					</div>
-				{/if}
-				{#if itemBuild.property2}
+				<div class="relative">
+					<li class="item-property-1">
+						{itemBuild.property1
+							? `+ ${itemBuild.property1.maximumValue?.toFixed(1)}${PropertyHelper.getModifier(itemBuild.property1)} ${itemBuild.property1.name}`
+							: "Any Property"}
+					</li>
+					<select bind:value={itemBuild.property1}>
+						<option value={null}>Choose Any</option>
+						{#each properties as property}
+							<option value={property}>{property.name}</option>
+						{/each}
+					</select>
+				</div>
+				{#if !itemBuild.rarity || itemBuild.rarity !== ItemRarityEnum.Green}
 					<div class="relative">
 						<li class="item-property-2">
 							{itemBuild.property2
 								? `+ ${itemBuild.property2.maximumValue?.toFixed(1)}${PropertyHelper.getModifier(itemBuild.property2)} ${itemBuild.property2.name}`
-								: ""}
+								: "Any Property"}
 						</li>
 						<select bind:value={itemBuild.property2}>
+							<option value={null}>Choose Any</option>
 							{#each properties as property}
 								<option value={property}>{property.name}</option>
 							{/each}
@@ -103,17 +103,18 @@
 			</div>
 		{/if}
 		{#if !itemBuild.rarity || itemBuild.rarity === ItemRarityEnum.Orange || itemBuild.rarity === ItemRarityEnum.Red}
-			<div class="item-trait-container">
+			<div class="item-trait-container min-h-[70px]">
 				<TraitIcon trait={itemBuild.trait ?? null} {tooltipPosition}></TraitIcon>
 				<div class="relative">
-					<p class="item-trait-name">{itemBuild.trait?.name}</p>
+					<p class="item-trait-name">{itemBuild.trait?.name ?? "Any Trait"}</p>
 					<select bind:value={itemBuild.trait}>
+						<option value={null}>Choose Any</option>
 						{#each traits as trait}
 							<option value={trait}>{trait.name}</option>
 						{/each}
 					</select>
 				</div>
-				<p class="item-trait-description">{itemBuild.trait?.description}</p>
+				<p class="item-trait-description">{itemBuild.trait?.description ?? "No specific trait required"}</p>
 			</div>
 		{/if}
 	</div>
