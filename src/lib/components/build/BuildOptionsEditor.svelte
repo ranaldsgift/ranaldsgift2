@@ -12,7 +12,6 @@
 	import type { IDifficultyModifier } from "$lib/entities/DifficultyModifier";
 	import type { IMission } from "$lib/entities/Mission";
 	import type { IPotion } from "$lib/entities/Potion";
-	import type { ITwitchSetting } from "$lib/entities/TwitchSetting";
 	import {
 		BookSettingsStore,
 		BuildRolesStore,
@@ -20,7 +19,6 @@
 		DifficultyModifiersStore,
 		MissionsStore,
 		PotionsStore,
-		TwitchSettingsStore,
 	} from "$lib/stores/DataStores";
 	import ContentHeader from "../ContentHeader.svelte";
 
@@ -184,6 +182,7 @@
 						onchange={handleRolesChange}
 						data-dirty={build.roles != null && build.roles.length > 0 ? true : null}
 						title="Ctrl+click to select/deselect multiple roles"
+						class="thin-scroll"
 					>
 						{#each buildRoles as role}
 							<option
