@@ -96,8 +96,7 @@
 			<ContainerTitle>Add to Team</ContainerTitle>
 			<div class="border-01 background-14 p-5 flex flex-col gap-4 justify-center items-center">
 				<div class="w-full">
-					<span class="block mb-2 text-sm font-medium">Select Team</span>
-					<select class="w-full p-2 border rounded bg-background text-foreground" bind:value={selectedTeamIndex}>
+					<select class="w-full p-2 styled-input" bind:value={selectedTeamIndex}>
 						{#each userState.teams.value as team, index}
 							<option selected={index === 0} value={index}>
 								{team.name ?? team.id}
@@ -112,10 +111,7 @@
 						<input id="replacingBuild" type="checkbox" bind:checked={replacingBuild} />
 						<label for="replacingBuild">Overwrite Build</label>
 						{#if replacingBuild}
-							<select
-								class="w-full p-2 border rounded bg-background text-foreground"
-								bind:value={selectedBuildToReplaceIndex}
-							>
+							<select class="w-full p-2 styled-input" bind:value={selectedBuildToReplaceIndex}>
 								{#each selectedTeam?.builds ?? [] as build, index}
 									<option value={index}>{build.name ?? `${build.career?.name} (${index + 1})`}</option>
 								{/each}
