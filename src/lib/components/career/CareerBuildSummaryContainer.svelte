@@ -74,7 +74,9 @@
 		</p>
 	</div>
 	<div class="career-portrait-container">
-		<CareerBuildPortrait {build} size="160px"></CareerBuildPortrait>
+		<a class="text-primary" href="/careers/{career.hero.id}/{career.id}">
+			<CareerBuildPortrait {build} size="160px"></CareerBuildPortrait>
+		</a>
 	</div>
 	<div class="career-attributes max-w-[400px] mobile:block hidden">
 		<div class="health-container">
