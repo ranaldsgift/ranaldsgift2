@@ -12,8 +12,8 @@
 		<div class="chain-decoration right scroll-10"></div>
 		<!-- <li><ButtonLink url='/'>Home</ButtonLink></li> -->
 		<li><ButtonLink url="/builds">Builds</ButtonLink></li>
-		<li><ButtonLink url="/heroes">Heroes</ButtonLink></li>
-		<li><ButtonLink url="/careers">Stats</ButtonLink></li>
+		<li><ButtonLink url="/heroes">Hero Editor</ButtonLink></li>
+		<li><ButtonLink url="/careers">Careers</ButtonLink></li>
 		<!--<li><ButtonLink url="/weapons">Weapons</ButtonLink></li>
         <li><ButtonLink url="/missions">Missions</ButtonLink></li>
         <li><ButtonLink url="/enemies">Enemies</ButtonLink></li>
@@ -33,7 +33,7 @@
 		{/if}
 	</ul>
 	<div class="menu-title-divider-bottom divider-19"></div>
-	<a class="discord-button" href="https://discord.gg/ZQrEeE69EF">&nbsp;</a>
+	<a class="discord-button" href="https://discord.gg/ZQrEeE69EF" aria-label="Discord">&nbsp;</a>
 </nav>
 
 <style>
