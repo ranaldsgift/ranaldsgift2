@@ -2,16 +2,12 @@
 	import type { ITrait } from "$lib/entities/Trait";
 
 	type Props = {
-		trait?: ITrait | null;
+		trait?: ITrait | undefined | null;
 		class?: string;
 		size?: string;
-		tooltipPosition?: {
-			x: "left" | "right" | "center";
-			y: "top" | "bottom" | "center";
-		};
 	};
 
-	let { trait, class: CLASS = "", size = "60px", tooltipPosition = { x: "left", y: "top" } }: Props = $props();
+	let { trait, size = "60px" }: Props = $props();
 </script>
 
 {#if trait && trait.name}
@@ -23,7 +19,7 @@
 {:else if trait === undefined}
 	<span class="item-trait-icon trait-icon lock-icon border-04" style="--size: {size};"></span>
 {:else}
-	<span class="item-trait-icon trait-icon border-04 text-3xl content-center text-center" style="--size: {size};">?</span>
+	<span class="item-trait-icon trait-icon border-04 text-2xl content-center text-center text-white" style="--size: {size};">?</span>
 {/if}
 
 <style>

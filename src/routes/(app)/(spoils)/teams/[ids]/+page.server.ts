@@ -5,6 +5,8 @@ import { ROOT_API_URL } from "$lib/data/constants/constants";
 import hash from "object-hash";
 import { LogHelper } from "$lib/helpers/LogHelper.js";
 
+const buildHashLength = 40;
+
 export const load = async (event) => {
 	LogHelper.debug(`Loading team page`);
 	const ids = event.params.ids;
@@ -44,7 +46,7 @@ export const load = async (event) => {
 
 			let careerBuild: ICareerBuild | null = null;
 
-			if (Number(buildId)) {
+			if (Number(buildId) || buildId.length !== buildHashLength) {
 				LogHelper.debug(`Fetching saved build from database: ${buildId}`);
 				const response = await event.fetch(`${ROOT_API_URL}/build?id=${buildId}`, { method: "GET" });
 

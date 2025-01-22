@@ -7,6 +7,7 @@
 	import BuildHelper from "$lib/helpers/BuildHelper.js";
 	import { ItemTypeEnum } from "$lib/enums/ItemTypeEnum";
 	import ItemIconTooltip from "../inventory/ItemIconTooltip.svelte";
+	import { ItemRarityEnum } from "$lib/enums/ItemRarityEnum";
 
 	type Props = {
 		build: ICareerBuild;
@@ -107,37 +108,27 @@
 {/snippet}
 
 {#snippet gear(build: ICareerBuild)}
+	{@const necklaceTrait =
+		build.necklace.rarity === ItemRarityEnum.Orange || build.necklace.rarity === ItemRarityEnum.Red
+			? (build.necklace.trait ?? null)
+			: undefined}
+	{@const charmTrait =
+		build.charm.rarity === ItemRarityEnum.Orange || build.charm.rarity === ItemRarityEnum.Red ? (build.charm.trait ?? null) : undefined}
+	{@const trinketTrait =
+		build.trinket.rarity === ItemRarityEnum.Orange || build.trinket.rarity === ItemRarityEnum.Red
+			? (build.trinket.trait ?? null)
+			: undefined}
 	{#if build.primaryWeapon.weapon && build.secondaryWeapon.weapon}
 		<ItemIconTooltip itemBuild={build.primaryWeapon} itemType={ItemTypeEnum.Weapon} size={gearIconSize}></ItemIconTooltip>
-		{#if build.primaryWeapon.trait}
-			<TraitIcon trait={build.primaryWeapon.trait} size={gearIconSize}></TraitIcon>
-		{:else}
-			<span class="lock-icon border-04"></span>
-		{/if}
+		<TraitIcon trait={build.primaryWeapon.trait} size={gearIconSize}></TraitIcon>
 		<ItemIconTooltip itemBuild={build.secondaryWeapon} itemType={ItemTypeEnum.Weapon} size={gearIconSize}></ItemIconTooltip>
-		{#if build.secondaryWeapon.trait}
-			<TraitIcon trait={build.secondaryWeapon.trait} size={gearIconSize}></TraitIcon>
-		{:else}
-			<span class="lock-icon border-04"></span>
-		{/if}
+		<TraitIcon trait={build.secondaryWeapon.trait} size={gearIconSize}></TraitIcon>
 		<ItemIconTooltip itemBuild={build.necklace} itemType={ItemTypeEnum.Necklace} size={gearIconSize}></ItemIconTooltip>
-		{#if build.necklace.trait}
-			<TraitIcon trait={build.necklace.trait} size={gearIconSize}></TraitIcon>
-		{:else}
-			<span class="lock-icon border-04"></span>
-		{/if}
+		<TraitIcon trait={necklaceTrait} size={gearIconSize}></TraitIcon>
 		<ItemIconTooltip itemBuild={build.charm} itemType={ItemTypeEnum.Charm} size={gearIconSize}></ItemIconTooltip>
-		{#if build.charm.trait}
-			<TraitIcon trait={build.charm.trait} size={gearIconSize}></TraitIcon>
-		{:else}
-			<span class="lock-icon border-04"></span>
-		{/if}
+		<TraitIcon trait={charmTrait} size={gearIconSize}></TraitIcon>
 		<ItemIconTooltip itemBuild={build.trinket} itemType={ItemTypeEnum.Trinket} size={gearIconSize}></ItemIconTooltip>
-		{#if build.trinket.trait}
-			<TraitIcon trait={build.trinket.trait} size={gearIconSize}></TraitIcon>
-		{:else}
-			<span class="lock-icon border-04"></span>
-		{/if}
+		<TraitIcon trait={trinketTrait} size={gearIconSize}></TraitIcon>
 	{/if}
 {/snippet}
 
